@@ -17,7 +17,7 @@ import org.instantplaces.purewidgets.shared.widgets.TagCloud.Tag;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 
 /**
@@ -44,8 +44,9 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	
 	
 	public static final String DEFAULT_STYLENAME = "instantplaces-GuiTagCloud";
-	public static final String TEXTBOX_PANEL_STYLE_SUFFIX = "textboxpanel";
-	public static final String TAG_STYLENAME_SUFFIX = "tag";
+	public static final String TAGS_PANEL_STYLENAME = "tagspanel";
+	//public static final String 
+	public static final String TAG_STYLENAME = "tag";
 	
 	/**
 	 * Possible ordering of tags in the tag cloud.
@@ -56,11 +57,15 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	public enum ORDER {ALPHA, FREQUENCY}; 
 	
 	
-	
 	/**
 	 * The outer panel that holds the tags
 	 */
-	private VerticalPanel panel;
+	private SimplePanel panel;
+	
+	/**
+	 * The panel that holds the textbox for user tag suggestions
+	 */
+	private SimplePanel textBoxPanel;
 	
 	/**
 	 * The order of the tags in the tag cloud.
@@ -109,6 +114,9 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 			 */
 			guiTextBox = new GuiTextBox( this.tagCloud.getTextBox(), null );
 			guiTextBox.setLongDescription("Enter a word to contribute to the video tag cloud");
+			textBoxPanel = new SimplePanel();
+			textBoxPanel.add(guiTextBox);
+			textBoxPanel.getElement().getStyle().setProperty("textAlign", "center");
 		}
 		
 		this.setWidget(this.tagCloud);
@@ -118,7 +126,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		 */
 		this.tagCloud.addActionListener(this);
 		
-		panel = new VerticalPanel();
+		panel = new SimplePanel();
+		
 		initWidget(panel);
 		this.setStyleName(DEFAULT_STYLENAME);
 		
@@ -139,17 +148,17 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	public void updateGui() {
 		this.panel.clear();
 		//this.panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		FlowPanel tagsPanel = new FlowPanel();
 		
+		/*
+		 * We need an intermediate panel so that we can calculate the font size to fill the main panel.
+		 */
+		FlowPanel tagsPanel = new FlowPanel();
+		tagsPanel.addStyleName(TAGS_PANEL_STYLENAME);
+		
+		//this.panel.add(tagsPanel);
+		tagsPanel.getElement().getStyle().setFontSize(14, Unit.PX);
 		
 		this.panel.add(tagsPanel);
-		this.panel.getElement().getStyle().setFontSize(14, Unit.PX);
-		
-		if ( this.allowUserInput ) {
-			this.panel.add( this.guiTextBox );
-			
-			//tagsPanel.addStyleName(TEXTBOX_PANEL_STYLE_SUFFIX);
-		}
 		
 		ArrayList<TagCloud.Tag> tagList = this.tagCloud.getTagList();
 		
@@ -165,10 +174,16 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		
 		for (TagCloud.Tag t : tagList) {
 			InlineLabel l = new InlineLabel(t.getWord()+ " ");
-			l.addStyleName(TAG_STYLENAME_SUFFIX);
+			l.addStyleName(TAG_STYLENAME);
 			l.getElement().getStyle().setFontSize((t.getNormalizedFrequency()*(3-1)+1), Unit.EM);
 			//l.getElement().getStyle().setFontSize((int)(t.getNormalizedFrequency()*(this.maxFontSize-this.minFontSize)+this.minFontSize), Unit.PX);
 			tagsPanel.add(l);
+		}
+		
+		if ( this.allowUserInput ) {
+			tagsPanel.add( this.textBoxPanel );
+			
+			//tagsPanel.addStyleName(TEXTBOX_PANEL_STYLE_SUFFIX);
 		}
 		
 		
@@ -196,9 +211,9 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 			 */
 			float percent;
 			if (difW > difH ) {
-				percent = difW*1.0f/this.panel.getOffsetWidth();
+				percent = difW*1.0f/maxWidth;
 			} else {
-				percent = difH*1.0f/this.panel.getOffsetHeight();
+				percent = difH*1.0f/maxHeight;
 			}
 			
 			int old = current;
@@ -283,6 +298,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		
 		return this.tagCloud.getTagListSortedByAlpha();
 	}
+	
 	public void addTag(String word, int frequency) {
 		this.tagCloud.addTag(word, frequency);
 		this.updateGui();

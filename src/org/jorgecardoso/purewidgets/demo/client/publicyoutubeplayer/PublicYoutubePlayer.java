@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.instantplaces.purewidgets.client.storage.LocalStorage;
+import org.instantplaces.purewidgets.client.storage.Storage;
 import org.instantplaces.purewidgets.client.widgets.youtube.EmbeddedPlayer;
 import org.instantplaces.purewidgets.client.widgets.youtube.PlayerError;
 import org.instantplaces.purewidgets.client.widgets.youtube.PlayerListener;
@@ -478,7 +478,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			tag.setFrequency(freq);
 			
-			
 		}
 		
 		gtc.setTagList(tags);
@@ -538,13 +537,12 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		this.initTagCloud();
 		
-		
-		
 		this.initStream();
 		
 		this.initRecentlyPlayedVideos();
 		
 		this.initToPlayNext();
+		
 		this.initVideoPlayer();
 	}
 
@@ -579,6 +577,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void initTagCloud() {
 		//RootPanel.get("tagcloud").add(gtc);
 		screen.setTagCloud(gtc);
+		this.gtc.updateGui();
 	}
 
 	private void initVideoPlayer() {
@@ -627,7 +626,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		for ( int i = 0; i < videoIds.size(); i++ ) {
 			Video v = new Video(videoIds.get(i), videoTitles.get(i), "", videoThumbnails.get(i));
-			v.setKeywords( PublicDisplayApplication.getStorage().decode( videoKeywords.get(i) ).toArray(new String[]{}) );
+			
+			v.setKeywords( Storage.decode( videoKeywords.get(i) ).toArray(new String[]{}) );
 			v.setOriginatingTags(videoOriginatingKeywords.get(i));
 			
 			this.allPlayedVideos.put(videoIds.get(i), v);
@@ -735,7 +735,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			videoTitles.add(allPlayedVideos.get(key).getTitle());
 			videoThumbnails.add(allPlayedVideos.get(key).getThumbnail());
 			
-			videoKeywords.add(PublicDisplayApplication.getStorage().encode( Arrays.asList( allPlayedVideos.get(key).getKeywords() ) ));
+			
+			videoKeywords.add(Storage.encode( Arrays.asList( allPlayedVideos.get(key).getKeywords() ) ));
 			
 			videoOriginatingKeywords.add( allPlayedVideos.get(key).getOriginatingTags() );
 		}
@@ -862,7 +863,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			
 		}
-		this.gtc.updateGui();
+		//this.gtc.updateGui();
 		this.saveTagCloud();
 	}
 
