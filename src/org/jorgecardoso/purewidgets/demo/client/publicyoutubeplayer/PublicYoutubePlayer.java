@@ -283,7 +283,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		screen.showVideo();
 		this.gotoState(1);
-
+		this.gtc.updateGui();
 	}
 
 	/**
@@ -403,9 +403,9 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		Log.debug(this, "Finished playing " + this.toPlay.getTitle());
 		this.addToAllPlayedVideos( this.toPlay );
 		this.addToRecentlyPlayedList( this.toPlay );
-		decreaseTagCloudFrequency();
 		
 		this.gotoState(1);
+		decreaseTagCloudFrequency();
 	}
 
 	/**
@@ -462,7 +462,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	 * 
 	 */
 	private void decreaseTagCloudFrequency() {
-		Log.debug(this, "Decreasing tag frequencies");
+		Log.warn(this, "Decreasing tag frequencies");
 		
 		ArrayList<TagCloud.Tag> tags = gtc.getTagList();
 		
@@ -481,7 +481,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		}
 		
 		gtc.setTagList(tags);
-		
+		this.gtc.updateGui();
 		this.saveTagCloud();
 	}
 	
@@ -531,6 +531,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 
 	private void initGui() {
+		Log.warn(this, "initGui");
 		screen = new VideoScreen();
 		
 		RootPanel.get().add(screen);
@@ -544,6 +545,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.initToPlayNext();
 		
 		this.initVideoPlayer();
+		this.gtc.updateGui();
 	}
 
 
@@ -577,7 +579,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void initTagCloud() {
 		//RootPanel.get("tagcloud").add(gtc);
 		screen.setTagCloud(gtc);
-		this.gtc.updateGui();
+		
 	}
 
 	private void initVideoPlayer() {
@@ -808,7 +810,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void updateTagCloud( Video video ) {
 		
 		TagCloud.Tag originTag = this.gtc.getTag( video.getOriginatingTags() );
-		Log.info(this, "Updating tag cloud with tag '" +originTag + "' from video '" + video.getId() + "'");
+		Log.warn(this, "Updating tag cloud with tag '" +originTag + "' from video '" + video.getId() + "'");
 		if ( null == originTag ) {
 			return;
 		}
@@ -818,7 +820,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			f = 50;
 		}
 		originTag.setFrequency(f);
-		
+		Log.warn(this, "Updating tag cloud 1 ");
 		//
 		
 		/*
@@ -838,6 +840,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 				}
 			}
 		}
+		Log.warn(this, "Updating tag cloud 2");
 		
 		/*
 		 * Limit tag cloud size.
@@ -861,9 +864,9 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			this.gtc.setTagList(tags);
 			
-			
+			Log.warn(this, "Updating tag cloud 3");
 		}
-		//this.gtc.updateGui();
+		this.gtc.updateGui();
 		this.saveTagCloud();
 	}
 

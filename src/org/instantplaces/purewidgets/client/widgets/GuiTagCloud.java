@@ -30,8 +30,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * <dd>the outer &lt;div&gt; element</dd>
  * <dt>.instantplaces-GuiTagCloud .tag</dt>
  * <dd>the &lt;span&gt; element for each word</dd>
- * <dt>.instantplaces-GuiTagCloud .textboxpanel</dt>
- * <dd>the panel that holds the textbox</dd>
+ * <dt>.instantplaces-GuiTagCloud .tagspanel</dt>
+ * <dd>the panel that holds the list of tags and the textbox</dd>
  * 
  * </dl>
  * 
@@ -134,6 +134,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		/*
 		 * Create the Gui for the tag cloud.
 		 */
+		Log.warn(this, "finishing constructor");
 		this.updateGui();
 		
 	}
@@ -146,6 +147,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	}
 
 	public void updateGui() {
+		Log.warn(this, "updateGUI");
 		this.panel.clear();
 		//this.panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
@@ -187,99 +189,114 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		}
 		
 		
-		int current = 15;
+//		int current = 15;
+//		
+//		
+//		int maxHeight = this.panel.getOffsetHeight();
+//		int maxWidth = this.panel.getOffsetWidth();
+//		int count = 0;
+//		int old = current;
+//		boolean change = true;
+//		int difW = 0;
+//		int difH = 0;
+//		while(change && maxHeight > 0 && maxWidth > 0) {
+//			
+//			tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
+//			difW = maxWidth-tagsPanel.getOffsetWidth();
+//			difH = maxHeight-tagsPanel.getOffsetHeight();
+//			
+//			if ( difW < 1 || difH < 1 ) {
+//				//tagsPanel.getElement().getStyle().setFontSize(current-1, Unit.PX);
+//				break;
+//			}
+//			
+//			/*
+//			 * Calculate the ratio of the size of the max dif to the size of the tags panel
+//			 */
+//			float percent;
+//			if (difW > difH ) {
+//				percent = difW*1.0f/maxWidth;
+//			} else {
+//				percent = difH*1.0f/maxHeight;
+//			}
+//			
+//			old = current;
+//			current = current+(int)(current*percent);
+//			
+//			if (current == old) {
+//				change = false;
+//			}
+//			
+//			count++;
+//		} 
+//		
+//
+//		
+//		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//		Log.warn("panel width: " + this.panel.getOffsetWidth());
+//		Log.warn("panel height: " + this.panel.getOffsetHeight());
+//		Log.warn("count:" + count);
+		
+		
+//		int min = 15;
+//		int max = 50;
+//		
+//		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//		Log.warn("panel width: " + this.panel.getOffsetWidth());
+//		Log.warn("panel height: " + this.panel.getOffsetHeight());
+//		int maxHeight = this.panel.getOffsetHeight();
+//		int maxWidth = this.panel.getOffsetWidth();
+//		
+//		int count = 0;
+//		while ( max-min > 1 ) {
+//			int half = (max-min)/2+min;
+//			tagsPanel.getElement().getStyle().setFontSize(half, Unit.PX);
+//			
+//			if (tagsPanel.getOffsetWidth() > maxWidth || tagsPanel.getOffsetHeight() > maxHeight) {
+//				max = half;
+//			} else {
+//				min = half;
+//			}
+//			Log.warn("half: "  + half);
+//			
+//			count++;
+//		}
+//		tagsPanel.getElement().getStyle().setFontSize(min, Unit.PX);
+//		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//		Log.warn("panel width: " + this.panel.getOffsetWidth());
+//		Log.warn("panel height: " + this.panel.getOffsetHeight());
+//		Log.warn("count:" + count);
 		
 		
 		int maxHeight = this.panel.getOffsetHeight();
 		int maxWidth = this.panel.getOffsetWidth();
-		int count = 0;
-		
-		boolean change = true;
-		while(change && maxHeight > 0 && maxWidth > 0) {
-			
-			tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
-			int difW = maxWidth-tagsPanel.getOffsetWidth();
-			int difH = maxHeight-tagsPanel.getOffsetHeight();
-			
-			if ( difW < 1 || difH < 1 ) {
-				tagsPanel.getElement().getStyle().setFontSize(current-1, Unit.PX);
-				break;
-			}
-			
-			/*
-			 * Calculate the ratio of the size of the max dif to the size of the tags panel
-			 */
-			float percent;
-			if (difW > difH ) {
-				percent = difW*1.0f/maxWidth;
-			} else {
-				percent = difH*1.0f/maxHeight;
-			}
-			
-			int old = current;
-			current = current+(int)(current*percent);
-			
-			if (current == old) {
-				change = false;
-			}
-			
-			count++;
-		} 
-		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-		Log.warn("panel width: " + this.panel.getOffsetWidth());
-		Log.warn("panel height: " + this.panel.getOffsetHeight());
-		Log.warn("count:" + count);
-		
-		/*
-		int min = 15;
-		int max = 50;
-		
-		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-		Log.warn("panel width: " + this.panel.getOffsetWidth());
-		Log.warn("panel height: " + this.panel.getOffsetHeight());
-		int maxHeight = this.panel.getOffsetHeight();
-		int maxWidth = this.panel.getOffsetWidth();
-		
-		int count = 0;
-		while ( max-min > 1 ) {
-			int half = (max-min)/2+min;
-			tagsPanel.getElement().getStyle().setFontSize(half, Unit.PX);
-			
-			if (tagsPanel.getOffsetWidth() > maxWidth || tagsPanel.getOffsetHeight() > maxHeight) {
-				max = half;
-			} else {
-				min = half;
-			}
-			Log.warn("half: "  + half);
-			
-			count++;
-		}
-		tagsPanel.getElement().getStyle().setFontSize(min, Unit.PX);
-		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-		Log.warn("panel width: " + this.panel.getOffsetWidth());
-		Log.warn("panel height: " + this.panel.getOffsetHeight());
-		Log.warn("count:" + count);
-		*/
-		
-		/*
 		int current = 15;
 		int count = 0;
+		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+		Log.warn("panel width: " + this.panel.getOffsetWidth());
+		Log.warn("panel height: " + this.panel.getOffsetHeight());
+
 		while (current < 40 && tagsPanel.getOffsetWidth() <= maxWidth && tagsPanel.getOffsetHeight() < maxHeight) {
 			tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
 			current++;
-			
+			Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+			Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 			count++;
 		}
+		/*
+		 * Revert the last change: current-2
+		 */
 		tagsPanel.getElement().getStyle().setFontSize(current-2, Unit.PX);
 		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 		Log.warn("panel width: " + this.panel.getOffsetWidth());
 		Log.warn("panel height: " + this.panel.getOffsetHeight());
 		Log.warn("count:" + count);
-		*/
+		
 	}
 	
 	
@@ -290,7 +307,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	public void setTagList(ArrayList<Tag> tagList) {
 		this.tagCloud.setTagList(tagList);
 		
-		this.updateGui();
+		//Log.warn(this, "set tag list");
+		//this.updateGui();
 		//this.addTagsToPanel();
 	}
 	
@@ -301,7 +319,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	
 	public void addTag(String word, int frequency) {
 		this.tagCloud.addTag(word, frequency);
-		this.updateGui();
+		//Log.warn(this, "add tag");
+		//this.updateGui();
 	}
 	
 	public ArrayList<Tag> getTagListSortedByFrequency() {
@@ -336,13 +355,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 
 	@Override
 	public void onAction(ActionEvent<?> e) {
-		
 		ActionEvent<GuiTagCloud> ae = new ActionEvent<GuiTagCloud>(e.getPersona(), this, null, e.getParam());
-		
 		this.updateGui();
-		
 		this.fireActionEvent(ae);
 	}
-	
-	
 }
