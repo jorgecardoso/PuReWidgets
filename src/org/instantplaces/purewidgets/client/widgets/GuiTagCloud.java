@@ -56,17 +56,6 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	public enum ORDER {ALPHA, FREQUENCY}; 
 	
 	
-	/**
-	 * The maximum font size for the tags. Tag frequency is normalized and assigned 
-	 * a font size by linear interpolation between min and max font size.
-	 */
-	private int maxFontSize= 3;
-	
-	/**
-	 * The minimum font size for the tags. Tag frequency is normalized and assigned 
-	 * a font size by linear interpolation between min and max font size.
-	 */
-	private int minFontSize = 1;
 	
 	/**
 	 * The outer panel that holds the tags
