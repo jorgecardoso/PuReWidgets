@@ -1,0 +1,344 @@
+@charset "UTF-8";
+
+/**
+ * Applied to ProgressBar.
+ */
+.gwt-ProgressBar-shell {
+  border: 2px solid #faf9f7;
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280; 
+  background-color: #AAAAAA;
+  height: 14pt;
+  width: 100%;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+  background-color: #67A7E3;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+  padding: 0px;
+  margin: 0px;
+  color: white;
+}
+.gwt-ProgressBar-thin {
+  border: 2px solid #848280;
+  background-color: white;
+  height: 7px;
+  overflow: hidden;
+}
+.gwt-ProgressBar-thin .gwt-ProgressBar-bar {
+  background-color: #67A7E3;
+}
+
+.instantplaces-AutoScrollPanel {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	
+	overflow: hidden;
+ }
+ 
+
+
+.instantplaces-Button {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:x-large;
+	height: 100px;
+	width: 200px;
+	
+	 margin: 0;
+  padding: 3px 5px;
+  /*//text-decoration: none;
+  //font-size: small;
+  //cursor: pointer;
+  //cursor: hand;*/
+
+  background: url("icons/hborder.png") repeat-x 0px -27px;
+  border: 1px outset #ccc;
+}
+.instantplaces-Button-disabled {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:x-large;
+	height: 100px;
+	width: 200px;
+	background: url("icons/hborder.png") repeat-x 0px -27px;
+}
+
+.instantplaces-Button-caption {
+}
+
+.instantplaces-Button-referencecode {
+}
+.instantplaces-Button-feedback {
+}
+ 
+.instantplaces-Button-disabled .instantplaces-Button-caption {
+	color: graytext;
+}
+.instantplaces-Button-disabled .instantplaces-Button-referencecode {
+	color: graytext;
+}
+.instantplaces-Button-disabled .instantplaces-Button-feedback {
+	color: graytext;
+	text-decoration: line-through;
+}
+
+
+
+.instantplaces-Carrousel {
+	background-color: #aaa;
+}
+.instantplaces-Carrousel-disabled {
+	background-color: #aaa;
+}
+
+.instantplaces-CarrouselItem {
+	padding: 5px;
+	width: 100px;
+}
+
+.instantplaces-CarrouselItem-image {
+	height: 100px;
+	width: 100px;
+}
+
+.instantplaces-CarrouselItem-label {
+	width:100px;
+	word-wrap:normal;
+	white-space:nowrap;
+	overflow:hidden;
+}
+
+
+
+
+.instantplaces-CheckBox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:x-large;
+	width: 150px;
+	
+}
+.instantplaces-CheckBox-disabled {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:x-large;
+	color: graytext;
+}
+
+.instantplaces-CheckBox-input{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+}
+
+.instantplaces-CheckBox-disabled .instantplaces-CheckBox-input{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+}
+
+.instantplaces-CheckBox-label{
+	vertical-align:middle;
+}
+
+.instantplaces-CheckBox-referencecode {
+	vertical-align:middle;
+	
+}
+
+.instantplaces-CheckBox-feedback {
+	vertical-align:middle;
+}
+
+.instantplaces-CheckBox-disabled .instantplaces-CheckBox-feedback {
+	color: graytext;
+	text-decoration: line-through;
+}
+
+
+
+.instantplaces-ListBox {
+	 cell-spacing:0px;
+	 border: 1px solid #000;
+	 min-width:300px;
+}
+
+.instantplaces-ListBox-disabled {
+	border: 1px solid #000;
+	min-width:300px;
+	background-color: #CCC; 
+	color: graytext;
+}
+
+.instantplaces-ListBox-item {
+	width: 100%;
+}
+
+.instantplaces-ListBox-item * {
+	height: 40px;
+	font-size:xx-large;
+	font-family: Verdana, Geneva, sans-serif;
+	white-space: nowrap;
+}
+
+.instantplaces-ListBox-topitem  {
+	//width: 100%;
+	float: right;
+}
+
+.instantplaces-ListBox-topitem * {
+	height: 40px;
+	font-size:xx-large;
+	font-family: Verdana, Geneva, sans-serif;
+	white-space: nowrap;
+	float: right;
+	//text-align: right;
+}
+
+.instantplaces-ListBox-item-selected {
+	//width: 100%;
+	
+}
+
+.instantplaces-ListBox-item-selected *{
+	height: 40px;
+	font-size:xx-large;
+	font-family: Verdana, Geneva, sans-serif;
+	
+}
+
+.instantplaces-ListBox-item-button {
+	width: 40px;
+	height: 40px;
+	vertical-align:middle;
+}
+
+.instantplaces-ListBox-item-label {
+}
+
+.instantplaces-ListBox-item-referencecode {
+	/*font-family: Courier,Courier New, monospace;*/
+	padding: 0px 0px 0px 5px;
+	text-align: right;
+	float:right;
+}
+
+.instantplaces-ListBox-item-feedback {
+}
+
+
+
+.instantplaces-ListBox .instantplaces-ListBox-item-selected {
+	background-color: darkblue;
+	color:white;
+}
+
+.instantplaces-ListBox-disabled * {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+}
+
+.instantplaces-ListBox-disabled .instantplaces-ListBox-item {
+	color:graytext;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+}
+
+.instantplaces-ListBox-disabled .instantplaces-ListBox-topitem  {
+	color:graytext;
+	//width: 100%;
+	float: right;
+}
+
+.instantplaces-ListBox-disabled .instantplaces-ListBox-item-selected {
+	background-color: darkblue;
+	color:graytext;
+}
+
+.instantplaces-ListBox-disabled .instantplaces-ListBox-item-feedback {
+	text-decoration: line-through;
+	white-space: nowrap;
+}
+
+
+
+
+     
+
+.instantplaces-SequentialInputFeedbackPanel {
+	z-index: 910;
+}
+
+.instantplaces-SequentialInputFeedbackPanel-content {
+
+	border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+	padding: 5px;
+	color: #000;
+	z-index: 910;
+}
+
+.instantplaces-SequentialInputFeedbackPanel-background {
+	position:absolute;
+	background-color: #fff;
+	opacity: .9 ;
+  	filter: alpha(opacity=90);
+  	z-index:900;  
+}
+
+
+.instantplaces-SequentialInputFeedbackPanel-accepted {
+	background-image:url('icons/16px-Crystal_Clear_action_apply.png');
+	background-repeat:no-repeat;
+	background-position: center left;
+	padding-left:20px;
+	color: green;
+		font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+	word-wrap:normal;
+	white-space:nowrap;
+}
+
+.instantplaces-SequentialInputFeedbackPanel-notaccepted {
+	background-image:url('icons/16px-Crystal_Clear_action_editdelete.png');
+	background-repeat:no-repeat;
+	background-position: center left;
+	padding-left:20px;
+	color: red;
+		font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+	word-wrap:normal;
+	white-space:nowrap;
+}
+ 
+.instantplaces-SequentialInputFeedbackPanel-systeminfo {
+	background-image:url('icons/16px-Crystal_Clear_action_info.png');
+	background-repeat:no-repeat;
+	background-position: center left;
+	padding-left:20px;
+	color: blue;
+}
+
+
+ 
+
+     
+
+.instantplaces-TimedPopupPanel {
+	<!-- background-color: #fff; -->
+}
+
+.instantplaces-TimedTransparentPopupPanel {
+	border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+	padding: 5px;
+	color: #000;
+	z-index: 901;
+}
+
+.instantplaces-TimedTransparentPopupPanel-background {
+	background-color: #fff;
+	opacity: .9 ;
+  	filter: alpha(opacity=90);
+  	z-index:900;  	
+}

@@ -1,0 +1,15 @@
+org.instantplaces.purewidgets.client.widgetmanager
+org.instantplaces.purewidgets.client.widgetmanager.json
+org.instantplaces.purewidgets.client.widgets
+org.instantplaces.purewidgets.client.widgets.events
+org.instantplaces.purewidgets.client.widgets.feedback
+org.instantplaces.purewidgets.server
+org.instantplaces.purewidgets.server.application
+org.instantplaces.purewidgets.server.interactionmanager
+org.instantplaces.purewidgets.server.widgetmanager
+org.instantplaces.purewidgets.shared
+org.instantplaces.purewidgets.shared.events
+org.instantplaces.purewidgets.shared.widgetmanager
+org.instantplaces.purewidgets.shared.widgets
+org.jorgecardoso.purewidgets.demo.client
+org.jorgecardoso.purewidgets.demo.server

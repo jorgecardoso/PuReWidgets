@@ -1,0 +1,41 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer">
+	<ui:style>
+    
+  </ui:style>
+  
+	<g:DeckPanel ui:field='deckPanelTop' styleName='all'>
+		
+		<g:SimplePanel ui:field='simplePanelPlayer' styleName='youtube'/>
+
+	
+		<g:HTMLPanel ui:field='htmlPanel'>
+			<div id='top'></div>
+				
+			<g:DeckPanel ui:field='deckPanelBottom' debugId="bottom">
+				<g:HorizontalPanel>
+					<g:cell width="50%">
+       					<p:RecentlyPlayed ui:field="recentlyPlayed" debugId="recentlyplayed" /> 
+    				</g:cell>
+    				<g:cell width="50%">
+        				<p:ActivityStream ui:field="activityStream" debugId="stream"/>
+    				</g:cell>
+					
+					
+				</g:HorizontalPanel>
+					
+				<g:HTMLPanel>
+					<div id='toplaynext'>
+						<p:ToPlayNext ui:field='toPlayNext'/>
+					</div>					
+				</g:HTMLPanel>
+			</g:DeckPanel>
+			
+		</g:HTMLPanel>
+
+	
+		
+	</g:DeckPanel>
+</ui:UiBinder> 

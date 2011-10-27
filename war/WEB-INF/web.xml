@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>interactionServlet</servlet-name>
+    <servlet-class>org.instantplaces.purewidgets.server.interactionmanager.InteractionServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>interactionServlet</servlet-name>
+    <url-pattern>/interactionservice</url-pattern>
+  </servlet-mapping>
+  
+  
+<servlet>
+    <servlet-name>testServlet</servlet-name>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.server.Test</servlet-class>
+  </servlet> 
+  
+      <servlet-mapping>
+    <servlet-name>testServlet</servlet-name>
+    <url-pattern>/test</url-pattern>
+  </servlet-mapping> 
+  
+   
+<servlet>
+  <servlet-name>sightingServlet</servlet-name>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.server.placeinteractionwebpage.SightingServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>sightingServlet</servlet-name>
+    <url-pattern>/sighting</url-pattern>
+  </servlet-mapping>  
+     
+ <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.server.placeinteractionwebpage.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/placeinteractiondemo/login</url-pattern>
+  </servlet-mapping>     
+     
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Demos.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
