@@ -8,7 +8,9 @@ import org.instantplaces.purewidgets.shared.widgets.Widget;
 public interface ServerCommunicator {
 
 	public void addWidget(Widget widget);
+	
 	public void deleteWidget(Widget widget);
+	public void deleteAllWidgets(boolean volatileOnly);
 	
 	public void getPlaceApplicationsList(boolean active);
 	public void getPlaceApplicationsList();
@@ -16,10 +18,10 @@ public interface ServerCommunicator {
 	public void setServerListener(ServerListener listener);
 	
 	/**
-	 * Enables or disables the automatic input requests
+	 * Enables or disables the automatic input requests. Useful for apps that don't require
+	 * remote input.
+	 * 
 	 * @param automatic
 	 */
 	public void setAutomaticInputRequests(boolean automatic);
-	
-	
 }

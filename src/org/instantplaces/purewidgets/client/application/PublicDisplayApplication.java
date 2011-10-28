@@ -9,6 +9,9 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
 
 /**
  * The PublicDisplayApplication class represents the graphical part of the public display application.
@@ -65,9 +68,23 @@ public class PublicDisplayApplication {
 		
 		WidgetManager.get().setServerCommunication(new ClientServerCommunicator(place, appName));
 		
+		/*
+		 * Delete all volatile widgets that may have left on the server before
+		 */
+		Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
+		WidgetManager.get().removeAllWidgets(true);
+		
 		PublicDisplayApplication.loaded = true;
 		
 		storage = new Storage(appName);
+		
+		Window.addCloseHandler(new CloseHandler<Window>() {
+
+			@Override
+			public void onClose(CloseEvent<Window> event) {
+				Log.debug(this, "Removing volatile widgets");
+				WidgetManager.get().removeAllWidgets(true);
+			}});
 	}
 	
 	public static Storage getStorage() {

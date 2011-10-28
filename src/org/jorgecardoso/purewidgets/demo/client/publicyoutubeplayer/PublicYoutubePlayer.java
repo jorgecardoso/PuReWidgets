@@ -177,43 +177,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 	int currentState;
 	
-	private void gotoState( int state ) {
-		if ( 0 == state ) { // video
-			this.currentState = 0;
-			this.screen.showVideo();
-			this.initVideoPlayer();
-			//this.youtube.play();
-			
-		} else if ( 1 == state ) { // recently played
-			this.currentState = 1;
-			this.searchVideos();
-			this.screen.showActivity();
-			stateTimer.schedule(this.activityScreenDuration*1000);
-			
-			
-		} else if ( 2 == state ) { // to play next
-			this.currentState = 2;
-			this.screen.showNext();
-			this.screen.toPlayNext.highlight(this.toPlay);
-			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
-			
-		} else if ( 3 == state ) { //show what is going to play
-			this.currentState = 3;
-			this.screen.toPlayNext.highlight(this.toPlay);
-			stateTimer.schedule(this.toPlayNextConfirmationDuration*1000);
-		}
-	}
-	
-	private void timerStateElapsed() {
-		if ( 1 == this.currentState ) {
-			this.gotoState(2);
-		} else if ( 2 == this.currentState ) {
-			this.gotoState(3);
-		} else if ( 3 == this.currentState ) {
-			this.gotoState(0);
-		}
-	}
-	
 	@Override
 	public void onAction(ActionEvent<?> e) {
 		GuiWidget source = (GuiWidget)e.getSource();
@@ -226,7 +189,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		}
 		
 	}
-
 	
 	@Override
 	public void onError(PlayerError state) {
@@ -234,12 +196,11 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		//this.searchVideos();
 	}
 	
-	
 	@Override
 	public void onLoading(int percent) {
 	}
 
-
+	
 	@Override
 	public void onModuleLoad() {
 		PublicDisplayApplication.load(this, "PublicYoutubePlayer");
@@ -285,22 +246,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.gotoState(1);
 		this.gtc.updateGui();
 	}
-
-	/**
-	 * 
-	 */
-	private int parseUrlParameterInt(String urlParameterName, int defaultValue) {
-		String parameterValueString =  com.google.gwt.user.client.Window.Location.getParameter(urlParameterName);
-		int value = defaultValue;
-		try {
-			value = Integer.parseInt(parameterValueString);
-		} catch (NumberFormatException nfe) {
-			Log.warn(this, "Could not parse '"+urlParameterName+"' URL parameter value: " + parameterValueString +". Using default value: " + defaultValue);
-		}
-		return value;
-	}
-
-
+	
 	
 	@Override
 	public void onReady() {
@@ -378,7 +324,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		//screen.showActivity();
 	}
 
-
 	@Override
 	public void onStateChange(PlayerState state) {
 		Log.debug(this, "Player State: " +  state.name());
@@ -398,15 +343,34 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 
 
-	private void videoEnded() {
+	
+	@Override
+	public void onVideoAction(ActionEvent<?> e, Video video, String action) {
 
-		Log.debug(this, "Finished playing " + this.toPlay.getTitle());
-		this.addToAllPlayedVideos( this.toPlay );
-		this.addToRecentlyPlayedList( this.toPlay );
+		Log.debug("User Clicked youtube" + video);
+			//label.setText(label.getText() + e.toDebugString());
+			
+			//String videoId = source.getWidgetId().substring("btn_like_".length());
+			
+			//Video video = this.allPlayedVideos.get(videoId);
+			
+			if ( null != video ) {
+				if ( action.equalsIgnoreCase("like") ) {
+					Log.debug(this, e.getPersona() + " liked video " + video.getId() );
+					this.addToStream(e.getPersona() + " liked video " + video.getTitle());
+				
+					this.updateTagCloud( video );
+				} else if ( action.equalsIgnoreCase("play") ) {
+					Log.debug(this, e.getPersona() + "wants to play " + video.getId());
+					this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
+					this.toPlay = video;
+					this.gotoState(3);
+				}
+			}
+			
 		
-		this.gotoState(1);
-		decreaseTagCloudFrequency();
 	}
+
 
 	/**
 	 * @param toPlay
@@ -426,9 +390,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		this.savePlayedVideos();
 	}
-
-	
-	
 
 
 	private void addToRecentlyPlayedList(Video video) {
@@ -456,7 +417,17 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 
 
-	
+	private void addToStream(String s) {
+		this.screen.activityStream.addEntry(s);
+		this.stream.add(s);
+		
+		if ( this.stream.size() > MAX_STREAM_SIZE ) {
+			this.stream.remove(0);
+		}
+		
+		
+		this.saveStream();
+	}
 
 	/**
 	 * 
@@ -484,8 +455,11 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.gtc.updateGui();
 		this.saveTagCloud();
 	}
+
 	
 	
+
+
 	/**
 	 * Randomly chooses a tag from the tag cloud, giving more weight to more frequent tags.
 	 * @return
@@ -527,9 +501,38 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			return "youtube";
 		}
 	}
-	
+
+
 	
 
+	private void gotoState( int state ) {
+		if ( 0 == state ) { // video
+			this.currentState = 0;
+			this.screen.showVideo();
+			this.initVideoPlayer();
+			//this.youtube.play();
+			
+		} else if ( 1 == state ) { // recently played
+			this.currentState = 1;
+			this.searchVideos();
+			this.screen.showActivity();
+			stateTimer.schedule(this.activityScreenDuration*1000);
+			
+			
+		} else if ( 2 == state ) { // to play next
+			this.currentState = 2;
+			this.screen.showNext();
+			this.screen.toPlayNext.highlight(this.toPlay);
+			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
+			
+		} else if ( 3 == state ) { //show what is going to play
+			this.currentState = 3;
+			this.screen.toPlayNext.highlight(this.toPlay);
+			stateTimer.schedule(this.toPlayNextConfirmationDuration*1000);
+		}
+	}
+	
+	
 	private void initGui() {
 		Log.warn(this, "initGui");
 		screen = new VideoScreen();
@@ -547,12 +550,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.initVideoPlayer();
 		this.gtc.updateGui();
 	}
-
-
-	private void initToPlayNext() {
-		this.screen.toPlayNext.setVideoEventListener(this, "play");
-		
-	}
+	
+	
 
 	private void initRecentlyPlayedVideos() {
 	
@@ -565,9 +564,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		//this.recentlyPlayed.setEntries(this.re)
 		//screen.setRecentlyPlayed(this.screen.recentlyPlayed);
 	}
-	
-	
-
 
 
 	private void initStream() {		
@@ -575,19 +571,27 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			this.screen.activityStream.addEntry(s);
 		}
 	}
-	
+
 	private void initTagCloud() {
 		//RootPanel.get("tagcloud").add(gtc);
 		screen.setTagCloud(gtc);
 		
 	}
+	
+	
 
+
+
+	private void initToPlayNext() {
+		this.screen.toPlayNext.setVideoEventListener(this, "play");
+		
+	}
+	
 	private void initVideoPlayer() {
 		youtube = new EmbeddedPlayer("youtubeplayer", "100%", "100%", false, this);
 		//RootPanel.get("youtube").add(youtube);
 		screen.setYoutubePlayer(youtube);
 	}
-
 
 	private void loadAllPlayedVideos() {
 		ArrayList<String> videoIds = PublicDisplayApplication.getStorage().loadList("PlayedVideoIds");
@@ -638,7 +642,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		
 	}
-	
+
+
 	/**
 	 * Loads the data from the localstorage.
 	 */
@@ -653,9 +658,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.loadTagCloud();
 		
 	}
-
-
-
+	
 	private void loadRecentlyPlayedVideos() {
 		this.recentlyPlayedVideos = PublicDisplayApplication.getStorage().loadList("LastPlayedVideos");
 		/*
@@ -667,13 +670,15 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 
 
+
 	private void loadStream() {
 		this.stream = PublicDisplayApplication.getStorage().loadList("Stream");
 		while ( this.stream.size() > MAX_STREAM_SIZE ) {
 			this.stream.remove(0);
 		}
 	}
-	
+
+
 	private void loadTagCloud() {
 		ArrayList<String> keywords = PublicDisplayApplication.getStorage().loadList("TagCloudKeywords");
 		
@@ -721,6 +726,20 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 	}
 	
+	/**
+	 * 
+	 */
+	private int parseUrlParameterInt(String urlParameterName, int defaultValue) {
+		String parameterValueString =  com.google.gwt.user.client.Window.Location.getParameter(urlParameterName);
+		int value = defaultValue;
+		try {
+			value = Integer.parseInt(parameterValueString);
+		} catch (NumberFormatException nfe) {
+			Log.warn(this, "Could not parse '"+urlParameterName+"' URL parameter value: " + parameterValueString +". Using default value: " + defaultValue);
+		}
+		return value;
+	}
+	
 	private void savePlayedVideos() {
 		ArrayList<String> videoIds = new ArrayList<String>(); 
 		
@@ -761,18 +780,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		PublicDisplayApplication.getStorage().saveList("Stream", this.stream);
 		
 	}
-	private void addToStream(String s) {
-		this.screen.activityStream.addEntry(s);
-		this.stream.add(s);
-		
-		if ( this.stream.size() > MAX_STREAM_SIZE ) {
-			this.stream.remove(0);
-		}
-		
-		
-		this.saveStream();
-	}
-	
 	private void saveTagCloud() {
 		ArrayList<TagCloud.Tag> tags = gtc.getTagList();
 		
@@ -802,6 +809,16 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void timerStalledElapsed() {
 		this.youtube.stop();
 		this.videoEnded();
+	}
+	
+	private void timerStateElapsed() {
+		if ( 1 == this.currentState ) {
+			this.gotoState(2);
+		} else if ( 2 == this.currentState ) {
+			this.gotoState(3);
+		} else if ( 3 == this.currentState ) {
+			this.gotoState(0);
+		}
 	}
 	
 	
@@ -870,31 +887,14 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.saveTagCloud();
 	}
 
-	@Override
-	public void onVideoAction(ActionEvent<?> e, Video video, String action) {
+	private void videoEnded() {
 
-		Log.debug("User Clicked youtube" + video);
-			//label.setText(label.getText() + e.toDebugString());
-			
-			//String videoId = source.getWidgetId().substring("btn_like_".length());
-			
-			//Video video = this.allPlayedVideos.get(videoId);
-			
-			if ( null != video ) {
-				if ( action.equalsIgnoreCase("like") ) {
-					Log.debug(this, e.getPersona() + " liked video " + video.getId() );
-					this.addToStream(e.getPersona() + " liked video " + video.getTitle());
-				
-					this.updateTagCloud( video );
-				} else if ( action.equalsIgnoreCase("play") ) {
-					Log.debug(this, e.getPersona() + "wants to play " + video.getId());
-					this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
-					this.toPlay = video;
-					this.gotoState(3);
-				}
-			}
-			
+		Log.debug(this, "Finished playing " + this.toPlay.getTitle());
+		this.addToAllPlayedVideos( this.toPlay );
+		this.addToRecentlyPlayedList( this.toPlay );
 		
+		this.gotoState(1);
+		decreaseTagCloudFrequency();
 	}
 	
 	

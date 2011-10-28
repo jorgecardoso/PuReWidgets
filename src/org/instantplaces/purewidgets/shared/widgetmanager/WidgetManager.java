@@ -131,6 +131,12 @@ public class WidgetManager implements ServerListener {
 			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
 		}
 	}
+	
+	public void removeAllWidgets(boolean volatileOnly) {
+		if ( null != this.communicator ) {
+			this.communicator.deleteAllWidgets(volatileOnly);
+		}
+	}
 
 	/**
 	 * This method is called when there is input available from the server.
