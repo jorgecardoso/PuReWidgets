@@ -329,6 +329,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		Log.debug(this, "Player State: " +  state.name());
 		
 		if ( state == PlayerState.PAUSED || state == PlayerState.UNSTARTED || state == PlayerState.BUFFERING) {
+			Log.info(this, state.toString());
 			stalledTimer.schedule(STALLED_WAIT_PERIOD);
 			Log.debug(this, "Scheduling stalled timer.");
 		} else {
@@ -433,8 +434,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	 * 
 	 */
 	private void decreaseTagCloudFrequency() {
-		Log.warn(this, "Decreasing tag frequencies");
-		
 		ArrayList<TagCloud.Tag> tags = gtc.getTagList();
 		
 		
@@ -507,12 +506,14 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 	private void gotoState( int state ) {
 		if ( 0 == state ) { // video
+			Log.info(this, "Going to Play state (video: " + this.toPlay.getTitle() + ")");
 			this.currentState = 0;
 			this.screen.showVideo();
 			this.initVideoPlayer();
 			//this.youtube.play();
 			
 		} else if ( 1 == state ) { // recently played
+			Log.info(this, "Going to Activity state");
 			this.currentState = 1;
 			this.searchVideos();
 			this.screen.showActivity();
@@ -520,12 +521,14 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			
 		} else if ( 2 == state ) { // to play next
+			Log.info(this, "Going to Next state");
 			this.currentState = 2;
 			this.screen.showNext();
 			this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
 			
 		} else if ( 3 == state ) { //show what is going to play
+			Log.info(this, "Going to Highlight state");
 			this.currentState = 3;
 			this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextConfirmationDuration*1000);
@@ -534,7 +537,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 	
 	private void initGui() {
-		Log.warn(this, "initGui");
+		Log.debug(this, "initGui");
 		screen = new VideoScreen();
 		
 		RootPanel.get().add(screen);
@@ -807,6 +810,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 	
 	private void timerStalledElapsed() {
+		Log.warn(this, "Video stalled, stopping it.");
 		this.youtube.stop();
 		this.videoEnded();
 	}
@@ -827,7 +831,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void updateTagCloud( Video video ) {
 		
 		TagCloud.Tag originTag = this.gtc.getTag( video.getOriginatingTags() );
-		Log.warn(this, "Updating tag cloud with tag '" +originTag + "' from video '" + video.getId() + "'");
+		Log.debug(this, "Updating tag cloud with tag '" +originTag + "' from video '" + video.getId() + "'");
 		if ( null == originTag ) {
 			return;
 		}
@@ -837,7 +841,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			f = 50;
 		}
 		originTag.setFrequency(f);
-		Log.warn(this, "Updating tag cloud 1 ");
+	
 		//
 		
 		/*
@@ -857,7 +861,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 				}
 			}
 		}
-		Log.warn(this, "Updating tag cloud 2");
 		
 		/*
 		 * Limit tag cloud size.
@@ -881,7 +884,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			this.gtc.setTagList(tags);
 			
-			Log.warn(this, "Updating tag cloud 3");
+			
 		}
 		this.gtc.updateGui();
 		this.saveTagCloud();

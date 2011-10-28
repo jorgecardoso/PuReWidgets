@@ -47,7 +47,19 @@
     <servlet-name>loginService</servlet-name>
     <url-pattern>/placeinteractiondemo/login</url-pattern>
   </servlet-mapping>     
+
+ 
      
+<servlet>
+	<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl </servlet-class> 
+	<servlet-name>logger </servlet-name>
+</servlet>
+
+<servlet-mapping >
+	<servlet-name>logger</servlet-name >
+	<url-pattern>/youtubedemo/remote_logging</url-pattern>
+</servlet-mapping >
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Demos.html</welcome-file>
