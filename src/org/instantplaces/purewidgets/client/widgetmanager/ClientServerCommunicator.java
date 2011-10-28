@@ -465,10 +465,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			this.toAddWidgetPool.add(w);
 			
 			this.addWidgetToServer(w);
-		}
-		
-		
-		if (this.toDeleteWidgetPool.size() > 0) {
+		} else if (this.toDeleteWidgetPool.size() > 0) {
 			/*
 			 * Take a widget from the top and put it at the end so that all of them will be processed
 			 * The widget will be definitely removed from this pool after confirmation from the server.
