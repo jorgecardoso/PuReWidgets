@@ -55,6 +55,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	    }
 	}
 	
+	private static  enum State {PLAYING, ACTIVITY, NEXT, HIGLIGHT};
+	
 	/**
 	 * The Url parameter name for setting the maximum video duration
 	 */
@@ -175,7 +177,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 	Timer stateTimer;
 	
-	int currentState;
+	State currentState;
 	
 	@Override
 	public void onAction(ActionEvent<?> e) {
@@ -243,7 +245,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.initGui();
 		
 		screen.showVideo();
-		this.gotoState(1);
+		this.gotoState(State.ACTIVITY);
 		this.gtc.updateGui();
 	}
 	
@@ -327,19 +329,14 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	@Override
 	public void onStateChange(PlayerState state) {
 		Log.debug(this, "Player State: " +  state.name());
-		
+		Log.debug(this, "Canceling stalled timer.");
+		stalledTimer.cancel();
 		if ( state == PlayerState.PAUSED || state == PlayerState.UNSTARTED || state == PlayerState.BUFFERING) {
-			Log.info(this, state.toString());
 			stalledTimer.schedule(STALLED_WAIT_PERIOD);
-			Log.debug(this, "Scheduling stalled timer.");
-		} else {
-			stalledTimer.cancel();
-			Log.debug(this, "Canceling stalled timer.");
-		}
+		} 
 		
 		if ( state == PlayerState.ENDED ) {
-			this.videoEnded();
-			
+			this.videoEnded();	
 		} 
 	}
 
@@ -347,7 +344,6 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 	@Override
 	public void onVideoAction(ActionEvent<?> e, Video video, String action) {
-
 		Log.debug("User Clicked youtube" + video);
 			//label.setText(label.getText() + e.toDebugString());
 			
@@ -355,19 +351,19 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			
 			//Video video = this.allPlayedVideos.get(videoId);
 			
-			if ( null != video ) {
-				if ( action.equalsIgnoreCase("like") ) {
-					Log.debug(this, e.getPersona() + " liked video " + video.getId() );
-					this.addToStream(e.getPersona() + " liked video " + video.getTitle());
-				
-					this.updateTagCloud( video );
-				} else if ( action.equalsIgnoreCase("play") ) {
-					Log.debug(this, e.getPersona() + "wants to play " + video.getId());
-					this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
-					this.toPlay = video;
-					this.gotoState(3);
-				}
+		if ( null != video ) {
+			if ( action.equalsIgnoreCase("like") ) {
+				Log.debug(this, e.getPersona() + " liked video " + video.getId() );
+				this.addToStream(e.getPersona() + " liked video " + video.getTitle());
+			
+				this.updateTagCloud( video );
+			} else if ( action.equalsIgnoreCase("play") ) {
+				Log.debug(this, e.getPersona() + "wants to play " + video.getId());
+				this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
+				this.toPlay = video;
+				this.gotoState(State.HIGLIGHT);
 			}
+		}
 			
 		
 	}
@@ -504,32 +500,32 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 	
 
-	private void gotoState( int state ) {
-		if ( 0 == state ) { // video
+	private void gotoState( State state ) {
+		if ( State.PLAYING == state ) { // video
 			Log.info(this, "Going to Play state (video: " + this.toPlay.getTitle() + ")");
-			this.currentState = 0;
+			this.currentState = State.PLAYING;
 			this.screen.showVideo();
 			this.initVideoPlayer();
 			//this.youtube.play();
 			
-		} else if ( 1 == state ) { // recently played
+		} else if ( State.ACTIVITY == state ) { // recently played
 			Log.info(this, "Going to Activity state");
-			this.currentState = 1;
+			this.currentState = State.ACTIVITY;
 			this.searchVideos();
 			this.screen.showActivity();
 			stateTimer.schedule(this.activityScreenDuration*1000);
 			
 			
-		} else if ( 2 == state ) { // to play next
+		} else if ( State.NEXT == state ) { // to play next
 			Log.info(this, "Going to Next state");
-			this.currentState = 2;
+			this.currentState = State.NEXT;
 			this.screen.showNext();
 			this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
 			
-		} else if ( 3 == state ) { //show what is going to play
+		} else if ( State.HIGLIGHT == state ) { //show what is going to play
 			Log.info(this, "Going to Highlight state");
-			this.currentState = 3;
+			this.currentState = State.HIGLIGHT;
 			this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextConfirmationDuration*1000);
 		}
@@ -816,12 +812,12 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 	
 	private void timerStateElapsed() {
-		if ( 1 == this.currentState ) {
-			this.gotoState(2);
-		} else if ( 2 == this.currentState ) {
-			this.gotoState(3);
-		} else if ( 3 == this.currentState ) {
-			this.gotoState(0);
+		if ( State.ACTIVITY == this.currentState ) {
+			this.gotoState(State.NEXT);
+		} else if ( State.NEXT == this.currentState ) {
+			this.gotoState(State.HIGLIGHT);
+		} else if ( State.HIGLIGHT == this.currentState ) {
+			this.gotoState(State.PLAYING);
 		}
 	}
 	
@@ -891,12 +887,12 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 
 	private void videoEnded() {
-
+		this.stalledTimer.cancel();
 		Log.debug(this, "Finished playing " + this.toPlay.getTitle());
 		this.addToAllPlayedVideos( this.toPlay );
 		this.addToRecentlyPlayedList( this.toPlay );
 		
-		this.gotoState(1);
+		this.gotoState(State.ACTIVITY);
 		decreaseTagCloudFrequency();
 	}
 	
