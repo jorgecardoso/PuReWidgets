@@ -284,18 +284,18 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		int maxWidth = this.panel.getOffsetWidth();
 		int current = this.currentFontSize;
 		int count = 0;
-		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-		Log.warn("panel width: " + this.panel.getOffsetWidth());
-		Log.warn("panel height: " + this.panel.getOffsetHeight());
+//		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//		Log.warn("panel width: " + this.panel.getOffsetWidth());
+//		Log.warn("panel height: " + this.panel.getOffsetHeight());
 
 		if ( maxHeight < tagsPanel.getOffsetHeight() || maxWidth < tagsPanel.getOffsetWidth() ) { // we need to decrease
 			while (current > 5 && (tagsPanel.getOffsetWidth() >= maxWidth || tagsPanel.getOffsetHeight() >= maxHeight) ) {
 				current--;
 				tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
 				
-				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 				count++;
 			}
 			
@@ -304,8 +304,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 				current++;
 				tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
 				
-				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 				count++;
 			}
 			/*
@@ -316,11 +316,11 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 			tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
 		}
 		this.currentFontSize = current;
-		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-		Log.warn("panel width: " + this.panel.getOffsetWidth());
-		Log.warn("panel height: " + this.panel.getOffsetHeight());
-		Log.warn("count:" + count);
+//		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+//		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+//		Log.warn("panel width: " + this.panel.getOffsetWidth());
+//		Log.warn("panel height: " + this.panel.getOffsetHeight());
+//		Log.warn("count:" + count);
 		
 	}
 	
