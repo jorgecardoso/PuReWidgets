@@ -81,6 +81,8 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	
 	private boolean allowUserInput;
 	
+	private int currentFontSize;
+	
 	public GuiTagCloud( String widgetId ) {
 		this(widgetId, null, null, true);
 	}
@@ -103,6 +105,12 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	public GuiTagCloud( String widgetId, String tags[], int frequency[], boolean allowUserInput ) {
 		this.order = ORDER.ALPHA;
 		this.allowUserInput = allowUserInput;
+		
+		/*
+		 * Start with a font size of 15px
+		 */
+		this.currentFontSize = 15;
+		
 		/*
 		 * The TagCloud that holds the data
 		 */
@@ -158,7 +166,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		tagsPanel.addStyleName(TAGS_PANEL_STYLENAME);
 		
 		//this.panel.add(tagsPanel);
-		tagsPanel.getElement().getStyle().setFontSize(14, Unit.PX);
+		
 		
 		this.panel.add(tagsPanel);
 		
@@ -270,27 +278,44 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 //		Log.warn("panel height: " + this.panel.getOffsetHeight());
 //		Log.warn("count:" + count);
 		
+		tagsPanel.getElement().getStyle().setFontSize(this.currentFontSize, Unit.PX);
 		
 		int maxHeight = this.panel.getOffsetHeight();
 		int maxWidth = this.panel.getOffsetWidth();
-		int current = 15;
+		int current = this.currentFontSize;
 		int count = 0;
 		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 		Log.warn("panel width: " + this.panel.getOffsetWidth());
 		Log.warn("panel height: " + this.panel.getOffsetHeight());
 
-		while (current < 40 && tagsPanel.getOffsetWidth() <= maxWidth && tagsPanel.getOffsetHeight() < maxHeight) {
+		if ( maxHeight < tagsPanel.getOffsetHeight() || maxWidth < tagsPanel.getOffsetWidth() ) { // we need to decrease
+			while (current > 5 && (tagsPanel.getOffsetWidth() >= maxWidth || tagsPanel.getOffsetHeight() >= maxHeight) ) {
+				current--;
+				tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
+				
+				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+				count++;
+			}
+			
+		} else {
+			while (current < 100 && tagsPanel.getOffsetWidth() <= maxWidth && tagsPanel.getOffsetHeight() < maxHeight) {
+				current++;
+				tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
+				
+				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
+				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
+				count++;
+			}
+			/*
+			 * Revert the last change: current-1
+			 */
+			current--;
+			
 			tagsPanel.getElement().getStyle().setFontSize(current, Unit.PX);
-			current++;
-			Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
-			Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-			count++;
 		}
-		/*
-		 * Revert the last change: current-2
-		 */
-		tagsPanel.getElement().getStyle().setFontSize(current-2, Unit.PX);
+		this.currentFontSize = current;
 		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 		Log.warn("panel width: " + this.panel.getOffsetWidth());
