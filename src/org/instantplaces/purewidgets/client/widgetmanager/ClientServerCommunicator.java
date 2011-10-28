@@ -66,7 +66,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/**
 	 * The interval between widget requests to the server
 	 */
-	private static final int WIDGET_REQUEST_PERIOD = 10000;
+	private static final int WIDGET_REQUEST_PERIOD = 1000;
 
 	/**
 	 * The applicationId on which this ServerCommunicator will be used.
@@ -137,11 +137,18 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 */
 	private ArrayList<Widget> toDeleteWidgetPool = new ArrayList<Widget>();
 	
+	/**
+	 * The current widget request interval
+	 */
+	private int currentWidgetRequestInterval;
+	
+	
 	
 	public ClientServerCommunicator(String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
 		this.applicationUrl = INTERACTION_SERVER + "/place/" + placeId + "/application/"+ appId;
+		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
 		
 		askPeriod = MIN_ASK_PERIOD;
 		
@@ -163,7 +170,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 				periodicallySendWidgetsToServer();
 			}
 		};
-		timerWidget.schedule(WIDGET_REQUEST_PERIOD); 		
+		timerWidget.schedule(this.currentWidgetRequestInterval); 		
 	}
 	
 	/* (non-Javadoc)
@@ -486,7 +493,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		}
 		
 		if ( this.toAddWidgetPool.size() > 0 || this.toDeleteWidgetPool.size() > 0 ) {
-			timerWidget.schedule(WIDGET_REQUEST_PERIOD);
+			timerWidget.schedule(this.currentWidgetRequestInterval);
 			Log.debug(this, "Scheduling next widget request in 15 seconds");
 		}
 	}
@@ -597,6 +604,8 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	private void processWidgetAddFailure(Throwable error) {
 		Log.warn("Error adding widget to server."
 				+ error.getMessage());
+		this.currentWidgetRequestInterval *= 2;
+		Log.warn("Increasing request interval to " + this.currentWidgetRequestInterval);
 	}
 	
 	private void processWidgetAddResponse(boolean success, String result, Throwable error) {
@@ -618,6 +627,8 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	private void processWidgetAddSuccess(String json) {
 		Log.debug(this, "Received widget from server: " + json);
 
+		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
+		
 		WidgetListJson widgetListJson = GenericJson.fromJson(json);
 		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 		
@@ -655,6 +666,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	private void processWidgetDeleteFailure(Throwable error) {
 		Log.warn("Error deleting widget to server."
 				+ error.getMessage());
+		
+		this.currentWidgetRequestInterval *= 2;
+		Log.warn("Increasing request interval to " + this.currentWidgetRequestInterval);
 	}
 
 
@@ -669,6 +683,8 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	private void processWidgetDeleteSuccess(String json) {
 		Log.debug(this, "Widget deleted: " + json);
 
+		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
+		
 		WidgetListJson widgetListJson = GenericJson.fromJson(json);
 		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 		
