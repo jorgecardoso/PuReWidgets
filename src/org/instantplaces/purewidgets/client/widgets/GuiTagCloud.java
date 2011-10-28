@@ -142,7 +142,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		/*
 		 * Create the Gui for the tag cloud.
 		 */
-		Log.warn(this, "finishing constructor");
+		
 		this.updateGui();
 		
 	}
@@ -155,7 +155,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 	}
 
 	public void updateGui() {
-		Log.warn(this, "updateGUI");
+		
 		this.panel.clear();
 		//this.panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
