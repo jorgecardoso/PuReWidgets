@@ -76,7 +76,7 @@ public class WidgetManager implements ServerListener {
 	 * 
 	 */
 	public void addWidget(Widget widget) {
-		Log.debug(this, "Adding widget: " + widget);
+		Log.debug(this, "Adding widget: " + widget.getWidgetId());
 		
 		
 		/*
@@ -85,7 +85,7 @@ public class WidgetManager implements ServerListener {
 		int index = indexOf(widget);
 		if (-1 == index) {
 			this.widgetList.add(widget);
-			Log.debug(this, "Adding new widget to widget list.");
+			//Log.debug(this, "Adding new widget to widget list.");
 		} else {
 			this.widgetList.set(index, widget);
 			Log.warn(this, "Widget already exists, replacing entry " + index + ".");
@@ -122,7 +122,7 @@ public class WidgetManager implements ServerListener {
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#removeWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 	public void removeWidget(Widget widget) {
-		Log.debug(this, "Removing widget: " + widget.toDebugString() );
+		Log.debug(this, "Removing widget: " + widget.getWidgetId() );
 		this.getWidgetList().remove(widget);
 
 		if (null != this.communicator) {
@@ -165,7 +165,7 @@ public class WidgetManager implements ServerListener {
 		 * Go through the inputs and save the widgets that have input
 		 */
 		for (WidgetInput input : inputList) {
-			Log.debug(this, "Processing input: " + input.toDebugString());
+			//Log.debug(this, "Processing input: " + input.toDebugString());
 
 			/*
 			 * Go through all widgets and find the one targeted by the input
@@ -215,7 +215,7 @@ public class WidgetManager implements ServerListener {
 
 	@Override
 	public  void onWidgetAdd(Widget widgetFromServer) {
-		Log.debug(this, "Received widget from server: " + widgetFromServer.toDebugString());
+		Log.debug(this, "Received widget from server: " + widgetFromServer.getWidgetId());
 		/*
 		 * Go through all widgets
 		 */

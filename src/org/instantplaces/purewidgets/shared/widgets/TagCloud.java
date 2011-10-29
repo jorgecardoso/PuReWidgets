@@ -293,8 +293,8 @@ public class TagCloud extends Widget implements ActionListener {
 		}
 		
 		
-		Log.debug(this, "Max frequency: " + this.maxFrequency);
-		Log.debug(this, "Min frequency: " + this.minFrequency);
+	//	Log.debug(this, "Max frequency: " + this.maxFrequency);
+	//	Log.debug(this, "Min frequency: " + this.minFrequency);
 	}
 	
 	/**
@@ -347,7 +347,7 @@ public class TagCloud extends Widget implements ActionListener {
 				
 				tag.setNormalizedFrequency( (tag.getFrequency()-this.minFrequency)*1.0f/(this.maxFrequency-this.minFrequency) );
 				
-				Log.debug(this, "Setting normalized frequency: " + tag.getWord() + ":" +tag.getFrequency() + ": " + tag.getNormalizedFrequency());
+				//Log.debug(this, "Setting normalized frequency: " + tag.getWord() + ":" +tag.getFrequency() + ": " + tag.getNormalizedFrequency());
 			}
 		}
 	}

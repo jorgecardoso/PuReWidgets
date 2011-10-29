@@ -67,8 +67,11 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/**
 	 * The interval between widget requests to the server
 	 */
-	private static final int WIDGET_REQUEST_PERIOD = 1000;
+	private static final int WIDGET_REQUEST_PERIOD = 5000;
 
+	
+	private static enum NextWidgetAction {ADD, DELETE};
+	
 	/**
 	 * The applicationId on which this ServerCommunicator will be used.
 	 */
@@ -126,7 +129,8 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 */
 	private Timer timerWidget;
 
-
+	private NextWidgetAction nextWidgetAction;
+	
 	/**
 	 * List of widgets scheduled to be added to the server
 	 */
@@ -165,13 +169,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		};
 		timerInput.schedule(askPeriod);
 		
-		timerWidget = new Timer() {
-			@Override
-			public void run() {
-				periodicallySendWidgetsToServer();
-			}
-		};
-		timerWidget.schedule(this.currentWidgetRequestInterval); 		
+		
 	}
 	
 	/* (non-Javadoc)
@@ -180,7 +178,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	@Override
 	public void addWidget(Widget widget) {
 		this.toAddWidgetPool.add(widget);
-		this.timerWidget.schedule(1000);
+		this.nextWidgetAction = NextWidgetAction.ADD;
+		
+		startTimerWidget();
+
 	}
 
 	
@@ -191,7 +192,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 		try {
 			interactionService.deleteWidget(
-					this.getWidgetsUrl()+ (volatileOnly ? "&volatileonly=true":""),
+					this.getWidgetsUrl()+ (volatileOnly ? "&volatileonly=true" : ""),
 					new AsyncCallback<String>() {
 
 						@Override
@@ -251,8 +252,36 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	public void deleteWidget(Widget widget) {
 		//this.removeWidget(widget);
 		this.toDeleteWidgetPool.add(widget);
-		this.timerWidget.schedule(1000);
+		
+		/*
+		 * It may happen that the app deletes a widget which has not yet been removed from the toAdd pool
+		 * if the app deletes a widget that only recently was added...
+		 */
+		if ( this.toAddWidgetPool.contains(widget) ) {
+			this.toAddWidgetPool.remove(widget);
+		}
+		
+		this.nextWidgetAction = NextWidgetAction.DELETE;
+		
+		startTimerWidget();
 
+	}
+
+	/**
+	 * 
+	 */
+	private void startTimerWidget() {
+		if ( null == this.timerWidget ) {
+			
+			this.timerWidget = new Timer() {
+				@Override
+				public void run() {
+					periodicallySendWidgetsToServer();
+				}
+			};
+			timerWidget.schedule(1000); 		
+			
+		}
 	}
 	
 
@@ -335,16 +364,25 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	}
 
-	private void addWidgetToServer(Widget widget) {
-		Log.debug(this, "Adding widget " + widget.getWidgetId() + " to server");
-		WidgetJson widgetJSON = WidgetJson.create(widget);
-		widgetJSON.setApplicationId(appId);
-		widgetJSON.setPlaceId(placeId);
+	private void addWidgetToServer(ArrayList<Widget> widgets) {
+		Log.debug(this, "Adding " + widgets.size() + " widgets to server");
+		
+		ArrayList<WidgetJson> widgetJsonList = new ArrayList<WidgetJson>();
+		
+		for ( Widget widget : widgets ) {
+			WidgetJson widgetJSON = WidgetJson.create(widget);
+			widgetJSON.setApplicationId(appId);
+			widgetJSON.setPlaceId(placeId);
+			
+			widgetJsonList.add(widgetJSON);
+		}
+		
+		
 		
 		WidgetListJson widgetListJson = GenericJson.getNew();
-		ArrayList<WidgetJson> widgets = new ArrayList<WidgetJson>();
-		widgets.add(widgetJSON);
-		widgetListJson.setWidgetsFromArrayList(widgets);
+		//ArrayList<WidgetJson> widgets = new ArrayList<WidgetJson>();
+		//widgets.add(widgetJSON);
+		widgetListJson.setWidgetsFromArrayList(widgetJsonList);
 		
 		
 		Log.debugFinest(this, "Sending " + widgetListJson.toJsonString() + " to server");
@@ -474,39 +512,51 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	private void periodicallySendWidgetsToServer() {
 		//TODO: Send a list of widgets instead of one by one.
-		if (this.toAddWidgetPool.size() > 0) {
-			
-			/*
-			 * Take a widget from the top and put it at the end so that all of them will be processed
-			 * The widget will be definitely removed from this pool after confirmation from the server.
-			 */
-			Widget w = this.toAddWidgetPool.remove(0);
-			this.toAddWidgetPool.add(w);
-			
-			this.addWidgetToServer(w);
-		} else if (this.toDeleteWidgetPool.size() > 0) {
-			/*
-			 * Take a widget from the top and put it at the end so that all of them will be processed
-			 * The widget will be definitely removed from this pool after confirmation from the server.
-			 */			
-			Widget w = this.toDeleteWidgetPool.remove(0);
-			
-			this.toDeleteWidgetPool.add(w);
-			
-			/*
-			 * Only try to remove a widget if it has been already added on the server.
-			 * This is only a precaution because applications should keep a widget on the interface
-			 * long enough so that this will not happen (trying to delete a widget which hasn't has time
-			 * to be added in the first place)...
-			 */
-			if ( !this.toAddWidgetPool.contains(w) ) {
-				this.removeWidget(w);
+		
+		
+		if ( this.toAddWidgetPool.size() == 0 ) {
+			this.nextWidgetAction = NextWidgetAction.DELETE;
+		} 
+		if ( this.toDeleteWidgetPool.size() == 0 ) {
+			this.nextWidgetAction = NextWidgetAction.ADD;
+		}
+		
+		
+		if ( NextWidgetAction.ADD == this.nextWidgetAction ) {
+		
+			if (this.toAddWidgetPool.size() > 0) {
+				
+				/*
+				 * Send the current set of widgets to the server.
+				 */
+				this.addWidgetToServer(this.toAddWidgetPool);
+				
+			} 
+		}
+		
+		if ( NextWidgetAction.DELETE == this.nextWidgetAction ) {
+			if (this.toDeleteWidgetPool.size() > 0) {
+				
+				
+				this.removeWidget(this.toDeleteWidgetPool);
+				
 			}
+		}
+		
+		/*
+		 * Invert the next action
+		 */
+		if ( NextWidgetAction.ADD == this.nextWidgetAction ) {
+			this.nextWidgetAction = NextWidgetAction.DELETE;
+		} else if ( NextWidgetAction.DELETE == this.nextWidgetAction ) {
+			this.nextWidgetAction = NextWidgetAction.ADD;
 		}
 		
 		if ( this.toAddWidgetPool.size() > 0 || this.toDeleteWidgetPool.size() > 0 ) {
 			timerWidget.schedule(this.currentWidgetRequestInterval);
 			Log.debugFinest(this, "Scheduling next widget request in " + (this.currentWidgetRequestInterval/1000) +" seconds");
+		} else {
+			this.timerWidget = null;
 		}
 	}
 	
@@ -759,13 +809,36 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * 
 	 * @param widget The Widget to remove.
 	 */
-	private  void removeWidget(Widget widget) {
-		Log.debug(this, "Removing widget " +widget.getWidgetId());
+	private  void removeWidget(ArrayList<Widget> widgets) {
+		Log.debug(this, "Removing " + widgets.size() + " widgets ");
 		
+		/*
+		 * Create the URL for the DELETE method. Widget ids are passed on the 
+		 * 'widget' url parameter
+		 */
+		StringBuilder widgetsUrlParam = new StringBuilder();
+		widgetsUrlParam.append(this.getWidgetsUrl()).append("&widgets=");
+		
+		for ( int i = 0; i < widgets.size(); i++) {
+			Widget w = widgets.get(i); 
+			
+			/*
+			 * Make sure we don't use Urls with more than 255 characters...
+			 */
+			if ( (widgetsUrlParam.length() + w.getWidgetId().length()) > 255 ) {
+				widgetsUrlParam.deleteCharAt(widgetsUrlParam.length()-1);
+				break;
+			}
+			widgetsUrlParam.append(w.getWidgetId());
+			
+			if ( i < (widgets.size()-1) ) {
+				widgetsUrlParam.append(",");
+			}
+		}
 		
 		try {
 			interactionService.deleteWidget(
-					this.getWidgetsUrl(widget),
+					widgetsUrlParam.toString(),
 					new AsyncCallback<String>() {
 
 						@Override
