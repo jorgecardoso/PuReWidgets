@@ -69,10 +69,10 @@ FINEST (lowest value)
 	}
 	
 	/*
-	 * FINER
+	 * FINE
 	 */
 	public static void debug(String msg) {
-		Log.get().log(Level.FINER, msg);
+		Log.get().log(Level.FINE, msg);
 	}
 	
 	public static void debug(Object s, String msg) {
@@ -85,7 +85,20 @@ FINEST (lowest value)
 	
 	
 	
+	/*
+	 * FINEST
+	 */
+	public static void debugFinest(String msg) {
+		Log.get().log(Level.FINEST, msg);
+	}
 	
+	public static void debugFinest(Object s, String msg) {
+		debugFinest(s.getClass().getName() + ": " + msg);
+	}	
+	
+	public static void debugFinest(String s, String msg) {
+		debugFinest(s + ": " + msg);	
+	}
 	
 	
 }

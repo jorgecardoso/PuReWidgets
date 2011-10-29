@@ -329,8 +329,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	@Override
 	public void onStateChange(PlayerState state) {
 		Log.debug(this, "Player State: " +  state.name());
-		Log.debug(this, "Canceling stalled timer.");
 		stalledTimer.cancel();
+		
 		if ( state == PlayerState.PAUSED || state == PlayerState.UNSTARTED || state == PlayerState.BUFFERING) {
 			stalledTimer.schedule(STALLED_WAIT_PERIOD);
 		} 

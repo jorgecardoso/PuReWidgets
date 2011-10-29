@@ -70,7 +70,7 @@ public class EmbeddedPlayer extends Widget {
 
 	private void createSwf() {
 		this.createSwf(this.width, this.height);
-		Log.debug("Creating swf: " + this.width + " " + this.height);
+		//Log.debug("Creating swf: " + this.width + " " + this.height);
 	}
 
 	public void createSwf(String width, String height) {
@@ -212,7 +212,7 @@ public class EmbeddedPlayer extends Widget {
 		this.currentVideoID = videoId;
 		if (player != null) {
 			player.loadVideoById(videoId, startSeconds, suggestedQuality);
-			Log.debug("Loading: " + videoId);
+			//Log.debug("Loading: " + videoId);
 		} else {
 			Log.info("Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
@@ -526,7 +526,7 @@ public class EmbeddedPlayer extends Widget {
 
 	
 	private static void onReady(String playerId, YTPlayer playerElement) {
-		 Log.debug("OnReady: " + playerId + " " + playerElement);
+		Log.debugFinest("org.instantplaces.purewidgets.client.widgets.youtube.EmbeddedPlayer", "OnReady: " + playerId + " " + playerElement);
 		EmbeddedPlayer player = map.get(playerId);
 		if (player != null) {
 			player.player = playerElement;

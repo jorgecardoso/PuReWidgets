@@ -157,7 +157,7 @@ public class GuiButton extends GuiWidget {
 
 	@Override
 	public void onReferenceCodesUpdated() {
-		Log.debug(this + " Updating reference code");
+		//Log.debug(this + " Updating reference code");
 		this.lblReferenceCode.setText(ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
 	}
 

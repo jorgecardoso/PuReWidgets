@@ -20,6 +20,7 @@ import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -185,7 +186,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	@Override
 	public void deleteAllWidgets(boolean volatileOnly) {
-			Log.debug("Removing all volative widgets " );
+			Log.debug(this, "Removing all volative widgets " );
 		
 		
 		try {
@@ -215,13 +216,14 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processAllWidgetDeleteFailure(Throwable error) {
-		Log.warn("Error deleting all widgets from server."
+		Log.warn(this, "Error deleting all widgets from server."
 				+ error.getMessage());
 	}
 
 
 	private void processAllWidgetDeleteResponse(boolean success, String result, Throwable error) {
 		if ( success ) {
+			Log.debugFinest(this, result);
 			this.processAllWidgetDeleteSuccess(result);
 		} else {
 			this.processAllWidgetDeleteFailure(error);
@@ -229,7 +231,16 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}	
 	
 	private void processAllWidgetDeleteSuccess(String json) {
-		Log.debug(this, "Widgets deleted. " + json);
+		if ( LogConfiguration.loggingIsEnabled() ) {
+			WidgetListJson widgetListJson = WidgetListJson.fromJson(json);
+			ArrayList<Widget> widgetList = widgetListJson.getWidgets();
+			
+			StringBuilder sb = new StringBuilder();
+			for ( Widget w : widgetList ) {
+				sb.append(w.getWidgetId()).append(" ");
+			}
+			Log.debug(this, "Widgets deleted: " + sb.toString());
+		}
 	}		
 		
 	
@@ -325,7 +336,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	private void addWidgetToServer(Widget widget) {
-		
+		Log.debug(this, "Adding widget " + widget.getWidgetId() + " to server");
 		WidgetJson widgetJSON = WidgetJson.create(widget);
 		widgetJSON.setApplicationId(appId);
 		widgetJSON.setPlaceId(placeId);
@@ -335,7 +346,8 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		widgets.add(widgetJSON);
 		widgetListJson.setWidgetsFromArrayList(widgets);
 		
-		Log.debug("Adding " + widgetListJson.toJsonString() + " to server");
+		
+		Log.debugFinest(this, "Sending " + widgetListJson.toJsonString() + " to server");
 
 		try {
 			this.interactionService.postWidget(widgetListJson.toJsonString(),
@@ -428,7 +440,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 */
 	private void periodicallyAskForInputFromServer() {
 		try {
-			Log.debug(this, "Scheduling next application server connection in " + askPeriod + " ms.");
+			Log.debugFinest(this, "Scheduling next application server connection in " + askPeriod + " ms.");
 			timerInput.schedule(askPeriod);
 			
 			if ( !receivedLastRequest ) {
@@ -441,7 +453,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			
 			String url = applicationUrl + "/input?output=json&from="+this.getLastTimeStampAsString()+"&appid="+appId;
 			
-			Log.debug(this, "Contacting application server for input..." + url);
+			Log.debugFinest(this, "Contacting application server for input..." + url);
 			
 			interactionService.getWidgetInput(url, new AsyncCallback<String>() {
 				@Override
@@ -494,17 +506,18 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 		if ( this.toAddWidgetPool.size() > 0 || this.toDeleteWidgetPool.size() > 0 ) {
 			timerWidget.schedule(this.currentWidgetRequestInterval);
-			Log.debug(this, "Scheduling next widget request in 15 seconds");
+			Log.debugFinest(this, "Scheduling next widget request in " + (this.currentWidgetRequestInterval/1000) +" seconds");
 		}
 	}
 	
 	private void processApplicationsFailure(Throwable error) {
-		Log.warn("Error getting list of applications from server."
+		Log.warn(this, "Error getting list of applications from server."
 				+ error.getMessage());
 	}
 	
 	private void processApplicationsResponse(boolean success, String result, Throwable error) {
 		if ( success ) {
+			Log.debugFinest(this, result);
 			this.processApplicationsSuccess(result);
 		} else {
 			this.processApplicationsFailure(error);
@@ -512,8 +525,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processApplicationsSuccess(String json) {
-		Log.debug(this, "Applications list: " + json);
-
+		Log.debug(this, "Received applications list." );
 		
 		
 		
@@ -533,8 +545,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		 * 
 		 */
 		if (this.serverListener != null) {
-			Log.debug(this, "Notifying WidgetManager of list of applications. ");
 			this.serverListener.onPlaceApplicationsList(applicationList);
+		} else {
+			Log.warn(this, "No widget manager to notify about application list");
 		}
 			
 		
@@ -556,6 +569,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		receivedLastRequest = true;
 		updateAskInputPeriod();
 		if ( success && null != data  ) {
+			Log.debugFinest(this, data);
 			this.processInputSuccess(data);
 			failureCount = 0;
 		} else {
@@ -566,7 +580,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	private void processInputSuccess(String result) {
-		Log.debug("Received inputs " + result);
+		
 		try {
 
 			WidgetInputListJson inputListJSON = GenericJson.fromJson(result);
@@ -595,21 +609,22 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 			
 		} catch (Exception e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		}
 		
 	}
 
 	private void processWidgetAddFailure(Throwable error) {
-		Log.warn("Error adding widget to server."
+		Log.warn(this, "Error adding widget to server."
 				+ error.getMessage());
 		this.currentWidgetRequestInterval *= 2;
-		Log.warn("Increasing request interval to " + this.currentWidgetRequestInterval);
+		Log.warn(this, "Increasing request interval to " + this.currentWidgetRequestInterval);
 	}
 	
 	private void processWidgetAddResponse(boolean success, String result, Throwable error) {
 		if ( success ) {
+			Log.debugFinest(this, result);
 			this.processWidgetAddSuccess(result);
 		} else {
 			this.processWidgetAddFailure(error);
@@ -625,12 +640,20 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * @param json
 	 */
 	private void processWidgetAddSuccess(String json) {
-		Log.debug(this, "Received widget from server: " + json);
+		
 
 		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
 		
 		WidgetListJson widgetListJson = GenericJson.fromJson(json);
 		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
+		
+		if ( LogConfiguration.loggingIsEnabled() ) {
+			if ( null != widgetList ) {
+				Log.debug(this, "Received " + widgetList.size()+ " widgets from server.");
+			} else {
+				Log.warn(this, "Could not extract any widget from server response. " + json);
+			}
+		}
 		
 		for (Widget widget : widgetList) {
 			
@@ -645,7 +668,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 				}
 			}
 			if (null != toRemove) {
-				Log.debug(this, "Removing widget from toAdd pool.");
+				Log.debug(this, "Removing widget " + toRemove.getWidgetId() + " from toAdd pool.");
 				this.toAddWidgetPool.remove(toRemove);
 			} else {
 				Log.warn(this, "Widget not found in toAdd pool!");
@@ -656,24 +679,26 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			 * 
 			 */
 			if (this.serverListener != null) {
-				Log.debug(this, "Notifying WidgetManager of: " + widget);
 				this.serverListener.onWidgetAdd(widget);
+			} else {
+				Log.warn(this, "No widget manager to notify about widget addition.");
 			}
 			
 		}
 	}
 	
 	private void processWidgetDeleteFailure(Throwable error) {
-		Log.warn("Error deleting widget to server."
+		Log.warn(this, "Error deleting widget from server."
 				+ error.getMessage());
 		
 		this.currentWidgetRequestInterval *= 2;
-		Log.warn("Increasing request interval to " + this.currentWidgetRequestInterval);
+		Log.warn(this, "Increasing request interval to " + this.currentWidgetRequestInterval);
 	}
 
 
 	private void processWidgetDeleteResponse(boolean success, String result, Throwable error) {
 		if ( success ) {
+			Log.debugFinest(this, result);
 			this.processWidgetDeleteSuccess(result);
 		} else {
 			this.processWidgetDeleteFailure(error);
@@ -681,15 +706,23 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}	
 	
 	private void processWidgetDeleteSuccess(String json) {
-		Log.debug(this, "Widget deleted: " + json);
-
+		
 		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
 		
 		WidgetListJson widgetListJson = GenericJson.fromJson(json);
 		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 		
-		for (Widget widget : widgetList) {
+		if ( LogConfiguration.loggingIsEnabled() ) {
+			if ( null != widgetList ) {
+				Log.debug(this, "Received " + widgetList.size()+ " widgets deleted from server.");
+			} else {
+				Log.warn(this, "Could not extract any widget from server response. " + json);
+			}
 		
+		}
+		
+		for (Widget widget : widgetList) {
+			Log.debug(this, "Widget " + widget.getWidgetId() + "deleted from server ");
 			/*
 			 * Remove widget from pool 
 			 */
@@ -712,8 +745,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			 * 
 			 */
 			if (this.serverListener != null) {
-				Log.debug(this, "Notifying WidgetManager of: " + widget);
+				
 				this.serverListener.onWidgetDelete(widget);
+			} else {
+				Log.warn(this, "No widget manager to notify about widget deletion.");
 			}
 			
 		}
@@ -725,7 +760,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * @param widget The Widget to remove.
 	 */
 	private  void removeWidget(Widget widget) {
-		Log.debug("Removing widget: " + widget.toDebugString());
+		Log.debug(this, "Removing widget " +widget.getWidgetId());
 		
 		
 		try {
@@ -762,7 +797,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		try {
 			return Long.parseLong(value);
 		} catch (Exception e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 		}
 		return 0;
 	}

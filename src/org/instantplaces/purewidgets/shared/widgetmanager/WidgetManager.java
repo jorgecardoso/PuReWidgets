@@ -224,8 +224,7 @@ public class WidgetManager implements ServerListener {
 
 		for (Widget widget : this.getWidgetList()) {
 			if (widgetFromServer.getWidgetId().equals(widget.getWidgetId())) {
-				Log.debug(this,
-						"Checking local widget: " + widget.toDebugString());
+				
 
 				receivedWidget = widget;
 
@@ -260,7 +259,7 @@ public class WidgetManager implements ServerListener {
 		}
 		if (changed) {
 			Log.debug(this, "Updating reference code on widget"
-					+ receivedWidget.toDebugString());
+					+ receivedWidget.getWidgetId());
 			receivedWidget.onReferenceCodesUpdated();
 		}
 

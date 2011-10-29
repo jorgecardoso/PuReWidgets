@@ -245,7 +245,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	@Override
 	public final void inputFeedbackStarted(InputFeedback<? extends GuiWidget> feedback) {
-		Log.debug(this, "Input feedback started: " + feedback.toString());
+		Log.debugFinest(this, "Input feedback started: " + feedback.toString());
 		
 		/*
 		 * If feedback for an accepted input has started, trigger the
@@ -285,10 +285,10 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	@Override
 	public final void onInput(ArrayList<InputEvent> inputList) {
-		Log.debug(this, "Received input event list ");
+		Log.debugFinest(this, "Received input event list ");
 		
 		for ( InputEvent ie : inputList ) {
-			Log.debug(this, "  Processing: " + (ie != null ? ie.toDebugString() : "null input event"));
+			Log.debugFinest(this, "  Processing: " + (ie != null ? ie.toDebugString() : "null input event"));
 			InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(ie);
 		
 			
@@ -319,7 +319,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	@Override
 	public void onReferenceCodesUpdated() {
-		Log.debug("AbstractGuiWidget Updating ReferenceCodes");
+		Log.debugFinest("AbstractGuiWidget Updating ReferenceCodes");
 	}
 	
 	
@@ -501,7 +501,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 * @param widget
 	 */
 	public void setWidget(Widget widget) {
-		Log.debug("AbstractGuiWidget " + this.toDebugString());
+		//Log.debug("AbstractGuiWidget " + this.toDebugString());
 		this.widget = widget; 
 		this.widget.setInputListener(this);
 		this.widget.setReferenceCodeListener(this);
@@ -541,9 +541,9 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 *            be created and sent.
 	 */
 	protected void fireActionEvent(ActionEvent<? extends GuiWidget> ae) {
-		Log.debug(this, "Firing " + ae.toDebugString());
+		//Log.debug(this, "Firing " + ae.toDebugString());
 		for ( ActionListener al : this.actionListeners ) {
-			Log.debug(this, "   on " + al.toString());
+			//Log.debug(this, "   on " + al.toString());
 			al.onAction(ae);
 		}
 		

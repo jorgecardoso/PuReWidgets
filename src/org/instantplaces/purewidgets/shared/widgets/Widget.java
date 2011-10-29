@@ -246,12 +246,11 @@ public class Widget {
 	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#addWidgetOption(org.instantplaces.purewidgets.shared.widgets.WidgetOptionInterface)
 	 */
 	public void addWidgetOption(WidgetOption option) {
-		Log.debug(this, "Adding widget option: " + option);
+		
 		if (!this.widgetOptions.contains(option)) {
 			this.widgetOptions.add(option);
 		}
-		// Log.debug(this, "Adding widget to widgetmanager: " + this);
-		// WidgetManager.get().addWidget(this);
+		
 	}
 
 	public String getApplicationId() {
@@ -298,7 +297,7 @@ public class Widget {
 	 * @see org.instantplaces.purewidgets.shared.events.InputListener#onInput(org.instantplaces.purewidgets.shared.events.InputEvent)
 	 */
 	public final void onInput(ArrayList<InputEvent> ie) {
-		Log.debug(this, "Received event: " + ie);
+		Log.debugFinest(this, "Received event: " + ie);
 		
 		// You want null? You can't handle null...
 		if (ie == null) {
@@ -331,13 +330,13 @@ public class Widget {
 	 * @see org.instantplaces.purewidgets.shared.events.ReferenceCodeListener#onReferenceCodesUpdated()
 	 */
 	public final void onReferenceCodesUpdated() {
-		Log.debug(this, "Received onReferenceCodesUpdated");
+		Log.debugFinest(this, "Received onReferenceCodesUpdated");
 		
 		/*
 		 * Cascade the input to the input listener for possible feedback
 		 */
 		if (null != this.referenceCodeListener) {
-			Log.debug(this, "Cascading onReferenceCodesUpdated to "
+			Log.debugFinest(this, "Cascading onReferenceCodesUpdated to "
 					+ this.referenceCodeListener);
 			this.referenceCodeListener.onReferenceCodesUpdated();
 		}  else {
@@ -356,12 +355,12 @@ public class Widget {
 	}
 
 	public final void removeFromServer() {
-		Log.debug(this, "Removing widget from widgetmanager: " + this);
+		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
 		WidgetManager.get().removeWidget(this);
 		
 		
 		for (Widget w : this.dependentWidgets ) {
-			Log.debug(this, "Removing dependent widgets from widgetmanager: " + w);
+			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
 			WidgetManager.get().removeWidget(w);
 		}
 	}
@@ -373,17 +372,17 @@ public class Widget {
 	 */
 	public void removeWidgetOption( WidgetOption option ) {
 		
-		Log.debug(this, "Removing widget option: " + option);
+		Log.debugFinest(this, "Removing widget option: " + option);
 		this.widgetOptions.remove(option);
 
 	}
 
 	public final void sendToServer() {
-		Log.debug(this, "Adding widget to widgetmanager: " + this);
+		Log.debugFinest(this, "Adding widget to widgetmanager: " + this);
 		WidgetManager.get().addWidget(this);
 		
 		for (Widget w : this.dependentWidgets ) {
-			Log.debug(this, "Adding dependent widgets to widgetmanager: " + w);
+			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w);
 			WidgetManager.get().addWidget(w);
 		}
 		
@@ -411,8 +410,7 @@ public class Widget {
 	public void setReferenceCodeListener(
 			ReferenceCodeListener referenceCodeListener) {
 		this.referenceCodeListener = referenceCodeListener;
-		Log.debug("AbstractWidget setReferencecodeListener "
-				+ referenceCodeListener);
+		
 
 	}
 
@@ -439,7 +437,7 @@ public class Widget {
 		 */
 		if (id == null) {
 			this.widgetId = String.valueOf(this.hashCode());
-			Log.debug("Null id, assigning object hashCode: " + this.widgetId);
+			Log.warn(this, "Null id, assigning object hashCode: " + this.widgetId);
 		} else {
 			this.widgetId = id;
 		}
@@ -453,7 +451,6 @@ public class Widget {
 	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#setWidgetOptions(java.util.ArrayList)
 	 */
 	public void setWidgetOptions(ArrayList<WidgetOption> options) {
-		Log.debug(this, "Setting widget options: " + options.toString());
 		this.widgetOptions = options;
 	}
 
@@ -480,9 +477,7 @@ public class Widget {
 	 * @param ae The ActionEvent to send
 	 */
 	public final void fireActionEvent(ActionEvent<?> ae) {
-		Log.debug(this, "Firing action event: " + ae.toDebugString() );
 		for (ActionListener handler : actionListeners) {
-			Log.debug(this, "   on " + handler.toString());
 			handler.onAction(ae);
 		}
 	}
@@ -514,7 +509,7 @@ public class Widget {
 	 * reference codes.
 	 */
 	protected void handleReferenceCodesUpdate() {
-		Log.debug(this, "handleReferenceCodesUpdate");
+		//Log.debug(this, "handleReferenceCodesUpdate");
 	}
 
 
