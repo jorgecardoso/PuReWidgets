@@ -30,7 +30,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class ClientServerCommunicator implements ServerCommunicator {
 	
-	
 	private static final String INTERACTION_SERVER = "http://im-instantplaces.appspot.com";
 		
 	/**
@@ -67,7 +66,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/**
 	 * The interval between widget requests to the server
 	 */
-	private static final int WIDGET_REQUEST_PERIOD = 5000;
+	private static final int WIDGET_REQUEST_PERIOD = 10000;
 
 	
 	private static enum NextWidgetAction {ADD, DELETE};
@@ -616,6 +615,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * @param error
 	 */
 	private void processInputResponse(boolean success, String data, Throwable error) {
+		Log.info(data);
 		receivedLastRequest = true;
 		updateAskInputPeriod();
 		if ( success && null != data  ) {
@@ -673,6 +673,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processWidgetAddResponse(boolean success, String result, Throwable error) {
+		Log.info(result);
 		if ( success ) {
 			Log.debugFinest(this, result);
 			this.processWidgetAddSuccess(result);

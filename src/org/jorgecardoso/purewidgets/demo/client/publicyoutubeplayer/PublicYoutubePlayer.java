@@ -205,7 +205,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 	@Override
 	public void onModuleLoad() {
-		PublicDisplayApplication.load(this, "PublicYoutubePlayer");
+		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true);
 		
 		ReferenceCodeFormatter.setLeftBracket("[");
 		ReferenceCodeFormatter.setRightBracket("]");

@@ -31,7 +31,7 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 	
 	@Override
 	public void onModuleLoad() {
-		PublicDisplayApplication.load(this, "SystemStatusBar");
+		PublicDisplayApplication.load(this, "SystemStatusBar", true);
 		
 		
 		WidgetManager.get().setApplicationListListener(this);

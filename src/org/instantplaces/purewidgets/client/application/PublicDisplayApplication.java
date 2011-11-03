@@ -45,9 +45,13 @@ public class PublicDisplayApplication {
 	private static boolean loaded = false;
 	
 	private static String appName;
+	
 	private static Storage storage;
 	
-	public static void load(EntryPoint entryPoint, String defaultAppName) {
+	private static boolean autoDeleteVolatile; 
+	
+	public static void load(EntryPoint entryPoint, String defaultAppName, boolean autoDeleteVolatile) {
+		
 		String place = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
 		
 		if (null == place) {
@@ -71,8 +75,11 @@ public class PublicDisplayApplication {
 		/*
 		 * Delete all volatile widgets that may have left on the server before
 		 */
-		Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
-		WidgetManager.get().removeAllWidgets(true);
+		PublicDisplayApplication.autoDeleteVolatile = autoDeleteVolatile;
+		if ( autoDeleteVolatile ) {
+			Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
+			WidgetManager.get().removeAllWidgets(true);
+		}
 		
 		PublicDisplayApplication.loaded = true;
 		
@@ -82,8 +89,10 @@ public class PublicDisplayApplication {
 
 			@Override
 			public void onClose(CloseEvent<Window> event) {
-				Log.debug(this, "Removing volatile widgets");
-				WidgetManager.get().removeAllWidgets(true);
+				if ( PublicDisplayApplication.autoDeleteVolatile ) {
+					Log.debug(this, "Removing volatile widgets");
+					WidgetManager.get().removeAllWidgets(true);
+				}
 			}});
 	}
 	

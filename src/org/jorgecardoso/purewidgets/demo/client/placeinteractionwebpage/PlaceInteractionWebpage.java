@@ -48,7 +48,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		sightingService = GWT.create(SightingService.class);
 		((ServiceDefTarget) sightingService).setServiceEntryPoint("/sighting");
 		
-		PublicDisplayApplication.load(this, "PlaceInteractionWebpage");
+		PublicDisplayApplication.load(this, "PlaceInteractionWebpage", true);
 		
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
@@ -141,7 +141,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		FlowPanel flowPanel = new FlowPanel();
 		for ( WidgetOption wo : widgetOptions ) {
-			Label label = new Label(wo.getReferenceCode());
+			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + wo.getReferenceCode());
 			flowPanel.add(label);
 			TextBox textBox = new TextBox(); 
 			flowPanel.add(textBox);
@@ -157,7 +157,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		FlowPanel flowPanel = new FlowPanel();
 		for ( WidgetOption wo : widgetOptions ) {
-			Label label = new Label(wo.getReferenceCode());
+			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + wo.getReferenceCode());
 			flowPanel.add(label);
 			
 			Button btn = new Button("send");
