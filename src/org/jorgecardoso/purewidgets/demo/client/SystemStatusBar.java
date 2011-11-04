@@ -83,18 +83,18 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 		 */
 		RootPanel.get("features").clear();
 		RootPanel.get("features").add(new Label("Application: " + app.getApplicationId()));
-		for ( Widget widget : app.getWidgets() ) {
-			if ( widget.isVolatileWidget() ) { 
-				continue;
-			}
-			
-			if ( widget.getWidgetOptions().size() == 1 ) {
-				RootPanel.get("features").add(new Label(widget.getShortDescription() + " [" + widget.getWidgetOptions().get(0).getReferenceCode()  + "] : " + widget.getLongDescription() + "<" + widget.getControlType() + ">"));
-			} else if ( widget.getWidgetOptions().size() > 1 ) { 
-				
-				
-			}
-		}
+//		for ( Widget widget : app.getWidgets() ) {
+//			if ( widget.isVolatileWidget() ) { 
+//				continue;
+//			}
+//			
+//			if ( widget.getWidgetOptions().size() == 1 ) {
+//				RootPanel.get("features").add(new Label(widget.getShortDescription() + " [" + widget.getWidgetOptions().get(0).getReferenceCode()  + "] : " + widget.getLongDescription() + "<" + widget.getControlType() + ">"));
+//			} else if ( widget.getWidgetOptions().size() > 1 ) { 
+//				
+//				
+//			}
+//		}
 		
 	}
 
@@ -109,19 +109,19 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 			Application ap = it.next();
 			
 			
-			if ( ap.getWidgets() != null ) {
-				boolean delete = true;
-				for (Widget w : ap.getWidgets() ) {
-					if ( !w.isVolatileWidget() ) {
-						delete = false;
-					}
-				}
-				if ( delete ) {
-					it.remove();
-				}
-			} else {
-				it.remove();
-			}
+//			if ( ap.getWidgets() != null ) {
+//				boolean delete = true;
+//				for (Widget w : ap.getWidgets() ) {
+//					if ( !w.isVolatileWidget() ) {
+//						delete = false;
+//					}
+//				}
+//				if ( delete ) {
+//					it.remove();
+//				}
+//			} else {
+//				it.remove();
+//			}
 		}
 		
 		this.apps = applications;

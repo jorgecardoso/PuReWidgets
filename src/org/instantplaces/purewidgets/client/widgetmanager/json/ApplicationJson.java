@@ -49,32 +49,8 @@ public class ApplicationJson extends GenericJson {
 
 
 
-	public final ArrayList<Widget> getWidgets() {
-		JsArray<WidgetJson> widgetsJs = getWidgetsAsJsArray();
-		ArrayList<Widget> widgets = new ArrayList<Widget>();//[optionsJs.length()];
-		
-		for (int i = 0; i < widgetsJs.length(); i++) {
-			widgets.add(widgetsJs.get(i).getWidget());
-		}
-		
-		return widgets;
-	}
-	
-	public final native JsArray<WidgetJson> getWidgetsAsJsArray() /*-{
-		return this.widgets;
-	}-*/;
-
-
-
-	public final native void addWidget(WidgetJson widget) /*-{
-		if (typeof(this.widgets) == "undefined") {
-			this.widgets = new Array();
-		}
-		this.widget.push(widget);
-	}-*/;
-
 	/**
-	 * Converts this widget to a JSON representation 
+	 * Converts this application to a JSON representation 
 	 * @return
 	 */
 	public static ApplicationJson create(Application application) {
@@ -83,16 +59,13 @@ public class ApplicationJson extends GenericJson {
 		aJSON.setPlaceId( application.getPlaceId() );
 		aJSON.setApplicationId( application.getApplicationId() );
 		
-		for ( Widget widget : application.getWidgets() ) {
-			aJSON.addWidget( WidgetJson.create(widget) );
-		}
+		
 		return aJSON;
 	}
 
 	public final Application getApplication() {
 		Application a = new Application( this.getPlaceId(), this.getApplicationId() );
 		
-		a.setWidgets(this.getWidgets());
 		return a;
 	}
 

@@ -15,8 +15,7 @@ public class Application {
 	
 	private String applicationId;
 	
-	private ArrayList<Widget> widgets;
-
+	
 	public Application(String placeId, String appId) {
 		this.placeId = placeId;
 		this.applicationId = appId;
@@ -49,19 +48,6 @@ public class Application {
 		this.applicationId = appId;
 	}
 
-	/**
-	 * @return the widgets
-	 */
-	public ArrayList<Widget> getWidgets() {
-		return widgets;
-	}
-
-	/**
-	 * @param widgets the widgets to set
-	 */
-	public void setWidgets(ArrayList<Widget> widgets) {
-		this.widgets = widgets;
-	}
 	
 	
 	

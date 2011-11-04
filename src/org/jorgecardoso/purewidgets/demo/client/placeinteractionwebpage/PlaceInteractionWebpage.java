@@ -119,9 +119,9 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			VerticalPanel p = new VerticalPanel();
 			
 			tabPanelApplications.add(p, app.getApplicationId());
-			for ( org.instantplaces.purewidgets.shared.widgets.Widget w : app.getWidgets() ) {
-				p.add(getHtmlWidget(w));
-			}
+//			for ( org.instantplaces.purewidgets.shared.widgets.Widget w : app.getWidgets() ) {
+//				p.add(getHtmlWidget(w));
+//			}
 		}
 		tabPanelApplications.selectTab(selectedTab);
 	}
