@@ -12,4 +12,5 @@ public interface ServerListener {
 	public void onWidgetDelete(Widget widget);
 	
 	public void onPlaceApplicationsList(ArrayList<Application> applicationList);
+	public void onApplicationWidgetsList(ArrayList<Widget> widgetList);
 }

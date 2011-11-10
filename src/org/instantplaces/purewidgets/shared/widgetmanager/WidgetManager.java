@@ -312,11 +312,27 @@ public class WidgetManager implements ServerListener {
 		this.communicator.getPlaceApplicationsList(  );
 	}	
 	
+	/**
+	 * Returns the list of widgets from the specified application.
+	 * @param active
+	 */
+	public void getApplicationWidgetsList(String placeId, String applicationId) {
+		Log.debug(this, "Getting widgets from application: " + applicationId);
+		this.communicator.getApplicationWidgetsList( placeId, applicationId );
+	}	
+	
+	
 	@Override
 	public void onPlaceApplicationsList(ArrayList<Application> applications) {
 		if ( null != this.applicationListListener ) {
 			this.applicationListListener.onApplicationList(applications);
 		}
-
+	}
+	
+	@Override
+	public void onApplicationWidgetsList(ArrayList<Widget> widgets) {
+		if ( null != this.applicationListListener ) {
+			this.applicationListListener.onWidgetsList( widgets );
+		}
 	}
 }

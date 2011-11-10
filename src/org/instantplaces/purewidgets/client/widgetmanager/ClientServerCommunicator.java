@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  */
 public class ClientServerCommunicator implements ServerCommunicator {
-	
+	//"http://localhost:8080";//
 	private static final String INTERACTION_SERVER = "http://im-instantplaces.appspot.com";
 		
 	/**
@@ -288,7 +288,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	public void getPlaceApplicationsList() {
 		Log.debug( this, "Getting applications from server: " + getApplicationsUrl() );
 		try {
-			interactionService.getApplicationsFromPlace(getApplicationsUrl(), 
+			interactionService.get(getApplicationsUrl(), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -307,7 +307,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 					});
 		} catch (Exception e) {
-			ClientServerCommunicator.this.processWidgetDeleteResponse(false, null, e);
+			ClientServerCommunicator.this.processApplicationsResponse(false, null, e);
 			e.printStackTrace();
 		}
 	}
@@ -316,7 +316,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	public void getPlaceApplicationsList(boolean active) {
 		Log.debug( this, "Getting applications from server: " + getApplicationsUrl()+"&active=" + (active?"true":"false") );
 		try {
-			interactionService.getApplicationsFromPlace(getApplicationsUrl()+"&active=" + (active?"true":"false"), 
+			interactionService.get(getApplicationsUrl()+"&active=" + (active?"true":"false"), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -431,14 +431,16 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	
 	private String getWidgetsUrl() {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget?output=json&appid=" +this.appId ;
+		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget?appid=" +this.appId ;
 	}
 	
 	
-	
-	
 	private String getWidgetsUrl(Widget widget) {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget/" + widget.getWidgetId() + "?output=json&appid=" +this.appId ;
+		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget/" + widget.getWidgetId() + "?appid=" +this.appId ;
+	}
+	
+	private String getWidgetsUrl(String placeId, String applicationId) {
+		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +this.appId ;
 	}
 
 	/**
@@ -469,7 +471,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		if (r > tHigh)
 			r = tHigh;
 		return r;
-
 	}
 	
 	/**
@@ -478,21 +479,23 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	private void periodicallyAskForInputFromServer() {
 		try {
 			Log.debugFinest(this, "Scheduling next application server connection in " + askPeriod + " ms.");
-			timerInput.schedule(askPeriod);
+			timerInput.schedule( askPeriod );
 			
 			if ( !receivedLastRequest ) {
 				Log.debug(this, "Haven't receive response to last request. Postponing new request.");
+				
+				// we just skip one, so mark as if we received the request so that in the next time we will ask again
+				receivedLastRequest = true;
 				return;
 			}
 			
 			receivedLastRequest = false;
 			
-			
-			String url = applicationUrl + "/input?output=json&from="+this.getLastTimeStampAsString()+"&appid="+appId;
+			String url = applicationUrl + "/input?from="+this.getLastTimeStampAsString()+"&appid="+appId;
 			
 			Log.debugFinest(this, "Contacting application server for input..." + url);
 			
-			interactionService.getWidgetInput(url, new AsyncCallback<String>() {
+			interactionService.get(url, new AsyncCallback<String>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					processInputResponse(false, null, caught);
@@ -580,10 +583,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 		ApplicationListJson applicationListJson = GenericJson.fromJson(json);
 		
-		/*JsArray<ApplicationJson> a = applicationListJson.getApplicationsAsJsArray(); 
-		
-		Log.debug(this, "Total applications: " + a.length());
-		*/
+
 		
 		ArrayList<Application> applicationList = applicationListJson.getApplications();
 		
@@ -883,6 +883,72 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		this.askPeriod = map(0, ClientServerCommunicator.MAX_FAILURE_COUNT,
 				ClientServerCommunicator.MIN_ASK_PERIOD,
 				ClientServerCommunicator.MAX_ASK_PERIOD, this.failureCount);
+	}
+
+
+	
+	@Override
+	public void getApplicationWidgetsList(String placeId, String applicationId) {
+		Log.debug( this, "Getting widgets from server: " + this.getWidgetsUrl(placeId, applicationId));
+		try {
+			interactionService.get(this.getWidgetsUrl(placeId, applicationId), 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							ClientServerCommunicator.this.processWidgetsResponse(
+									false, null, caught);
+
+						}
+
+						@Override
+						public void onSuccess(String result) {
+							ClientServerCommunicator.this.processWidgetsResponse(
+									true, result, null);
+
+						}
+
+					});
+		} catch (Exception e) {
+			ClientServerCommunicator.this.processWidgetsResponse(false, null, e);
+			e.printStackTrace();
+		}
+		
+	}
+	
+
+	private void processWidgetsFailure(Throwable error) {
+		Log.warn(this, "Error getting list of widgets from server."
+				+ error.getMessage());
+	}
+	
+	private void processWidgetsResponse(boolean success, String result, Throwable error) {
+		if ( success ) {
+			Log.debugFinest(this, result);
+			this.processWidgetsSuccess(result);
+		} else {
+			this.processWidgetsFailure(error);
+		}
+	}
+	
+	private void processWidgetsSuccess(String json) {
+		Log.debug(this, "Received widgets list." );
+		
+		WidgetListJson widgetListJson = GenericJson.fromJson(json);
+		
+		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
+			
+		/*
+		 * Notify the WidgetManager
+		 * 
+		 */
+		if (this.serverListener != null) {
+			this.serverListener.onApplicationWidgetsList(widgetList);
+		} else {
+			Log.warn(this, "No widget manager to notify about application list");
+		}
+			
+		
 	}
 	
 }

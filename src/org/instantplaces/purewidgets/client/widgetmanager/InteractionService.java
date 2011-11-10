@@ -13,12 +13,13 @@ public interface InteractionService extends RemoteService {
 	
 	String postWidget(String json, String url) throws InteractionManagerException;
 	
-	String getWidget(String url) throws InteractionManagerException;
+	String get(String url) throws InteractionManagerException;
 	
-	String getWidgetInput(String url) throws InteractionManagerException;
+//	String getWidgetInput(String url) throws InteractionManagerException;
 	
 	String deleteWidget( String url) throws InteractionManagerException;
 	
-	String getApplicationsFromPlace(String url) throws InteractionManagerException;
+//	String getApplicationsFromPlace(String url) throws InteractionManagerException;
+	
 	
 }

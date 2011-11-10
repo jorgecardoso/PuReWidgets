@@ -19,10 +19,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class InteractionServiceImpl extends RemoteServiceServlet implements
 		InteractionService {
 	
-	@Override
-	public String getApplicationsFromPlace(String url)  throws InteractionManagerException {
-		return doMethod("GET", null, url);
-	}
+//	@Override
+//	public String getApplicationsFromPlace(String url)  throws InteractionManagerException {
+//		return doMethod("GET", null, url);
+//	}
 	
 	@Override
 	public String postWidget(String json, String url) throws InteractionManagerException  {
@@ -31,15 +31,15 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 	
 	
 	@Override
-	public String getWidget(String url) throws InteractionManagerException  {
+	public String get(String url) throws InteractionManagerException  {
 		return doMethod("GET", null, url);
 	}
 	
 	
-	@Override
-	public String getWidgetInput(String url) throws InteractionManagerException  {
-		return doMethod("GET", null, url);
-	}
+//	@Override
+//	public String getWidgetInput(String url) throws InteractionManagerException  {
+//		return doMethod("GET", null, url);
+//	}
 	
 	
 	@Override

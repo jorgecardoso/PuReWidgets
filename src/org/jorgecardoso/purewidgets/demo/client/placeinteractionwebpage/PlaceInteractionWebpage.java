@@ -34,15 +34,22 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListener {
-	Timer timer;
+	private Timer timerApplications;
+	private Timer timerWidgets;
+	
+	private String currentApplicationId;
+	
+	
 	public static SightingServiceAsync sightingService;
 	
-	ArrayList<Application> apps;
+	ArrayList<Application> applications;
 	
 	TabPanel tabPanelApplications;
 	public static LoginInfo loginInfo = null;
 	private Anchor signInLink = new Anchor("Sign In");
 	private Label labelId;
+	
+	
 	@Override
 	public void onModuleLoad() {
 		sightingService = GWT.create(SightingService.class);
@@ -53,14 +60,24 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
-		timer = new Timer() {
+		timerApplications = new Timer() {
 			@Override
 			public void run() {
-				refresh();
+				refreshApplications();
 			}
 		};
 		
-		timer.scheduleRepeating(15*1000);
+		timerApplications.scheduleRepeating(60*1000);
+		
+		timerWidgets = new Timer() {
+			@Override
+			public void run() {
+				refreshWidgets();
+			}
+		};
+		
+		timerWidgets.scheduleRepeating(15*1000);
+		
 		
 		labelId = new Label();
 		RootPanel.get().add(labelId);
@@ -93,12 +110,30 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 	
 	
-	protected void refresh() {
+	protected void refreshApplications() {
 		Log.debug(this, "Asking server for list of applications");
 		WidgetManager.get().getPlaceApplicationsList();	
 	}
 
+	protected void refreshWidgets() {
+		Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
+		
+		//tabPanelApplications.getTabBar()
+		
+		if ( null != this.currentApplicationId ) {
+			WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
+			
+		}
+	}
+	
 
+	@Override
+	public void onWidgetsList(
+			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+		
+		
+	}
+	
 	@Override
 	public void onApplicationList(ArrayList<Application> applicationList) {
 		/*
@@ -106,6 +141,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		 * TODO: Improve efficiency by checking if the widget is already there and
 		 * if any widget needs to be deleted or updated.
 		 */
+		this.applications = applicationList;
+		
 		RootPanel.get("features").clear();
 		int selectedTab = 0;
 		if ( tabPanelApplications != null ) {
@@ -119,12 +156,11 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			VerticalPanel p = new VerticalPanel();
 			
 			tabPanelApplications.add(p, app.getApplicationId());
-//			for ( org.instantplaces.purewidgets.shared.widgets.Widget w : app.getWidgets() ) {
-//				p.add(getHtmlWidget(w));
-//			}
+
 		}
 		tabPanelApplications.selectTab(selectedTab);
 	}
+	
 	
 	Widget getHtmlWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		
@@ -166,4 +202,6 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		}
 		return flowPanel;
 	}
+
+
 }

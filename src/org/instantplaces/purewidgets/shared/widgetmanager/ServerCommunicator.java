@@ -15,6 +15,8 @@ public interface ServerCommunicator {
 	public void getPlaceApplicationsList(boolean active);
 	public void getPlaceApplicationsList();
 	
+	public void getApplicationWidgetsList( String placeId, String applicationId );
+	
 	public void setServerListener(ServerListener listener);
 	
 	/**

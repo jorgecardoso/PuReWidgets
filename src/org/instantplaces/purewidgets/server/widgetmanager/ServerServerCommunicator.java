@@ -173,7 +173,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			String response = null;
 			
 			try {
-				response = interactionService.getWidgetInput(url);
+				response = interactionService.get(url);
 			} catch (InteractionManagerException e) {
 				Log.error( e.getMessage());
 				e.printStackTrace();
@@ -307,5 +307,11 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			Log.error(e.getMessage());
 		}
 		return 0;
+	}
+
+	@Override
+	public void getApplicationWidgetsList(String placeId, String applicationId) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

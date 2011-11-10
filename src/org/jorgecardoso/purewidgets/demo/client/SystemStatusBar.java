@@ -138,5 +138,12 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 		
 	}
 
+
+	@Override
+	public void onWidgetsList(ArrayList<Widget> widgetList) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }
