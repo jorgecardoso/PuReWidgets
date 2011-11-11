@@ -37,7 +37,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	private Timer timerApplications;
 	private Timer timerWidgets;
 	
-	private String currentApplicationId;
+	
 	
 	
 	public static SightingServiceAsync sightingService;
@@ -45,6 +45,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	ArrayList<Application> applications;
 	
 	TabPanel tabPanelApplications;
+	
+	
 	public static LoginInfo loginInfo = null;
 	private Anchor signInLink = new Anchor("Sign In");
 	private Label labelId;
@@ -116,49 +118,153 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 
 	protected void refreshWidgets() {
-		Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
-		
-		//tabPanelApplications.getTabBar()
-		
-		if ( null != this.currentApplicationId ) {
-			WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
+		if ( null != this.tabPanelApplications ) {
+			int selected = tabPanelApplications.getTabBar().getSelectedTab();
+			Log.debug(this, "Selected Tab: " + selected);
+			String currentApplicationId = tabPanelApplications.getTabBar().getTabHTML(selected);
+			Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
+			
+				WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
+
 		}
+
+		
 	}
 	
 
 	@Override
 	public void onWidgetsList(
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+		Log.debug(this, "Received widget list" + widgetList.toString());
+		
+		if ( null != widgetList && widgetList.size() > 0 ) {
+			
+			ArrayList<String> widgetIds = new ArrayList<String>();
+			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
+				widgetIds.add(widget.getWidgetId());
+			}
+			String applicationId = widgetList.get(0).getApplicationId();
+			Log.debug(this, "Received widgets for application: " + applicationId);
+			
+			/* 
+			 * Get the tab that holds this application
+			 */
+			VerticalPanel panel = null;
+			for (int i = 0; i < tabPanelApplications.getWidgetCount(); i++ ) {
+				String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+				if ( tabName.equals(applicationId) ) {
+					panel = (VerticalPanel) tabPanelApplications.getWidget(i);
+					break;
+				}
+			}
+			
+			if ( null != panel) {
+				Log.debug(this, panel.toString());
+				
+				/*
+				 * Delete widgets that no longer exist
+				 */
+				int i = 0;
+				while ( i < panel.getWidgetCount() ) {
+					String widgetName = panel.getWidget(0).getTitle();
+					
+					if ( !widgetIds.contains(widgetName) ) {
+						panel.remove(i);
+					} else {
+						// only increment if we haven't deleted anything because if we did, indexed may have changed
+						i++;
+					}
+				}
+				
+				/*
+				 * Add the new widgets
+				 */
+				
+				for ( org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList ) {
+					boolean exists = false;
+					for (i = 0; i < panel.getWidgetCount(); i++ ) {
+						String existingWidgetName = panel.getWidget(i).getTitle();
+						if ( existingWidgetName.equals(widget.getWidgetId()) ) {
+							exists = true;
+						}
+					}
+					
+					if ( !exists ) {
+						Log.debug(this,"Adding " + widget.getWidgetId() + " to panel");
+						panel.add(this.getHtmlWidget(widget));
+					}
+				}
+			}
+		}
+		
+		//tabPanelApplications.getWidget(index)
 		
 		
 	}
 	
+	
 	@Override
 	public void onApplicationList(ArrayList<Application> applicationList) {
-		/*
-		 * Brute force... 
-		 * TODO: Improve efficiency by checking if the widget is already there and
-		 * if any widget needs to be deleted or updated.
-		 */
+		Log.debug(this, "Received applications: " + applicationList);
 		this.applications = applicationList;
 		
-		RootPanel.get("features").clear();
-		int selectedTab = 0;
-		if ( tabPanelApplications != null ) {
-			selectedTab = tabPanelApplications.getTabBar().getSelectedTab();
+		/*
+		 * Create a temporary list just with the app names
+		 */
+		ArrayList<String> applicationIds = new ArrayList<String>();
+		for ( Application app: applicationList ) {
+			applicationIds.add( app.getApplicationId() );
 		}
-		tabPanelApplications = new TabPanel();
-		
-		RootPanel.get("features").add(tabPanelApplications);
-		
-		for ( Application app : applicationList ) {
-			VerticalPanel p = new VerticalPanel();
-			
-			tabPanelApplications.add(p, app.getApplicationId());
 
+		
+		if ( null == tabPanelApplications ) {
+			tabPanelApplications = new TabPanel();
+			RootPanel.get("features").add(tabPanelApplications);
 		}
-		tabPanelApplications.selectTab(selectedTab);
+		
+		/*
+		 * Delete applications that no longer exist  
+		 */
+		int i = 0;
+		while ( i < tabPanelApplications.getWidgetCount() ) {
+			String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+			if ( !applicationIds.contains(tabName) ) {
+				tabPanelApplications.remove(i);
+			} else {
+				// only increment if we haven't deleted anything because if we did, indexed may have changed
+				i++;
+			}
+		}
+	
+		/*
+		 * Add new applications
+		 */
+		for ( String appName : applicationIds ) {
+			boolean exists = false;
+			for (i = 0; i < tabPanelApplications.getWidgetCount(); i++ ) {
+				String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+				if ( tabName.equals(appName) ) {
+					exists = true;
+				}
+			}
+			
+			if ( !exists ) {
+				VerticalPanel p = new VerticalPanel();
+				
+				tabPanelApplications.add( p, appName );
+			}
+		}
+		
+		/*
+		 * Set the selected tab
+		 */
+		int selected = tabPanelApplications.getTabBar().getSelectedTab();
+		if ( selected < 0 ) {
+			this.tabPanelApplications.getTabBar().selectTab(0);
+		}
+
+		
 	}
 	
 	

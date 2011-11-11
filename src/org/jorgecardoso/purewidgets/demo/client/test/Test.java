@@ -80,7 +80,7 @@ public class Test implements EntryPoint{
 		Date d = new Date();
 		//SightingReport.this.feedback.setText("Sending.");
 		
-		String user = "StressTest";
+		String user = "StressTest"+(int)(Math.random()*100);
 		
 		int randomIndex = (int) (Math.random()*this.widgets.size());
 		

@@ -3,15 +3,15 @@
  */
 package org.instantplaces.purewidgets.shared.widgets;
 
-import java.util.ArrayList;
-
 /**
  * @author "Jorge C. S. Cardoso"
  *
  */
 public class Application {
 
+	
 	private String placeId;
+	
 	
 	private String applicationId;
 	
@@ -20,12 +20,15 @@ public class Application {
 		this.placeId = placeId;
 		this.applicationId = appId;
 	}
+	
+	
 	/**
 	 * @return the placeId
 	 */
 	public String getPlaceId() {
 		return placeId;
 	}
+	
 
 	/**
 	 * @param placeId the placeId to set
@@ -33,6 +36,7 @@ public class Application {
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
 	}
+	
 
 	/**
 	 * @return the appId
@@ -41,14 +45,12 @@ public class Application {
 		return applicationId;
 	}
 
+	
 	/**
 	 * @param appId the appId to set
 	 */
 	public void setApplicationId(String appId) {
 		this.applicationId = appId;
 	}
-
-	
-	
 	
 }

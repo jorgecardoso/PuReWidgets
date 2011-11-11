@@ -923,6 +923,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processWidgetsResponse(boolean success, String result, Throwable error) {
+		
 		if ( success ) {
 			Log.debugFinest(this, result);
 			this.processWidgetsSuccess(result);
@@ -932,7 +933,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processWidgetsSuccess(String json) {
-		Log.debug(this, "Received widgets list." );
 		
 		WidgetListJson widgetListJson = GenericJson.fromJson(json);
 		

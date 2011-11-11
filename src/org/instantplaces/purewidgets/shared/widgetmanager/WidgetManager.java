@@ -317,7 +317,6 @@ public class WidgetManager implements ServerListener {
 	 * @param active
 	 */
 	public void getApplicationWidgetsList(String placeId, String applicationId) {
-		Log.debug(this, "Getting widgets from application: " + applicationId);
 		this.communicator.getApplicationWidgetsList( placeId, applicationId );
 	}	
 	

@@ -54,7 +54,7 @@ public class SightingServiceImpl extends RemoteServiceServlet implements
 		
 		//deviceAddress++;
 		// TODO: Check why we needed to generate random addresses
-		deviceAddress = 0;
+		deviceAddress = (int)(Math.random()*10000);
 		
 		NumberFormat nf=NumberFormat.getInstance(); // Get Instance of NumberFormat
 		nf.setMinimumIntegerDigits(12);  // The minimum Digits required is 5
