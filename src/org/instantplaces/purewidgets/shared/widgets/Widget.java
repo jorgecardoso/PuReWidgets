@@ -3,7 +3,6 @@
  */
 package org.instantplaces.purewidgets.shared.widgets;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +85,7 @@ public class Widget {
 	public static String CONTROL_TYPE_ENTRY = "entry";
 	public static String CONTROL_TYPE_UPLOAD = "upload";
 	public static String CONTROL_TYPE_DOWNLOAD = "download";
+	public static String CONTROL_TYPE_CHECKIN = "checkin";
 	//TODO: composite
 	
 	@PrimaryKey
@@ -137,6 +137,12 @@ public class Widget {
 	 */
 	@Persistent
 	private String longDescription;
+	
+	@Persistent
+	private String contentUrl;
+	
+	@Persistent
+	private String userResponse;
 	
 	/**
 	 * The list of options of this widget
@@ -579,6 +585,38 @@ public class Widget {
 	 */
 	public void setControlType(String controlType) {
 		this.controlType = controlType;
+	}
+
+
+	/**
+	 * @return the contentUrl
+	 */
+	public String getContentUrl() {
+		return contentUrl;
+	}
+
+
+	/**
+	 * @param contentUrl the contentUrl to set
+	 */
+	public void setContentUrl(String contentUrl) {
+		this.contentUrl = contentUrl;
+	}
+
+
+	/**
+	 * @return the userResponse
+	 */
+	public String getUserResponse() {
+		return userResponse;
+	}
+
+
+	/**
+	 * @param userResponse the userResponse to set
+	 */
+	public void setUserResponse(String userResponse) {
+		this.userResponse = userResponse;
 	}
 
 }

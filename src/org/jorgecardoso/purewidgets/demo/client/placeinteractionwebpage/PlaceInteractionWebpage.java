@@ -70,6 +70,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		};
 		
 		timerApplications.scheduleRepeating(60*1000);
+		this.refreshApplications();
 		
 		timerWidgets = new Timer() {
 			@Override
@@ -207,6 +208,9 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	@Override
 	public void onApplicationList(ArrayList<Application> applicationList) {
 		Log.debug(this, "Received applications: " + applicationList);
+		if ( null != timerWidgets ) {
+			timerWidgets.cancel();
+		}
 		this.applications = applicationList;
 		
 		/*
@@ -264,7 +268,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			this.tabPanelApplications.getTabBar().selectTab(0);
 		}
 
-		
+		timerWidgets.scheduleRepeating(15*1000);
+		this.refreshWidgets();
 	}
 	
 	
@@ -274,6 +279,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			return getEntryWidget(publicDisplayWidget);
 		} else if (  publicDisplayWidget.getControlType().equals(org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_IMPERATIVE_SELECTION) ) {
 			return getImperativeWidget(publicDisplayWidget);
+		} else if ( publicDisplayWidget.getControlType().equals(org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_DOWNLOAD) ) {
+			return getDownloadWidget(publicDisplayWidget);
 		}
 		return null;
 	}
@@ -306,6 +313,21 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			flowPanel.add(btn);
 			btn.addClickHandler(new ImperativeClickHandler(wo.getReferenceCode()));
 		}
+		return flowPanel;
+	}
+	
+	Widget getDownloadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
+		WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
+		
+		FlowPanel flowPanel = new FlowPanel();
+	
+			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + publicDisplayWidget.getContentUrl());
+			flowPanel.add(label);
+			
+			Button btn = new Button("send");
+			flowPanel.add(btn);
+			btn.addClickHandler(new ImperativeClickHandler(widgetOption.getReferenceCode()));
+		
 		return flowPanel;
 	}
 
