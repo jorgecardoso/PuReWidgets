@@ -118,7 +118,7 @@ public class Test implements EntryPoint{
 		
 		for (int i = 0; i < 5; i++) {
 			
-			GuiButton b = new GuiButton("button"+widgetIdIndex, "button"+widgetIdIndex);
+			GuiButton b = new GuiButton("button "+widgetIdIndex, "button "+widgetIdIndex);
 			b.setVolatile(true);
 			widgetIdIndex++;
 			

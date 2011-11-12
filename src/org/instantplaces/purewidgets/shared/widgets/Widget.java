@@ -3,6 +3,7 @@
  */
 package org.instantplaces.purewidgets.shared.widgets;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -439,8 +440,12 @@ public class Widget {
 			this.widgetId = String.valueOf(this.hashCode());
 			Log.warn(this, "Null id, assigning object hashCode: " + this.widgetId);
 		} else {
-			this.widgetId = id;
+			this.widgetId =  com.google.gwt.http.client.URL.decode(id);
 		}
+	}
+	
+	public String getWidgetIdUrlEscaped() {
+		return com.google.gwt.http.client.URL.encode(this.widgetId);
 	}
 
 	/**

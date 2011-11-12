@@ -826,11 +826,11 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			/*
 			 * Make sure we don't use Urls with more than 255 characters...
 			 */
-			if ( (widgetsUrlParam.length() + w.getWidgetId().length()) > 255 ) {
+			if ( (widgetsUrlParam.length() + w.getWidgetIdUrlEscaped().length()) > 255 ) {
 				widgetsUrlParam.deleteCharAt(widgetsUrlParam.length()-1);
 				break;
 			}
-			widgetsUrlParam.append(w.getWidgetId());
+			widgetsUrlParam.append(w.getWidgetIdUrlEscaped());
 			
 			if ( i < (widgets.size()-1) ) {
 				widgetsUrlParam.append(",");
