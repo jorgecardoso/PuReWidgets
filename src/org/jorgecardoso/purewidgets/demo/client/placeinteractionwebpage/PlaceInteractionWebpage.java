@@ -317,16 +317,15 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 	
 	Widget getDownloadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
+		//WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
 		
 		FlowPanel flowPanel = new FlowPanel();
 	
-			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + publicDisplayWidget.getContentUrl());
-			flowPanel.add(label);
 			
-			Button btn = new Button("send");
-			flowPanel.add(btn);
-			btn.addClickHandler(new ImperativeClickHandler(widgetOption.getReferenceCode()));
+			Anchor a = new Anchor(publicDisplayWidget.getShortDescription(), publicDisplayWidget.getContentUrl());
+			
+			flowPanel.add(a);
+			
 		
 		return flowPanel;
 	}
