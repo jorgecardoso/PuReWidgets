@@ -10,6 +10,7 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
 
@@ -298,40 +299,54 @@ public class WidgetManager implements ServerListener {
 	 * Returns the list of active or inactive applications.
 	 * @param active
 	 */
-	public void getPlaceApplicationsList(boolean active) {
-		Log.debug(this, "Getting applications list");
-		this.communicator.getPlaceApplicationsList( active );
+	public void getApplicationsList(String placeId, boolean active) {
+		Log.debug(this, "Asking for applications list");
+		this.communicator.getApplicationsList( placeId, active );
 	}
 	
 	/**
 	 * Returns the list of all applications.
 	 * @param active
 	 */
-	public void getPlaceApplicationsList() {
-		Log.debug(this, "Getting applications list");
-		this.communicator.getPlaceApplicationsList(  );
+	public void getApplicationsList(String placeId) {
+		Log.debug(this, "Asking for applications list");
+		this.communicator.getApplicationsList( placeId );
 	}	
+	
+	public void getPlacesList() {
+		Log.debug(this, "Asking for place list");
+		this.communicator.getPlacesList();
+	}
 	
 	/**
 	 * Returns the list of widgets from the specified application.
 	 * @param active
 	 */
-	public void getApplicationWidgetsList(String placeId, String applicationId) {
-		this.communicator.getApplicationWidgetsList( placeId, applicationId );
+	public void getWidgetsList(String placeId, String applicationId) {
+		this.communicator.getWidgetsList( placeId, applicationId );
 	}	
 	
 	
 	@Override
-	public void onPlaceApplicationsList(ArrayList<Application> applications) {
+	public void onApplicationsList(String placeId, ArrayList<Application> applications) {
 		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onApplicationList(applications);
+			this.applicationListListener.onApplicationList(placeId, applications);
 		}
 	}
 	
 	@Override
-	public void onApplicationWidgetsList(ArrayList<Widget> widgets) {
+	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgets) {
 		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onWidgetsList( widgets );
+			this.applicationListListener.onWidgetsList( placeId, applicationId, widgets );
 		}
+	}
+
+
+	@Override
+	public void onPlacesList(ArrayList<Place> placeList) {
+		if ( null != this.applicationListListener ) {
+			this.applicationListListener.onPlaceList( placeList );
+		}
+		
 	}
 }

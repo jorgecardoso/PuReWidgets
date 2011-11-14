@@ -12,11 +12,14 @@ import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 
 
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -35,17 +38,21 @@ import com.google.gwt.user.client.ui.Widget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListener {
+public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListener, ClickHandler {
+	private Timer timerPlaces;
 	private Timer timerApplications;
 	private Timer timerWidgets;
 	
 	
 	public static SightingServiceAsync sightingService;
 	
+	private ArrayList<Place> places;
+	
 	ArrayList<Application> currentApplications;
 	
 	HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> currentWidgetsMap;
 	
+	String currentPlaceId = "DefaultPlace";
 	String currentApplicationId;
 	
 	StackPanel stackPanelApplications;
@@ -69,6 +76,17 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> ();
 		
+
+		timerPlaces = new Timer() {
+			@Override
+			public void run() {
+				refreshPlaces();
+			}
+		};
+		
+		timerPlaces.scheduleRepeating(30*1000);
+		this.refreshPlaces();
+		
 		timerApplications = new Timer() {
 			@Override
 			public void run() {
@@ -76,8 +94,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			}
 		};
 		
-		timerApplications.scheduleRepeating(60*1000);
-		this.refreshApplications();
+		//timerApplications.scheduleRepeating(60*1000);
+		//this.refreshApplications();
 		
 		timerWidgets = new Timer() {
 			@Override
@@ -86,7 +104,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			}
 		};
 		
-		timerWidgets.scheduleRepeating(15*1000);
+		//timerWidgets.scheduleRepeating(15*1000);
 		
 		
 		labelId = new Label();
@@ -120,9 +138,16 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 	
 	
+	private void refreshPlaces() {
+		Log.debug(this, "Asking server for list of places");
+		WidgetManager.get().getPlacesList();	
+		
+	}
+
+
 	protected void refreshApplications() {
 		Log.debug(this, "Asking server for list of applications");
-		WidgetManager.get().getPlaceApplicationsList();	
+		WidgetManager.get().getApplicationsList(currentPlaceId);	
 	}
 
 	protected void refreshWidgets() {
@@ -133,7 +158,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			    currentApplicationId = this.currentApplications.get(selected).getApplicationId(); //tabPanelApplications.getTabBar().getTabHTML(selected);
 				Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
-				WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
+				WidgetManager.get().getWidgetsList("DefaultPlace", currentApplicationId);
 			}
 		}
 
@@ -143,7 +168,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 
 	@Override
 	public void onWidgetsList(
-			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+			String placeId, String applicationId, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 		
 		if ( null != widgetList  ) {
@@ -154,7 +179,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
 				widgetIds.add(widget.getWidgetId());
 			}
-			String applicationId = this.currentApplicationId; //widgetList.get(0).getApplicationId();
+			//String applicationId = this.currentApplicationId; //widgetList.get(0).getApplicationId();
 			Log.debug(this, "Received widgets for application: " + applicationId);
 			
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> currentWidgets = this.currentWidgetsMap.get(applicationId);
@@ -222,7 +247,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	
 	
 	@Override
-	public void onApplicationList(ArrayList<Application> applicationList) {
+	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		Log.debug(this, "Received applications: " + applicationList);
 		if ( null != timerWidgets ) {
 			timerWidgets.cancel();
@@ -353,6 +378,40 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			
 		
 		return flowPanel;
+	}
+
+
+	@Override
+	public void onPlaceList(ArrayList<Place> placeList) {
+		this.timerPlaces.cancel();
+		this.places = placeList;
+		
+		VerticalPanel panel = new VerticalPanel();
+		
+		for ( Place place : placeList ) {
+			Button b = new Button(place.getPlaceId());
+			//l.setStyleName("gwt-StackPanelItem");
+			
+			b.addClickHandler(this);
+			//panel.get
+			panel.add(b);
+			//l.getParent().setStyleName("gwt-StackPanelItem");
+		}
+		
+		RootPanel.get().add(panel);
+		//this.timerApplications.scheduleRepeating(60*1000);
+		//this.refreshApplications();
+	}
+
+
+	@Override
+	public void onClick(ClickEvent event) {
+		Button b = (Button) event.getSource();
+		
+		this.currentPlaceId = b.getText();
+		
+		this.timerApplications.scheduleRepeating(60*1000);
+		this.refreshApplications();
 	}
 
 

@@ -244,16 +244,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 	}
 
-	@Override
-	public void getPlaceApplicationsList() {
-		
-	}
-
-	@Override
-	public void getPlaceApplicationsList(boolean active) {
-		
-		
-	}
+	
 	
 	/**
 	 * Enables or disables the automatic input requests
@@ -310,7 +301,25 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	}
 
 	@Override
-	public void getApplicationWidgetsList(String placeId, String applicationId) {
+	public void getWidgetsList(String placeId, String applicationId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getApplicationsList(String placeId, boolean active) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getApplicationsList(String placeId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getPlacesList() {
 		// TODO Auto-generated method stub
 		
 	}	

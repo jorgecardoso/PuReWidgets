@@ -11,6 +11,7 @@ import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 
 
 
@@ -94,7 +95,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 	
 	protected void refreshApplications() {
 		Log.debug(this, "Asking server for list of applications");
-		WidgetManager.get().getPlaceApplicationsList();	
+		WidgetManager.get().getApplicationsList("DefaultPlace");	
 	}
 
 	protected void refreshWidgets() {
@@ -105,7 +106,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 			Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
 			
-				WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
+				WidgetManager.get().getWidgetsList("DefaultPlace", currentApplicationId);
 
 		}
 
@@ -115,7 +116,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 
 	@Override
 	public void onWidgetsList(
-			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+			String placeId, String applicationId, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 		
 		if ( null != widgetList && widgetList.size() > 0 ) {
@@ -124,7 +125,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
 				widgetIds.add(widget.getWidgetId());
 			}
-			String applicationId = widgetList.get(0).getApplicationId();
+			//String applicationId = widgetList.get(0).getApplicationId();
 			Log.debug(this, "Received widgets for application: " + applicationId);
 			
 			/* 
@@ -211,7 +212,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 	
 	
 	@Override
-	public void onApplicationList(ArrayList<Application> applicationList) {
+	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		Log.debug(this, "Received applications: " + applicationList);
 		if ( null != timerWidgets ) {
 			timerWidgets.cancel();
@@ -275,6 +276,13 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 
 		timerWidgets.scheduleRepeating(15*1000);
 		this.refreshWidgets();
+	}
+
+
+	@Override
+	public void onPlaceList(ArrayList<Place> placeList) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -11,6 +11,7 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
@@ -58,7 +59,7 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 		 */
 		if ( System.currentTimeMillis()-this.lastApplicationsUpdate > 30*1000 ) {
 			Log.debug(this, "Asking server for list of applications");
-			WidgetManager.get().getPlaceApplicationsList(false);
+			WidgetManager.get().getApplicationsList("DefaultPlace", false);
 			this.lastApplicationsUpdate = System.currentTimeMillis();
 		}
 		
@@ -99,7 +100,7 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 	}
 
 	@Override
-	public void onApplicationList(ArrayList<Application> applications) {
+	public void onApplicationList(String placeId, ArrayList<Application> applications) {
 		Log.debug(this, "Received list of applications: " + applications.size() );
 		/*
 		 * Remove apps with no widgets
@@ -140,7 +141,14 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 
 
 	@Override
-	public void onWidgetsList(ArrayList<Widget> widgetList) {
+	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onPlaceList(ArrayList<Place> placeList) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.instantplaces.purewidgets.client.json.GenericJson;
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.json.ApplicationListJson;
+import org.instantplaces.purewidgets.client.widgetmanager.json.PlaceListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetListJson;
@@ -17,6 +18,7 @@ import org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
 import com.google.gwt.core.client.GWT;
@@ -285,10 +287,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 
 	@Override
-	public void getPlaceApplicationsList() {
-		Log.debug( this, "Getting applications from server: " + getApplicationsUrl() );
+	public void getApplicationsList( String placeId) {
+		Log.debug( this, "Getting applications from server: " + getApplicationsUrl(placeId) );
 		try {
-			interactionService.get(getApplicationsUrl(), 
+			interactionService.get(getApplicationsUrl(placeId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -313,10 +315,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	@Override
-	public void getPlaceApplicationsList(boolean active) {
-		Log.debug( this, "Getting applications from server: " + getApplicationsUrl()+"&active=" + (active?"true":"false") );
+	public void getApplicationsList(String placeId, boolean active) {
+		Log.debug( this, "Getting applications from server: " + getApplicationsUrl(placeId)+"&active=" + (active?"true":"false") );
 		try {
-			interactionService.get(getApplicationsUrl()+"&active=" + (active?"true":"false"), 
+			interactionService.get(getApplicationsUrl(placeId)+"&active=" + (active?"true":"false"), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -412,9 +414,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 
 	
-	private String getApplicationsUrl() {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application?output=json&appid=" + this.appId;
-	}
 
 	private long getLastTimeStampAsLong() {
 		try {
@@ -443,6 +442,14 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +this.appId ;
 	}
 
+	private String getApplicationsUrl(String placeId) {
+		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application?appid=" +this.appId ;
+	}
+	
+	private String getPlacesUrl() {
+		return ClientServerCommunicator.INTERACTION_SERVER + "/place?appid=" +this.appId ;
+	}
+	
 	/**
 	 * Helper method that maps a value in a source range to a value in a target
 	 * range. The resulting value is truncated at the target's range limits.
@@ -594,7 +601,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		 * 
 		 */
 		if (this.serverListener != null) {
-			this.serverListener.onPlaceApplicationsList(applicationList);
+			this.serverListener.onApplicationsList(applicationListJson.getPlaceId(), applicationList);
 		} else {
 			Log.warn(this, "No widget manager to notify about application list");
 		}
@@ -888,7 +895,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	
 	@Override
-	public void getApplicationWidgetsList(String placeId, String applicationId) {
+	public void getWidgetsList(String placeId, String applicationId) {
 		Log.debug( this, "Getting widgets from server: " + this.getWidgetsUrl(placeId, applicationId));
 		try {
 			interactionService.get(this.getWidgetsUrl(placeId, applicationId), 
@@ -943,9 +950,74 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		 * 
 		 */
 		if (this.serverListener != null) {
-			this.serverListener.onApplicationWidgetsList(widgetList);
+			this.serverListener.onWidgetsList(widgetListJson.getPlaceId(), widgetListJson.getApplicationId(), widgetList);
 		} else {
 			Log.warn(this, "No widget manager to notify about application list");
+		}
+			
+		
+	}
+
+
+	@Override
+	public void getPlacesList() {
+		Log.debug( this, "Getting places from server: " + this.getPlacesUrl());
+		try {
+			interactionService.get(this.getPlacesUrl(), 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							ClientServerCommunicator.this.processPlacesResponse(
+									false, null, caught);
+
+						}
+
+						@Override
+						public void onSuccess(String result) {
+							ClientServerCommunicator.this.processPlacesResponse(
+									true, result, null);
+
+						}
+
+					});
+		} catch (Exception e) {
+			ClientServerCommunicator.this.processPlacesResponse(false, null, e);
+			e.printStackTrace();
+		}
+		
+	}
+	
+
+	private void processPlacesFailure(Throwable error) {
+		Log.warn(this, "Error getting list of places from server."
+				+ error.getMessage());
+	}
+	
+	private void processPlacesResponse(boolean success, String result, Throwable error) {
+		
+		if ( success ) {
+			Log.debugFinest(this, result);
+			this.processPlacesSuccess(result);
+		} else {
+			this.processPlacesFailure(error);
+		}
+	}
+	
+	private void processPlacesSuccess(String json) {
+		
+		PlaceListJson placeListJson = GenericJson.fromJson(json);
+		
+		ArrayList<Place> placeList = placeListJson.getPlaces();
+			
+		/*
+		 * Notify the WidgetManager
+		 * 
+		 */
+		if (this.serverListener != null) {
+			this.serverListener.onPlacesList(placeList);
+		} else {
+			Log.warn(this, "No widget manager to notify about place list");
 		}
 			
 		

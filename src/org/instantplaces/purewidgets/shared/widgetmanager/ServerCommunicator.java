@@ -12,10 +12,10 @@ public interface ServerCommunicator {
 	public void deleteWidget(Widget widget);
 	public void deleteAllWidgets(boolean volatileOnly);
 	
-	public void getPlaceApplicationsList(boolean active);
-	public void getPlaceApplicationsList();
-	
-	public void getApplicationWidgetsList( String placeId, String applicationId );
+	public void getPlacesList();
+	public void getApplicationsList(String placeId, boolean active);
+	public void getApplicationsList( String placeId);
+	public void getWidgetsList( String placeId, String applicationId );
 	
 	public void setServerListener(ServerListener listener);
 	
