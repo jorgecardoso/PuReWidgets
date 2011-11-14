@@ -4,6 +4,7 @@
 package org.jorgecardoso.purewidgets.demo.client.placeinteractionwebpage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.shared.Log;
@@ -24,6 +25,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -38,13 +40,15 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	private Timer timerWidgets;
 	
 	
-	
-	
 	public static SightingServiceAsync sightingService;
 	
-	ArrayList<Application> applications;
+	ArrayList<Application> currentApplications;
 	
-	TabPanel tabPanelApplications;
+	HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> currentWidgetsMap;
+	
+	String currentApplicationId;
+	
+	StackPanel stackPanelApplications;
 	
 	
 	public static LoginInfo loginInfo = null;
@@ -61,6 +65,9 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
+		
+		
+		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> ();
 		
 		timerApplications = new Timer() {
 			@Override
@@ -86,7 +93,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		RootPanel.get().add(labelId);
 	    RootPanel.get().add(signInLink);
 	    
-		  // Check login status using login service.
+		// Check login status using login service.
 	    LoginServiceAsync loginService = GWT.create(LoginService.class);
 	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 	    @Override
@@ -119,15 +126,15 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 
 	protected void refreshWidgets() {
-		if ( null != this.tabPanelApplications ) {
-			int selected = tabPanelApplications.getTabBar().getSelectedTab();
+		if ( null != this.stackPanelApplications ) {
+			int selected = stackPanelApplications.getSelectedIndex();// .getTabBar().getSelectedTab();
 			Log.debug(this, "Selected Tab: " + selected);
-			String currentApplicationId = tabPanelApplications.getTabBar().getTabHTML(selected);
-			Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
-			
+			if ( selected >= 0) {
+			    currentApplicationId = this.currentApplications.get(selected).getApplicationId(); //tabPanelApplications.getTabBar().getTabHTML(selected);
+				Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
 				WidgetManager.get().getApplicationWidgetsList("DefaultPlace", currentApplicationId);
-
+			}
 		}
 
 		
@@ -139,23 +146,30 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 		
-		if ( null != widgetList && widgetList.size() > 0 ) {
+		if ( null != widgetList  ) {
+			
+			
 			
 			ArrayList<String> widgetIds = new ArrayList<String>();
 			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
 				widgetIds.add(widget.getWidgetId());
 			}
-			String applicationId = widgetList.get(0).getApplicationId();
+			String applicationId = this.currentApplicationId; //widgetList.get(0).getApplicationId();
 			Log.debug(this, "Received widgets for application: " + applicationId);
 			
+			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> currentWidgets = this.currentWidgetsMap.get(applicationId);
+			if ( null == currentWidgets ) {
+				currentWidgets = new ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>();
+			}
+					
 			/* 
 			 * Get the tab that holds this application
 			 */
 			VerticalPanel panel = null;
-			for (int i = 0; i < tabPanelApplications.getWidgetCount(); i++ ) {
-				String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+			for (int i = 0; i < this.stackPanelApplications.getWidgetCount(); i++ ) {
+				String tabName = this.currentApplications.get(i).getApplicationId(); //tabPanelApplications.getTabBar().getTabHTML(i);
 				if ( tabName.equals(applicationId) ) {
-					panel = (VerticalPanel) tabPanelApplications.getWidget(i);
+					panel = (VerticalPanel) stackPanelApplications.getWidget(i);
 					break;
 				}
 			}
@@ -167,11 +181,12 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 				 * Delete widgets that no longer exist
 				 */
 				int i = 0;
-				while ( i < panel.getWidgetCount() ) {
-					String widgetName = panel.getWidget(0).getTitle();
+				while ( i < currentWidgets.size() ) {
+					String widgetName = currentWidgets.get(i).getWidgetId(); //panel.getWidget(0).getTitle();
 					
 					if ( !widgetIds.contains(widgetName) ) {
 						panel.remove(i);
+						currentWidgets.remove(i);
 					} else {
 						// only increment if we haven't deleted anything because if we did, indexed may have changed
 						i++;
@@ -184,8 +199,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 				
 				for ( org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList ) {
 					boolean exists = false;
-					for (i = 0; i < panel.getWidgetCount(); i++ ) {
-						String existingWidgetName = panel.getWidget(i).getTitle();
+					for (i = 0; i < currentWidgets.size(); i++ ) {
+						String existingWidgetName = currentWidgets.get(i).getWidgetId();//panel.getWidget(i).getTitle();
 						if ( existingWidgetName.equals(widget.getWidgetId()) ) {
 							exists = true;
 						}
@@ -197,6 +212,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 					}
 				}
 			}
+			this.currentWidgetsMap.put(applicationId, widgetList);
 		}
 		
 		//tabPanelApplications.getWidget(index)
@@ -211,7 +227,10 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		if ( null != timerWidgets ) {
 			timerWidgets.cancel();
 		}
-		this.applications = applicationList;
+		
+		if ( null == this.currentApplications ) {
+			this.currentApplications = new ArrayList<Application>();
+		}
 		
 		/*
 		 * Create a temporary list just with the app names
@@ -222,19 +241,21 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		}
 
 		
-		if ( null == tabPanelApplications ) {
-			tabPanelApplications = new TabPanel();
-			RootPanel.get("features").add(tabPanelApplications);
+		if ( null == stackPanelApplications ) {
+			stackPanelApplications = new StackPanel();
+			RootPanel.get("features").add(stackPanelApplications);
 		}
 		
 		/*
 		 * Delete applications that no longer exist  
 		 */
 		int i = 0;
-		while ( i < tabPanelApplications.getWidgetCount() ) {
-			String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+		//for ()
+		while ( i < this.currentApplications.size() ) {
+			String tabName = this.currentApplications.get(i).getApplicationId(); //tabPanelApplications.getTabBar().getTabHTML(i);
 			if ( !applicationIds.contains(tabName) ) {
-				tabPanelApplications.remove(i);
+				stackPanelApplications.remove(i);
+				this.currentApplications.remove(i);
 			} else {
 				// only increment if we haven't deleted anything because if we did, indexed may have changed
 				i++;
@@ -244,28 +265,34 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		/*
 		 * Add new applications
 		 */
-		for ( String appName : applicationIds ) {
+		for ( int j = 0; j < applicationList.size(); j++ ) {
+			String appName = applicationList.get(j).getApplicationId();
+		
 			boolean exists = false;
-			for (i = 0; i < tabPanelApplications.getWidgetCount(); i++ ) {
-				String tabName = tabPanelApplications.getTabBar().getTabHTML(i);
+			for (i = 0; i < this.currentApplications.size(); i++ ) {
+				String tabName = this.currentApplications.get(i).getApplicationId();
 				if ( tabName.equals(appName) ) {
 					exists = true;
+					break;
 				}
 			}
 			
 			if ( !exists ) {
 				VerticalPanel p = new VerticalPanel();
 				
-				tabPanelApplications.add( p, appName );
+				stackPanelApplications.insert(p, j);
+				stackPanelApplications.setStackText(j, appName); 
 			}
 		}
+		
+		this.currentApplications = applicationList;
 		
 		/*
 		 * Set the selected tab
 		 */
-		int selected = tabPanelApplications.getTabBar().getSelectedTab();
+		int selected = stackPanelApplications.getSelectedIndex();// .getTabBar().getSelectedTab();
 		if ( selected < 0 ) {
-			this.tabPanelApplications.getTabBar().selectTab(0);
+			this.stackPanelApplications.showStack(0); //.getTabBar().selectTab(0);
 		}
 
 		timerWidgets.scheduleRepeating(15*1000);
@@ -320,8 +347,6 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		//WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
 		
 		FlowPanel flowPanel = new FlowPanel();
-	
-			
 			Anchor a = new Anchor(publicDisplayWidget.getShortDescription(), publicDisplayWidget.getContentUrl());
 			
 			flowPanel.add(a);
