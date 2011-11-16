@@ -4,6 +4,7 @@
 package org.jorgecardoso.purewidgets.demo.client.placeinteractionwebpage;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
@@ -22,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -32,7 +34,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,6 +47,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	private Timer timerApplications;
 	private Timer timerWidgets;
 	
+	public static String userIdentity = "Anonymous1984";
 	
 	public static SightingServiceAsync sightingService;
 	
@@ -53,7 +55,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	
 	ArrayList<Application> currentApplications;
 	
-	HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> currentWidgetsMap;
+	//HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> currentWidgetsMap;
 	
 	String currentPlaceId = "DefaultPlace";
 	String currentApplicationId;
@@ -68,6 +70,16 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	
 	@Override
 	public void onModuleLoad() {
+		userIdentity = Cookies.getCookie("userIdentity");
+		if ( null == userIdentity ) {
+			userIdentity = "Anonymous" + ((int)(Math.random()*10000));
+			Date future = new Date(System.currentTimeMillis() + 7*24*60*60*1000); // 7 days in the future
+			Cookies.setCookie("userIdentity", userIdentity, future);
+		}
+		labelId = new Label("Your identity is " + userIdentity);
+		RootPanel.get("user").add(labelId);
+	    RootPanel.get("user").add(signInLink);
+	    
 		sightingService = GWT.create(SightingService.class);
 		((ServiceDefTarget) sightingService).setServiceEntryPoint("/sighting");
 		
@@ -77,7 +89,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
 		
-		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> ();
+		//this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> ();
 		
 		
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -92,10 +104,6 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		//timerWidgets.scheduleRepeating(15*1000);
 		
-		
-		labelId = new Label();
-		RootPanel.get().add(labelId);
-	    RootPanel.get().add(signInLink);
 	    
 		// Check login status using login service.
 	    LoginServiceAsync loginService = GWT.create(LoginService.class);
@@ -111,7 +119,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	        Log.debug(this, loginInfo.getLoginUrl());
 	        if(loginInfo.isLoggedIn()) {
 	          Log.debug(this, loginInfo.getEmailAddress());
-	          labelId.setText(loginInfo.getEmailAddress());
+	          userIdentity = loginInfo.getEmailAddress();
+	          labelId.setText("Your identity is: " + userIdentity);
 	          signInLink.setText("Sign out");
 	          signInLink.setHref(loginInfo.getLogoutUrl());
 	        } else {
@@ -194,7 +203,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		this.currentApplications = new ArrayList<Application> ();
 
-		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>>();
+		//this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>>();
 		
 		this.timerApplications.scheduleRepeating(60*1000);
 		this.refreshApplications();
@@ -250,11 +259,11 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			//String applicationId = this.currentApplicationId; //widgetList.get(0).getApplicationId();
 			Log.debug(this, "Received widgets for application: " + applicationId);
 			
-			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> currentWidgets = this.currentWidgetsMap.get(applicationId);
-			if ( null == currentWidgets ) {
-				currentWidgets = new ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>();
-			}
-					
+//			//ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> currentWidgets = this.currentWidgetsMap.get(applicationId);
+//			if ( null == currentWidgets ) {
+//				//currentWidgets = new ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>();
+//			}
+//					
 			/* 
 			 * Get the tab that holds this application
 			 */
@@ -274,12 +283,12 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 				 * Delete widgets that no longer exist
 				 */
 				int i = 0;
-				while ( i < currentWidgets.size() ) {
-					String widgetName = currentWidgets.get(i).getWidgetId(); //panel.getWidget(0).getTitle();
+				while ( i < panel.getWidgetCount() ) {
+					String widgetName = panel.getWidget(i).getElement().getPropertyString("id");
 					
 					if ( !widgetIds.contains(widgetName) ) {
 						panel.remove(i);
-						currentWidgets.remove(i);
+						//currentWidgets.remove(i);
 					} else {
 						// only increment if we haven't deleted anything because if we did, indexed may have changed
 						i++;
@@ -292,8 +301,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 				
 				for ( org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList ) {
 					boolean exists = false;
-					for (i = 0; i < currentWidgets.size(); i++ ) {
-						String existingWidgetName = currentWidgets.get(i).getWidgetId();//panel.getWidget(i).getTitle();
+					for (i = 0; i < panel.getWidgetCount(); i++ ) {
+						String existingWidgetName = panel.getWidget(i).getElement().getPropertyString("id");
 						if ( existingWidgetName.equals(widget.getWidgetId()) ) {
 							exists = true;
 						}
@@ -305,7 +314,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 					}
 				}
 			}
-			this.currentWidgetsMap.put(applicationId, widgetList);
+//			this.currentWidgetsMap.put(applicationId, widgetList);
 		}
 		
 		//tabPanelApplications.getWidget(index)
@@ -406,18 +415,21 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 
 	Widget getEntryWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
+
+		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
 		
 		FlowPanel flowPanel = new FlowPanel();
-		for ( WidgetOption wo : widgetOptions ) {
-			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + wo.getReferenceCode());
-			flowPanel.add(label);
-			TextBox textBox = new TextBox(); 
-			flowPanel.add(textBox);
-			Button btn = new Button("send");
-			flowPanel.add(btn);
-			btn.addClickHandler(new EntryClickHandler(wo.getReferenceCode(), textBox));
-		}
+		//for ( WidgetOption wo : widgetOptions ) {
+		Label label = new Label(publicDisplayWidget.getShortDescription() + " [" + option.getReferenceCode() + "]");
+		flowPanel.add(label);
+		TextBox textBox = new TextBox(); 
+		flowPanel.add(textBox);
+		Button btn = new Button("Submit");
+		flowPanel.add(btn);
+		btn.addClickHandler(new EntryClickHandler(option.getReferenceCode(), textBox));
+		//}
+		
+		flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
 
@@ -447,6 +459,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			flowPanel.add(btn);
 			btn.addClickHandler(new ImperativeClickHandler(wo.getReferenceCode()));
 		}
+		flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
 	
@@ -461,20 +474,20 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		Button btn = new Button(publicDisplayWidget.getShortDescription() + " [" + option.getReferenceCode() + "]");
 		flowPanel.add(btn);
 		btn.addClickHandler(new ImperativeClickHandler(option.getReferenceCode()));
-		
+		flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
 	
 	
 	Widget getDownloadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		//WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
+		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
 		
 		FlowPanel flowPanel = new FlowPanel();
-			Anchor a = new Anchor(publicDisplayWidget.getShortDescription(), publicDisplayWidget.getContentUrl());
+		Anchor a = new Anchor(publicDisplayWidget.getShortDescription() + " [" +option.getReferenceCode() + "]", publicDisplayWidget.getContentUrl());
 			
-			flowPanel.add(a);
+		flowPanel.add(a);
 			
-		
+		flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
 

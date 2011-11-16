@@ -38,7 +38,10 @@ public class StressTest implements EntryPoint{
 	
 	@Override
 	public void onModuleLoad() {
-		PublicDisplayApplication.load(this, "StressTest"+(int)(Math.random()*10000000), true);
+		Date d = new Date();
+		String date = DateTimeFormat.getFormat("y-M-d:H:m:s").format(d);
+		
+		PublicDisplayApplication.load(this, "StressTest-" + date, true);
 		
 		//GuiButton b = new GuiButton("button", "button");
 		//b.setVolatile(true);
@@ -118,7 +121,8 @@ public class StressTest implements EntryPoint{
 		
 		for (int i = 0; i < 5; i++) {
 			
-			GuiButton b = new GuiButton("button "+widgetIdIndex, "button "+widgetIdIndex);
+			GuiButton b = new GuiButton("button "+widgetIdIndex, "Button "+widgetIdIndex);
+			b.setShortDescription("Test button " + widgetIdIndex);
 			b.setVolatile(true);
 			widgetIdIndex++;
 			

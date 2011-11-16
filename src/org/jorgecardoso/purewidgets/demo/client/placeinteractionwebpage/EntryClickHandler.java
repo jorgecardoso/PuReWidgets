@@ -30,14 +30,8 @@ public class EntryClickHandler implements ClickHandler {
 		DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'hh:mm:ss");
 		Date d = new Date();
 		//SightingReport.this.feedback.setText("Sending.");
-		LoginInfo loginInfo = PlaceInteractionWebpage.loginInfo;
-		String user = "";
-		if (loginInfo.isLoggedIn()) {
-			user = loginInfo.getEmailAddress();
-		} else {
-			user = "Anonymous";
-		}
-		PlaceInteractionWebpage.sightingService.sighting(user + " tag."+this.referenceCode+ ":" + this.textbox.getText(), dtf.format(d),new AsyncCallback<Void>() {
+		
+		PlaceInteractionWebpage.sightingService.sighting(PlaceInteractionWebpage.userIdentity + " tag."+this.referenceCode+ ":" + this.textbox.getText(), dtf.format(d),new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

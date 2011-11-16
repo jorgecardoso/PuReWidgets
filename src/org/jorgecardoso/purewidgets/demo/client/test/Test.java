@@ -19,6 +19,6 @@ public class Test implements EntryPoint{
 	public void onModuleLoad() {
 		PublicDisplayApplication.load(this, "Test", true);
 		
-		GuiDownloadButton gdb = new GuiDownloadButton("downloadid", "download video", "http://jorgecardoso.eu");
+		GuiDownloadButton gdb = new GuiDownloadButton("downloadid", "Download test video", "http://jorgecardoso.eu");
 	}
 }
