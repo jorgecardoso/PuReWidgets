@@ -23,9 +23,34 @@
     <script type="text/javascript" language="javascript" src="placeinteractiondemo/placeinteractiondemo.nocache.js"></script>
     
  <style type="text/css">
-.gwt-StackPanel td {
-
+#content {
+	width: 400px;
+	margin-left:auto;
+	margin-right:auto;
 }
+
+#title {
+font-size: 24px;
+margin-left: auto;
+margin-right: auto;
+margin-bottom:25px;
+margin-top:15px;
+text-align:center;
+}
+
+#features table,button {
+	width:100%;
+}
+
+.gwt-StackPanelItem div {
+text-align:center;
+}
+
+.gwt-Button {
+	font-size: 24px !important;
+	margin-bottom: 10px !important;
+}
+
 </style>
   </head>
     
@@ -42,7 +67,10 @@
       </p>
     </div>
     </noscript>
-    <div id='info'>Place Interaction Webpage: Shows interactive features of all place applications</div>
-    <div id='features'></div>
+   <!-- <div id='info'>Place Interaction Webpage: Shows interactive features of all place applications</div> -->
+    <div id='content'>
+    	<div id='title'> </div>
+    	<div id='features'></div>
+    </div>
   </body>
 </html>

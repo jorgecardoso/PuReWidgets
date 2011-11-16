@@ -20,6 +20,9 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -76,33 +79,16 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		
 		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>> ();
 		
+		
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+		      public void onValueChange(ValueChangeEvent<String> event) {
+		        String historyToken = event.getValue();
+		        show(historyToken);
+		      }
 
-		timerPlaces = new Timer() {
-			@Override
-			public void run() {
-				refreshPlaces();
-			}
-		};
-		
-		timerPlaces.scheduleRepeating(30*1000);
-		this.refreshPlaces();
-		
-		timerApplications = new Timer() {
-			@Override
-			public void run() {
-				refreshApplications();
-			}
-		};
-		
-		//timerApplications.scheduleRepeating(60*1000);
-		//this.refreshApplications();
-		
-		timerWidgets = new Timer() {
-			@Override
-			public void run() {
-				refreshWidgets();
-			}
-		};
+			
+		 });
+
 		
 		//timerWidgets.scheduleRepeating(15*1000);
 		
@@ -135,8 +121,90 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	        }
 	      }
 	    });
+	    this.show(History.getToken());
 	}
 	
+	/**
+	 * @param historyToken
+	 */
+	protected void show(String historyToken) {
+		if ( null == historyToken || historyToken.length() == 0) {
+			this.showPlaces();
+		}
+		if ( historyToken.equals("app") ) {
+        	this.showApps();
+        	
+        } else if ( historyToken.equals("place") ) {
+        	this.showPlaces();
+        }
+	}
+	
+	
+	private void showPlaces( ) {
+		if ( null != this.timerApplications ) {
+			this.timerApplications.cancel();
+		}
+		if ( null != this.timerWidgets ) {
+			this.timerWidgets.cancel();
+		}
+		
+		timerPlaces = new Timer() {
+			@Override
+			public void run() {
+				refreshPlaces();
+			}
+		};
+		
+		timerPlaces.scheduleRepeating(30*1000);
+		this.refreshPlaces();
+		RootPanel.get("title").clear();
+		RootPanel.get("title").add(new Label("Available places:"));
+		
+	}
+	
+	
+	private void showApps( ) {
+		Log.debug("Currrent place: " + this.currentPlaceId);
+		if ( null != this.timerPlaces ) {
+			timerPlaces.cancel();
+			timerPlaces = null;
+		}
+		
+		if ( null == this.currentPlaceId ) {
+			//Log.debug("A")
+			History.newItem("place");
+		}
+		
+		timerApplications = new Timer() {
+			@Override
+			public void run() {
+				refreshApplications();
+			}
+		};
+		
+		//timerApplications.scheduleRepeating(60*1000);
+		//this.refreshApplications();
+		
+		timerWidgets = new Timer() {
+			@Override
+			public void run() {
+				refreshWidgets();
+			}
+		};
+		
+		this.currentApplications = new ArrayList<Application> ();
+
+		this.currentWidgetsMap = new HashMap<String, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>>();
+		
+		this.timerApplications.scheduleRepeating(60*1000);
+		this.refreshApplications();
+		RootPanel.get("title").clear();
+		RootPanel.get("title").add(new Label("Interact with applications in " + this.currentPlaceId + " place:"));
+		
+		RootPanel.get("features").clear();
+		stackPanelApplications = new StackPanel();
+		RootPanel.get("features").add(stackPanelApplications);
+	}
 	
 	private void refreshPlaces() {
 		Log.debug(this, "Asking server for list of places");
@@ -356,6 +424,20 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	Widget getImperativeWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
 		
+		if (null != widgetOptions ) {
+			if ( widgetOptions.size() == 1 ) {
+				return getSingleOptionImperativeWidget(publicDisplayWidget);
+			} else {
+				return getMultipleOptionImperativeWidget(publicDisplayWidget);
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	Widget getMultipleOptionImperativeWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
+		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
+		
 		FlowPanel flowPanel = new FlowPanel();
 		for ( WidgetOption wo : widgetOptions ) {
 			Label label = new Label(publicDisplayWidget.getShortDescription() + ": " + wo.getReferenceCode());
@@ -367,6 +449,22 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		}
 		return flowPanel;
 	}
+	
+	Widget getSingleOptionImperativeWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
+		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
+		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
+		
+		FlowPanel flowPanel = new FlowPanel();
+		Label label = new Label(publicDisplayWidget.getLongDescription());
+		flowPanel.add(label);
+			
+		Button btn = new Button(publicDisplayWidget.getShortDescription() + " [" + option.getReferenceCode() + "]");
+		flowPanel.add(btn);
+		btn.addClickHandler(new ImperativeClickHandler(option.getReferenceCode()));
+		
+		return flowPanel;
+	}
+	
 	
 	Widget getDownloadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		//WidgetOption widgetOption = publicDisplayWidget.getWidgetOptions().get(0);
@@ -383,7 +481,9 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 
 	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
-		this.timerPlaces.cancel();
+		if ( null == this.timerPlaces ) { // the timer was canceled, so the user must be in the app list
+			return;
+		}
 		this.places = placeList;
 		
 		VerticalPanel panel = new VerticalPanel();
@@ -398,7 +498,8 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 			//l.getParent().setStyleName("gwt-StackPanelItem");
 		}
 		
-		RootPanel.get().add(panel);
+		RootPanel.get("features").clear();
+		RootPanel.get("features").add(panel);
 		//this.timerApplications.scheduleRepeating(60*1000);
 		//this.refreshApplications();
 	}
@@ -406,12 +507,15 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 
 	@Override
 	public void onClick(ClickEvent event) {
+	
 		Button b = (Button) event.getSource();
-		
+		Log.debug("Button clicked:" + b.getText());
 		this.currentPlaceId = b.getText();
 		
-		this.timerApplications.scheduleRepeating(60*1000);
-		this.refreshApplications();
+		History.newItem("app");
+		
+		//this.timerApplications.scheduleRepeating(60*1000);
+		//this.refreshApplications();
 	}
 
 
