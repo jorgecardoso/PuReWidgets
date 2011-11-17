@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -412,19 +413,24 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	}
 
 	Widget getHtmlWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-
+		Widget toReturn = null;
+		
 		if (publicDisplayWidget.getControlType().equals(
 				org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_ENTRY)) {
-			return getEntryWidget(publicDisplayWidget);
+			toReturn = getEntryWidget(publicDisplayWidget);
 		} else if (publicDisplayWidget
 				.getControlType()
 				.equals(org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_IMPERATIVE_SELECTION)) {
-			return getImperativeWidget(publicDisplayWidget);
+			toReturn = getImperativeWidget(publicDisplayWidget);
 		} else if (publicDisplayWidget.getControlType().equals(
 				org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_DOWNLOAD)) {
-			return getDownloadWidget(publicDisplayWidget);
+			toReturn =  getDownloadWidget(publicDisplayWidget);
 		}
-		return null;
+		
+		if ( null != toReturn ) {
+			toReturn.setStyleName("widget");
+		}
+		return toReturn;
 	}
 
 	Widget getEntryWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
@@ -450,7 +456,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 	Widget getImperativeWidget(
 			org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
-
+		
 		if (null != widgetOptions) {
 			if (widgetOptions.size() == 1) {
 				return getSingleOptionImperativeWidget(publicDisplayWidget);
@@ -462,20 +468,27 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 		}
 	}
 
+	
 	Widget getMultipleOptionImperativeWidget(
 			org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
+		
 		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
-
+		
 		FlowPanel flowPanel = new FlowPanel();
-		for (WidgetOption wo : widgetOptions) {
-			Label label = new Label(publicDisplayWidget.getShortDescription() + ": "
-					+ wo.getReferenceCode());
-			flowPanel.add(label);
 
-			Button btn = new Button("send");
-			flowPanel.add(btn);
-			btn.addClickHandler(new ImperativeClickHandler(wo.getReferenceCode()));
+		ListBox listbox = new ListBox();
+		listbox.setVisibleItemCount(4);
+		for (WidgetOption wo : widgetOptions) {
+			listbox.addItem(publicDisplayWidget.getShortDescription() + " [" + wo.getReferenceCode() + "]");
 		}
+		
+		
+		flowPanel.add(listbox);
+		
+		Button button = new Button("Send");
+		button.addClickHandler(new MultipleOptionImperativeClickHandler(widgetOptions, listbox));
+		
+		flowPanel.add(button);
 		flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
@@ -538,7 +551,7 @@ public class PlaceInteractionWebpage implements EntryPoint, ApplicationListListe
 
 	@Override
 	public void onClick(ClickEvent event) {
-
+			
 		Button b = (Button) event.getSource();
 		Log.debug("Button clicked:" + b.getText());
 		this.currentPlaceId = b.getText();
