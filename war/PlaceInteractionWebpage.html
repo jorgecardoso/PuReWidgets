@@ -22,20 +22,25 @@
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="placeinteractiondemo/placeinteractiondemo.nocache.js"></script>
     
- <style type="text/css">
+<style type="text/css">
+ 
 #content {
-	width: 400px;
+	width: 600px;
 	margin-left:auto;
 	margin-right:auto;
 }
 
-#title {
-font-size: 24px;
-margin-left: auto;
-margin-right: auto;
-margin-bottom:25px;
-margin-top:15px;
-text-align:center;
+.title {
+	font-size: 3em;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom:25px;
+	margin-top:15px;
+	text-align:center;
+}
+
+#user {
+	font-size: 2em;
 }
 
 #features table,button {
@@ -43,9 +48,12 @@ text-align:center;
 }
 
 #features .gwt-StackPanelItem div {
-text-align:center;
+	text-align:center;
 }
 
+#features .gwt-StackPanelContent td {
+	text-align:center;
+}
 
 #features .widget {
 	border-bottom-style: solid;
@@ -53,20 +61,42 @@ text-align:center;
 	margin: 10px 0px 10px 0px;
 }
 
+#features .gwt-Image {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
 
 .widget .gwt-Label {
-font-size: 24px !important;
+	font-size: 2em !important;
 	width:100%;
 }
 
 .widget .gwt-Button {
-	font-size: 24px !important;
+	font-size: 2em !important;
 	margin-bottom: 10px !important;
+	margin-left:auto;
+	margin-right:auto;
+	width: 50%;
 }
 
 .widget .gwt-TextBox {
-	font-size: 24px !important;
+	font-size: 2em !important;
 	width:98%;
+}
+
+
+.widget .gwt-Anchor {
+	font-size: 2em !important;
+	width:98%;
+}
+
+#features .gwt-StackPanelItem {
+	background: #D3DEF6  !important;
+	font-size: 2em;
+}
+
+#features .gwt-StackPanelItem-selected {
+	background: #9ea6b8 !important;
 }
 </style>
   </head>
@@ -86,7 +116,6 @@ font-size: 24px !important;
     </noscript>
    <!-- <div id='info'>Place Interaction Webpage: Shows interactive features of all place applications</div> -->
     <div id='content'>
-    	<div id='title'> </div>
     	<div id='features'></div>
     	<div id='user'></div>
     </div>
