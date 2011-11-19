@@ -105,12 +105,23 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 
 	public boolean isDisplaying() {
 		com.google.gwt.user.client.ui.Widget current = this;
+		/*
+		 * If the widget is not on the DOM than it is not visible.
+		 */
+		if ( !current.isAttached() ) {
+			return false;
+		}
+		
+		/*
+		 * If any ancestor is not visible than this widget is not visible either
+		 */
 		while ( current != null ) {
 			if ( !current.isVisible() ) {
 				return false;
 			}
 			current = current.getParent();
 		}
+		
 		return true;
 	}
 	
