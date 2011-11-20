@@ -33,7 +33,11 @@ public class InputEvent {
 	private ArrayList<String> parameters;
 	
 	
-
+	/**
+	 * The age of the input, in milliseconds.
+	 */
+	private int age;
+	
 	/**
 	 * Creates a new InputEvent with the given WidgetOption and parameters.
 	 * This constructor is used when there is no persona associated (i.e., the input was
@@ -123,6 +127,22 @@ public class InputEvent {
 		sb.append("\t WidgetOption: ").append(this.widgetOption != null ? this.widgetOption.toDebugString() : "null").append("\n");
 		
 		return sb.toString();
+	}
+
+
+	/**
+	 * @return the age
+	 */
+	public int getAge() {
+		return age;
+	}
+
+
+	/**
+	 * @param age the age to set
+	 */
+	public void setAge(int age) {
+		this.age = age;
 	}
 	
 	

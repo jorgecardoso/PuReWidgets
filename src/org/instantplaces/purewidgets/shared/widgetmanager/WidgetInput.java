@@ -33,7 +33,8 @@ public class WidgetInput {
 	private String persona;	
 	
 
-
+	private int age;
+	
 	public void setWidgetId(String widgetId) {
 		this.widgetId = widgetId;
 	}
@@ -85,6 +86,22 @@ public class WidgetInput {
 	
 	public final String toDebugString() {
 		return "WidgetInput(" + "persona: " + this.persona + "; parameters " + this.parameters.toString() + ")";
+	}
+
+
+	/**
+	 * @return the age
+	 */
+	public int getAge() {
+		return age;
+	}
+
+
+	/**
+	 * @param age the age to set
+	 */
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 }

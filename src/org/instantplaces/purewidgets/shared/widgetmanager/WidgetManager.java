@@ -183,6 +183,7 @@ public class WidgetManager implements ServerListener {
 							 */
 							InputEvent ie = new InputEvent(input.getPersona(),
 									option, input.getParameters());
+							ie.setAge(input.getAge());
 							
 							/*
 							 * Put the event in the hashmap, associated with the target widget
