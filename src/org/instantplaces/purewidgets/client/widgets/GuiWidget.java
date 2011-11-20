@@ -1,6 +1,7 @@
 package org.instantplaces.purewidgets.client.widgets;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.instantplaces.purewidgets.client.widgets.events.InputFeedbackListener;
@@ -27,6 +28,7 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public class GuiWidget extends Composite implements  InputListener, ReferenceCodeListener, InputFeedbackListener {
 	
+	private static final int INPUT_EVENT_OLD_AGE = 1000*60*1; // 5 minutes
 	//public final String DEFAULT_STYLENAME = "";
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
@@ -300,26 +302,42 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		
 		for ( InputEvent ie : inputList ) {
 			Log.debugFinest(this, "  Processing: " + (ie != null ? ie.toDebugString() : "null input event"));
-			InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(ie);
-		
 			
-			if( this.isInputEnabled() ) {
-				
-				/*
-				 * If this widget is enabled than ask it to handle the input, validating it 
-				 */
-				feedback = handleInput(ie);
-			} else {
-				/*
-				 * If the widget is not enabled than the input is not accepted.
-				 */
-				feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
-			}
-		
 			/*
-			 * Schedule the feedback to appear
+			 * If the input is old, just trigger the application event
 			 */
-			this.feedbackSequencer.add(feedback);
+			if ( ie.getAge() > INPUT_EVENT_OLD_AGE ) {
+				/*
+				 * Ask the widget to validate the input and generate an appropriate feedback
+				 */
+				InputFeedback<? extends GuiWidget> feedback = handleInput(ie);
+				this.fireActionEvent( feedback.getActionEvent() );
+				
+				
+			/*
+			 * If the input is recent, generate feedback for it
+			 */
+			} else {
+				
+				InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(ie);
+				if( this.isInputEnabled() ) {
+					
+					/*
+					 * If this widget is enabled than ask it to handle the input, validating it 
+					 */
+					feedback = handleInput(ie);
+				} else {
+					/*
+					 * If the widget is not enabled than the input is not accepted.
+					 */
+					feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
+				}
+			
+				/*
+				 * Schedule the feedback to appear
+				 */
+				this.feedbackSequencer.add(feedback);
+			}
 		}
 
 	}
@@ -552,6 +570,10 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 *            be created and sent.
 	 */
 	protected void fireActionEvent(ActionEvent<? extends GuiWidget> ae) {
+		if ( null == ae ) {
+			return;
+		}
+		
 		//Log.debug(this, "Firing " + ae.toDebugString());
 		for ( ActionListener al : this.actionListeners ) {
 			//Log.debug(this, "   on " + al.toString());
