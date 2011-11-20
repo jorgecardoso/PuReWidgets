@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Composite;
 public class GuiWidget extends Composite implements  InputListener, ReferenceCodeListener, InputFeedbackListener {
 	
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
-	//public final String DEFAULT_STYLENAME = "";
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
 	

@@ -17,6 +17,8 @@ import org.instantplaces.purewidgets.shared.widgets.Place;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -35,24 +38,12 @@ import com.google.gwt.user.client.ui.Widget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class QrCode implements EntryPoint, ApplicationListListener {
-	private Timer timerApplications;
-	private Timer timerWidgets;
+public class QrCodeGenerator implements EntryPoint, ApplicationListListener {
 	
 	
+	private TabPanel tabPanelApplications;
 	
-	
-	//public static SightingServiceAsync sightingService;
-	
-	ArrayList<Application> applications;
-	
-	TabPanel tabPanelApplications;
-	
-	
-
-	private Anchor signInLink = new Anchor("Sign In");
-	private Label labelId;
-	
+	private ListBox qrSizes;
 	
 	@Override
 	public void onModuleLoad() {
@@ -65,30 +56,33 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
-		timerApplications = new Timer() {
-			@Override
-			public void run() {
-				refreshApplications();
-			}
-		};
 		
-		timerApplications.scheduleRepeating(60*1000);
+		
+		
+		qrSizes = new ListBox();
+		for (int i = 50; i < 550; i+= 50) {
+			qrSizes.addItem(i+"x"+i);
+		}
+		qrSizes.setSelectedIndex(3);
+		
+		RootPanel.get("qrsize").add(new Label("QR Code size: "));
+		RootPanel.get("qrsize").add(qrSizes);
+		
+		
+		
+		tabPanelApplications = new TabPanel();
+		tabPanelApplications.getTabBar().addHandler(new ClickHandler() {
+	        @Override
+	        public void onClick(ClickEvent event) {
+	        	Log.debug(this, "Clicked");
+	        	refreshWidgets();
+	            
+	        }
+	    }, ClickEvent.getType());
+		RootPanel.get("features").add(tabPanelApplications);
+		
+		
 		this.refreshApplications();
-		
-		timerWidgets = new Timer() {
-			@Override
-			public void run() {
-				refreshWidgets();
-			}
-		};
-		
-		timerWidgets.scheduleRepeating(15*1000);
-		
-		
-		labelId = new Label();
-		RootPanel.get().add(labelId);
-	    RootPanel.get().add(signInLink);
-	    
 		
 	}
 	
@@ -106,7 +100,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 			Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
 			
-				WidgetManager.get().getWidgetsList("DefaultPlace", currentApplicationId);
+			WidgetManager.get().getWidgetsList("DefaultPlace", currentApplicationId);
 
 		}
 
@@ -173,31 +167,36 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 					
 					if ( !exists ) {
 						VerticalPanel v = new VerticalPanel();
-						
 					
-						Log.debug(this,"Adding " + widget.getWidgetId() + " to panel");
-						//panel.add(this.getHtmlWidget(widget));
-						String data = "http://jorgecardoso.eu/?place=" + widget.getPlaceId() + 
-								"&app="+widget.getApplicationId() + "&widget=" + widget.getWidgetId();
-						data = com.google.gwt.http.client.URL. encode(data);
-						data = data.replaceAll(";", "%2F");
-						data = data.replaceAll("/", "%2F");
-						data = data.replaceAll(":", "%3A");
-						data = data.replaceAll("\\?", "%3F");
-						data = data.replaceAll("&", "%26");
-					    data = data.replaceAll("\\=", "%3D");
-					    data = data.replaceAll("\\+", "%2B");
-					    data = data.replaceAll("\\$", "%24");
-					    data = data.replaceAll(",", "%2C");
-					    data = data.replaceAll("#", "%23");
-						  
-					    
-						String url = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+data;
-						Image im = new Image(url);
-					
+						v.add(new Label("Widget id: " + widget.getWidgetId()) );
+						v.add(new Label("Short description:" + widget.getShortDescription()) );
 						
-						v.add(new Label(data));
-						v.add(im);
+						for ( WidgetOption option : widget.getWidgetOptions() ) {
+							Log.debug(this,"Adding " + widget.getWidgetId() + " to panel");
+							//panel.add(this.getHtmlWidget(widget));
+							String data = "http://pw.jorgecardoso.org/QrCodeInteractor.html?place=" + widget.getPlaceId() + 
+									"&app="+widget.getApplicationId() + "&widget=" + widget.getWidgetId()
+									+"&type="+widget.getControlType() + "&ref=" + option.getReferenceCode();
+							data = com.google.gwt.http.client.URL.encode(data);
+							data = data.replaceAll(";", "%2F");
+							data = data.replaceAll("/", "%2F");
+							data = data.replaceAll(":", "%3A");
+							data = data.replaceAll("\\?", "%3F");
+							data = data.replaceAll("&", "%26");
+						    data = data.replaceAll("\\=", "%3D");
+						    data = data.replaceAll("\\+", "%2B");
+						    data = data.replaceAll("\\$", "%24");
+						    data = data.replaceAll(",", "%2C");
+						    data = data.replaceAll("#", "%23");
+							  
+						    
+							String url = "https://chart.googleapis.com/chart?cht=qr&chs="+qrSizes.getValue(qrSizes.getSelectedIndex())+"&chl="+data;
+							Image im = new Image(url);
+						
+							v.add(new Label("Reference code: " + option.getReferenceCode()));
+							v.add(new Label("Encoded url:" +data));
+							v.add(im);
+						}
 						panel.add(v);
 						//TODO: generate QrCode
 					}
@@ -214,10 +213,6 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 	@Override
 	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		Log.debug(this, "Received applications: " + applicationList);
-		if ( null != timerWidgets ) {
-			timerWidgets.cancel();
-		}
-		this.applications = applicationList;
 		
 		/*
 		 * Create a temporary list just with the app names
@@ -228,10 +223,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 		}
 
 		
-		if ( null == tabPanelApplications ) {
-			tabPanelApplications = new TabPanel();
-			RootPanel.get("features").add(tabPanelApplications);
-		}
+		
 		
 		/*
 		 * Delete applications that no longer exist  
@@ -273,9 +265,7 @@ public class QrCode implements EntryPoint, ApplicationListListener {
 		if ( selected < 0 ) {
 			this.tabPanelApplications.getTabBar().selectTab(0);
 		}
-
-		timerWidgets.scheduleRepeating(15*1000);
-		this.refreshWidgets();
+		refreshWidgets();
 	}
 
 

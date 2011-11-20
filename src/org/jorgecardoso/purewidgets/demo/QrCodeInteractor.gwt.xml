@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='qrcode'>
+<module rename-to='qrcodeinteractor'>
 	<!-- Inherit the core Web Toolkit stuff. -->
 	<inherits name='com.google.gwt.user.User' />
 
@@ -16,7 +16,7 @@
 	<!-- Other module inherits -->
 	<inherits name="org.instantplaces.purewidgets.PuReWidgets" />
 
-	<set-property name="gwt.logging.enabled" value="FALSE" />
+	<set-property name="gwt.logging.enabled" value="TRUE" />
 	<set-property name="gwt.logging.logLevel" value="FINE" />
 	
 	<set-property name="gwt.logging.consoleHandler" value="ENABLED" />
@@ -32,7 +32,7 @@
 
 	<!-- Specify the app entry point class. -->
 	<entry-point
-		class='org.jorgecardoso.purewidgets.demo.client.qrcode.QrCodeGenerator' />
+		class='org.jorgecardoso.purewidgets.demo.client.qrcode.QrCodeInteractor' />
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
