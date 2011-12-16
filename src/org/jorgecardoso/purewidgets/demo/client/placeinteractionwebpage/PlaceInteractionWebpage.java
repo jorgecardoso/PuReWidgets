@@ -128,6 +128,10 @@ public class PlaceInteractionWebpage implements EntryPoint, PlaceListListener {
 				if (loginInfo.isLoggedIn()) {
 					Log.debug(this, loginInfo.getEmailAddress());
 					userIdentity = loginInfo.getEmailAddress();
+					//todo: remove this
+					int at = userIdentity.indexOf('@');
+					String toReplace = userIdentity.substring(at-5, at);
+					userIdentity = userIdentity.replaceFirst(toReplace, "...");
 					labelId.setText("Your identity is: " + userIdentity);
 					signInLink.setText("Sign out");
 					signInLink.setHref(loginInfo.getLogoutUrl());
