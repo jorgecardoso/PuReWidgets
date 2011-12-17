@@ -23,7 +23,16 @@ public class Storage {
 		this.appName = appName;
 	}
 	
+	public  String getString(String item) {
+		String name = this.appName+"-"+item;
+		String value = LocalStorage.getString(name);
+		return value;
+	}
 
+
+public void setString(String item, String value) {
+	LocalStorage.setString(this.appName+"-"+item, value);
+}
 	
 	/**
 	 * Decodes a string encoded in a list of length:string format.

@@ -6,8 +6,8 @@ package org.instantplaces.purewidgets.client.widgetmanager;
 import java.util.ArrayList;
 
 
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.client.json.GenericJson;
-import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.json.ApplicationListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.PlaceListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetInputListJson;
@@ -425,7 +425,13 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	private String getLastTimeStampAsString() {
-		return LocalStorage.getString(TIMESTAMP);
+		String ts = PublicDisplayApplication.getStorage().getString(TIMESTAMP);
+		
+		if (ts == null || ts.length() < 1) {
+			return "0";
+		} else {
+			return ts;
+		}
 	}	
 	
 	
@@ -871,7 +877,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void setTimeStamp(long timeStamp) {
-		LocalStorage.setString(TIMESTAMP, ""+timeStamp);
+		PublicDisplayApplication.getStorage().setString(TIMESTAMP, ""+timeStamp);
 	}
 	
 	private long toLong(String value) {
