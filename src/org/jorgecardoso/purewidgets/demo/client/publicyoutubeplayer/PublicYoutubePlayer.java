@@ -195,6 +195,12 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	@Override
 	public void onError(PlayerError state) {
 		Log.debug(this, "Player Error: " + state.name());
+		
+		if ( state == PlayerError.NO_EMBED ) {
+			// If we get a noembed error during playback, set the stalled timer so that the app
+			// does not get stuck.
+			this.stalledTimer.schedule(3000);
+		}
 		//this.searchVideos();
 	}
 	
@@ -329,11 +335,19 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	@Override
 	public void onStateChange(PlayerState state) {
 		Log.debug(this, "Player State: " +  state.name());
-		stalledTimer.cancel();
 		
-		if ( state == PlayerState.PAUSED || state == PlayerState.UNSTARTED || state == PlayerState.BUFFERING) {
+
+		
+		if ( state == PlayerState.PLAYING ) {
+			stalledTimer.cancel();
+		} else {
+			stalledTimer.cancel();
 			stalledTimer.schedule(STALLED_WAIT_PERIOD);
-		} 
+		}
+		
+//		if ( state == PlayerState.PAUSED || state == PlayerState.UNSTARTED || state == PlayerState.BUFFERING) {
+//			
+//		} 
 		
 		if ( state == PlayerState.ENDED ) {
 			this.videoEnded();	
