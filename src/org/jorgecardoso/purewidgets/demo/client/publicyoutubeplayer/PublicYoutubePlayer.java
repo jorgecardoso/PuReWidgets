@@ -196,8 +196,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	public void onError(PlayerError state) {
 		Log.debug(this, "Player Error: " + state.name());
 		
-		if ( state == PlayerError.NO_EMBED ) {
-			// If we get a noembed error during playback, set the stalled timer so that the app
+		if ( this.currentState == State.PLAYING ) {
+			// If we get anerror during playback, set the stalled timer so that the app
 			// does not get stuck.
 			this.stalledTimer.schedule(3000);
 		}

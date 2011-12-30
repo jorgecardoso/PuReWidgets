@@ -628,7 +628,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * @param error
 	 */
 	private void processInputResponse(boolean success, String data, Throwable error) {
-		Log.info(data);
+		
 		receivedLastRequest = true;
 		updateAskInputPeriod();
 		if ( success && null != data  ) {
@@ -686,7 +686,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void processWidgetAddResponse(boolean success, String result, Throwable error) {
-		Log.info(result);
+		//Log.info(result);
 		if ( success ) {
 			Log.debugFinest(this, result);
 			this.processWidgetAddSuccess(result);
