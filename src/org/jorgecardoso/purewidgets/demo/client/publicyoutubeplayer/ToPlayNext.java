@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,6 +33,8 @@ public class ToPlayNext extends Composite {
 	@UiField
 	VerticalPanel verticalPanelRight;	
 
+	@UiField
+	VerticalPanel verticalPanelQueue;
 
 	private VideoActionListener videoEventListener;
 	
@@ -40,13 +43,16 @@ public class ToPlayNext extends Composite {
 	private ArrayList<Video> toPlayNextVideos;
 	private ArrayList<VideoActionEntry> toPlayNextEntries;
 	
+	private ArrayList<Video> videoQueue;
+	
 	public ToPlayNext() {
 		initWidget(uiBinder.createAndBindUi(this));
 		toPlayNextVideos = new ArrayList<Video>();
 		toPlayNextEntries = new ArrayList<VideoActionEntry>();
+		videoQueue = new ArrayList<Video>();
 	}	
 	
-	public void clear() {
+	public void clearSearchResults() {
 		for (VideoActionEntry vae : this.toPlayNextEntries)  {
 			vae.dispose();
 		}
@@ -58,9 +64,6 @@ public class ToPlayNext extends Composite {
 	
 	
 	public void highlight(Video v) {
-		
-
-		
 		for ( VideoActionEntry vae : this.toPlayNextEntries ) {
 			if ( vae.getVideo().getId().equals(v.getId()) ) {
 				vae.highlight(true);
@@ -71,6 +74,15 @@ public class ToPlayNext extends Composite {
 	}
 	
 	private void createGui() {
+		createGuiSearchResults();
+		
+		createGuiQueue();
+	}
+
+	/**
+	 * 
+	 */
+	private void createGuiSearchResults() {
 		int leftPanelSize = (int)Math.ceil(PublicYoutubePlayer.MAX_TO_PLAY_NEXT_VIDEOS/2.0);
 		int rightPanelSize = PublicYoutubePlayer.MAX_TO_PLAY_NEXT_VIDEOS/2;
 		
@@ -85,10 +97,23 @@ public class ToPlayNext extends Composite {
 			}
 		}
 	}
+
+	/**
+	 * 
+	 */
+	private void createGuiQueue() {
+		this.verticalPanelQueue.clear();
+		for ( Video video : this.videoQueue ) {
+			this.verticalPanelQueue.add(new Label(video.getTitle()));
+		}
+	}
+	
+	
 	public ArrayList<Video> getEntries() {
 		return this.toPlayNextVideos;
 	}
-	public void addEntry(Video v) {
+	
+	public void addSearchResultEntry(Video v) {
 		
 		/*
 		 * Create the VideoActionEntry
@@ -105,10 +130,22 @@ public class ToPlayNext extends Composite {
 		this.toPlayNextVideos.add(v);
 		this.toPlayNextEntries.add(rpe);
 		
-		this.createGui();
+		this.createGuiSearchResults();
 	}
 	
-
+	public void addQueueEntry(Video v) {
+		this.videoQueue.add(v);
+		this.createGuiQueue();
+	}
+	
+	public Video getNextVideoFromQueue() {
+		if ( this.videoQueue.size() == 0 ) {
+			return null;
+		}
+		Video video = this.videoQueue.remove(0);
+		this.createGuiQueue();
+		return video;
+	}
 	
 
 	/**

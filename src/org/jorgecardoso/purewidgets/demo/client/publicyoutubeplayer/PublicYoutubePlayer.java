@@ -305,10 +305,10 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		 * If the duration and played filtered videos are enough to fill the ToPlay panel use them
 		 */
 		if ( filteredByLengthAndPlayed.size() >= MAX_TO_PLAY_NEXT_VIDEOS ) {
-			this.screen.toPlayNext.clear();
+			this.screen.toPlayNext.clearSearchResults();
 			
 			for (int i = 0; i < MAX_TO_PLAY_NEXT_VIDEOS;  i++ ) {
-				this.screen.toPlayNext.addEntry(filteredByLengthAndPlayed.get(i));
+				this.screen.toPlayNext.addSearchResultEntry(filteredByLengthAndPlayed.get(i));
 			}
 		/*
 		 * If not, just add the ones we have
@@ -316,7 +316,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		} else {
 			Log.info(this, "Could not find more than " + filteredByLengthAndPlayed.size() + " videos.");
 			for ( Video video : filteredByLengthAndPlayed ) {
-				this.screen.toPlayNext.addEntry(video);
+				this.screen.toPlayNext.addSearchResultEntry(video);
 			}
 		}
 		
@@ -375,6 +375,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 				Log.debug(this, e.getPersona() + "wants to play " + video.getId());
 				this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
 				this.toPlay = video;
+				this.screen.toPlayNext.addQueueEntry(video);
 				this.gotoState(State.HIGLIGHT);
 			}
 		}
@@ -516,6 +517,13 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 	private void gotoState( State state ) {
 		if ( State.PLAYING == state ) { // video
+			Video topFromQueue = this.screen.toPlayNext.getNextVideoFromQueue();
+			if ( null == topFromQueue ) {
+				//this.screen.toPlayNext.addQueueEntry(this.toPlay);
+			} else {
+				this.toPlay = topFromQueue;
+			}
+			
 			Log.info(this, "Going to Play state (video: " + this.toPlay.getTitle() + ")");
 			this.currentState = State.PLAYING;
 			this.screen.showVideo();
