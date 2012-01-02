@@ -55,7 +55,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	    }
 	}
 	
-	private static  enum State {PLAYING, ACTIVITY, NEXT, HIGLIGHT};
+	private static  enum State {PLAYING, ACTIVITY, NEXT};//, HIGLIGHT};
 	
 	/**
 	 * The Url parameter name for setting the maximum video duration
@@ -116,7 +116,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	/**
 	 * The duration of the confirmation screen before starting to play the video
 	 */
-	private int toPlayNextConfirmationDuration;
+	//private int toPlayNextConfirmationDuration;
 	
 	/**
 	 * If a video stalls for some reason we wait this period of time before searching another one.
@@ -226,7 +226,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		this.toPlayNextScreenDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION, DEFAULT_TOPLAYNEXT_SCREEN_DURATION);
 		
-		this.toPlayNextConfirmationDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION, DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION);
+		//this.toPlayNextConfirmationDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION, DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION);
 		
 		stalledTimer = new Timer() {
 			@Override
@@ -374,9 +374,9 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			} else if ( action.equalsIgnoreCase("play") ) {
 				Log.debug(this, e.getPersona() + "wants to play " + video.getId());
 				this.addToStream(e.getPersona() + " wants to play " + video.getTitle());
-				this.toPlay = video;
+				//this.toPlay = video;
 				this.screen.toPlayNext.addQueueEntry(video);
-				this.gotoState(State.HIGLIGHT);
+				//this.gotoState(State.HIGLIGHT);
 			}
 		}
 			
@@ -542,15 +542,15 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			Log.info(this, "Going to Next state");
 			this.currentState = State.NEXT;
 			this.screen.showNext();
-			this.screen.toPlayNext.highlight(this.toPlay);
+			//this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
 			
-		} else if ( State.HIGLIGHT == state ) { //show what is going to play
+		} /*else if ( State.HIGLIGHT == state ) { //show what is going to play
 			Log.info(this, "Going to Highlight state");
 			this.currentState = State.HIGLIGHT;
 			this.screen.toPlayNext.highlight(this.toPlay);
 			stateTimer.schedule(this.toPlayNextConfirmationDuration*1000);
-		}
+		}*/
 	}
 	
 	
@@ -837,10 +837,10 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		if ( State.ACTIVITY == this.currentState ) {
 			this.gotoState(State.NEXT);
 		} else if ( State.NEXT == this.currentState ) {
-			this.gotoState(State.HIGLIGHT);
-		} else if ( State.HIGLIGHT == this.currentState ) {
 			this.gotoState(State.PLAYING);
-		}
+		} /*else if ( State.HIGLIGHT == this.currentState ) {
+			this.gotoState(State.PLAYING);
+		}*/
 	}
 	
 	

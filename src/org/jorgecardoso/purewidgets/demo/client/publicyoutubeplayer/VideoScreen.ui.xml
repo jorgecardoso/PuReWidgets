@@ -2,9 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer">
-	<ui:style>
-    
-  </ui:style>
+	<ui:style src="css/ui.css" />
+
   
 	<g:DeckPanel ui:field='deckPanelTop' styleName='all'>
 		
@@ -17,7 +16,7 @@
 			<g:DeckPanel ui:field='deckPanelBottom' debugId="bottom">
 				<g:HorizontalPanel>
 					<g:cell width="50%">
-       					<p:RecentlyPlayed ui:field="recentlyPlayed" debugId="recentlyplayed" /> 
+       					<p:RecentlyPlayed ui:field="recentlyPlayed" styleName='{style.id-recentlyplayed}' /> 
     				</g:cell>
     				<g:cell width="50%">
         				<p:ActivityStream ui:field="activityStream" debugId="stream"/>

@@ -1,13 +1,21 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+<ui:style src="css/ui.css" />
+
+
+<g:HorizontalPanel ui:field="outerPanel">
+	<g:Image ui:field="image" styleName="{style.videoactionentry-thumbnail}"> </g:Image>
 	
-	<g:VerticalPanel ui:field="verticalPanel">
+	<g:VerticalPanel styleName="{style.videoactionentry-infoPanel}">
 		<g:Label ui:field="title"> </g:Label>
-		<g:HorizontalPanel ui:field="horizontalPanel">
-			<g:Image ui:field="image" styleName="thumbnail"> </g:Image>
-			
-		</g:HorizontalPanel>
-	</g:VerticalPanel>
 		
+		<g:Label ui:field="description" styleName="{style.videoactionentry-description}"> </g:Label>
+		
+		<g:HTMLPanel ui:field="buttonPanel" styleName="{style.videoactionentry-button}" />
+		
+	</g:VerticalPanel>
+	
+</g:HorizontalPanel>
 </ui:UiBinder> 

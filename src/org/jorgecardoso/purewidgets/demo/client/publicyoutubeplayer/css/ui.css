@@ -1,0 +1,41 @@
+
+.id-recentlyplayed {
+ 	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	background-color: #DDD;
+	height: 100%;
+	width: 100%;
+	padding-left: 5px;
+}
+
+
+.recentlyplayed-title {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color:blue;
+}
+
+
+
+.videoactionentry-thumbnail {
+	height: 150px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right:10px;
+}
+
+.videoactionentry-infoPanel {
+	height: 100%;	
+}
+
+
+.videoactionentry-description {
+	height: auto;	
+}
+
+.style.videoactionentry-button {
+	margin-top: auto;
+	margin-bottom: 0px;
+}
+

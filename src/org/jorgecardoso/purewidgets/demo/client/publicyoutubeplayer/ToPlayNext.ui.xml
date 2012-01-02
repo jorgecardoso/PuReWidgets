@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-		<g:HorizontalPanel>
+		<g:HorizontalPanel styleName='searchresults' >
 			<g:cell width="75%">
 				<g:VerticalPanel>
 					<g:HTMLPanel>
@@ -17,7 +17,7 @@
 				</g:VerticalPanel>
 			</g:cell>
 			<g:cell width="25%">
-				<g:VerticalPanel>
+				<g:VerticalPanel styleName='queue'>
 					<g:HTMLPanel>
 						<h2>Queue</h2>
 					</g:HTMLPanel>

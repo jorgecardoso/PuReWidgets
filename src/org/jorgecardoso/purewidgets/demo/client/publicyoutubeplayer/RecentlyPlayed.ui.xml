@@ -1,8 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" >
+	
+<ui:style src="css/ui.css" />
+
 	<g:HTMLPanel>
-		<h2>Recently Played</h2>
+		<h2 class="{style.recentlyplayed-title}">Recently Played</h2>
 		<g:VerticalPanel ui:field="verticalPanel"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 

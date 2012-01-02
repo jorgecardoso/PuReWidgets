@@ -13,6 +13,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -37,10 +38,13 @@ public class VideoActionEntry extends Composite implements ActionListener {
     Label title;
 	
 	@UiField
-	VerticalPanel verticalPanel;
+    Label description;
 	
 	@UiField
-	HorizontalPanel horizontalPanel;
+	HorizontalPanel outerPanel;
+	
+	@UiField
+	HTMLPanel buttonPanel;
 
 	@UiField
 	Image image;
@@ -58,17 +62,20 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		this.video = video;
 		
 		title.setText( video.getTitle() );
+		
+		description.setText( video.getTitle() );
+		
 		image.setUrl( video.getThumbnail() );
 		//image.setHeight("100px");
 		guiButton = createButton(video.getId(), actionLabel);
-		horizontalPanel.add( guiButton );
+		buttonPanel.add( guiButton );
 	}
 	
 	public void highlight(boolean h) {
 		if ( h ) { 
-			this.verticalPanel.addStyleName("highlight");
+			this.outerPanel.addStyleName("highlight");
 		} else {
-			this.verticalPanel.removeStyleName("highlight");
+			this.outerPanel.removeStyleName("highlight");
 		}
 	}
 	
@@ -84,7 +91,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiButton createButton(String videoId, String label) {
 		GuiButton btn = new GuiButton(this.encodeLabel(label)+"-"+videoId, label);
 		
-		btn.setSize("175px", "100px");
+		btn.setSize("175px", "50px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);

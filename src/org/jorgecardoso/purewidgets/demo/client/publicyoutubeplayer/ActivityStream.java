@@ -37,7 +37,7 @@ public class ActivityStream extends Composite{
 		if ( this.verticalPanel.getWidgetCount() >= PublicYoutubePlayer.MAX_STREAM_SIZE ) {
 			this.verticalPanel.remove(this.verticalPanel.getWidgetCount()-1);
 		}
-		this.verticalPanel.insert(this.createStreamEntryPanel(message+"-teste"), 0);
+		this.verticalPanel.insert(this.createStreamEntryPanel(message), 0);
 	}
 	
 	
