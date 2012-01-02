@@ -11,7 +11,7 @@
 
 	
 		<g:HTMLPanel ui:field='htmlPanel'>
-			<div id='top'></div>
+			<div id='top' class="{style.top}"></div>
 				
 			<g:DeckPanel ui:field='deckPanelBottom' styleName='{style.id-globalBottomPanel}'>
 				<g:HorizontalPanel>

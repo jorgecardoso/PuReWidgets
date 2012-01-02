@@ -5,7 +5,7 @@
 <ui:style src="css/ui.css" />
 		
 		<g:HorizontalPanel styleName='{style.searchresults}' >
-			<g:cell width="75%">
+			<g:cell >
 				<g:VerticalPanel>
 					<!-- <g:HTMLPanel>
 						<h2>To Play Next</h2>
@@ -19,7 +19,7 @@
 				</g:VerticalPanel>
 			</g:cell>
 			<g:cell width="25%">
-				<g:VerticalPanel styleName='queue'>
+				<g:VerticalPanel styleName='{style.queue}'>
 					<g:HTMLPanel>
 						<h2>Queue</h2>
 					</g:HTMLPanel>
