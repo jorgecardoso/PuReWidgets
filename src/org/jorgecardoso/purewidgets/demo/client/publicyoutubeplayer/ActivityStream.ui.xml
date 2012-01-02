@@ -2,12 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
+	<ui:style src="css/ui.css" />
 	
-	<g:HTMLPanel>
-		<h2>Activity Stream</h2>
+	<g:HTMLPanel >
+	
+		<h2 class="{style.activityStream-title}" >Activity Stream</h2>
+	
 		<g:VerticalPanel ui:field="verticalPanel" />
 	</g:HTMLPanel>
-
-	
 	
 </ui:UiBinder> 

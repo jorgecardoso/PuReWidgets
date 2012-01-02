@@ -13,16 +13,14 @@
 		<g:HTMLPanel ui:field='htmlPanel'>
 			<div id='top'></div>
 				
-			<g:DeckPanel ui:field='deckPanelBottom' debugId="bottom">
+			<g:DeckPanel ui:field='deckPanelBottom' styleName='{style.id-globalBottomPanel}'>
 				<g:HorizontalPanel>
-					<g:cell width="50%">
+					<g:cell width="60%">
        					<p:RecentlyPlayed ui:field="recentlyPlayed" styleName='{style.id-recentlyplayed}' /> 
     				</g:cell>
-    				<g:cell width="50%">
-        				<p:ActivityStream ui:field="activityStream" debugId="stream"/>
+    				<g:cell width="40%">
+        				<p:ActivityStream ui:field="activityStream" styleName='{style.id-activityStream}'/>
     				</g:cell>
-					
-					
 				</g:HorizontalPanel>
 					
 				<g:HTMLPanel>

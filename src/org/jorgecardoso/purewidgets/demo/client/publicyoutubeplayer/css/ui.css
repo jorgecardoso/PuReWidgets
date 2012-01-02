@@ -1,40 +1,98 @@
+@external gwt-Label;
+
+
+.id-globalBottomPanel{
+	height: 70%;
+	/*width: 100%;*/
+	background-color: transparent;
+	margin-left: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 10px;
+	
+}
 
 .id-recentlyplayed {
  	margin-top: 0px;
 	margin-bottom: 0px;
-	margin-right: 0px;
-	background-color: #DDD;
+	margin-right: 10px;
+	background-color: #FFF;
 	height: 100%;
-	width: 100%;
-	padding-left: 5px;
+	/*width: 100%;*/
+	float:left;
+	padding-left: 0px;
+	/*border:2px solid black;*/
 }
 
 
 .recentlyplayed-title {
 	margin-top: 0px;
 	margin-bottom: 0px;
-	color:blue;
+	font-size: 3em;
 }
 
 
 
-.videoactionentry-thumbnail {
-	height: 150px;
+.id-activityStream {
+ 	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	
+	background-color: #FFF;
+	height: 100%;
+	float:right;
+	
+	padding-right:0px;
+	/*border:2px solid black;*/
+}
+
+.id-activityStream .gwt-Label {
+	font-size: 2em;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	border-bottom: 1px dashed black;
+}
+
+.activityStream-title {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 3em;
+}
+
+
+
+
+
+
+
+.videoactionentry-outerpanel {
+	height: 100%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.videoactionentry-outerpanel td{
+	height: 100%;
+}
+
+.videoactionentry-thumbnail {
+	height: 150px;
 	margin-right:10px;
+	margin-bottom:0px;
 }
 
 .videoactionentry-infoPanel {
 	height: 100%;	
 }
 
-
-.videoactionentry-description {
-	height: auto;	
+.videoactionentry-infoPanel-title {
+	font-size: 2em;
+	height: 75px;
+	overflow:hidden;
 }
 
-.style.videoactionentry-button {
+.videoactionentry-button {
 	margin-top: auto;
 	margin-bottom: 0px;
 }

@@ -278,6 +278,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		 */
 		for ( Video video : videos ) {
 			video.setOriginatingTags(this.lastSearchTags);
+			Log.info(video.getDescription());
 		}
 		
 		/*

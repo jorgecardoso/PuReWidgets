@@ -4,6 +4,7 @@
 package org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer;
 
 import org.instantplaces.purewidgets.client.widgets.GuiButton;
+import org.instantplaces.purewidgets.client.widgets.GuiDownloadButton;
 import org.instantplaces.purewidgets.client.widgets.youtube.Video;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.ActionListener;
@@ -38,9 +39,6 @@ public class VideoActionEntry extends Composite implements ActionListener {
     Label title;
 	
 	@UiField
-    Label description;
-	
-	@UiField
 	HorizontalPanel outerPanel;
 	
 	@UiField
@@ -51,7 +49,8 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	
 	private Video video;
 	
-	private GuiButton guiButton;
+	private GuiButton likeGuiButton;
+	private GuiDownloadButton downloadGuiButton;
 	
 	private VideoActionListener videoEventListener;
 	private String action;
@@ -63,12 +62,15 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		
 		title.setText( video.getTitle() );
 		
-		description.setText( video.getTitle() );
+	
 		
 		image.setUrl( video.getThumbnail() );
 		//image.setHeight("100px");
-		guiButton = createButton(video.getId(), actionLabel);
-		buttonPanel.add( guiButton );
+		likeGuiButton = createButton(video.getId(), actionLabel);
+		buttonPanel.add( likeGuiButton );
+		
+		downloadGuiButton =  createDownloadButton(video.getId(), actionLabel);
+		buttonPanel.add( downloadGuiButton );
 	}
 	
 	public void highlight(boolean h) {
@@ -80,8 +82,8 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	}
 	
 	public void dispose() {
-		if ( null != guiButton ) {
-			guiButton.removeFromServer();
+		if ( null != likeGuiButton ) {
+			likeGuiButton.removeFromServer();
 		}
 	}
 	
@@ -98,6 +100,18 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		return btn;
 	}
 
+	/**
+	 * 
+	 */
+	private GuiDownloadButton createDownloadButton(String videoId, String label) {
+		GuiDownloadButton btn = new GuiDownloadButton(this.encodeLabel("Download")+"-"+videoId, "Download", "");
+		
+		btn.setSize("200px", "75px");
+		btn.setVolatile(true);
+		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
+		btn.addActionListener(this);
+		return btn;
+	}
 	
 	private String encodeLabel(String label) {
 		return label.replace(' ', '_');

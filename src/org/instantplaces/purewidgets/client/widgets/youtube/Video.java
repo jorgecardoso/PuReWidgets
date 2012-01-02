@@ -46,7 +46,8 @@ public class Video {
 				jsonVideo.getTitle(),
 				jsonVideo.getChannel(),
 				jsonVideo.getThumbnailURL());
-		v.setDescription(jsonVideo.getDescription());
+		
+		v.setDescription("tese");//jsonVideo.getDescription());
 		
 		if (jsonVideo.existsRating()) {
 			v.setRating(new Rating(jsonVideo.getRatingMin(),
