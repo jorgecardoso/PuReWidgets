@@ -91,7 +91,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiButton createButton(String videoId, String label) {
 		GuiButton btn = new GuiButton(this.encodeLabel(label)+"-"+videoId, label);
 		
-		btn.setSize("175px", "50px");
+		btn.setSize("200px", "75px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);

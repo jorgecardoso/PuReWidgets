@@ -70,18 +70,16 @@
 	height: 100px;
 	width: 200px;
 	background: url("icons/hborder.png") repeat-x 0px -27px;
+	color: graytext;
 }
 
 .instantplaces-GuiButton .caption {
-	
+	display: inline;
 }
 
-.instantplaces-Button .referencecode {
-	
-}
-
-.instantplaces-Button-disabled {
-	color: graytext;
+.instantplaces-GuiButton .referencecode {
+	display: inline;
+	margin-left: 5px;
 }
 
 
