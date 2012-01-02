@@ -52,7 +52,7 @@ public class RecentlyPlayed extends Composite {
 			this.verticalPanel.remove(numEntries-1);
 		} 
 		
-		VideoActionEntry rpe = new VideoActionEntry(v, "Like");
+		VideoActionEntry rpe = new VideoActionEntry(v, "Like", true);
 		rpe.setVideoEventListener(this.videoEventListener, this.action);
 		this.verticalPanel.insert(rpe, 0);
 	}

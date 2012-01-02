@@ -25,7 +25,7 @@
 					
 				<g:HTMLPanel>
 					<div id='toplaynext'>
-						<p:ToPlayNext ui:field='toPlayNext'/>
+						<p:ToPlayNext ui:field='toPlayNext' />
 					</div>					
 				</g:HTMLPanel>
 			</g:DeckPanel>

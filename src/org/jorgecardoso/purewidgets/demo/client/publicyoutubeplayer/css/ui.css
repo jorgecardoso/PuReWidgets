@@ -1,4 +1,4 @@
-@external gwt-Label;
+@external gwt-Label,instantplaces-GuiButton;
 
 
 .id-globalBottomPanel{
@@ -95,5 +95,9 @@
 .videoactionentry-button {
 	margin-top: auto;
 	margin-bottom: 0px;
+}
+
+.videoactionentry-button .instantplaces-GuiButton {
+	margin-right: 10px;
 }
 

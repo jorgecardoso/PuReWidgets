@@ -51,6 +51,37 @@
 }
  
 
+/************************ GuiDownloadButton */
+.instantplaces-GuiDownloadButton {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	height: 100px;
+	width: 200px;
+	margin: 0;
+	padding: 3px 5px;
+	background: url("icons/hborder.png") repeat-x 0px -27px;
+	border: 1px outset #ccc;
+}
+
+.instantplaces-GuiDownloadButton-disabled {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	height: 100px;
+	width: 200px;
+	background: url("icons/hborder.png") repeat-x 0px -27px;
+	color: graytext;
+}
+
+.instantplaces-GuiDownloadButton .caption {
+	display: inline;
+}
+
+.instantplaces-GuiDownloadButton .referencecode {
+	display: inline;
+	margin-left: 5px;
+}
+
+
 
 /************************ GuiButton */
 .instantplaces-GuiButton {

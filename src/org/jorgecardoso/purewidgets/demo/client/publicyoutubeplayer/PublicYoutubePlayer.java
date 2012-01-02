@@ -136,7 +136,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	public static final int MAX_TO_PLAY_NEXT_VIDEOS = 6;
 	
 	
-	public static final int MAX_STREAM_SIZE = 5;
+	public static final int MAX_STREAM_SIZE = 7;
 
 
 	private static final int MAX_TAG_CLOUD_SIZE = 25;

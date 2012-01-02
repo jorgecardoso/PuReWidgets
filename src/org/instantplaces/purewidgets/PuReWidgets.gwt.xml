@@ -31,7 +31,7 @@
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/> 
   <source path='shared'/>
-  <stylesheet src="instantplaces.css?ab"/>
+  <stylesheet src="instantplaces.css?abc"/>
   
   
 </module>

@@ -55,8 +55,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private VideoActionListener videoEventListener;
 	private String action;
 	
-	
-	public VideoActionEntry(Video video, String actionLabel) {
+		public VideoActionEntry(Video video, String actionLabel, boolean showDownload) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.video = video;
 		
@@ -68,9 +67,10 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		//image.setHeight("100px");
 		likeGuiButton = createButton(video.getId(), actionLabel);
 		buttonPanel.add( likeGuiButton );
-		
-		downloadGuiButton =  createDownloadButton(video.getId(), actionLabel);
-		buttonPanel.add( downloadGuiButton );
+		if ( showDownload ) {
+			downloadGuiButton =  createDownloadButton(video.getId(), actionLabel);
+			buttonPanel.add( downloadGuiButton );
+		}
 	}
 	
 	public void highlight(boolean h) {
@@ -93,7 +93,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiButton createButton(String videoId, String label) {
 		GuiButton btn = new GuiButton(this.encodeLabel(label)+"-"+videoId, label);
 		
-		btn.setSize("200px", "75px");
+		btn.setSize("200px", "50px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);
@@ -106,7 +106,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiDownloadButton createDownloadButton(String videoId, String label) {
 		GuiDownloadButton btn = new GuiDownloadButton(this.encodeLabel("Download")+"-"+videoId, "Download", "");
 		
-		btn.setSize("200px", "75px");
+		btn.setSize("200px", "50px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);
