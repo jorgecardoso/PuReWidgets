@@ -118,7 +118,7 @@ public class ToPlayNext extends Composite {
 		/*
 		 * Create the VideoActionEntry
 		 */
-		VideoActionEntry rpe = new VideoActionEntry(v, "Play this", false);
+		VideoActionEntry rpe = new VideoActionEntry(v, "Add to queue", false);
 		rpe.setVideoEventListener(this.videoEventListener, this.action);
 		
 		if ( this.toPlayNextVideos.size() >= PublicYoutubePlayer.MAX_TO_PLAY_NEXT_VIDEOS ) {

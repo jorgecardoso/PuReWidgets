@@ -93,7 +93,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiButton createButton(String videoId, String label) {
 		GuiButton btn = new GuiButton(this.encodeLabel(label)+"-"+videoId, label);
 		
-		btn.setSize("200px", "50px");
+		//btn.setSize("200px", "50px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);
@@ -106,7 +106,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private GuiDownloadButton createDownloadButton(String videoId, String label) {
 		GuiDownloadButton btn = new GuiDownloadButton(this.encodeLabel("Download")+"-"+videoId, "Download", "");
 		
-		btn.setSize("200px", "50px");
+		//btn.setSize("200px", "50px");
 		btn.setVolatile(true);
 		btn.getFeedbackSequencer().setFeedbackFinalDelay(5000);
 		btn.addActionListener(this);

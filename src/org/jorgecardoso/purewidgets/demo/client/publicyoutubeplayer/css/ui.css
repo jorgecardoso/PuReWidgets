@@ -1,4 +1,4 @@
-@external gwt-Label,instantplaces-GuiButton;
+@external gwt-Label,instantplaces-GuiButton,instantplaces-GuiDownloadButton ;
 
 
 .id-globalBottomPanel{
@@ -29,6 +29,15 @@
 	margin-top: 0px;
 	margin-bottom: 0px;
 	font-size: 3em;
+}
+
+.id-recentlyplayed  .instantplaces-GuiButton {
+	width: 200px;
+	height: 50px;
+}
+.id-recentlyplayed  .instantplaces-GuiDownloadButton {
+	width: 200px;
+	height: 50px;
 }
 
 
@@ -101,3 +110,11 @@
 	margin-right: 10px;
 }
 
+.searchresults {
+	width: 100%;
+}
+
+.searchresults  .instantplaces-GuiButton {
+	width: 250px;
+	height: 50px;
+}
