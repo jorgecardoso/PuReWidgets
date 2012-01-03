@@ -13,6 +13,7 @@
   <!-- Other module inherits                                      -->
   <inherits name="com.google.gwt.http.HTTP"/>
   <inherits name="com.google.gwt.logging.Logging"/>
+  <inherits name="com.google.gwt.resources.Resources" />
   
   <!-- 
   <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
@@ -31,7 +32,7 @@
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/> 
   <source path='shared'/>
-  <stylesheet src="instantplaces.css?abc"/>
+  <stylesheet src="instantplaces.css"/>
   
   
 </module>

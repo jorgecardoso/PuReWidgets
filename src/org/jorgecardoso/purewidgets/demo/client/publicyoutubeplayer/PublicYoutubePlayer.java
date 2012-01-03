@@ -211,6 +211,9 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	
 	@Override
 	public void onModuleLoad() {
+		
+		org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
+		
 		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true);
 		
 		ReferenceCodeFormatter.setLeftBracket("[");
