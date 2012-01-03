@@ -255,7 +255,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		screen.showVideo();
 		this.gotoState(State.ACTIVITY);
-		this.gtc.updateGui();
+		//this.gtc.updateGui();
 	}
 	
 	
@@ -573,7 +573,15 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		this.initToPlayNext();
 		
 		this.initVideoPlayer();
-		this.gtc.updateGui();
+		
+		Timer t = new Timer(){
+			@Override
+			public void run() {
+				PublicYoutubePlayer.this.gtc.updateGui();
+			}
+		};
+		t.schedule(1000);
+		
 	}
 	
 	
