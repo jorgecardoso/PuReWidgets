@@ -4,7 +4,12 @@
 package org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer;
 
 import java.util.ArrayList;
+
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.widgets.youtube.JsonVideoEntry;
 import org.instantplaces.purewidgets.client.widgets.youtube.Video;
+import org.instantplaces.purewidgets.client.widgets.youtube.VideoAdapter;
+import org.instantplaces.purewidgets.shared.Log;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -41,16 +46,20 @@ public class ToPlayNext extends Composite {
 	private String action;
 
 	private ArrayList<Video> toPlayNextVideos;
+	
 	private ArrayList<VideoActionEntry> toPlayNextEntries;
 	
 	private ArrayList<Video> videoQueue;
+	
 	
 	public ToPlayNext() {
 		initWidget(uiBinder.createAndBindUi(this));
 		toPlayNextVideos = new ArrayList<Video>();
 		toPlayNextEntries = new ArrayList<VideoActionEntry>();
 		videoQueue = new ArrayList<Video>();
+		this.loadQueueFromLocalStorage();
 	}	
+	
 	
 	public void clearSearchResults() {
 		for (VideoActionEntry vae : this.toPlayNextEntries)  {
@@ -136,6 +145,10 @@ public class ToPlayNext extends Composite {
 	public void addQueueEntry(Video v) {
 		this.videoQueue.add(v);
 		this.createGuiQueue();
+		
+		this.saveQueueToLocalStorage();
+		//JsonVideoEntry jve = VideoAdapter.fromVideo(v);
+		//Log.info(jve.toJsonString());
 	}
 	
 	public Video getNextVideoFromQueue() {
@@ -144,6 +157,7 @@ public class ToPlayNext extends Composite {
 		}
 		Video video = this.videoQueue.remove(0);
 		this.createGuiQueue();
+		this.saveQueueToLocalStorage();
 		return video;
 	}
 	
@@ -172,6 +186,22 @@ public class ToPlayNext extends Composite {
 		for (int i = 0; i < this.verticalPanelRight.getWidgetCount(); i++ ) {
 			VideoActionEntry rpe = (VideoActionEntry) this.verticalPanelRight.getWidget(i);
 			rpe.setVideoEventListener(videoEventListener, action);
+		}
+	}
+	
+	private void saveQueueToLocalStorage() {
+		ArrayList<String> videoSerialized = new ArrayList<String>();
+		for ( Video video : this.videoQueue ) {
+			videoSerialized.add(VideoAdapter.fromVideo(video).toJsonString());
+		}
+		PublicDisplayApplication.getStorage().saveList("ToPlayNext-Queue", videoSerialized);
+	}
+	
+	private void loadQueueFromLocalStorage() {
+		ArrayList<String> videosSerialized = PublicDisplayApplication.getStorage().loadList("ToPlayNext-Queue");
+		for ( String videoSerialized : videosSerialized ) {
+			JsonVideoEntry jsonVideo = JsonVideoEntry.fromJson(videoSerialized);
+			this.videoQueue.add(VideoAdapter.fromJSONVideoEntry(jsonVideo));
 		}
 	}
 

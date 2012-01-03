@@ -574,6 +574,11 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		
 		this.initVideoPlayer();
 		
+		/*
+		 * The tag cloud widget had problems finding the correct font size at startup because
+		 * the panel seems not to have the final size yet. So we give the app UI some time before 
+		 * updating the tag cloud ui.
+		 */
 		Timer t = new Timer(){
 			@Override
 			public void run() {

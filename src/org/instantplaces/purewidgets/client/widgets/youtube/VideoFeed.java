@@ -54,7 +54,7 @@ public class VideoFeed {
 					for (int i = 0; i < list.getEntryLength(); i++) {
 						//Log.debug(list.getEntry(i).getId());
 						//Log.debug(""+list.getEntry(i).toJsonString());
-						videos.add(Video.fromJSONVideoEntry(list.getEntry(i)));
+						videos.add(VideoAdapter.fromJSONVideoEntry(list.getEntry(i)));
 						
 						//Image img = new Image(list.getEntry(i).getThumbnailURL());
 						//RootPanel.get().add(img);

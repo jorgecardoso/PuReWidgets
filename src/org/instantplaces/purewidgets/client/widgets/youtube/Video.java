@@ -41,35 +41,7 @@ public class Video {
 	}
 	
 	
-	public static Video fromJSONVideoEntry(JsonVideoEntry jsonVideo) {
-		Video v = new Video(jsonVideo.getId(), 
-				jsonVideo.getTitle(),
-				jsonVideo.getChannel(),
-				jsonVideo.getThumbnailURL());
-		
-		v.setDescription("tese");//jsonVideo.getDescription());
-		
-		if (jsonVideo.existsRating()) {
-			v.setRating(new Rating(jsonVideo.getRatingMin(),
-					jsonVideo.getRatingMax(),
-					jsonVideo.getRatingAverage(),
-					jsonVideo.getRatingNumRaters()));
-		}
-		v.setViewCount(Long.parseLong(jsonVideo.getViewCount()));
-		v.setFavoriteCount(Long.parseLong(jsonVideo.getFavoriteCount()));
-		v.setKeywords(parseKeywords(jsonVideo.getKeywords()));
-		v.setDuration( Long.parseLong( jsonVideo.getDuration() ) );
-		return v;
-	}
-
-
-	private static String[] parseKeywords(String keywords) {
-		if ( null == keywords ) {
-			return new String[0];
-		} else {
-			return keywords.split(",");
-		}
-	}
+	
 
 
 	public void setThumbnail(String thumbnail) {
@@ -215,4 +187,6 @@ public class Video {
 	public void setDuration(long duration) {
 		this.duration = duration;
 	}
+	
+	
 }
