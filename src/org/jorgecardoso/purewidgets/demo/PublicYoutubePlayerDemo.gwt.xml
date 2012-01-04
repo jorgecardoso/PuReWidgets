@@ -6,6 +6,8 @@
 	<!-- This is needed to allow UiBinder elements to have custom Ids -->
 	<inherits name="com.google.gwt.user.Debug"/>
 
+ 	<inherits name="com.google.gwt.i18n.I18N"/>
+ 
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
@@ -34,10 +36,11 @@
 	<entry-point
 		class='org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer.PublicYoutubePlayer' />
 
+	<extend-property name="locale" values="pt"/>
+
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
 	<script src="swfobject.js" />
-	<set-property name="user.agent" value="safari,ie9" />
-	
+
 </module>

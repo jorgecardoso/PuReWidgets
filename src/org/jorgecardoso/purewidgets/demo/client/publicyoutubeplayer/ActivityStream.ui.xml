@@ -1,12 +1,17 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+    ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+    ui:generateLocales="default"
+	>
 	
 	<ui:style src="css/ui.css" />
 	
 	<g:HTMLPanel >
 	
-		<h2 class="{style.activityStream-title}" >Activity Stream</h2>
+		<h2 class="{style.activityStream-title}" ><ui:msg description="Activity Stream">Activity Stream</ui:msg></h2>
 	
 		<g:VerticalPanel ui:field="verticalPanel" />
 	</g:HTMLPanel>
