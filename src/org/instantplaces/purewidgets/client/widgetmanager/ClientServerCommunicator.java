@@ -425,7 +425,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	private String getLastTimeStampAsString() {
-		String ts = PublicDisplayApplication.getStorage().getString(TIMESTAMP);
+		String ts = PublicDisplayApplication.getLocalStorage().getString(TIMESTAMP);
 		
 		if (ts == null || ts.length() < 1) {
 			return "0";
@@ -877,7 +877,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	private void setTimeStamp(long timeStamp) {
-		PublicDisplayApplication.getStorage().setString(TIMESTAMP, ""+timeStamp);
+		PublicDisplayApplication.getLocalStorage().setString(TIMESTAMP, ""+timeStamp);
 	}
 	
 	private long toLong(String value) {

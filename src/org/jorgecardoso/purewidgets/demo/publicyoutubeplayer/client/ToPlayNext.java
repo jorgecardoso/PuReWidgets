@@ -194,11 +194,11 @@ public class ToPlayNext extends Composite {
 		for ( Video video : this.videoQueue ) {
 			videoSerialized.add(VideoAdapter.fromVideo(video).toJsonString());
 		}
-		PublicDisplayApplication.getStorage().saveList("ToPlayNext-Queue", videoSerialized);
+		PublicDisplayApplication.getLocalStorage().saveList("ToPlayNext-Queue", videoSerialized);
 	}
 	
 	private void loadQueueFromLocalStorage() {
-		ArrayList<String> videosSerialized = PublicDisplayApplication.getStorage().loadList("ToPlayNext-Queue");
+		ArrayList<String> videosSerialized = PublicDisplayApplication.getLocalStorage().loadList("ToPlayNext-Queue");
 		for ( String videoSerialized : videosSerialized ) {
 			JsonVideoEntry jsonVideo = JsonVideoEntry.fromJson(videoSerialized);
 			this.videoQueue.add(VideoAdapter.fromJSONVideoEntry(jsonVideo));

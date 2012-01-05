@@ -4,6 +4,7 @@
 package org.instantplaces.purewidgets.client.application;
 
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
+import org.instantplaces.purewidgets.client.storage.RemoteStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
@@ -42,35 +43,58 @@ public class PublicDisplayApplication {
 	 */
 	private static final String DEFAULT_PLACE_NAME = "DefaultPlace";
 	
+	/**
+	 * Indicates if the application has been loaded
+	 */
 	private static boolean loaded = false;
 	
-	private static String appName;
+	/**
+	 * The application name
+	 */
+	private static String applicationName;
 	
-	private static LocalStorage storage;
+	/**
+	 * The place name
+	 */
+	private static String placeName;
 	
+	/**
+	 * The LocalStorage for this application
+	 */
+	private static LocalStorage localStorage;
+	
+	/**
+	 * The RemoteStorage for this application
+	 */
+	private static RemoteStorage remoteStorage;
+	
+	/**
+	 * Indicates if this application should automatically delete volatile widgets on startup and finish
+	 */
 	private static boolean autoDeleteVolatile; 
+	
 	
 	public static void load(EntryPoint entryPoint, String defaultAppName, boolean autoDeleteVolatile) {
 		
-		String place = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
+		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
 		
-		if (null == place) {
-			place = DEFAULT_PLACE_NAME;
+		if (null == placeName) {
+			placeName = DEFAULT_PLACE_NAME;
 		}
-		Log.debug(PublicDisplayApplication.class.getName(), "Using place name: " + place);
+		Log.debug(PublicDisplayApplication.class.getName(), "Using place name: " + placeName);
 		
-		appName = com.google.gwt.user.client.Window.Location.getParameter(APP_NAME_PARAMETER);
+		applicationName = com.google.gwt.user.client.Window.Location.getParameter(APP_NAME_PARAMETER);
 		
-		if (null == appName) {
+		if (null == applicationName) {
 			if ( null == defaultAppName ) {
-				appName = DEFAULT_APP_NAME;
+				applicationName = DEFAULT_APP_NAME;
 			} else {
-				appName = defaultAppName;
+				applicationName = defaultAppName;
 			}
 		}
-		Log.debug(PublicDisplayApplication.class.getName(), "Using application name: " + appName);
+		Log.debug(PublicDisplayApplication.class.getName(), "Using application name: " + applicationName);
 		
-		WidgetManager.get().setServerCommunication(new ClientServerCommunicator(place, appName));
+		WidgetManager.get().setServerCommunication(new ClientServerCommunicator(placeName, applicationName));
 		
 		/*
 		 * Delete all volatile widgets that may have left on the server before
@@ -83,7 +107,9 @@ public class PublicDisplayApplication {
 		
 		PublicDisplayApplication.loaded = true;
 		
-		storage = new LocalStorage(appName);
+		localStorage = new LocalStorage(applicationName);
+		
+		remoteStorage = new RemoteStorage(placeName, applicationName);
 		
 		Window.addCloseHandler(new CloseHandler<Window>() {
 
@@ -96,13 +122,50 @@ public class PublicDisplayApplication {
 			}});
 	}
 	
-	public static LocalStorage getStorage() {
+	public static LocalStorage getLocalStorage() {
 		if ( !loaded ) {
-			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication", "Error getting Storage: application not loaded yet. Call load() first");
+			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication", "Error getting Local Storage: application not loaded yet. Call load() first");
 			return null;
 		} else {
-			return storage;
+			return localStorage;
 		}
+	}
+
+	public static RemoteStorage getRemoteStorage() {
+		if ( !loaded ) {
+			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication", "Error getting Remote Storage: application not loaded yet. Call load() first");
+			return null;
+		} else {
+			return remoteStorage;
+		}
+	}
+	
+	/**
+	 * @return the placeName
+	 */
+	public static String getPlaceName() {
+		return placeName;
+	}
+
+	/**
+	 * @param placeName the placeName to set
+	 */
+	public static void setPlaceName(String placeName) {
+		PublicDisplayApplication.placeName = placeName;
+	}
+
+	/**
+	 * @return the applicationName
+	 */
+	public static String getApplicationName() {
+		return applicationName;
+	}
+
+	/**
+	 * @param applicationName the applicationName to set
+	 */
+	public static void setApplicationName(String applicationName) {
+		PublicDisplayApplication.applicationName = applicationName;
 	}
 	
 	

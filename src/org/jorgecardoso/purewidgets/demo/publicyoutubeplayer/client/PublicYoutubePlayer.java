@@ -632,15 +632,15 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 
 	private void loadAllPlayedVideos() {
-		ArrayList<String> videoIds = PublicDisplayApplication.getStorage().loadList("PlayedVideoIds");
+		ArrayList<String> videoIds = PublicDisplayApplication.getLocalStorage().loadList("PlayedVideoIds");
 		
-		ArrayList<String> videoTitles = PublicDisplayApplication.getStorage().loadList("PlayedVideoTitles");
+		ArrayList<String> videoTitles = PublicDisplayApplication.getLocalStorage().loadList("PlayedVideoTitles");
 
-		ArrayList<String> videoThumbnails = PublicDisplayApplication.getStorage().loadList("PlayedVideoThumbnails");
+		ArrayList<String> videoThumbnails = PublicDisplayApplication.getLocalStorage().loadList("PlayedVideoThumbnails");
 		
-		ArrayList<String> videoKeywords = PublicDisplayApplication.getStorage().loadList("PlayedVideoKeywords");
+		ArrayList<String> videoKeywords = PublicDisplayApplication.getLocalStorage().loadList("PlayedVideoKeywords");
 		
-		ArrayList<String> videoOriginatingKeywords = PublicDisplayApplication.getStorage().loadList("PlayedVideoOriginatingKeywords");
+		ArrayList<String> videoOriginatingKeywords = PublicDisplayApplication.getLocalStorage().loadList("PlayedVideoOriginatingKeywords");
 		
 		
 		this.allPlayedVideos = new MyLinkedHashMap();
@@ -698,7 +698,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	}
 	
 	private void loadRecentlyPlayedVideos() {
-		this.recentlyPlayedVideos = PublicDisplayApplication.getStorage().loadList("LastPlayedVideos");
+		this.recentlyPlayedVideos = PublicDisplayApplication.getLocalStorage().loadList("LastPlayedVideos");
 		/*
 		 * Trim down to the proper size (we may have changed the size limit)
 		 */
@@ -710,7 +710,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 
 	private void loadStream() {
-		this.stream = PublicDisplayApplication.getStorage().loadList("Stream");
+		this.stream = PublicDisplayApplication.getLocalStorage().loadList("Stream");
 		while ( this.stream.size() > MAX_STREAM_SIZE ) {
 			this.stream.remove(0);
 		}
@@ -718,7 +718,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 
 
 	private void loadTagCloud() {
-		ArrayList<String> keywords = PublicDisplayApplication.getStorage().loadList("TagCloudKeywords");
+		ArrayList<String> keywords = PublicDisplayApplication.getLocalStorage().loadList("TagCloudKeywords");
 		
 		String userTags =  com.google.gwt.user.client.Window.Location.getParameter("allowusertags");
 		boolean allowUserTags = false;
@@ -728,7 +728,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			allowUserTags = true;
 		}
 		
-		int [] frequencies = PublicDisplayApplication.getStorage().loadIntList("TagCloudFrequencies");
+		int [] frequencies = PublicDisplayApplication.getLocalStorage().loadIntList("TagCloudFrequencies");
 		
 		if ( keywords.size() == 0 || frequencies.length == 0 ) {
 			gtc = new GuiTagCloud("tagcloud", allowUserTags);
@@ -800,22 +800,22 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			videoOriginatingKeywords.add( allPlayedVideos.get(key).getOriginatingTags() );
 		}
 		
-		PublicDisplayApplication.getStorage().saveList("PlayedVideoIds", videoIds);
-		PublicDisplayApplication.getStorage().saveList("PlayedVideoTitles", videoTitles);
-		PublicDisplayApplication.getStorage().saveList("PlayedVideoThumbnails", videoThumbnails);
-		PublicDisplayApplication.getStorage().saveList("PlayedVideoKeywords", videoKeywords);
-		PublicDisplayApplication.getStorage().saveList("PlayedVideoOriginatingKeywords", videoOriginatingKeywords);
+		PublicDisplayApplication.getLocalStorage().saveList("PlayedVideoIds", videoIds);
+		PublicDisplayApplication.getLocalStorage().saveList("PlayedVideoTitles", videoTitles);
+		PublicDisplayApplication.getLocalStorage().saveList("PlayedVideoThumbnails", videoThumbnails);
+		PublicDisplayApplication.getLocalStorage().saveList("PlayedVideoKeywords", videoKeywords);
+		PublicDisplayApplication.getLocalStorage().saveList("PlayedVideoOriginatingKeywords", videoOriginatingKeywords);
 		
 		
 	}
 	
 	
 	private void saveRecentlyPlayedVideos() {
-		PublicDisplayApplication.getStorage().saveList("LastPlayedVideos", this.recentlyPlayedVideos);
+		PublicDisplayApplication.getLocalStorage().saveList("LastPlayedVideos", this.recentlyPlayedVideos);
 	}
 	
 	private void saveStream() {
-		PublicDisplayApplication.getStorage().saveList("Stream", this.stream);
+		PublicDisplayApplication.getLocalStorage().saveList("Stream", this.stream);
 		
 	}
 	private void saveTagCloud() {
@@ -830,8 +830,8 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 			frequencies[i++] = t.getFrequency();
 		}
 		
-		PublicDisplayApplication.getStorage().saveList("TagCloudKeywords", keywords);
-		PublicDisplayApplication.getStorage().saveIntList("TagCloudFrequencies", frequencies);
+		PublicDisplayApplication.getLocalStorage().saveList("TagCloudKeywords", keywords);
+		PublicDisplayApplication.getLocalStorage().saveIntList("TagCloudFrequencies", frequencies);
 	}
 	
 	private void searchVideos() {

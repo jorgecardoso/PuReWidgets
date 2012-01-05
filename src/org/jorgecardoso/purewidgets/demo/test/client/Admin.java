@@ -35,7 +35,7 @@ public class Admin {
 	static RemoteStorage rs;
 
 	public static void  run() {
-		rs = new RemoteStorage("DefaultPlace", "Test");
+		rs = PublicDisplayApplication.getRemoteStorage();
 		
 		values = new ArrayList<TextBox>();
 		
