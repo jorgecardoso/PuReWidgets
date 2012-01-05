@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<!-- URL Parameters supported by all public display apps: -->
+<!-- appname=APPNAME -->
+<!-- placename=PlaceNAME -->
+
+<!-- URL Parameters supported by Public Youtube Player: -->
+<!-- placetags=tag1,tag2,etc							-->
+<!-- allowusertags=true|false						    -->
+<!-- maxvideoduration=minutes  					    -->
+<!-- activityscreentime=seconds  					    -->
+<!-- toplaynextscreentime=seconds  					    -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" style="overflow: auto">
+  <head>
+  	<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
+    <title>Public Youtube Player</title>
+    
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <script type="text/javascript" language="javascript" src="publicyoutubeplayer/publicyoutubeplayer.nocache.js"></script>
+    
+<style type="text/css">
+
+html, body {
+	height: 100%;
+	margin:0;
+	overflow: hidden;
+}
+ 
+
+.instantplaces-GuiTextBox {
+	width: 400px !important;
+}
+
+
+.all {
+	height: 100%;
+	width: 100%;
+}
+
+
+.youtube div {
+	height:100%;
+	background-color: #BBB;
+}
+
+
+.highlight {
+	background-color: #ff0000;
+}
+
+.tagspanel {
+	background-color: #FFF;
+	text-align:center;
+	margin-top:auto;
+	margin-bottom:auto;
+}
+
+
+
+
+
+  </style>
+  </head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  
+  
+  <body>
+
+    <!-- OPTIONAL: include this if you want history support -->
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+    
+    <noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+      <p>
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </p>
+    </div>
+    </noscript>
+    
+    
+  </body>
+</html>

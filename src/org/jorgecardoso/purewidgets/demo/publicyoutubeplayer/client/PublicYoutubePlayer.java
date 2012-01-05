@@ -1,4 +1,4 @@
-package org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer;
+package org.jorgecardoso.purewidgets.demo.publicyoutubeplayer.client;
 
 
 import java.util.ArrayList;

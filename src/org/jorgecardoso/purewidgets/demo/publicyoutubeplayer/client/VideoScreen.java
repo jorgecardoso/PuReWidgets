@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer;
+package org.jorgecardoso.purewidgets.demo.publicyoutubeplayer.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

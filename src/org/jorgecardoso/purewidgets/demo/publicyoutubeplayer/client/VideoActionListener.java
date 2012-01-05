@@ -1,4 +1,4 @@
-package org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer;
+package org.jorgecardoso.purewidgets.demo.publicyoutubeplayer.client;
 
 import org.instantplaces.purewidgets.client.widgets.youtube.Video;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='youtubedemo'>
+<module rename-to='publicyoutubeplayer'>
 	<!-- Inherit the core Web Toolkit stuff. -->
 	<inherits name='com.google.gwt.user.User' />
 
@@ -34,10 +34,14 @@
 
 	<!-- Specify the app entry point class. -->
 	<entry-point
-		class='org.jorgecardoso.purewidgets.demo.client.publicyoutubeplayer.PublicYoutubePlayer' />
+		class='org.jorgecardoso.purewidgets.demo.publicyoutubeplayer.client.PublicYoutubePlayer' />
 
+
+	<!-- 
 	<extend-property name="locale" values="pt"/>
+ 	-->
 
+	
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />
