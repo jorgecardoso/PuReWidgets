@@ -6,6 +6,7 @@ package org.jorgecardoso.purewidgets.demo.qrcodegenerator.client;
 import java.util.ArrayList;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class QrCodeGenerator implements EntryPoint, ApplicationListListener {
+public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, EntryPoint, ApplicationListListener {
 	
 	
 	private TabPanel tabPanelApplications;
@@ -57,32 +58,6 @@ public class QrCodeGenerator implements EntryPoint, ApplicationListListener {
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
 		
-		
-		
-		qrSizes = new ListBox();
-		for (int i = 50; i < 550; i+= 50) {
-			qrSizes.addItem(i+"x"+i);
-		}
-		qrSizes.setSelectedIndex(3);
-		
-		RootPanel.get("qrsize").add(new Label("QR Code size: "));
-		RootPanel.get("qrsize").add(qrSizes);
-		
-		
-		
-		tabPanelApplications = new TabPanel();
-		tabPanelApplications.getTabBar().addHandler(new ClickHandler() {
-	        @Override
-	        public void onClick(ClickEvent event) {
-	        	Log.debug(this, "Clicked");
-	        	refreshWidgets();
-	            
-	        }
-	    }, ClickEvent.getType());
-		RootPanel.get("features").add(tabPanelApplications);
-		
-		
-		this.refreshApplications();
 		
 	}
 	
@@ -272,6 +247,39 @@ public class QrCodeGenerator implements EntryPoint, ApplicationListListener {
 	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onApplicationLoaded() {
+
+		
+		
+		qrSizes = new ListBox();
+		for (int i = 50; i < 550; i+= 50) {
+			qrSizes.addItem(i+"x"+i);
+		}
+		qrSizes.setSelectedIndex(3);
+		
+		RootPanel.get("qrsize").add(new Label("QR Code size: "));
+		RootPanel.get("qrsize").add(qrSizes);
+		
+		
+		
+		tabPanelApplications = new TabPanel();
+		tabPanelApplications.getTabBar().addHandler(new ClickHandler() {
+	        @Override
+	        public void onClick(ClickEvent event) {
+	        	Log.debug(this, "Clicked");
+	        	refreshWidgets();
+	            
+	        }
+	    }, ClickEvent.getType());
+		RootPanel.get("features").add(tabPanelApplications);
+		
+		
+		this.refreshApplications();
 		
 	}
 	

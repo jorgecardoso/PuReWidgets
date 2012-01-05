@@ -3,7 +3,10 @@ package org.jorgecardoso.purewidgets.demo.test.client;
 
 
 
+import java.util.ArrayList;
+
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.client.storage.RemoteStorage;
 import org.instantplaces.purewidgets.client.widgets.GuiDownloadButton;
 import org.instantplaces.purewidgets.shared.Log;
@@ -20,56 +23,30 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Test implements EntryPoint{
+public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	
 	
 	@Override
 	public void onModuleLoad() {
-		PublicDisplayApplication.load(this, "Test", false);
+		
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add("placetags");
+		parameters.add("non");
+		
+		PublicDisplayApplication.load(this, "Test", false, parameters);
 		WidgetManager.get().setAutomaticInputRequests(false);
+		
+	}
+
+	@Override
+	public void onApplicationLoaded() {
 		String page = Window.Location.getPath();
 		if ( page.contains("admin.html") ) {
 			Admin.run();
 			return;
 		}
 		
-		//GuiDownloadButton gdb = new GuiDownloadButton("downloadid", "Download test video", "http://jorgecardoso.eu");
-		/*RemoteStorage rs = new RemoteStorage("DefaultPlace", "App");
+		RootPanel.get().add(new Label(PublicDisplayApplication.getParameter("non", "default")));
 		
-		rs.setString("teste1", "value", new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.debug("Failed");
-				Log.debug(caught.getMessage());
-				RootPanel.get().add(new Label("Failed"));
-				
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				Log.debug("ok");
-				RootPanel.get().add(new Label("ok"));
-			}
-			
-		});
-		
-		rs.getString("teste",  new AsyncCallback<String>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Log.debug("Failed");
-				Log.debug(caught.getMessage());
-				RootPanel.get().add(new Label("Failed"));
-				
-			}
-
-			@Override
-			public void onSuccess(String result) {
-				Log.debug("ok:" + result);
-				RootPanel.get().add(new Label("ok: " + result));
-			}
-			
-		});*/
 	}
 }

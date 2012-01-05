@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
@@ -21,7 +22,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * @author "Jorge C. S. Cardoso"
  */
-public class SystemStatusBar implements EntryPoint, ApplicationListListener {
+public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, EntryPoint, ApplicationListListener {
 
 	Timer timer;
 	
@@ -37,17 +38,7 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 		
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
-		lastApplicationsUpdate = System.currentTimeMillis();
 		
-		timer = new Timer() {
-			@Override
-			public void run() {
-				refresh();
-			}
-		};
-		
-		timer.scheduleRepeating(15*1000);
-		//refresh();
 	
 	}
 
@@ -150,6 +141,23 @@ public class SystemStatusBar implements EntryPoint, ApplicationListListener {
 	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onApplicationLoaded() {
+lastApplicationsUpdate = System.currentTimeMillis();
+		
+		timer = new Timer() {
+			@Override
+			public void run() {
+				refresh();
+			}
+		};
+		
+		timer.scheduleRepeating(15*1000);
+		//refresh();
 		
 	}
 

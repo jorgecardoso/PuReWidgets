@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
@@ -45,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author "Jorge C. S. Cardoso"
  * 
  */
-public class PlaceInteractionWebpage implements EntryPoint, PlaceListListener {
+public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedListener, EntryPoint, PlaceListListener {
 	
 
 	public static String userIdentity = "Anonymous1984";
@@ -106,47 +107,6 @@ public class PlaceInteractionWebpage implements EntryPoint, PlaceListListener {
 		
 		WidgetManager.get().setAutomaticInputRequests(false);
 
-		History.addValueChangeHandler(new ValueChangeHandler<String>() {
-			public void onValueChange(ValueChangeEvent<String> event) {
-				String historyToken = event.getValue();
-				show(historyToken);
-			}
-		});
-
-		// Check login status using login service.
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-			@Override
-			public void onFailure(Throwable error) {
-				Log.debug(this, "error; " + error.getMessage());
-			}
-
-			@Override
-			public void onSuccess(LoginInfo result) {
-				loginInfo = result;
-				Log.debug(this, loginInfo.getLoginUrl());
-				if (loginInfo.isLoggedIn()) {
-					Log.debug(this, loginInfo.getEmailAddress());
-					userIdentity = loginInfo.getEmailAddress();
-					//todo: remove this
-					int at = userIdentity.indexOf('@');
-					String toReplace = userIdentity.substring(at-5, at);
-					userIdentity = userIdentity.replaceFirst(toReplace, "...");
-					labelId.setText("Your identity is: " + userIdentity);
-					signInLink.setText("Sign out");
-					signInLink.setHref(loginInfo.getLogoutUrl());
-				} else {
-					signInLink.setText("Sign in");
-					signInLink.setHref(loginInfo.getLoginUrl());
-
-				}
-			}
-		});
-		
-		this.placeListUi = new PlaceList();
-		this.placeListUi.setPlaceListener(this);
-		
-		this.show(History.getToken());
 		
 	}
 
@@ -197,6 +157,53 @@ public class PlaceInteractionWebpage implements EntryPoint, PlaceListListener {
 		Log.debug(this, "User selected " + placeId);
 		
 		History.newItem("place-"+placeId);
+	}
+
+	@Override
+	public void onApplicationLoaded() {
+
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String historyToken = event.getValue();
+				show(historyToken);
+			}
+		});
+
+		// Check login status using login service.
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			@Override
+			public void onFailure(Throwable error) {
+				Log.debug(this, "error; " + error.getMessage());
+			}
+
+			@Override
+			public void onSuccess(LoginInfo result) {
+				loginInfo = result;
+				Log.debug(this, loginInfo.getLoginUrl());
+				if (loginInfo.isLoggedIn()) {
+					Log.debug(this, loginInfo.getEmailAddress());
+					userIdentity = loginInfo.getEmailAddress();
+					//todo: remove this
+					int at = userIdentity.indexOf('@');
+					String toReplace = userIdentity.substring(at-5, at);
+					userIdentity = userIdentity.replaceFirst(toReplace, "...");
+					labelId.setText("Your identity is: " + userIdentity);
+					signInLink.setText("Sign out");
+					signInLink.setHref(loginInfo.getLogoutUrl());
+				} else {
+					signInLink.setText("Sign in");
+					signInLink.setHref(loginInfo.getLoginUrl());
+
+				}
+			}
+		});
+		
+		this.placeListUi = new PlaceList();
+		this.placeListUi.setPlaceListener(this);
+		
+		this.show(History.getToken());
+		
 	}
 
 

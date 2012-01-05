@@ -2,6 +2,7 @@ package org.jorgecardoso.purewidgets.demo.helloworld.client;
 
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.client.widgets.GuiButton;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.ActionListener;
@@ -11,7 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class HelloWorld implements EntryPoint{
+public class HelloWorld implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	
 	@Override
 	public void onModuleLoad() {
@@ -21,6 +22,12 @@ public class HelloWorld implements EntryPoint{
 		 * background processes.
 		 */
 		PublicDisplayApplication.load(this, "HelloWorld", true);
+	
+	
+	}
+
+	@Override
+	public void onApplicationLoaded() {
 		
 		/*
 		 * Create a PuReWidgets button with associated graphical 
@@ -54,6 +61,6 @@ public class HelloWorld implements EntryPoint{
 		 * window.
 		 */
 		RootPanel.get("main").add(guiButton);
-	
+		
 	}
 }

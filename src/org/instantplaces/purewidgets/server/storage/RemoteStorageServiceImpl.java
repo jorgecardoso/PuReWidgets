@@ -3,6 +3,8 @@
  */
 package org.instantplaces.purewidgets.server.storage;
 
+import java.util.ArrayList;
+
 import org.instantplaces.purewidgets.client.storage.RemoteStorageService;
 import org.instantplaces.purewidgets.server.dao.Dao;
 import org.instantplaces.purewidgets.server.dao.StorageDao;
@@ -40,6 +42,28 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 	
 	}
 
+	@Override
+	public String[] get(String storageId, ArrayList<String> names) {
+		String[] result = new String[names.size()];
+		
+		Dao.beginTransaction();
+		
+		StorageDao storageDao = Dao.getStorage(storageId);
+		if ( null == storageDao ) {
+			return null;
+		}
+		int i = 0;
+		for ( String name: names ) {
+			String value = storageDao.getString(name);
+			result[i++] = value;
+		}
+		
+		Dao.commitOrRollbackTransaction();
+		
+		return result;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see org.instantplaces.purewidgets.client.storage.RemoteStorageService#set(java.lang.String, java.lang.String)
 	 */
@@ -55,5 +79,7 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 		Dao.put(storageDao);
 		Dao.commitOrRollbackTransaction();
 	}
+
+	
 
 }

@@ -3,6 +3,8 @@
  */
 package org.instantplaces.purewidgets.client.application;
 
+import java.util.ArrayList;
+
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.storage.RemoteStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
@@ -13,6 +15,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * The PublicDisplayApplication class represents the graphical part of the public display application.
@@ -71,10 +74,15 @@ public class PublicDisplayApplication {
 	/**
 	 * Indicates if this application should automatically delete volatile widgets on startup and finish
 	 */
-	private static boolean autoDeleteVolatile; 
+	private static boolean autoDeleteVolatile;
 	
+	private static ArrayList<String> parameterNames;
+	private static ArrayList<String> parameterValues;
 	
-	public static void load(EntryPoint entryPoint, String defaultAppName, boolean autoDeleteVolatile) {
+	private static PublicDisplayApplicationLoadedListener listener;
+
+public static void load(PublicDisplayApplicationLoadedListener entryPoint, String defaultAppName, boolean autoDeleteVolatile, ArrayList<String> parameters) {
+		listener = entryPoint;
 		
 		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
 		
@@ -120,6 +128,42 @@ public class PublicDisplayApplication {
 					WidgetManager.get().removeAllWidgets(true);
 				}
 			}});
+		
+		parameterNames = parameters;
+		parameterValues = new ArrayList<String>();
+		
+		if (null == parameters ) {
+			listener.onApplicationLoaded();
+			return;
+		} else {
+			remoteStorage.getStrings(parameterNames, new AsyncCallback<String[]>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					listener.onApplicationLoaded();
+					
+				}
+
+				@Override
+				public void onSuccess(String[] result) {
+					if ( null != result ) {
+						for ( String value : result ) {
+							parameterValues.add(value);
+						}
+					}
+					listener.onApplicationLoaded();
+					
+				}
+				
+			});
+		}
+		
+	}
+
+	
+	public static void load(PublicDisplayApplicationLoadedListener entryPoint, String defaultAppName, boolean autoDeleteVolatile) {
+		
+		load(entryPoint, defaultAppName, autoDeleteVolatile, null);
 	}
 	
 	public static LocalStorage getLocalStorage() {
@@ -168,5 +212,28 @@ public class PublicDisplayApplication {
 		PublicDisplayApplication.applicationName = applicationName;
 	}
 	
-	
+	public static String getParameter(String name, String defaultValue) {
+		if ( null == parameterNames || parameterNames.size() == 0) return defaultValue;
+		String remoteValue = null;
+		for ( int i = 0; i < parameterNames.size(); i++ ) {
+			if ( parameterNames.get(i).equals(name) ) {
+				if ( null != parameterValues && parameterValues.size() > 0) {
+					remoteValue = parameterValues.get(i);
+					break;
+				}
+			}
+		}
+		
+		if ( null != remoteValue ) {
+			return remoteValue;
+		}
+		
+		String urlValue =  com.google.gwt.user.client.Window.Location.getParameter(name);
+		
+		if ( null != urlValue ) {
+			return urlValue;
+		}
+		
+		return defaultValue;
+	}
 }

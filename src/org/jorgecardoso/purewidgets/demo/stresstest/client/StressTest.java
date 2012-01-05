@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.client.widgets.GuiButton;
 import org.instantplaces.purewidgets.client.widgets.GuiWidget;
 import org.instantplaces.purewidgets.shared.Log;
@@ -26,7 +27,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StressTest implements EntryPoint{
+public class StressTest implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	public static SightingServiceAsync sightingService;
 	
 	Timer timerAddDelete;
@@ -43,34 +44,6 @@ public class StressTest implements EntryPoint{
 		
 		PublicDisplayApplication.load(this, "StressTest-" + date, true);
 		
-		//GuiButton b = new GuiButton("button", "button");
-		//b.setVolatile(true);
-		
-		
-		sightingService = GWT.create(SightingService.class);
-		((ServiceDefTarget) sightingService).setServiceEntryPoint("/sighting");
-		
-		widgets = new ArrayList<GuiWidget>();
-		
-		widgetIdIndex = 0;
-		
-		timerAddDelete = new Timer() {
-			@Override
-			public void run() {
-				addDelete();
-			}
-		};
-		timerAddDelete.scheduleRepeating(60000);
-		
-		
-		timerInput = new Timer() {
-			@Override
-			public void run() {
-				input();
-			}
-		};
-		timerInput.scheduleRepeating(10000);
-		addDelete();
 		
 	}
 	
@@ -128,6 +101,40 @@ public class StressTest implements EntryPoint{
 			
 			widgets.add(b);
 		}
+		
+	}
+
+	@Override
+	public void onApplicationLoaded() {
+		//GuiButton b = new GuiButton("button", "button");
+				//b.setVolatile(true);
+				
+				
+				sightingService = GWT.create(SightingService.class);
+				((ServiceDefTarget) sightingService).setServiceEntryPoint("/sighting");
+				
+				widgets = new ArrayList<GuiWidget>();
+				
+				widgetIdIndex = 0;
+				
+				timerAddDelete = new Timer() {
+					@Override
+					public void run() {
+						addDelete();
+					}
+				};
+				timerAddDelete.scheduleRepeating(60000);
+				
+				
+				timerInput = new Timer() {
+					@Override
+					public void run() {
+						input();
+					}
+				};
+				timerInput.scheduleRepeating(10000);
+				addDelete();
+				
 		
 	}
 }

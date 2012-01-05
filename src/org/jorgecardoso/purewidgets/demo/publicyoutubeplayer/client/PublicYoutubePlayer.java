@@ -17,6 +17,7 @@ import org.instantplaces.purewidgets.client.widgets.youtube.PlayerState;
 import org.instantplaces.purewidgets.client.widgets.youtube.RequestCompleteHandler;
 import org.instantplaces.purewidgets.client.widgets.youtube.VideoFeed;
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.client.widgets.GuiTagCloud;
 
 import org.instantplaces.purewidgets.client.widgets.GuiWidget;
@@ -29,17 +30,21 @@ import org.instantplaces.purewidgets.shared.events.ActionListener;
 import org.instantplaces.purewidgets.shared.widgets.TagCloud;
 
 
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, ActionListener, RequestCompleteHandler, PlayerListener{
+public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListener, EntryPoint, VideoActionListener, ActionListener, RequestCompleteHandler, PlayerListener{
 	
 	
+	public static final String URL_PARAMETER_ALLOW_USER_TAGS = "allowusertags";
+
 	private class MyLinkedHashMap extends LinkedHashMap<String, Video> {
 		/**
 		 * 
@@ -60,7 +65,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	/**
 	 * The Url parameter name for setting the maximum video duration
 	 */
-	private static final String URL_PARAMETER_MAX_VIDEO_DURATION = "maxvideotime";
+	public static final String URL_PARAMETER_MAX_VIDEO_DURATION = "maxvideotime";
 	
 	/**
 	 * The default maximum video duration allowed.
@@ -70,7 +75,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	/**
 	 * The Url parameter name for setting the duration of the 'Activity' screen
 	 */
-	private static final String URL_PARAMETER_ACTIVITY_SCREEN_DURATION = "activityscreentime";
+	public static final String URL_PARAMETER_ACTIVITY_SCREEN_DURATION = "activityscreentime";
 	
 	/**
 	 * The default value for the duration of the 'Activity' screen
@@ -80,7 +85,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	/**
 	 * The Url parameter name for setting the duration of the 'To play next' screen
 	 */
-	private static final String URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION = "toplaynextscreentime";
+	public static final String URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION = "toplaynextscreentime";
 	
 	/**
 	 * The default value for the duration of the 'To play next' screen
@@ -91,12 +96,12 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	/**
 	 * The Url parameter name for setting the duration of the 'To play next' screen
 	 */
-	private static final String URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION = "toplaynextconfirmationtime";
+	public static final String URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION = "toplaynextconfirmationtime";
 	
 	/**
 	 * The default value for the duration of the 'To play next' screen
 	 */
-	private static int DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION = 15; // seconds
+	public static int DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION = 15; // seconds
 	
 	/**
 	 * The duration of the 'Activity' screen
@@ -208,16 +213,17 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	public void onLoading(int percent) {
 	}
 
-	
 	@Override
-	public void onModuleLoad() {
-		
-		org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
-		
-		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true);
-		
+	public void onApplicationLoaded() {
+
 		ReferenceCodeFormatter.setLeftBracket("[");
 		ReferenceCodeFormatter.setRightBracket("]");
+		
+		String page = Window.Location.getPath();
+		if ( page.contains("admin.html") ) {
+			Admin.run();
+			return;
+		}
 		
 		/*
 		 * Parse URL parameters
@@ -256,6 +262,22 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 		screen.showVideo();
 		this.gotoState(State.ACTIVITY);
 		//this.gtc.updateGui();
+	}
+	
+	@Override
+	public void onModuleLoad() {
+		
+		org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
+		
+		ArrayList<String> parameters = new ArrayList<String>();
+		parameters.add(URL_PARAMETER_ACTIVITY_SCREEN_DURATION);
+		parameters.add(URL_PARAMETER_ALLOW_USER_TAGS);
+		parameters.add(URL_PARAMETER_MAX_VIDEO_DURATION);
+		parameters.add(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION);
+		parameters.add(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION);
+		
+		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true, parameters);
+		
 	}
 	
 	
@@ -720,7 +742,7 @@ public class PublicYoutubePlayer implements EntryPoint, VideoActionListener, Act
 	private void loadTagCloud() {
 		ArrayList<String> keywords = PublicDisplayApplication.getLocalStorage().loadList("TagCloudKeywords");
 		
-		String userTags =  com.google.gwt.user.client.Window.Location.getParameter("allowusertags");
+		String userTags =  PublicDisplayApplication.getParameter(URL_PARAMETER_ALLOW_USER_TAGS, "false"); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
 		boolean allowUserTags = false;
 		
 		
