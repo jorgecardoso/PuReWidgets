@@ -17,6 +17,18 @@
   </servlet-mapping>
   
   
+  <servlet>
+    <servlet-name>remoteStorageServlet</servlet-name>
+    <servlet-class>org.instantplaces.purewidgets.server.storage.RemoteStorageServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>remoteStorageServlet</servlet-name>
+    <url-pattern>/storageservice</url-pattern>
+  </servlet-mapping>
+  
+  
+    
 <servlet>
     <servlet-name>testServlet</servlet-name>
     <servlet-class>org.jorgecardoso.purewidgets.demo.server.Test</servlet-class>

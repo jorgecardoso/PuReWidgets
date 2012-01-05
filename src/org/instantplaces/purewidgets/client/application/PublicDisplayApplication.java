@@ -3,7 +3,7 @@
  */
 package org.instantplaces.purewidgets.client.application;
 
-import org.instantplaces.purewidgets.client.storage.Storage;
+import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
@@ -46,7 +46,7 @@ public class PublicDisplayApplication {
 	
 	private static String appName;
 	
-	private static Storage storage;
+	private static LocalStorage storage;
 	
 	private static boolean autoDeleteVolatile; 
 	
@@ -83,7 +83,7 @@ public class PublicDisplayApplication {
 		
 		PublicDisplayApplication.loaded = true;
 		
-		storage = new Storage(appName);
+		storage = new LocalStorage(appName);
 		
 		Window.addCloseHandler(new CloseHandler<Window>() {
 
@@ -96,7 +96,7 @@ public class PublicDisplayApplication {
 			}});
 	}
 	
-	public static Storage getStorage() {
+	public static LocalStorage getStorage() {
 		if ( !loaded ) {
 			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication", "Error getting Storage: application not loaded yet. Call load() first");
 			return null;
