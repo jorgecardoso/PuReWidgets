@@ -24,8 +24,9 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 	 * @see org.instantplaces.purewidgets.client.storage.RemoteStorageService#get(java.lang.String)
 	 */
 	@Override
-	public String get(String storageId, String name) {
-		
+	public String[] get(String storageId, String name) {
+		String[] result = new String[2];
+		result[0] = name;
 		Dao.beginTransaction();
 		
 		StorageDao storageDao = Dao.getStorage(storageId);
@@ -34,7 +35,8 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 		}
 		String value = storageDao.getString(name);
 		Dao.commitOrRollbackTransaction();
-		return value;
+		result[1] = value;
+		return result;
 	
 	}
 

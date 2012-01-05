@@ -31,7 +31,7 @@
     
 <servlet>
     <servlet-name>testServlet</servlet-name>
-    <servlet-class>org.jorgecardoso.purewidgets.demo.server.Test</servlet-class>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.test.server.Test</servlet-class>
   </servlet> 
   
       <servlet-mapping>
@@ -42,7 +42,7 @@
    
 <servlet>
   <servlet-name>sightingServlet</servlet-name>
-    <servlet-class>org.jorgecardoso.purewidgets.demo.server.placeinteractionwebpage.SightingServiceImpl</servlet-class>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.placeinteraction.server.SightingServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -52,7 +52,7 @@
      
  <servlet>
     <servlet-name>loginService</servlet-name>
-    <servlet-class>org.jorgecardoso.purewidgets.demo.server.placeinteractionwebpage.LoginServiceImpl</servlet-class>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.placeinteraction.server.LoginServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>

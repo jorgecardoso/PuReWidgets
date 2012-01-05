@@ -27,7 +27,7 @@ public class RemoteStorage {
 		this.remoteStorageService.set(this.storageId, name, value, callback);
 	}
 	
-	public void getString(String name, AsyncCallback<String> callback) {
+	public void getString(String name, AsyncCallback<String[]> callback) {
 		this.remoteStorageService.get(this.storageId, name, callback);
 	}
 	

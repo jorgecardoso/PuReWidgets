@@ -11,6 +11,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("/storageservice")
 public interface RemoteStorageService extends RemoteService {
-	public String get(String storageId, String name);
+	public String[] get(String storageId, String name);
 	public void set(String storageId, String name, String value);
 }
