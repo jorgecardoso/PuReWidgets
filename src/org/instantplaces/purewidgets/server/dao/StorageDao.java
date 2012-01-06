@@ -49,14 +49,14 @@ public class StorageDao {
 	
 	
 	public  String getString(String item) {
-		String name = this.storageId+"-"+item;
-		String value = this.getStringFromStorage(name);
+		//String name = this.storageId+"-"+item;
+		String value = this.getStringFromStorage(item);
 		return value;
 	}
 
 
 	public void setString(String item, String value) {
-		this.setStringInStorage(this.storageId+"-"+item, value);
+		this.setStringInStorage(item, value);
 	}
 
 /**
@@ -177,7 +177,7 @@ public long getLongFromStorage(String name) {
 
 	
 	public int [] loadIntList(String name) {
-		name = this.storageId+"-"+name;
+		//name = this.storageId+"-"+name;
 		
 		String codedList = this.getStringFromStorage(name);
 		
@@ -202,13 +202,13 @@ public long getLongFromStorage(String name) {
 	}
 	
 	public  ArrayList<String> loadList(String name) {
-		name = this.storageId+"-"+name;
+		//name = this.storageId+"-"+name;
 		String value = this.getStringFromStorage(name);
 		return decode(value);
 	}
 
 	public void saveIntList(String name, int [] list) {
-		name = this.storageId+"-"+name;
+		//name = this.storageId+"-"+name;
 		if ( null == list || list.length == 0 ) {
 			return;
 		}
@@ -232,7 +232,7 @@ public long getLongFromStorage(String name) {
 	 * @param values
 	 */
 	public void saveList(String name, ArrayList<String> values) {
-		name = this.storageId+"-"+name;
+		//name = this.storageId+"-"+name;
 		this.setStringInStorage(name, encode(values));
 	}
 
@@ -240,11 +240,11 @@ public long getLongFromStorage(String name) {
 	 * @return the keys
 	 */
 	public ArrayList<String> getKeys() {
-		ArrayList<String> keys = new ArrayList<String>();
-		for ( String completeKey : this.keys ) {
-			keys.add(completeKey.substring(this.storageId.length()+1));
-		}
-		return keys;
+		//ArrayList<String> keys = new ArrayList<String>();
+		//for ( String completeKey : this.keys ) {
+		//	keys.add(completeKey.substring(this.storageId.length()+1));
+		//}
+		return this.keys;
 	}
 
 	
