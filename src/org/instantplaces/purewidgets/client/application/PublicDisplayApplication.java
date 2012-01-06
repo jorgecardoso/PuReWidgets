@@ -109,11 +109,11 @@ public class PublicDisplayApplication {
 	}
 
 	/** 
-	 * This function returns an application parameter value by first checking if
+	 * This function returns a string application parameter value by first checking if
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static String getParameter(String name, String defaultValue) {
+	public static String getParameterString(String name, String defaultValue) {
 		if (null == parameterNames || parameterNames.size() == 0)
 			return defaultValue;
 		String remoteValue = null;
@@ -141,6 +141,41 @@ public class PublicDisplayApplication {
 
 		return defaultValue;
 	}
+	
+	/** 
+	 * This function returns an int application parameter value by first checking if
+	 * it is set in the remote storage, then on the URL. Remote storage parameters have
+	 * precedence over URL parameters.
+	 */
+	public static int getParameterInt(String name, int defaultValue) {
+		String valueString = getParameterString(name, defaultValue+"");
+		int toReturn = defaultValue;
+		try {
+			toReturn = Integer.parseInt(valueString);
+		} catch (NumberFormatException nfe) {
+			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into an integer.");
+		}
+
+		return toReturn;
+	}	
+	
+	/** 
+	 * This function returns a boolean application parameter value by first checking if
+	 * it is set in the remote storage, then on the URL. Remote storage parameters have
+	 * precedence over URL parameters.
+	 */
+	public static boolean getParameterInt(String name, boolean defaultValue) {
+		String valueString = getParameterString(name, defaultValue+"");
+		boolean toReturn = defaultValue;
+		try {
+			toReturn = Boolean.parseBoolean(valueString);
+		} catch (NumberFormatException nfe) {
+			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into a boolean (true/false).");
+		}
+
+		return toReturn;
+	}		
+	
 
 	/**
 	 * @return the placeName

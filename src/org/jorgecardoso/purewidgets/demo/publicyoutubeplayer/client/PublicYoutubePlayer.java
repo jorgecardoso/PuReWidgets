@@ -742,7 +742,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	private void loadTagCloud() {
 		ArrayList<String> keywords = PublicDisplayApplication.getLocalStorage().loadList("TagCloudKeywords");
 		
-		String userTags =  PublicDisplayApplication.getParameter(URL_PARAMETER_ALLOW_USER_TAGS, "false"); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
+		String userTags =  PublicDisplayApplication.getParameterString(URL_PARAMETER_ALLOW_USER_TAGS, "false"); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
 		boolean allowUserTags = false;
 		
 		

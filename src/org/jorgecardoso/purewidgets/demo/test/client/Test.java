@@ -46,7 +46,7 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 			return;
 		}
 		
-		RootPanel.get().add(new Label(PublicDisplayApplication.getParameter("non", "default")));
+		RootPanel.get().add(new Label(PublicDisplayApplication.getParameterString("non", "default")));
 		
 	}
 }
