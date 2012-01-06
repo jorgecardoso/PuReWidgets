@@ -164,7 +164,7 @@ public class PublicDisplayApplication {
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static boolean getParameterInt(String name, boolean defaultValue) {
+	public static boolean getParameterBoolean(String name, boolean defaultValue) {
 		String valueString = getParameterString(name, defaultValue+"");
 		boolean toReturn = defaultValue;
 		try {
