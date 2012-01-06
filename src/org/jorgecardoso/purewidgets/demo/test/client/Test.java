@@ -29,11 +29,7 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	@Override
 	public void onModuleLoad() {
 		
-		ArrayList<String> parameters = new ArrayList<String>();
-		parameters.add("placetags");
-		parameters.add("non");
-		
-		PublicDisplayApplication.load(this, "Test", false, parameters);
+		PublicDisplayApplication.load(this, "Test", false);
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
 	}

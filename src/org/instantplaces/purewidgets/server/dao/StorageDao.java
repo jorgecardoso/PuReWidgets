@@ -235,4 +235,17 @@ public long getLongFromStorage(String name) {
 		name = this.storageId+"-"+name;
 		this.setStringInStorage(name, encode(values));
 	}
+
+	/**
+	 * @return the keys
+	 */
+	public ArrayList<String> getKeys() {
+		ArrayList<String> keys = new ArrayList<String>();
+		for ( String completeKey : this.keys ) {
+			keys.add(completeKey.substring(this.storageId.length()+1));
+		}
+		return keys;
+	}
+
+	
 }

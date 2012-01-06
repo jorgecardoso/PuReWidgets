@@ -34,6 +34,7 @@ import org.instantplaces.purewidgets.shared.widgets.TagCloud;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
 
@@ -95,6 +96,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	 */
 	public static final String URL_PARAMETER_PLACE_TAGS = "placetags";
 	
+	public static final String URL_PARAMETER_RESET = "reset";
 	
 	/**
 	 * The default value for the duration of the 'To play next' screen
@@ -137,6 +139,8 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	 * The user defined place tags
 	 */
 	private String placeTagsParameter;
+	
+	private boolean resetParameter;
 	
 	
 	/**
@@ -253,14 +257,24 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		 * These can be set in the URL or via the admin console
 		 */
 		this.maxVideoDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_MAX_VIDEO_DURATION, DEFAULT_MAX_VIDEO_DURATION);
+		Log.info("Loaded '" + URL_PARAMETER_MAX_VIDEO_DURATION + "' parameter with value: " + this.maxVideoDurationParameter);
 		
 		this.activityScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_ACTIVITY_SCREEN_DURATION, DEFAULT_ACTIVITY_SCREEN_DURATION);
+		Log.info("Loaded '" + URL_PARAMETER_ACTIVITY_SCREEN_DURATION + "' parameter with value: " + this.activityScreenDurationParameter);
 		
 		this.toPlayNextScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION, DEFAULT_TOPLAYNEXT_SCREEN_DURATION);
+		Log.info("Loaded '" + URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION + "' parameter with value: " + this.toPlayNextScreenDurationParameter);
 		
 		this.allowUserTagsParameter =  PublicDisplayApplication.getParameterBoolean(URL_PARAMETER_ALLOW_USER_TAGS, false); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
-
+		Log.info("Loaded '" + URL_PARAMETER_ALLOW_USER_TAGS + "' parameter with value: " + this.allowUserTagsParameter);
+		
 		this.placeTagsParameter = PublicDisplayApplication.getParameterString(URL_PARAMETER_PLACE_TAGS, "public,youtube,player");
+		Log.info("Loaded '" + URL_PARAMETER_PLACE_TAGS + "' parameter with value: " + this.placeTagsParameter);
+		
+		this.resetParameter = PublicDisplayApplication.getParameterBoolean(URL_PARAMETER_RESET, false);
+		Log.info("Loaded '" + URL_PARAMETER_RESET + "' parameter with value: " + this.resetParameter);
+		
+		PublicDisplayApplication.setParameterString(URL_PARAMETER_RESET, "false");
 		
 		
 		//this.toPlayNextConfirmationDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION, DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION);
@@ -278,12 +292,12 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 				timerStateElapsed();
 			}
 		};
+		
 		/*
 		 * Load data from the LocalStorage
 		 */
 		this.loadLocalData();
 		
-
 		
 		this.initGui();
 		
@@ -297,14 +311,9 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		
 		org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
 		
-		ArrayList<String> parameters = new ArrayList<String>();
-		parameters.add(URL_PARAMETER_ACTIVITY_SCREEN_DURATION);
-		parameters.add(URL_PARAMETER_ALLOW_USER_TAGS);
-		parameters.add(URL_PARAMETER_MAX_VIDEO_DURATION);
-		parameters.add(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION);
-		parameters.add(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION);
 		
-		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true, parameters);
+		
+		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true);
 		
 	}
 	
@@ -771,8 +780,12 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		ArrayList<String> keywords = PublicDisplayApplication.getLocalStorage().loadList("TagCloudKeywords");
 		
 		
-		
 		int [] frequencies = PublicDisplayApplication.getLocalStorage().loadIntList("TagCloudFrequencies");
+		
+		if ( this.resetParameter ) {
+			keywords = new ArrayList<String>();
+			frequencies = new int[0];
+		}
 		
 		if ( keywords.size() == 0 || frequencies.length == 0 ) {
 			gtc = new GuiTagCloud("tagcloud", allowUserTagsParameter);
@@ -908,16 +921,16 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		
 		TagCloud.Tag originTag = this.gtc.getTag( video.getOriginatingTags() );
 		Log.debug(this, "Updating tag cloud with tag '" +originTag + "' from video '" + video.getId() + "'");
-		if ( null == originTag ) {
-			return;
+		if ( null != originTag ) {
+		
+			int f = originTag.getFrequency();
+			f = f + 3;
+			if ( f > 50 ) {
+				f = 50;
+			}
+			originTag.setFrequency(f);
+		//return;
 		}
-		int f = originTag.getFrequency();
-		f = f + 3;
-		if ( f > 50 ) {
-			f = 50;
-		}
-		originTag.setFrequency(f);
-	
 		//
 		
 		/*

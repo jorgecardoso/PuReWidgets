@@ -4,6 +4,7 @@
 package org.instantplaces.purewidgets.client.application;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.storage.RemoteStorage;
@@ -66,16 +67,12 @@ public class PublicDisplayApplication {
 	private static LocalStorage localStorage;
 
 	/**
-	 * The parameter names for the application-defined options that are stored in the 
+	 * The parameter/values  for the application-defined options that are stored in the 
 	 * remote storage/passed in the URL
 	 */
-	private static ArrayList<String> parameterNames;
+	private static Map<String, String> parameters;
 	
-	/**
-	 * The values for the application-defined options that are stored in the 
-	 * remote storage/passed in the URL
-	 */
-	private static ArrayList<String> parameterValues;
+	
 
 	/**
 	 * The URL query string parameter name that holds the place id
@@ -109,37 +106,20 @@ public class PublicDisplayApplication {
 	}
 
 	/** 
-	 * This function returns a string application parameter value by first checking if
+	 * This function returns a boolean application parameter value by first checking if
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static String getParameterString(String name, String defaultValue) {
-		if (null == parameterNames || parameterNames.size() == 0)
-			return defaultValue;
-		String remoteValue = null;
-		for (int i = 0; i < parameterNames.size(); i++) {
-			if (parameterNames.get(i).equals(name)) {
-				if (null != parameterValues && parameterValues.size() > 0) {
-					remoteValue = parameterValues.get(i);
-					break;
-				}
-			}
+	public static boolean getParameterBoolean(String name, boolean defaultValue) {
+		String valueString = getParameterString(name, defaultValue+"");
+		boolean toReturn = defaultValue;
+		try {
+			toReturn = Boolean.parseBoolean(valueString);
+		} catch (NumberFormatException nfe) {
+			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into a boolean (true/false).");
 		}
 
-		if (null != remoteValue) {
-			return remoteValue;
-		}
-
-		/*
-		 * Check the URL for the parameter
-		 */
-		String urlValue = com.google.gwt.user.client.Window.Location.getParameter(name);
-
-		if (null != urlValue) {
-			return urlValue;
-		}
-
-		return defaultValue;
+		return toReturn;
 	}
 	
 	/** 
@@ -160,29 +140,44 @@ public class PublicDisplayApplication {
 	}	
 	
 	/** 
-	 * This function returns a boolean application parameter value by first checking if
+	 * This function returns a string application parameter value by first checking if
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static boolean getParameterBoolean(String name, boolean defaultValue) {
-		String valueString = getParameterString(name, defaultValue+"");
-		boolean toReturn = defaultValue;
-		try {
-			toReturn = Boolean.parseBoolean(valueString);
-		} catch (NumberFormatException nfe) {
-			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into a boolean (true/false).");
+	public static String getParameterString(String name, String defaultValue) {
+		if (null == parameters || parameters.size() == 0)
+			return defaultValue;
+		
+		String remoteValue = null;
+		
+		remoteValue = parameters.get(name);
+		Log.debug("Remote value for " + name + " is " + remoteValue);
+		
+
+		if (null != remoteValue) {
+			return remoteValue;
 		}
 
-		return toReturn;
+		/*
+		 * Check the URL for the parameter
+		 */
+		String urlValue = com.google.gwt.user.client.Window.Location.getParameter(name);
+
+		if (null != urlValue) {
+			return urlValue;
+		}
+
+		return defaultValue;
 	}		
 	
-
+	
 	/**
 	 * @return the placeName
 	 */
 	public static String getPlaceName() {
 		return placeName;
 	}
+	
 
 	public static RemoteStorage getRemoteStorage() {
 		if (!loaded) {
@@ -194,13 +189,10 @@ public class PublicDisplayApplication {
 		}
 	}
 
-	public static void load(PublicDisplayApplicationLoadedListener entryPoint,
-			String defaultAppName, boolean autoDeleteVolatile) {
-		load(entryPoint, defaultAppName, autoDeleteVolatile, null);
-	}
+	
 
 	public static void load(PublicDisplayApplicationLoadedListener entryPoint,
-			String defaultAppName, boolean autoDeleteVolatile, ArrayList<String> parameters) {
+			String defaultAppName, boolean autoDeleteVolatile) {
 		listener = entryPoint;
 
 		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
@@ -252,14 +244,9 @@ public class PublicDisplayApplication {
 			}
 		});
 
-		parameterNames = parameters;
-		parameterValues = new ArrayList<String>();
-
-		if (null == parameters) {
-			listener.onApplicationLoaded();
-			return;
-		} else {
-			remoteStorage.getStrings(parameterNames, new AsyncCallback<String[]>() {
+		
+		
+			remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -268,18 +255,20 @@ public class PublicDisplayApplication {
 				}
 
 				@Override
-				public void onSuccess(String[] result) {
+				public void onSuccess(Map<String, String> result) {
 					if (null != result) {
-						for (String value : result) {
-							parameterValues.add(value);
+						PublicDisplayApplication.parameters = result;
+						
+						for ( String key : result.keySet() ) {
+							
+							Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
 						}
 					}
 					listener.onApplicationLoaded();
-
 				}
 
 			});
-		}
+		
 
 	}
 
@@ -289,6 +278,23 @@ public class PublicDisplayApplication {
 	 */
 	public static void setApplicationName(String applicationName) {
 		PublicDisplayApplication.applicationName = applicationName;
+	}
+
+	public static void setParameterString(String name, String value) {
+		parameters.put(name, value);
+		remoteStorage.setString(name, value, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.warn(PublicDisplayApplication.class.getName(), "Could not save to remote datastore" );
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				Log.debug(PublicDisplayApplication.class.getName(), "Saved to remote datastore" );
+			}
+			
+		});
 	}
 
 	/**

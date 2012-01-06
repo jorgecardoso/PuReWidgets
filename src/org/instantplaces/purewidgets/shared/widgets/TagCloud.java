@@ -220,6 +220,10 @@ public class TagCloud extends Widget implements ActionListener {
 	}
 
 	public TagCloud.Tag getTag(String keyword) {
+		if ( null == keyword ) {
+			return null;
+		}
+		
 		keyword = this.cleanTag(keyword);
 		if ( this.tags.containsKey( keyword ) ) {
 			return this.tags.get( keyword );

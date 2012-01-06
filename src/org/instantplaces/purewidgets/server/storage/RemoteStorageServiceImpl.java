@@ -4,6 +4,8 @@
 package org.instantplaces.purewidgets.server.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.instantplaces.purewidgets.client.storage.RemoteStorageService;
 import org.instantplaces.purewidgets.server.dao.Dao;
@@ -79,7 +81,27 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 		Dao.put(storageDao);
 		Dao.commitOrRollbackTransaction();
 	}
-
 	
+	@Override
+	public Map<String, String> getAll(String storageId) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		Dao.beginTransaction();
+		
+		StorageDao storageDao = Dao.getStorage(storageId);
+		if ( null == storageDao ) {
+			return null;
+		}
+		ArrayList<String> keys = storageDao.getKeys();
+		
+		for ( String key: keys ) {
+			map.put( key, storageDao.getString(key) );
+		}
+		
+		Dao.commitOrRollbackTransaction();
+		
+		return map;
+		
+	}
 
 }

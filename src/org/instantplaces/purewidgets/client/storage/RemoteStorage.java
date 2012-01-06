@@ -5,6 +5,7 @@ package org.instantplaces.purewidgets.client.storage;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,5 +38,8 @@ public class RemoteStorage {
 		this.remoteStorageService.get(this.storageId, names, callback);
 	}
 	
+	public void getAll(AsyncCallback<Map<String, String>> callback) {
+		this.remoteStorageService.getAll(storageId, callback);
+	}
 	
 }

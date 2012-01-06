@@ -26,14 +26,16 @@ public class Admin {
 								PublicYoutubePlayer.URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION,
 								PublicYoutubePlayer.URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION,
 								PublicYoutubePlayer.URL_PARAMETER_ALLOW_USER_TAGS,
-								PublicYoutubePlayer.URL_PARAMETER_PLACE_TAGS};
+								PublicYoutubePlayer.URL_PARAMETER_PLACE_TAGS,
+								PublicYoutubePlayer.URL_PARAMETER_RESET};
 	
 	static String descriptions[] = {"(seconds) The maximum video duration for played videos",
 									"(seconds) How much time to stay at the activity screen",
 									"(seconds) unused",
 									"(seconds) How much time to stay at the results screen",
 									"(true/false) Allow users to suggest tags?",
-									"(comma separated list) base place tags that are always present in the tag cloud"
+									"(comma separated list) base place tags that are always present in the tag cloud",
+									"(true/false) Reset the tag cloud in the nex run?"
 		
 	};
 	
