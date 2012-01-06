@@ -25,7 +25,17 @@ public class Admin {
 								PublicYoutubePlayer.URL_PARAMETER_ACTIVITY_SCREEN_DURATION,
 								PublicYoutubePlayer.URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION,
 								PublicYoutubePlayer.URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION,
-								PublicYoutubePlayer.URL_PARAMETER_ALLOW_USER_TAGS};
+								PublicYoutubePlayer.URL_PARAMETER_ALLOW_USER_TAGS,
+								PublicYoutubePlayer.URL_PARAMETER_PLACE_TAGS};
+	
+	static String descriptions[] = {"(seconds) The maximum video duration for played videos",
+									"(seconds) How much time to stay at the activity screen",
+									"(seconds) unused",
+									"(seconds) How much time to stay at the results screen",
+									"(true/false) Allow users to suggest tags?",
+									"(comma separated list) base place tags that are always present in the tag cloud"
+		
+	};
 	
 	static ArrayList<TextBox> values;
 	
@@ -39,7 +49,9 @@ public class Admin {
 		VerticalPanel verticalPanel = new VerticalPanel();
 		
 		
-		for ( String option: options ) {
+		for (int i = 0; i < options.length; i++) {
+			String option = options[i];
+		
 			HorizontalPanel horizontalPanel = new HorizontalPanel();
 			Label l = new Label(option);
 			TextBox textbox = new TextBox();
@@ -47,6 +59,7 @@ public class Admin {
 			
 			horizontalPanel.add(l);
 			horizontalPanel.add(textbox);
+			horizontalPanel.add(new Label(descriptions[i]));
 			
 			verticalPanel.add(horizontalPanel);
 		}

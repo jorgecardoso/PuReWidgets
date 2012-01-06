@@ -41,9 +41,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListener, EntryPoint, VideoActionListener, ActionListener, RequestCompleteHandler, PlayerListener{
-	
-	
-	public static final String URL_PARAMETER_ALLOW_USER_TAGS = "allowusertags";
+
 
 	private class MyLinkedHashMap extends LinkedHashMap<String, Video> {
 		/**
@@ -86,6 +84,17 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	 * The Url parameter name for setting the duration of the 'To play next' screen
 	 */
 	public static final String URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION = "toplaynextscreentime";
+	
+	/**
+	 * The Url parameter name for setting whether users can suggest tags
+	 */
+	public static final String URL_PARAMETER_ALLOW_USER_TAGS = "allowusertags";
+	
+	/**
+	 * The Url parameter name for the place tags
+	 */
+	public static final String URL_PARAMETER_PLACE_TAGS = "placetags";
+	
 	
 	/**
 	 * The default value for the duration of the 'To play next' screen
@@ -158,7 +167,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 
 	private static final int MAX_TAG_CLOUD_SIZE = 25;
 
-	private static final String URL_PARAMETER_PLACE_TAGS = null;
+	
 	
 	
 	MyLinkedHashMap allPlayedVideos;
