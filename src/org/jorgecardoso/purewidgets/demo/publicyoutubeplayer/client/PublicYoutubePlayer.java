@@ -106,17 +106,29 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	/**
 	 * The duration of the 'Activity' screen
 	 */
-	private int activityScreenDuration;
+	private int activityScreenDurationParameter;
 	
 	/**
 	 * The duration of the 'To play next' screen
 	 */
-	private int toPlayNextScreenDuration;
+	private int toPlayNextScreenDurationParameter;
 	
 	/**
 	 * The maximum duration of a video
 	 */
-	private int maxVideoDuration;
+	private int maxVideoDurationParameter;
+	
+	/**
+	 * Whether users can suggest tags, or not.
+	 */
+	private boolean allowUserTagsParameter;
+	
+	
+	/**
+	 * The user defined place tags
+	 */
+	private String placeTagsParameter;
+	
 	
 	/**
 	 * The duration of the confirmation screen before starting to play the video
@@ -145,6 +157,8 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 
 
 	private static final int MAX_TAG_CLOUD_SIZE = 25;
+
+	private static final String URL_PARAMETER_PLACE_TAGS = null;
 	
 	
 	MyLinkedHashMap allPlayedVideos;
@@ -226,14 +240,19 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		}
 		
 		/*
-		 * Parse URL parameters
-		 * TODO: centralize the other url parameters here
+		 * Read the application parameters
+		 * These can be set in the URL or via the admin console
 		 */
-		this.maxVideoDuration = this.parseUrlParameterInt(URL_PARAMETER_MAX_VIDEO_DURATION, DEFAULT_MAX_VIDEO_DURATION);
+		this.maxVideoDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_MAX_VIDEO_DURATION, DEFAULT_MAX_VIDEO_DURATION);
 		
-		this.activityScreenDuration = this.parseUrlParameterInt(URL_PARAMETER_ACTIVITY_SCREEN_DURATION, DEFAULT_ACTIVITY_SCREEN_DURATION);
+		this.activityScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_ACTIVITY_SCREEN_DURATION, DEFAULT_ACTIVITY_SCREEN_DURATION);
 		
-		this.toPlayNextScreenDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION, DEFAULT_TOPLAYNEXT_SCREEN_DURATION);
+		this.toPlayNextScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION, DEFAULT_TOPLAYNEXT_SCREEN_DURATION);
+		
+		this.allowUserTagsParameter =  PublicDisplayApplication.getParameterBoolean(URL_PARAMETER_ALLOW_USER_TAGS, false); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
+
+		this.placeTagsParameter = PublicDisplayApplication.getParameterString(URL_PARAMETER_PLACE_TAGS, "public,youtube,player");
+		
 		
 		//this.toPlayNextConfirmationDuration = this.parseUrlParameterInt(URL_PARAMETER_TOPLAYNEXT_CONFIRMATION_DURATION, DEFAULT_TOPLAYNEXT_CONFIRMATION_DURATION);
 		
@@ -311,7 +330,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		 */
 		ArrayList<Video> filteredByLength = new ArrayList<Video>();
 		for ( Video video : videos ) {
-			if (video.getDuration() <= this.maxVideoDuration ) {
+			if (video.getDuration() <= this.maxVideoDurationParameter ) {
 				filteredByLength.add(video);
 			}
 		}
@@ -561,7 +580,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 			this.currentState = State.ACTIVITY;
 			this.searchVideos();
 			this.screen.showActivity();
-			stateTimer.schedule(this.activityScreenDuration*1000);
+			stateTimer.schedule(this.activityScreenDurationParameter*1000);
 			
 			
 		} else if ( State.NEXT == state ) { // to play next
@@ -569,7 +588,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 			this.currentState = State.NEXT;
 			this.screen.showNext();
 			//this.screen.toPlayNext.highlight(this.toPlay);
-			stateTimer.schedule(this.toPlayNextScreenDuration*1000);
+			stateTimer.schedule(this.toPlayNextScreenDurationParameter*1000);
 			
 		} /*else if ( State.HIGLIGHT == state ) { //show what is going to play
 			Log.info(this, "Going to Highlight state");
@@ -742,38 +761,29 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	private void loadTagCloud() {
 		ArrayList<String> keywords = PublicDisplayApplication.getLocalStorage().loadList("TagCloudKeywords");
 		
-		String userTags =  PublicDisplayApplication.getParameterString(URL_PARAMETER_ALLOW_USER_TAGS, "false"); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
-		boolean allowUserTags = false;
 		
-		
-		if ( userTags != null && userTags.equalsIgnoreCase("true") ) {
-			allowUserTags = true;
-		}
 		
 		int [] frequencies = PublicDisplayApplication.getLocalStorage().loadIntList("TagCloudFrequencies");
 		
 		if ( keywords.size() == 0 || frequencies.length == 0 ) {
-			gtc = new GuiTagCloud("tagcloud", allowUserTags);
+			gtc = new GuiTagCloud("tagcloud", allowUserTagsParameter);
 			
 		} else {
-			gtc = new GuiTagCloud("tagcloud", keywords.toArray( new String[]{}), frequencies, allowUserTags);
+			gtc = new GuiTagCloud("tagcloud", keywords.toArray( new String[]{}), frequencies, allowUserTagsParameter);
 		}
 		
 		
 		this.gtc.addActionListener(this);
 		
-		/*
-		 * Read the place tags from the URL
-		 */
-		String urlPlaceTags = com.google.gwt.user.client.Window.Location.getParameter("placetags");
-		Log.debug("Place Tags: " + urlPlaceTags);
-		this.placeTags = new ArrayList<String>();
+
+		
 		
 		/*
 		 * Make sure the tagcloud has the placetags
 		 */
-		if ( null != urlPlaceTags && urlPlaceTags.length() > 0 ) {
-			String tags[] = urlPlaceTags.split(",");
+		this.placeTags = new ArrayList<String>();
+		if ( null != this.placeTagsParameter && this.placeTagsParameter.length() > 0 ) {
+			String tags[] = this.placeTagsParameter.split(",");
 			
 			for ( String tag : tags ) {
 				this.placeTags.add(tag);
