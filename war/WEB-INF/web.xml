@@ -28,6 +28,16 @@
   </servlet-mapping>
   
   
+
+<servlet>
+    <servlet-name>EveryBodyVotes</servlet-name>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.everybodyvotes.server.EveryBodyVotes</servlet-class>
+</servlet> 
+<servlet-mapping>
+    <servlet-name>EveryBodyVotes</servlet-name>
+    <url-pattern>/everybodyvotes/server</url-pattern>
+</servlet-mapping>   
+  
     
 <servlet>
     <servlet-name>testServlet</servlet-name>
