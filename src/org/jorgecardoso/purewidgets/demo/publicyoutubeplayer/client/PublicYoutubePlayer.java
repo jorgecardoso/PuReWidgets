@@ -166,7 +166,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	public static final int MAX_TO_PLAY_NEXT_VIDEOS = 6;
 	
 	
-	public static final int MAX_STREAM_SIZE = 7;
+	public static final int MAX_STREAM_SIZE = 4;
 
 
 	private static final int MAX_TAG_CLOUD_SIZE = 25;

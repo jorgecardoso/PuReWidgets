@@ -148,7 +148,6 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 			}
 		} else if ( source.getWidgetId().equals("txt_1")) {
 			message += ae.getParam() + "\n"; 
-				
 		}
 		
 		

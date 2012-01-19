@@ -15,7 +15,7 @@
 
 	
 		<g:HTMLPanel ui:field='htmlPanel'>
-			<h2 align="center">Public Youtube Player</h2>
+			<h1 align="center" class="{style.title}">Public Youtube Player</h1>
 			<div id='top' class="{style.top}"></div>
 				
 			<g:DeckPanel ui:field='deckPanelBottom' styleName='{style.id-globalBottomPanel}'>

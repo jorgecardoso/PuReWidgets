@@ -117,9 +117,9 @@
 
 /************************ GuiTagCloud */
 .instantplaces-GuiTagCloud {
-	border-style: solid;
+	/*border-style: solid;
 	border-width: 1px;
-	border-color: black;
+	border-color: black;*/
 	font-family: Verdana, Geneva, sans-serif;
 	background-color: transparent; /*lightgreen;*/
 	width: 100%;

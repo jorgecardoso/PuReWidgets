@@ -9,7 +9,7 @@
 		
 		<g:HorizontalPanel styleName='{style.searchresults}' >
 			<g:cell >
-				<g:VerticalPanel>
+				<g:VerticalPanel styleName='{style.searchresults-results}'>
 					 <g:HTMLPanel>
 						<h2><ui:msg description="Search Results">Search Results</ui:msg></h2>
 					</g:HTMLPanel>
