@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao;
+package org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +18,14 @@ import org.instantplaces.purewidgets.shared.Log;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class EBVPollDao {
+public class EBVPollDao implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	/**
 	 * the poll id in the datastore
 	 */

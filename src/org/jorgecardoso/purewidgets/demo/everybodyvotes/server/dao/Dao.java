@@ -6,6 +6,7 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao;
 import java.util.List;
 
 import org.instantplaces.purewidgets.shared.Log;
+import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 
 
 import com.googlecode.objectify.Objectify;

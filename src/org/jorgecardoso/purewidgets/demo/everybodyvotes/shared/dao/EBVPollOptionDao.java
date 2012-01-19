@@ -1,13 +1,20 @@
 /**
  * 
  */
-package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao;
+package org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao;
+
+import java.io.Serializable;
 
 /**
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class EBVPollOptionDao {
+public class EBVPollOptionDao implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String option;
 	

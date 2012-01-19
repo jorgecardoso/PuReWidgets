@@ -15,8 +15,8 @@ import org.instantplaces.purewidgets.shared.widgets.TextBox;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 import org.instantplaces.purewidgets.shared.widgets.Button;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
-import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.EBVPollDao;
-import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.EBVPollOptionDao;
+import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
+import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollOptionDao;
 
 public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle {
 

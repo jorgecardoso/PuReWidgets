@@ -4,7 +4,6 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  
   <!-- Servlets -->
   <servlet>
     <servlet-name>interactionServlet</servlet-name>
@@ -37,7 +36,14 @@
     <servlet-name>EveryBodyVotes</servlet-name>
     <url-pattern>/everybodyvotes/server</url-pattern>
 </servlet-mapping>   
-  
+ <servlet>
+    <servlet-name>pollServlet</servlet-name>
+    <servlet-class>org.jorgecardoso.purewidgets.demo.everybodyvotes.server.service.PollServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>pollServlet</servlet-name>
+    <url-pattern>/pollservice</url-pattern>
+</servlet-mapping>    
     
 <servlet>
     <servlet-name>testServlet</servlet-name>
@@ -70,8 +76,7 @@
     <url-pattern>/placeinteractiondemo/login</url-pattern>
   </servlet-mapping>     
 
- 
-     
+ <!-- 
 <servlet>
 	<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl </servlet-class> 
 	<servlet-name>logger </servlet-name>
@@ -81,7 +86,8 @@
 	<servlet-name>logger</servlet-name >
 	<url-pattern>/youtubedemo/remote_logging</url-pattern>
 </servlet-mapping >
-
+ -->
+ 
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Demos.html</welcome-file>
