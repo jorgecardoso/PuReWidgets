@@ -34,4 +34,24 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 		return polls;
 	}
 
+
+
+	@Override
+	public void savePoll(EBVPollDao poll) {
+		Dao.beginTransaction();
+		Dao.put(poll);
+		Dao.commitOrRollbackTransaction();
+		
+	}
+
+
+
+	@Override
+	public void deletePoll(EBVPollDao poll) {
+		Dao.beginTransaction();
+		Dao.delete(poll);
+		Dao.commitOrRollbackTransaction();
+		
+	}
+
 }

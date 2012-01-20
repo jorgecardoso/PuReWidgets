@@ -72,7 +72,7 @@ public class Dao extends DAOBase {
 		 * static ofy
 		 */
 		Objectify ofy_ = ObjectifyService.begin();
-		Query<EBVPollDao> q = ofy_.query(EBVPollDao.class);//.filter("placeId", placeId);
+		Query<EBVPollDao> q = ofy_.query(EBVPollDao.class).filter("placeId", placeId);
 		
 		return q.list();
 	}

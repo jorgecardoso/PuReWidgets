@@ -29,8 +29,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	public void onApplicationLoaded() {
 		String page = Window.Location.getPath();
 		if ( page.contains("admin.html") ) {
-			Admin a = new Admin();
-			a.run();
+			new Admin().run();
 			return;
 		}
 		

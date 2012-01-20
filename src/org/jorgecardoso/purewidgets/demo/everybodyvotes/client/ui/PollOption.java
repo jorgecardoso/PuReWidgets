@@ -5,31 +5,36 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PollOption extends Composite  {
 
-	private static PollOptionUiBinder uiBinder = GWT.create(PollOptionUiBinder.class);
-
 	interface PollOptionUiBinder extends UiBinder<Widget, PollOption> {
 	}
 
-	public PollOption() {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
+	private static PollOptionUiBinder uiBinder = GWT.create(PollOptionUiBinder.class);
 
-	Poll poll;
-	
+	@UiField
+	Button buttonDelete;
+
 	@UiField
 	TextBox optionTextBox;
 	
-	@UiField
-	Button buttonDelete;
+	Poll poll;
+	
+	public PollOption() {
+		initWidget(uiBinder.createAndBindUi(this));
+	}
+	
+	public PollOption(Poll poll, String optionText) {
+		initWidget(uiBinder.createAndBindUi(this));
+		this.poll = poll;
+		this.optionTextBox.setText(optionText);
+	}
+	
 	
 
 	@UiHandler("buttonDelete")
@@ -39,8 +44,12 @@ public class PollOption extends Composite  {
 	}
 
 	
+	public String getText() {
+		return this.optionTextBox.getText();
+	}
+	
+	
 	public void setPoll(Poll poll) {
 		this.poll = poll;
 	}
-	
 }

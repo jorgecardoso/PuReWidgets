@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:dp="urn:import:com.google.gwt.user.datepicker.client" 
 	xmlns:p="urn:import:org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui">
 	<ui:style>
 		.important {
@@ -8,12 +9,22 @@
 		}
 	</ui:style>
 	<g:HTMLPanel>
-	<g:Button styleName="{style.important}" ui:field="deleteButton" >Delete poll</g:Button>
-		<p:PollQuestion ui:field="question"></p:PollQuestion>
-		<g:VerticalPanel ui:field="optionsPanel">
 		
+		ID: <g:Label ui:field="pollIdLabel"></g:Label>
+		
+		Question: <g:TextBox ui:field="questionTextBox"> </g:TextBox>
+		
+		<g:VerticalPanel ui:field="optionsPanel">
 		</g:VerticalPanel>
 
+		Show after: <dp:DateBox ui:field="showAfterDateBox"></dp:DateBox><br/>
+		
+		Closes on: <dp:DateBox ui:field="closesOnDateBox"></dp:DateBox><br/>
+		
+		Show until: <dp:DateBox ui:field="showUntilDateBox"></dp:DateBox><br/>
+		
 		<g:Button styleName="{style.important}" ui:field="buttonAdd" >Add option</g:Button>
+		<g:Button styleName="{style.important}" ui:field="deleteButton" >Delete poll</g:Button>
+		<g:Button styleName="{style.important}" ui:field="saveButton" >Save poll</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

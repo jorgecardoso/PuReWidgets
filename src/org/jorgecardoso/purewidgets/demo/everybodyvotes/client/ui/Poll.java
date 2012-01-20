@@ -1,6 +1,7 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,10 +11,15 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class Poll extends Composite  {
 
@@ -26,15 +32,27 @@ public class Poll extends Composite  {
 	public Poll() {
 		initWidget(uiBinder.createAndBindUi(this));
 		options = new ArrayList<PollOption>();
-		PollOption o = new PollOption();
-		o.setPoll(this);
-		options.add(o);
 		
+		showAfterDateBox.setValue(new Date());
 		updateGui();
 	}
 	
 	@UiField
-	PollQuestion question;
+	Label pollIdLabel;
+	
+	@UiField
+	TextBox questionTextBox;
+	
+	@UiField
+	DateBox showAfterDateBox;
+	
+	
+	@UiField
+	DateBox showUntilDateBox;
+	
+	
+	@UiField
+	DateBox closesOnDateBox;
 	
 	ArrayList<PollOption> options;
 	
@@ -46,8 +64,12 @@ public class Poll extends Composite  {
 	Button buttonAdd;
 	
 	@UiField
+	Button saveButton;
+	
+	@UiField
 	VerticalPanel optionsPanel;
 
+	private PollActionListener listener;
 
 	@UiHandler("buttonAdd")
 	void onAddClick(ClickEvent e) {
@@ -59,8 +81,18 @@ public class Poll extends Composite  {
 	
 	@UiHandler("deleteButton")
 	void onDeleteClick(ClickEvent e) {
-		options.add(new PollOption());
-		updateGui();
+		if ( null != this.listener ) {
+			this.listener.onDeletePoll(this);
+		}
+	}
+	
+	@UiHandler("saveButton")
+	void onSaveClick(ClickEvent e) {
+		//options.add(new PollOption());
+		//updateGui();
+		if ( null != this.listener ) {
+			this.listener.onSavePoll(this);
+		}
 	}
 	
 	public void onDeleteOption(PollOption optionDeleted) {
@@ -76,6 +108,75 @@ public class Poll extends Composite  {
 		for ( PollOption option : this.options ) {
 			this.optionsPanel.add(option);
 		}
+	}
+
+	/**
+	 * @return the listener
+	 */
+	public PollActionListener getListener() {
+		return listener;
+	}
+
+	/**
+	 * @param listener the listener to set
+	 */
+	public void setListener(PollActionListener listener) {
+		this.listener = listener;
+	}
+	
+	public void setPollIdText(String pollId) {
+		this.pollIdLabel.setText(pollId);
+	}
+	public String getPollIdText() {
+		return this.pollIdLabel.getText();
+	}
+	
+	public void setQuestionText(String text) {
+		this.questionTextBox.setText(text);
+	}
+	
+	public String getQuestionText() {
+		return this.questionTextBox.getText();
+	}
+	
+	
+	public void clearOptions() {
+		this.options.clear();
+		this.updateGui();
+	}
+	
+	public void addOption(String option) {
+		this.options.add( new PollOption(this, option) );
+		this.updateGui();
+	}
+	
+	public void setShowAfter(Date d) {
+		this.showAfterDateBox.setValue(d);
+	}
+	public Date getShowAfter() {
+		return this.showAfterDateBox.getValue();
+	}
+	
+	public void setShowUntil(Date d) {
+		this.showUntilDateBox.setValue(d);
+	}
+	public Date getShowUntil() {
+		return this.showUntilDateBox.getValue();
+	}
+	
+	public void setClosesOn(Date d) {
+		this.closesOnDateBox.setValue(d);
+	}
+	public Date getClosesOn() {
+		return this.closesOnDateBox.getValue();
+	}
+	
+	public ArrayList<String> getOptions() {
+		ArrayList<String> options = new ArrayList<String>();
+		for ( PollOption option : this.options ) {
+			options.add( option.getText() );
+		}
+		return options;
 	}
 
 }
