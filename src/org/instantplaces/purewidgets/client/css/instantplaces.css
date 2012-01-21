@@ -115,6 +115,42 @@
 
 
 
+
+/************************ GuiListBox */
+.instantplaces-GuiListBox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	margin: 0;
+	
+	border: 1px outset #ccc;
+}
+
+.instantplaces-GuiListBox .item {
+	width: 500px;
+	margin-bottom: 20px;
+}
+
+.instantplaces-GuiListBox .title {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+.instantplaces-GuiListBox .label {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	float:left;
+}
+
+.instantplaces-GuiListBox .referencecode {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	float: right;
+}
+
+
 /************************ GuiTagCloud */
 .instantplaces-GuiTagCloud {
 	/*border-style: solid;

@@ -121,12 +121,13 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		super();
 		
 		this.widgetTextBox = widgetTextBox;
-		
 		this.setWidget(widgetTextBox);
 		this.sendToServer();
 		
 		
-	    
+	    /*
+	     * Gui stuff
+	     */
 		textBox = new com.google.gwt.user.client.ui.TextBox();
 		
 		textBox.addKeyPressHandler(this);

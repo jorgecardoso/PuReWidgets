@@ -446,7 +446,7 @@ public class Widget {
 			this.widgetId = String.valueOf(this.hashCode());
 			Log.warn(this, "Null id, assigning object hashCode: " + this.widgetId);
 		} else {
-			this.widgetId =  com.google.gwt.http.client.URL.decode(id);
+			this.widgetId =  id;//com.google.gwt.http.client.URL.decode(id);
 		}
 	}
 	

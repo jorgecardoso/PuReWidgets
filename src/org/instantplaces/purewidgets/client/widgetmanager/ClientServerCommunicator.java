@@ -440,10 +440,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	
-	private String getWidgetsUrl(Widget widget) {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget/" + widget.getWidgetId() + "?appid=" +this.appId ;
-	}
-	
 	private String getWidgetsUrl(String placeId, String applicationId) {
 		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +this.appId ;
 	}

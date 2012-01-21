@@ -269,7 +269,7 @@ public class PublicDisplayApplication {
 
 			});
 		
-
+			org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
 	}
 
 	/**

@@ -349,7 +349,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		ListBox listbox = new ListBox();
 		listbox.setVisibleItemCount(4);
 		for (WidgetOption wo : widgetOptions) {
-			listbox.addItem(publicDisplayWidget.getShortDescription() + " [" + wo.getReferenceCode() + "]");
+			listbox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
 		}
 		
 		

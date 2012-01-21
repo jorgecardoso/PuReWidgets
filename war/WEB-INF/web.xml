@@ -52,7 +52,7 @@
   
       <servlet-mapping>
     <servlet-name>testServlet</servlet-name>
-    <url-pattern>/test</url-pattern>
+    <url-pattern>/test/server</url-pattern>
   </servlet-mapping> 
   
    

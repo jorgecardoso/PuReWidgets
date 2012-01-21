@@ -1,6 +1,8 @@
 package org.jorgecardoso.purewidgets.demo.test.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +11,7 @@ import org.instantplaces.purewidgets.server.application.ApplicationLifeCycle;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.ListBox;
 import org.instantplaces.purewidgets.shared.widgets.TextBox;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 import org.instantplaces.purewidgets.shared.widgets.Button;
@@ -56,24 +59,10 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 	
 	@Override
 	public void start() {
-		Button bt = new Button("button_1", "Click me");
-		bt.addActionListener(this);
-		
-		//WidgetManager.get().addWidget(bt);
-		app.addWidget(bt);
-		
-		clicks = app.getLong("button_1");
-		
-	
-		if ( this.clicks > 1 && this.clicks < 3) {
-			TextBox text = new TextBox("txt_1", "Gimme text");
-			text.addActionListener(this);
-			app.addWidget(text);
-		}
-		
-		Log.debug(this, "Loaded clicks: " + clicks);
-		
-		this.message = "";
+		ArrayList<String> l = new ArrayList<String>();
+		l.add("op 1");
+		l.add("op 2");
+		ListBox list = new ListBox("listid", "Lista xpto", l);
 	}
 	
 	@Override

@@ -9,6 +9,8 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.client.storage.RemoteStorage;
 import org.instantplaces.purewidgets.client.widgets.GuiDownloadButton;
+import org.instantplaces.purewidgets.client.widgets.GuiTextBox;
+import org.instantplaces.purewidgets.client.widgets.GuiListBox;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 
@@ -30,7 +32,7 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	public void onModuleLoad() {
 		
 		PublicDisplayApplication.load(this, "Test", false);
-		WidgetManager.get().setAutomaticInputRequests(false);
+		//WidgetManager.get().setAutomaticInputRequests(false);
 		
 	}
 
@@ -42,7 +44,14 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 			return;
 		}
 		
-		RootPanel.get().add(new Label(PublicDisplayApplication.getParameterString("non", "default")));
+		
+		
+		ArrayList<String> l = new ArrayList<String>();
+		l.add("I don't go");
+		l.add("Once a week");
+		l.add("Twice a week");
+		GuiListBox tb = new GuiListBox("lista", "On average, how many times to you go to the movies?", l);
+		RootPanel.get("content").add(tb);
 		
 	}
 }

@@ -309,10 +309,6 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	@Override
 	public void onModuleLoad() {
 		
-		org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
-		
-		
-		
 		PublicDisplayApplication.load(this, "PublicYoutubePlayer", true);
 		
 	}
