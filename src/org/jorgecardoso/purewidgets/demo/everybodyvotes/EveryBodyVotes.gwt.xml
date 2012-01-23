@@ -15,6 +15,7 @@
 
 	<!-- Other module inherits -->
 	<inherits name="org.instantplaces.purewidgets.PuReWidgets" />
+	<inherits name='com.google.gwt.visualization.Visualization'/>
 
 	<set-property name="gwt.logging.enabled" value="TRUE" />
 	<set-property name="gwt.logging.logLevel" value="ALL" />

@@ -7,6 +7,6 @@
 		}
 	</ui:style>
 	<g:HTMLPanel>
-		Option: <g:TextBox ui:field="optionTextBox"/><g:Button styleName="{style.important}" ui:field="buttonDelete" >Delete</g:Button>
+		Option: <g:TextBox ui:field="optionTextBox"/> <g:TextBox ui:field="votesTextBox"></g:TextBox> <g:Button styleName="{style.important}" ui:field="buttonDelete" >Delete</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

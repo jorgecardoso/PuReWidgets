@@ -6,6 +6,8 @@ package org.instantplaces.purewidgets.client.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.instantplaces.purewidgets.shared.Log;
+
 
 
 /**
@@ -23,6 +25,23 @@ public class LocalStorage {
 	
 	public LocalStorage(String appName) {
 		this.appName = appName;
+	}
+	
+	public Integer getInteger(String item) {
+		String valueString = this.getString(item);
+		
+		try {
+			int value = Integer.parseInt(valueString);
+			
+			return new Integer(value);
+		} catch (NumberFormatException nfe) {
+			Log.warn(this, "Could not parse value from localStorage as int.");
+			return null;
+		}
+	}
+	
+	public void setInt(String item, int value) {
+		this.setString(item, value+"");
 	}
 	
 	public  String getString(String item) {

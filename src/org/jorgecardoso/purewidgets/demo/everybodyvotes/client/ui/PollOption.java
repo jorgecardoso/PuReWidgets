@@ -1,5 +1,7 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui;
 
+import org.instantplaces.purewidgets.shared.Log;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,16 +25,20 @@ public class PollOption extends Composite  {
 	@UiField
 	TextBox optionTextBox;
 	
+	@UiField
+	TextBox votesTextBox;
+	
 	Poll poll;
 	
 	public PollOption() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
-	public PollOption(Poll poll, String optionText) {
+	public PollOption(Poll poll, String optionText, int votes) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.poll = poll;
 		this.optionTextBox.setText(optionText);
+		this.votesTextBox.setText(votes+"");
 	}
 	
 	
@@ -48,6 +54,15 @@ public class PollOption extends Composite  {
 		return this.optionTextBox.getText();
 	}
 	
+	public int getVotes() {
+		int votes = 0;
+		try {
+			votes = Integer.parseInt(this.votesTextBox.getText());
+		} catch (Exception e) {
+			Log.warn(this, "Could not parse votes: " + this.votesTextBox.getText());
+		}
+		return votes;
+	}
 	
 	public void setPoll(Poll poll) {
 		this.poll = poll;

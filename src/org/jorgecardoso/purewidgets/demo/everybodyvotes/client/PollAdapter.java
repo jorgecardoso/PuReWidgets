@@ -6,6 +6,7 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.client;
 import java.util.ArrayList;
 
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui.Poll;
+import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui.PollOption;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollOptionDao;
 
@@ -27,8 +28,11 @@ public class PollAdapter {
 		
 		ArrayList<EBVPollOptionDao> optionsDao = new ArrayList<EBVPollOptionDao>();
 		
-		for ( String optionText : poll.getOptions() ) {
-			EBVPollOptionDao optionDao = new EBVPollOptionDao(optionText);
+		//for ( String optionText : poll.getOptionsText() ) {
+		for ( PollOption option : poll.getOptions() ) {
+			
+			EBVPollOptionDao optionDao = new EBVPollOptionDao(option.getText());
+			optionDao.setVotes(option.getVotes());
 			optionsDao.add(optionDao);
 		}
 		pollDao.setPollOptions(optionsDao);
@@ -36,6 +40,7 @@ public class PollAdapter {
 		pollDao.setShowAfter(poll.getShowAfter().getTime());
 		pollDao.setShowUntil(poll.getShowUntil().getTime());
 		pollDao.setClosesOn(poll.getClosesOn().getTime());
+		
 		
 		return pollDao;
 	}

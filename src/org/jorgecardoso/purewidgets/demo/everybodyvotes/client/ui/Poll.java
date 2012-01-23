@@ -145,8 +145,8 @@ public class Poll extends Composite  {
 		this.updateGui();
 	}
 	
-	public void addOption(String option) {
-		this.options.add( new PollOption(this, option) );
+	public void addOption(String option, int votes) {
+		this.options.add( new PollOption(this, option, votes) );
 		this.updateGui();
 	}
 	
@@ -171,12 +171,16 @@ public class Poll extends Composite  {
 		return this.closesOnDateBox.getValue();
 	}
 	
-	public ArrayList<String> getOptions() {
+	public ArrayList<String> getOptionsText() {
 		ArrayList<String> options = new ArrayList<String>();
 		for ( PollOption option : this.options ) {
 			options.add( option.getText() );
 		}
 		return options;
+	}
+	
+	public ArrayList<PollOption> getOptions() {
+		return this.options;
 	}
 
 }

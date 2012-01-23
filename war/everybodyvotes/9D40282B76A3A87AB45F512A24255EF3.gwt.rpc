@@ -1,3 +1,4 @@
+com.google.gwt.ajaxloader.client.Properties$TypeException, false, false, true, true, com.google.gwt.ajaxloader.client.Properties$TypeException/806639172, 806639172
 com.google.gwt.core.client.impl.SerializableThrowable, false, false, true, true, com.google.gwt.core.client.impl.SerializableThrowable/3336179259, 3336179259
 com.google.gwt.event.shared.UmbrellaException, false, false, true, true, com.google.gwt.event.shared.UmbrellaException/3104463596, 3104463596
 com.google.gwt.http.client.RequestException, false, false, true, true, com.google.gwt.http.client.RequestException/190587325, 190587325

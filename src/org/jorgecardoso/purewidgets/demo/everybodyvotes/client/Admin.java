@@ -104,7 +104,7 @@ public class Admin implements PollActionListener {
 		this.editPoll.setQuestionText(poll.getPollQuestion());
 		this.editPoll.clearOptions();
 		for ( EBVPollOptionDao optionDao : poll.getPollOptions() ) {
-			this.editPoll.addOption( optionDao.getOption() );
+			this.editPoll.addOption( optionDao.getOption(), optionDao.getVotes() );
 		}
 		
 		this.editPoll.setShowAfter(new Date(poll.getShowAfter()));
