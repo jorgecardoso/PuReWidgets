@@ -1,6 +1,7 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -10,10 +11,9 @@ import org.instantplaces.purewidgets.server.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.server.application.ApplicationLifeCycle;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
-import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.ListBox;
 import org.instantplaces.purewidgets.shared.widgets.TextBox;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
-import org.instantplaces.purewidgets.shared.widgets.Button;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollOptionDao;
@@ -29,7 +29,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 	HttpServletRequest req;
 	HttpServletResponse resp;
 	
-	long clicks;
+	List<EBVPollDao> polls = null;
 	
 	String message;
 	
@@ -52,45 +52,27 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 	 */
 	@Override
 	public void setup() {
-		
-		Log.debug(this, "Setup");
-		
-		
-		//app.setLong("button_1", 0);
-		
 	}
 	
 	@Override
 	public void start() {
-		/*Button bt = new Button("button_1", "Click me");
-		bt.addActionListener(this);
+
+		this.polls = Dao.getPolls("DefaultPlace");
 		
-		//WidgetManager.get().addWidget(bt);
-		app.addWidget(bt);
-		
-		clicks = app.getLong("button_1");
-		
-	
-		if ( this.clicks > 1 && this.clicks < 3) {
-			TextBox text = new TextBox("txt_1", "Gimme text");
-			text.addActionListener(this);
-			app.addWidget(text);
-		}
-		
-		Log.debug(this, "Loaded clicks: " + clicks);
-		
-		this.message = "";*/
-		
-		
-		List<EBVPollDao> polls = Dao.getPolls("DefaultPlace");
-		
-		
+		/*
+		 * Create the list widgets
+		 */
 		for ( EBVPollDao poll : polls ) {
-			Dao.beginTransaction();
-			message += poll.getPollQuestion();
-			poll.vote("jor", poll.getPollOptions().get(0).getOption());
-			Dao.put(poll);
-			Dao.commitOrRollbackTransaction();
+			ArrayList<String> listOptions = new ArrayList<String>();
+			message += poll.getPollQuestion() + "<br>";
+			for ( EBVPollOptionDao pollOption : poll.getPollOptions() ) {
+				listOptions.add(pollOption.getOption());
+				message += pollOption.getOption() + ": " + pollOption.getVotes() + "<br>";
+			}
+			message += "<br>";
+			
+			ListBox listBox = new ListBox("poll-" + poll.getPollId(), poll.getPollQuestion(), listOptions);
+			listBox.addActionListener(this);
 		}
 		
 //		Dao.beginTransaction();
@@ -121,11 +103,12 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 			
 		}*/
 		
-		message += "ok";
+		
 		
 		
 		try {
-			resp.getWriter().write(message);
+			resp.setContentType("text/html");
+			resp.getWriter().write("<html><body>" + message + "</body></html>");
 		} catch (IOException e) {
 			Log.error(this, "Could not write the Http response.");
 			e.printStackTrace();
@@ -136,19 +119,33 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 	public void onAction(ActionEvent<?> ae) {
 		//ae = (ActionEvent<? extends Widget>)ae;
 		
-		Log.debug(this, ae.toDebugString());
+		
 		Widget source = (Widget)ae.getSource();
 		
-		if ( source.getWidgetId().equals("button_1") ) {
-			this.clicks++;
-			
-			if ( this.clicks > 1 && this.clicks < 3) {
-				TextBox text = new TextBox("txt_1", "Gimme text");
-				app.addWidget(text);
+		if ( source.getWidgetId().startsWith("poll") ) {
+			String pollIdString = source.getWidgetId().substring(5);
+			long pollId = Long.parseLong(pollIdString);
+			for ( EBVPollDao poll : this.polls ) {
+				if ( poll.getPollId() == pollId ) {
+					Log.info(this, "Voting on " + poll.getPollQuestion());
+					Dao.beginTransaction();
+					poll.vote(ae.getPersona(), ae.getParam().toString());
+					Dao.put(poll);
+					Dao.commitOrRollbackTransaction();
+				}
 			}
-		} else if ( source.getWidgetId().equals("txt_1")) {
-			message += ae.getParam() + "\n"; 
 		}
+		
+//		if ( source.getWidgetId().equals("button_1") ) {
+//			this.clicks++;
+//			
+//			if ( this.clicks > 1 && this.clicks < 3) {
+//				TextBox text = new TextBox("txt_1", "Gimme text");
+//				app.addWidget(text);
+//			}
+//		} else if ( source.getWidgetId().equals("txt_1")) {
+//			message += ae.getParam() + "\n"; 
+//		}
 		
 		
 	}

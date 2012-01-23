@@ -32,6 +32,9 @@ public class WidgetInput {
 
 	private String persona;	
 	
+	private String inputMechanism;
+	
+	private boolean delivered;
 
 	private int age;
 	

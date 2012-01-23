@@ -5,10 +5,6 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
 import javax.persistence.Embedded;
 import javax.persistence.Id;
 

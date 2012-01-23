@@ -7,7 +7,6 @@ import java.util.List;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
  * @author "Jorge C. S. Cardoso"

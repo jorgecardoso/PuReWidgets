@@ -5,6 +5,7 @@ package org.instantplaces.purewidgets.shared.widgets;
 
 import java.util.ArrayList;
 
+import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
@@ -50,19 +51,21 @@ public class ListBox extends Widget {
 	
 	@Override
 	public void handleInput(ArrayList<InputEvent> inputEventList) {
-		
+		Log.debug(this, "Handling input");
 		/*
 		 * If the textbox received text, trigger an application event
 		 */
 		for (InputEvent ie : inputEventList) {
-			if ( null != ie.getParameters() && ie.getParameters().size() > 0) {
+			Log.debug(this, ie.toDebugString() );
+			//if ( null != ie.getParameters() ) {
+				Log.debug(this, "Firing event to app");
 				String selectedOption;
 				WidgetOption wo = ie.getWidgetOption();
 				int index = this.getWidgetOptions().indexOf(wo);
 				selectedOption = this.listOptions.get(index);
 				ActionEvent<ListBox> ae = new ActionEvent<ListBox>(this, ie, selectedOption );
 				this.fireActionEvent(ae);
-			} 
+		//	} 
 		}
 		
 		/*

@@ -14,7 +14,6 @@ import org.instantplaces.purewidgets.client.widgets.GuiListBox;
 import org.instantplaces.purewidgets.client.widgets.GuiTextBox;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
-import org.instantplaces.purewidgets.shared.widgets.TextBox;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollServiceAsync;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
@@ -36,8 +35,8 @@ import com.google.gwt.visualization.client.LegendPosition;
 import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
 import com.google.gwt.visualization.client.visualizations.corechart.BarChart;
+import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
 import com.google.gwt.visualization.client.visualizations.corechart.Options;
-import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
 
 
 
@@ -71,7 +70,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 				
 			}
 			
-		} , BarChart.PACKAGE);
+		} , CoreChart.PACKAGE);
 		
 		
 	}
@@ -134,7 +133,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 		if ( poll.getClosesOn() < today ) { // closed poll
 			showClosedPoll(poll);
 		} else {
-			showClosedPoll(poll);
+			showOpenPoll(poll);
 		}	
 	}
 	

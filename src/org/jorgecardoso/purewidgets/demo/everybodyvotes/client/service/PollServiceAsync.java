@@ -1,6 +1,5 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;

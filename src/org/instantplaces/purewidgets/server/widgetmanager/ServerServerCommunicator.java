@@ -165,11 +165,11 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	
 			String lastTimeStamp = this.getLastTimeStampAsString();
 			if ( null == lastTimeStamp ) {
-				lastTimeStamp = "";
+				lastTimeStamp = "0";
 			}
 			String url = applicationUrl + "/input?output=json&from=" + lastTimeStamp + "&appid="+appId;
 			
-			Log.debug("Contacting application server for input..." + url);
+			Log.warn("Contacting application server for input..." + url);
 			String response = null;
 			
 			try {
@@ -179,7 +179,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				e.printStackTrace();
 				return;
 			}
-			Log.debug(response);
+			Log.warn(response);
 			
 			
 

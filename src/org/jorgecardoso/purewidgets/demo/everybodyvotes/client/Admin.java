@@ -1,11 +1,8 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
-import org.instantplaces.purewidgets.shared.Log;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollServiceAsync;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui.Poll;
