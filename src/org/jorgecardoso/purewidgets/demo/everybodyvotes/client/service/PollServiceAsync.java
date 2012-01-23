@@ -8,6 +8,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface PollServiceAsync {
 	public void getPolls(String placeId, AsyncCallback<List<EBVPollDao>> callback);
+	public void getActivePolls(String placeId, AsyncCallback<List<EBVPollDao>> callback);
+	public void getClosedPolls(String placeId, AsyncCallback<List<EBVPollDao>> callback);
 	public void savePoll(EBVPollDao poll, AsyncCallback<Void> callback);
 	public void deletePoll(EBVPollDao poll, AsyncCallback<Void> callback);
 }

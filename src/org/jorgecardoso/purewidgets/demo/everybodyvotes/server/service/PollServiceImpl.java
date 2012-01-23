@@ -34,6 +34,23 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 		return polls;
 	}
 
+	@Override
+	public List<EBVPollDao> getActivePolls(String placeId) {
+		
+		List<EBVPollDao> polls = Dao.getActivePolls(placeId);
+		
+		
+		return polls;
+	}
+	
+	@Override
+	public List<EBVPollDao> getClosedPolls(String placeId) {
+		
+		List<EBVPollDao> polls = Dao.getClosedPolls(placeId);
+		
+		
+		return polls;
+	}	
 
 
 	@Override

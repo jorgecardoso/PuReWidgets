@@ -14,7 +14,9 @@ import com.google.gwt.user.client.rpc.RemoteService;
  */
 public interface PollService extends RemoteService {
 	public List<EBVPollDao> getPolls(String placeId);
-
+	public List<EBVPollDao> getActivePolls(String placeId);
+	public List<EBVPollDao> getClosedPolls(String placeId);
+	
 	public void savePoll( EBVPollDao poll );
 	
 	public void deletePoll( EBVPollDao poll);

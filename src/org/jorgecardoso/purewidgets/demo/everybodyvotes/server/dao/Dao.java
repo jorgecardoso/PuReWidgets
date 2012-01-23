@@ -3,6 +3,9 @@
  */
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.instantplaces.purewidgets.shared.Log;
@@ -75,6 +78,56 @@ public class Dao extends DAOBase {
 		Query<EBVPollDao> q = ofy_.query(EBVPollDao.class).filter("placeId", placeId);
 		
 		return q.list();
+	}
+	
+	public static List<EBVPollDao> getActivePolls(String placeId) {
+		/*
+		 * We can't get all root entities inside a transaction, so don't use the
+		 * static ofy
+		 */
+		Objectify ofy_ = ObjectifyService.begin();
+		long today = new Date().getTime();
+		Query<EBVPollDao> q = ofy_.query(EBVPollDao.class).filter("placeId", placeId).filter("showAfter <" , today);
+		
+		/*
+		 * we can only filter using one inequality op so the rest must be done here
+		 * 
+		 * remove polls that have closed.
+		 */
+		ArrayList<EBVPollDao> filtered = new ArrayList<EBVPollDao>();
+		
+		for ( EBVPollDao poll : q.list() ) {
+			if ( poll.getClosesOn() > today && poll.getShowUntil() > today) {
+				filtered.add(poll);
+			}
+		}
+		
+		return filtered;
+	}
+	
+	public static List<EBVPollDao> getClosedPolls(String placeId) {
+		/*
+		 * We can't get all root entities inside a transaction, so don't use the
+		 * static ofy
+		 */
+		Objectify ofy_ = ObjectifyService.begin();
+		long today = new Date().getTime();
+		Query<EBVPollDao> q = ofy_.query(EBVPollDao.class).filter("placeId", placeId).filter("closesOn <" , today);
+		
+		/*
+		 * we can only filter using one inequality op so the rest must be done here
+		 * 
+		 * remove polls that have closed.
+		 */
+		ArrayList<EBVPollDao> filtered = new ArrayList<EBVPollDao>();
+		
+		for ( EBVPollDao poll : q.list() ) {
+			if ( poll.getShowUntil() > today ) {
+				filtered.add(poll);
+			}
+		}
+		
+		return filtered;
 	}
 	
 	

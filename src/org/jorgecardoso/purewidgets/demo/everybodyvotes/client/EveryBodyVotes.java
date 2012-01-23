@@ -107,7 +107,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			this.polls.clear();
 		}
 		
-		pollService.getPolls(PublicDisplayApplication.getPlaceName(), new AsyncCallback<List<EBVPollDao>> () {
+		pollService.getActivePolls(PublicDisplayApplication.getPlaceName(), new AsyncCallback<List<EBVPollDao>> () {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -117,6 +117,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			@Override
 			public void onSuccess(List<EBVPollDao> result) {
 				if ( null == result || result.size() == 0 ) {
+					Window.alert("no polls found");
 					Log.warn(EveryBodyVotes.class.getName(), "No polls found");
 				}
 				EveryBodyVotes.this.polls = result;
