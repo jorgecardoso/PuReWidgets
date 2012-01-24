@@ -12,7 +12,10 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.widgets.GuiListBox;
 import org.instantplaces.purewidgets.client.widgets.GuiTextBox;
+import org.instantplaces.purewidgets.client.widgets.GuiWidget;
 import org.instantplaces.purewidgets.shared.Log;
+import org.instantplaces.purewidgets.shared.events.ActionEvent;
+import org.instantplaces.purewidgets.shared.events.ActionListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollServiceAsync;
@@ -51,6 +54,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	private static final int POLL_DISPLAY_INTERVAL = 60000; 
 	
 	private List<EBVPollDao> polls;
+	
 	private PollServiceAsync pollService;
 	
 	private LocalStorage localStorage;
@@ -61,15 +65,14 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	
 	@Override
 	public void onModuleLoad() {
-
+		/*
+		 * Load the Google visualization API and then the PublicDisplayApplication
+		 */
 		VisualizationUtils.loadVisualizationApi(new Runnable() {
-
 			@Override
 			public void run() {
 				PublicDisplayApplication.load(EveryBodyVotes.this, "EveryBodyVotes", false);
-				
 			}
-			
 		} , CoreChart.PACKAGE);
 		
 		
@@ -82,10 +85,15 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			new Admin().run();
 			return;
 		} 
+		
 		WidgetManager.get().setAutomaticInputRequests(true);
 		
 		this.localStorage = PublicDisplayApplication.getLocalStorage();
+		
 		Integer currentPoll =  this.localStorage.getInteger(LS_CURRENT_POLL_INDEX);
+		
+		//Window.alert(currentPoll.toString());
+		
 		if ( null == currentPoll ) {
 			this.currentPollIndex = -1;
 		} else {
@@ -105,6 +113,8 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	private void askForPollList() {
 		if ( null != this.polls ) {
 			this.polls.clear();
+		} else {
+			this.polls = new ArrayList<EBVPollDao>();
 		}
 		
 		pollService.getActivePolls(PublicDisplayApplication.getPlaceName(), new AsyncCallback<List<EBVPollDao>> () {
@@ -117,10 +127,38 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			@Override
 			public void onSuccess(List<EBVPollDao> result) {
 				if ( null == result || result.size() == 0 ) {
-					Window.alert("no polls found");
-					Log.warn(EveryBodyVotes.class.getName(), "No polls found");
+					//Window.alert("no polls found");
+					Log.warn(EveryBodyVotes.class.getName(), "No active polls found");
 				}
-				EveryBodyVotes.this.polls = result;
+				/*
+				 * The active polls are the first in the list
+				 */
+				EveryBodyVotes.this.polls.addAll(0, result);
+				
+				//EveryBodyVotes.this.advancePoll();
+				EveryBodyVotes.this.advancePoll();
+			}
+		});
+		
+		pollService.getClosedPolls(PublicDisplayApplication.getPlaceName(), new AsyncCallback<List<EBVPollDao>> () {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.warn(EveryBodyVotes.class.getName(), "Oops! " + caught.getMessage() );
+				
+			}
+
+			@Override
+			public void onSuccess(List<EBVPollDao> result) {
+				if ( null == result || result.size() == 0 ) {
+					//Window.alert("no polls found");
+					Log.warn(EveryBodyVotes.class.getName(), "No closed polls found");
+				}
+				/*
+				 * The closed polls are the last in the list
+				 */
+				EveryBodyVotes.this.polls.addAll(result);
+				
 				EveryBodyVotes.this.advancePoll();
 				
 			}
@@ -145,6 +183,44 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 		}
 		
 		GuiListBox tb = new GuiListBox("poll " + poll.getPollId(), poll.getPollQuestion(), l);
+		tb.addActionListener(new ActionListener() {
+
+			@Override
+			public void onAction(final ActionEvent<?> e) {
+				pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Oops. " + caught.getMessage());
+						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						GuiWidget widget = (GuiWidget)e.getSource();
+						pollService.getPoll(widget.getWidgetId().substring(5), new AsyncCallback<EBVPollDao>(){
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert(caught.getMessage());
+								
+							}
+
+							@Override
+							public void onSuccess(EBVPollDao result) {
+								EveryBodyVotes.this.showClosedPoll(result);
+								
+							}
+							
+						});
+						
+					}
+					
+				});
+				
+			}
+			
+		});
 		RootPanel.get("content").clear();
 		RootPanel.get("content").add(tb);
 		
@@ -180,8 +256,10 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	    AxisOptions ao = AxisOptions.create();
 	    ao.setTextPosition("in");
 	    options.setVAxisOptions(ao);
+	    
 	    ao = AxisOptions.create();
 	    ao.setTextPosition("none");
+	    ao.setMinValue(0);
 	    options.setHAxisOptions(ao);
 		BarChart pie = new BarChart(dt, options);
 		pie.setWidth("500px");

@@ -36,7 +36,7 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 		this.req = req;
 		this.resp = resp;
 		
-		PublicDisplayApplication.load(req, this);
+		PublicDisplayApplication.load(req, this, "Test");
 	}
 	
 	@Override

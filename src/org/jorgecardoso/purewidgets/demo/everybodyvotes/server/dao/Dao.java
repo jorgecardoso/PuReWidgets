@@ -66,7 +66,13 @@ public class Dao extends DAOBase {
 
 
 	public static EBVPollDao getPoll(String pollId) {
-		return ofy.find(EBVPollDao.class, pollId);
+		long id = 0;
+		try {
+			id = Long.parseLong(pollId);
+		} catch  (NumberFormatException nfe) {
+			Log.warn(Dao.class.getName(), "Could not parse pollId: " + pollId );
+		}
+		return ofy.find(EBVPollDao.class, id);
 	}
 	
 	public static List<EBVPollDao> getPolls(String placeId) {

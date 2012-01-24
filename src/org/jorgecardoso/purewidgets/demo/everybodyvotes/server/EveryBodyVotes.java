@@ -38,7 +38,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 		this.req = req;
 		this.resp = resp;
 		
-		PublicDisplayApplication.load(req, this);
+		PublicDisplayApplication.load(req, this, "EveryBodyVotes");
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 			}
 			message += "<br>";
 			
-			ListBox listBox = new ListBox("poll-" + poll.getPollId(), poll.getPollQuestion(), listOptions);
+			ListBox listBox = new ListBox("poll " + poll.getPollId(), poll.getPollQuestion(), listOptions);
 			listBox.addActionListener(this);
 		}
 		
@@ -105,13 +105,14 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 		
 		
 		
-		
-		try {
-			resp.setContentType("text/html");
-			resp.getWriter().write("<html><body>" + message + "</body></html>");
-		} catch (IOException e) {
-			Log.error(this, "Could not write the Http response.");
-			e.printStackTrace();
+		if ( null != this.resp ) {
+			try {
+				resp.setContentType("text/html");
+				resp.getWriter().write("<html><body>" + message + "</body></html>");
+			} catch (IOException e) {
+				Log.error(this, "Could not write the Http response.");
+				e.printStackTrace();
+			}
 		}
 	}
 

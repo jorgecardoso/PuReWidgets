@@ -6,7 +6,9 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.service;
 
 import java.util.List;
 
+import org.instantplaces.purewidgets.server.application.PublicDisplayApplication;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
+import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.EveryBodyVotes;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 
@@ -23,8 +25,24 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+	@Override
+	public void updatePolls(String placeId, String applicationId) {
+		EveryBodyVotes ebvApp = new EveryBodyVotes();
+		PublicDisplayApplication.load(placeId, applicationId, ebvApp);
+	}
 
+	@Override
+	public EBVPollDao getPoll(String pollId) {
+		EBVPollDao poll = null;
+		
+		Dao.beginTransaction();
+		poll = Dao.getPoll(pollId);
+		Dao.commitOrRollbackTransaction();
+		return poll;
+		
+	}
+	
+	
 	@Override
 	public List<EBVPollDao> getPolls(String placeId) {
 		
@@ -57,8 +75,7 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 	public void savePoll(EBVPollDao poll) {
 		Dao.beginTransaction();
 		Dao.put(poll);
-		Dao.commitOrRollbackTransaction();
-		
+		Dao.commitOrRollbackTransaction();	
 	}
 
 
@@ -68,7 +85,6 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 		Dao.beginTransaction();
 		Dao.delete(poll);
 		Dao.commitOrRollbackTransaction();
-		
 	}
 
 }

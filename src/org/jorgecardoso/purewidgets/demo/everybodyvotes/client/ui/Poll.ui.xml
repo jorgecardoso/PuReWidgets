@@ -26,5 +26,6 @@
 		<g:Button styleName="{style.important}" ui:field="buttonAdd" >Add option</g:Button>
 		<g:Button styleName="{style.important}" ui:field="deleteButton" >Delete poll</g:Button>
 		<g:Button styleName="{style.important}" ui:field="saveButton" >Save poll</g:Button>
+		<g:Button styleName="{style.important}" ui:field="addPollButton" >Add poll</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

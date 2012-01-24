@@ -19,7 +19,7 @@ public class EBVPollDao implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 
 	/**
@@ -117,7 +117,7 @@ public class EBVPollDao implements Serializable {
 			 */
 			EBVPollOptionDao oldOption = null;
 			for (EBVPollOptionDao o : this.pollOptions) {
-				if ( o.getOption().equals(optionId) ) {
+				if ( o.getOption().equals(existingOptionVoted) ) {
 					oldOption = o;
 					break;
 				}

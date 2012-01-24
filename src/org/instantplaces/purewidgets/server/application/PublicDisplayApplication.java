@@ -125,15 +125,16 @@ public class PublicDisplayApplication  {
 		
 		persistenceManager.close();
 	}
-	
-	public static void load(HttpServletRequest req, ApplicationLifeCycle acl) {
-		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Loading application ");
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		
+
+	public static void load(HttpServletRequest req, ApplicationLifeCycle acl, String defaultAppName) {
 		String appId = req.getParameter(APP_NAME_PARAMETER);
+		
 		if (null == appId) {
-			appId = DEFAULT_APP_NAME;
-			Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Could not read '"+APP_NAME_PARAMETER+"' parameter from query string. Using default appname.");
+			appId = defaultAppName;
+			if (null == appId) {
+				appId = DEFAULT_APP_NAME;
+				Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Could not read '"+APP_NAME_PARAMETER+"' parameter from query string. Using default appname.");
+			}
 		}
 		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Using application name: " + appId);
 		
@@ -143,6 +144,14 @@ public class PublicDisplayApplication  {
 			Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Could not read '"+PLACE_NAME_PARAMETER+"' parameter from query string. Using default placename.");
 		}
 		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Using place name: " + placeId);
+		
+		load(placeId, appId, acl);
+	}
+	
+	public static void load(String placeId, String appId, ApplicationLifeCycle acl) {
+		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Loading application ");
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+
 				
 		
 		// Load application
@@ -191,6 +200,8 @@ public class PublicDisplayApplication  {
 	    application.run();
 		//return application;
 	}
+	
+	
 	
 	/**
 	 * Saves a name/value pair in the DS. If the name already exists, its value will be

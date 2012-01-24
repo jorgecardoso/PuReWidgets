@@ -62,10 +62,21 @@ public class Poll extends Composite  {
 	Button saveButton;
 	
 	@UiField
+	Button addPollButton;
+	
+	@UiField
 	VerticalPanel optionsPanel;
 
 	private PollActionListener listener;
 
+	@UiHandler("addPollButton")
+	void onAddPollClick(ClickEvent e) {
+		this.pollIdLabel.setText("");
+		this.options.clear();
+		this.questionTextBox.setText("");
+		this.updateGui();
+	}
+	
 	@UiHandler("buttonAdd")
 	void onAddClick(ClickEvent e) {
 		PollOption o = new PollOption();

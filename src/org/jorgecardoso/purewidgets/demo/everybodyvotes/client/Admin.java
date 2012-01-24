@@ -3,6 +3,7 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.client;
 import java.util.Date;
 import java.util.List;
 
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollServiceAsync;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.ui.Poll;
@@ -43,6 +44,8 @@ public class Admin implements PollActionListener {
 	private TextBox placeTextBox;
 	
 	public  void  run() {
+		WidgetManager.get().setAutomaticInputRequests(false);
+		
 		pollService = GWT.create(PollService.class);
 		((ServiceDefTarget)pollService).setServiceEntryPoint("/pollservice"); 
 		
