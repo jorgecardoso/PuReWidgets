@@ -4,6 +4,8 @@
 package org.instantplaces.purewidgets.server.widgetmanager;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
@@ -13,6 +15,9 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.instantplaces.purewidgets.client.json.GenericJson;
+import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
+import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.instantplaces.purewidgets.server.RemoteStorage;
 import org.instantplaces.purewidgets.server.interactionmanager.InteractionServiceImpl;
 import org.instantplaces.purewidgets.shared.Log;
@@ -22,7 +27,11 @@ import org.instantplaces.purewidgets.shared.widgetmanager.ServerListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInputList;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetList;
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
+
+import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 
@@ -126,7 +135,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		String response = null;
 		try {
 			response = interactionService.postWidget(json,
-					this.getWidgetsUrl());
+					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (InteractionManagerException e) {
 			Log.error(e.getMessage());
 			e.printStackTrace();
@@ -240,7 +249,62 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	 */
 	@Override
 	public void deleteWidget(Widget widget) {
-		// TODO Implement delete widget
+		Log.debug(this, "Removing widget:" + widget.getWidgetId() );
+		
+		/*
+		 * Create the URL for the DELETE method. Widget ids are passed on the 
+		 * 'widget' url parameter
+		 */
+		StringBuilder widgetsUrlParam = new StringBuilder();
+		widgetsUrlParam.append( WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
+		
+		
+		try {
+			widgetsUrlParam.append(URLEncoder.encode(widget.getWidgetId(), "UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			Log.error("Could not URLencode." + e1.getMessage());
+			e1.printStackTrace();
+			return;
+		}
+			
+		String response;
+		
+		try {
+			response = interactionService.deleteWidget(widgetsUrlParam.toString());
+			
+		} catch (Exception e) {
+			Log.error( e.getMessage() );
+			e.printStackTrace();
+			return;
+		}
+		Log.warn(response);
+		
+	
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
+			
+			for ( Widget w : widgetList.getWidgets() ) {
+				/*
+				 * Notify the widgetManager
+				 */
+				if (this.serverListener != null) {
+					this.serverListener.onWidgetDelete(w);
+				}
+			}
+		} catch (JsonParseException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} 	
+		
+		
 
 	}
 
@@ -277,14 +341,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		return remoteStorage.getString(TIMESTAMP_NAME);
 	}	
 	
-	/*private String getWidgetsUrl(Widget widget) {
-		return INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget/" + widget.getWidgetId() + "?output=json&appid=" +this.appId ;
-	} */
 
-
-	private String getWidgetsUrl() {
-		return INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget?output=json&appid=" +this.appId ;
-	}	
 	private void setTimeStamp(long timeStamp) {
 		Log.debug("Storing timestamp: " + timeStamp);
 		
@@ -302,7 +359,43 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getWidgetsList(String placeId, String applicationId) {
-		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		
+		
+		String url = WidgetManager.getWidgetsUrl(placeId, applicationId, this.appId);
+		
+		Log.warn("Contacting application server for input..." + url);
+		String response = null;
+		
+		try {
+			response = interactionService.get(url);
+		} catch (InteractionManagerException e) {
+			Log.error( e.getMessage());
+			e.printStackTrace();
+			return;
+		}
+		Log.warn(response);
+	
+
+		try {
+			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
+			
+			/*
+			 * Notify the widgetManager
+			 */
+			if (this.serverListener != null) {
+				this.serverListener.onWidgetsList(placeId, applicationId, widgetList.getWidgets());
+			}
+		} catch (JsonParseException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.error(e.getMessage());
+			e.printStackTrace();
+		} 	
 		
 	}
 

@@ -1,17 +1,17 @@
-<!-- Indices written at Tue, 24 Jan 2012 13:50:38 WET -->
+<!-- Indices written at Tue, 24 Jan 2012 18:42:37 WET -->
 
 <datastore-indexes>
 
-    <!-- Used 5 times in query history -->
-    <datastore-index kind="EBVPollDao" ancestor="false" source="auto">
-        <property name="placeId" direction="asc"/>
-        <property name="closesOn" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 5 times in query history -->
+    <!-- Used 20 times in query history -->
     <datastore-index kind="EBVPollDao" ancestor="false" source="auto">
         <property name="placeId" direction="asc"/>
         <property name="showAfter" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="EBVPollDao" ancestor="false" source="auto">
+        <property name="placeId" direction="asc"/>
+        <property name="closesOn" direction="asc"/>
     </datastore-index>
 
 </datastore-indexes>

@@ -253,6 +253,38 @@ public class PublicDisplayApplication  {
 	private ApplicationLifeCycle getApplicationLifeCycle() {
 		return applicationLifeCycle;
 	}
+
+
+	/**
+	 * @return the appId
+	 */
+	public String getAppId() {
+		return appId;
+	}
+
+
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+
+	/**
+	 * @return the placeId
+	 */
+	public String getPlaceId() {
+		return placeId;
+	}
+
+
+	/**
+	 * @param placeId the placeId to set
+	 */
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
 	
 	
 	

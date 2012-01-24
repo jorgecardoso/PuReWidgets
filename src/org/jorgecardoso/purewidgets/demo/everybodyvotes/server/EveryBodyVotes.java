@@ -11,14 +11,18 @@ import org.instantplaces.purewidgets.server.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.server.application.ApplicationLifeCycle;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
+import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.ListBox;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.TextBox;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollOptionDao;
 
-public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle {
+public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle, ApplicationListListener {
 
 	/**
 	 * 
@@ -57,7 +61,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 	@Override
 	public void start() {
 
-		this.polls = Dao.getPolls("DefaultPlace");
+		this.polls = Dao.getActivePolls("DefaultPlace");
 		
 		/*
 		 * Create the list widgets
@@ -74,6 +78,9 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 			ListBox listBox = new ListBox("poll " + poll.getPollId(), poll.getPollQuestion(), listOptions);
 			listBox.addActionListener(this);
 		}
+		
+		WidgetManager.get().setApplicationListListener(this);
+		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
 		
 //		Dao.beginTransaction();
 //		
@@ -148,6 +155,39 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 //			message += ae.getParam() + "\n"; 
 //		}
 		
+		
+	}
+
+	@Override
+	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList) {
+		/*
+		 * Go through our widgets and delete the ones that refer to closed polls
+		 */
+		for ( Widget widget : widgetList ) {
+			if (widget.getWidgetId().equals("suggest")) continue;
+			
+			boolean exists = false;
+			for ( EBVPollDao poll : this.polls ) {
+				if ( widget.getWidgetId().substring(5).equals( String.valueOf(poll.getPollId()) ) ) {
+					exists = true;
+				}
+			}
+			if (!exists) {
+				WidgetManager.get().removeWidget(widget);
+			}
+		}
+		
+	}
+
+	@Override
+	public void onPlaceList(ArrayList<Place> placeList) {
+		// TODO Auto-generated method stub
 		
 	}
 }

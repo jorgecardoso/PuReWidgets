@@ -19,12 +19,37 @@ import org.instantplaces.purewidgets.shared.widgets.Widget;
  * 
  */
 public class WidgetManager implements ServerListener {
-
+	//"http://localhost:8080";//
+	private static final String INTERACTION_SERVER = "http://im-instantplaces.appspot.com";
+	
 	/**
 	 * "There can be only one"! Singleton pattern.
 	 */
 	private static WidgetManager wm = new WidgetManager();
 
+	public static WidgetManager get() {
+		return wm;
+	}
+
+	public static String getApplicationsUrl(String placeId, String callingApplicationId) {
+		return INTERACTION_SERVER + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
+	}
+
+	
+	public static String getApplicationUrl(String placeId, String applicationId) {
+		return INTERACTION_SERVER + "/place/" + placeId + "/application/"+ applicationId;
+	}
+	
+	public static String getPlacesUrl(String callingApplicationId) {
+		return INTERACTION_SERVER + "/place?appid=" + callingApplicationId ;
+	}
+
+	public static String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
+		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
+	}
+
+	private ApplicationListListener applicationListListener;
+	
 	/**
 	 * Communication with the Interaction manager is done via a
 	 * ServerCommunicator.
@@ -37,29 +62,12 @@ public class WidgetManager implements ServerListener {
 	 */
 
 	private ArrayList<Widget> widgetList;
-
-	
-	private ApplicationListListener applicationListListener;
 	
 	/**
 	 * Creates a new Widget Manager.
 	 */
 	protected WidgetManager() {
 		setWidgetList(new ArrayList<Widget>());
-	}
-
-	public static WidgetManager get() {
-		return wm;
-	}
-
-	/**
-	 * Enables or disables the automatic input requests
-	 * @param automatic
-	 */
-	public void setAutomaticInputRequests(boolean automatic) {
-		if ( this.communicator != null ) {
-			this.communicator.setAutomaticInputRequests(automatic);
-		}
 	}
 	
 	/**
@@ -104,41 +112,121 @@ public class WidgetManager implements ServerListener {
 		
 	}
 	
+	/**
+	 * Returns the list of all applications.
+	 * @param active
+	 */
+	public void getApplicationsList(String placeId) {
+		Log.debug(this, "Asking for applications list");
+		this.communicator.getApplicationsList( placeId );
+	}
+	
 
-	private int indexOf(Widget widget) {
-		for (Widget w : this.widgetList) {
-			if (w.getWidgetId().equals(widget.getWidgetId())) {
-				return this.widgetList.indexOf(w);
+	/**
+	 * Returns the list of active or inactive applications.
+	 * @param active
+	 */
+	public void getApplicationsList(String placeId, boolean active) {
+		Log.debug(this, "Asking for applications list");
+		this.communicator.getApplicationsList( placeId, active );
+	}
+
+	
+	public void getPlacesList() {
+		Log.debug(this, "Asking for place list");
+		this.communicator.getPlacesList();
+	}
+	
+	public ServerCommunicator getServerCommunicator() {
+		return this.communicator;
+	}
+
+	public ArrayList<Widget> getWidgetList() {
+		return widgetList;
+	}
+
+	/**
+	 * Returns the list of widgets from the specified application.
+	 * @param active
+	 */
+	public void getWidgetsList(String placeId, String applicationId) {
+		this.communicator.getWidgetsList( placeId, applicationId );
+	}
+
+	@Override
+	public void onApplicationsList(String placeId, ArrayList<Application> applications) {
+		if ( null != this.applicationListListener ) {
+			this.applicationListListener.onApplicationList(placeId, applications);
+		}
+	}
+	
+	@Override
+	public void onPlacesList(ArrayList<Place> placeList) {
+		if ( null != this.applicationListListener ) {
+			this.applicationListListener.onPlaceList( placeList );
+		}
+		
+	}
+	
+	@Override
+	public  void onWidgetAdd(Widget widgetFromServer) {
+		Log.debug(this, "Received widget from server: " + widgetFromServer.getWidgetId());
+		/*
+		 * Go through all widgets
+		 */
+		boolean changed = false;
+		Widget receivedWidget = null;
+
+		for (Widget widget : this.getWidgetList()) {
+			if (widgetFromServer.getWidgetId().equals(widget.getWidgetId())) {
+				
+
+				receivedWidget = widget;
+
+				/*
+				 * Go through all the options received
+				 */
+				ArrayList<WidgetOption> options = widgetFromServer
+						.getWidgetOptions();
+				for (WidgetOption optionFromServer : options) {
+
+					/*
+					 * Find the matching local widget option
+					 */
+					for (WidgetOption option : widget.getWidgetOptions()) {
+						if (option.getWidgetOptionId().equals(optionFromServer.getWidgetOptionId())) {
+
+							/*
+							 * If the ref code changed, update the local widget
+							 */
+							if ( !optionFromServer.getReferenceCode().equals( option.getReferenceCode() ) ) {
+								option.setReferenceCode(optionFromServer
+										.getReferenceCode());
+								
+								changed = true;
+							}
+						}
+					}
+
+				}
+
 			}
 		}
-		return -1;
+		if (changed) {
+			Log.debug(this, "Updating reference code on widget"
+					+ receivedWidget.getWidgetId());
+			receivedWidget.onReferenceCodesUpdated();
+		}
+
 	}
 
 	
-	/**
-	 * Removes a previously added Widget.
-	 * 
-	 * @param widget
-	 *            The Widget to remove.
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#removeWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
-	 */
-	public void removeWidget(Widget widget) {
-		Log.debug(this, "Removing widget: " + widget.getWidgetId() );
-		this.getWidgetList().remove(widget);
+	@Override
+	public void onWidgetDelete(Widget widget) {
 
-		if (null != this.communicator) {
-			this.communicator.deleteWidget(widget);
-		} else {
-			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
-		}
 	}
+
 	
-	public void removeAllWidgets(boolean volatileOnly) {
-		if ( null != this.communicator ) {
-			this.communicator.deleteAllWidgets(volatileOnly);
-		}
-	}
-
 	/**
 	 * This method is called when there is input available from the server.
 	 * 
@@ -216,138 +304,68 @@ public class WidgetManager implements ServerListener {
 	}
 
 	@Override
-	public  void onWidgetAdd(Widget widgetFromServer) {
-		Log.debug(this, "Received widget from server: " + widgetFromServer.getWidgetId());
-		/*
-		 * Go through all widgets
-		 */
-		boolean changed = false;
-		Widget receivedWidget = null;
-
-		for (Widget widget : this.getWidgetList()) {
-			if (widgetFromServer.getWidgetId().equals(widget.getWidgetId())) {
-				
-
-				receivedWidget = widget;
-
-				/*
-				 * Go through all the options received
-				 */
-				ArrayList<WidgetOption> options = widgetFromServer
-						.getWidgetOptions();
-				for (WidgetOption optionFromServer : options) {
-
-					/*
-					 * Find the matching local widget option
-					 */
-					for (WidgetOption option : widget.getWidgetOptions()) {
-						if (option.getWidgetOptionId().equals(optionFromServer.getWidgetOptionId())) {
-
-							/*
-							 * If the ref code changed, update the local widget
-							 */
-							if ( !optionFromServer.getReferenceCode().equals( option.getReferenceCode() ) ) {
-								option.setReferenceCode(optionFromServer
-										.getReferenceCode());
-								
-								changed = true;
-							}
-						}
-					}
-
-				}
-
-			}
-		}
-		if (changed) {
-			Log.debug(this, "Updating reference code on widget"
-					+ receivedWidget.getWidgetId());
-			receivedWidget.onReferenceCodesUpdated();
-		}
-
-	}
-
-	@Override
-	public void onWidgetDelete(Widget widget) {
-
-	}
-	
-	public ServerCommunicator getServerCommunicator() {
-		return this.communicator;
-	}
-	
-	public void setServerCommunication(ServerCommunicator serverCommunication) {
-		this.communicator = serverCommunication;
-		this.communicator.setServerListener(this);
-	}
-
-	
-	public void setWidgetList(ArrayList<Widget> widgetList) {
-		this.widgetList = widgetList;
-	}
-
-	
-	public ArrayList<Widget> getWidgetList() {
-		return widgetList;
-	}
-
-	public void setApplicationListListener(ApplicationListListener listener) {
-		this.applicationListListener = listener;
-	}
-	
-	
-	/**
-	 * Returns the list of active or inactive applications.
-	 * @param active
-	 */
-	public void getApplicationsList(String placeId, boolean active) {
-		Log.debug(this, "Asking for applications list");
-		this.communicator.getApplicationsList( placeId, active );
-	}
-	
-	/**
-	 * Returns the list of all applications.
-	 * @param active
-	 */
-	public void getApplicationsList(String placeId) {
-		Log.debug(this, "Asking for applications list");
-		this.communicator.getApplicationsList( placeId );
-	}	
-	
-	public void getPlacesList() {
-		Log.debug(this, "Asking for place list");
-		this.communicator.getPlacesList();
-	}
-	
-	/**
-	 * Returns the list of widgets from the specified application.
-	 * @param active
-	 */
-	public void getWidgetsList(String placeId, String applicationId) {
-		this.communicator.getWidgetsList( placeId, applicationId );
-	}	
-	
-	
-	@Override
-	public void onApplicationsList(String placeId, ArrayList<Application> applications) {
-		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onApplicationList(placeId, applications);
-		}
-	}
-	
-	@Override
 	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgets) {
 		if ( null != this.applicationListListener ) {
 			this.applicationListListener.onWidgetsList( placeId, applicationId, widgets );
 		}
 	}
-
-
-	@Override
-	public void onPlacesList(ArrayList<Place> placeList) {
-		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onPlaceList( placeList );
+	
+	
+	public void removeAllWidgets(boolean volatileOnly) {
+		if ( null != this.communicator ) {
+			this.communicator.deleteAllWidgets(volatileOnly);
 		}
-		
+	}
+	
+	/**
+	 * Removes a previously added Widget.
+	 * 
+	 * @param widget
+	 *            The Widget to remove.
+	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#removeWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
+	 */
+	public void removeWidget(Widget widget) {
+		Log.debug(this, "Removing widget: " + widget.getWidgetId() );
+		this.getWidgetList().remove(widget);
+
+		if (null != this.communicator) {
+			this.communicator.deleteWidget(widget);
+		} else {
+			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
+		}
+	}	
+	
+	public void setApplicationListListener(ApplicationListListener listener) {
+		this.applicationListListener = listener;
+	}
+	
+	/**
+	 * Enables or disables the automatic input requests
+	 * @param automatic
+	 */
+	public void setAutomaticInputRequests(boolean automatic) {
+		if ( this.communicator != null ) {
+			this.communicator.setAutomaticInputRequests(automatic);
+		}
+	}	
+	
+	
+	public void setServerCommunication(ServerCommunicator serverCommunication) {
+		this.communicator = serverCommunication;
+		this.communicator.setServerListener(this);
+	}
+	
+	public void setWidgetList(ArrayList<Widget> widgetList) {
+		this.widgetList = widgetList;
+	}
+
+
+	private int indexOf(Widget widget) {
+		for (Widget w : this.widgetList) {
+			if (w.getWidgetId().equals(widget.getWidgetId())) {
+				return this.widgetList.indexOf(w);
+			}
+		}
+		return -1;
 	}
 }

@@ -187,32 +187,43 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 
 			@Override
 			public void onAction(final ActionEvent<?> e) {
-				pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
+				GuiWidget widget = (GuiWidget)e.getSource();
+				EveryBodyVotes.this.showPollResult(widget.getWidgetId().substring(5));
+
+			}
+			
+		});
+		RootPanel.get("content").clear();
+		RootPanel.get("content").add(tb);
+		
+	}
+	
+	private void showPollResult(final String pollId) {
+		if ( null != this.timer ) {
+			timer.schedule(POLL_DISPLAY_INTERVAL);
+		}
+		pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Oops. " + caught.getMessage());
+				
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				
+				pollService.getPoll(pollId, new AsyncCallback<EBVPollDao>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Oops. " + caught.getMessage());
+						Window.alert(caught.getMessage());
 						
 					}
 
 					@Override
-					public void onSuccess(Void result) {
-						GuiWidget widget = (GuiWidget)e.getSource();
-						pollService.getPoll(widget.getWidgetId().substring(5), new AsyncCallback<EBVPollDao>(){
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert(caught.getMessage());
-								
-							}
-
-							@Override
-							public void onSuccess(EBVPollDao result) {
-								EveryBodyVotes.this.showClosedPoll(result);
-								
-							}
-							
-						});
+					public void onSuccess(EBVPollDao result) {
+						EveryBodyVotes.this.showClosedPoll(result);
 						
 					}
 					
@@ -221,9 +232,6 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			}
 			
 		});
-		RootPanel.get("content").clear();
-		RootPanel.get("content").add(tb);
-		
 	}
 	
 	private void showClosedPoll(EBVPollDao poll) {

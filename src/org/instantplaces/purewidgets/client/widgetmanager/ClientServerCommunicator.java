@@ -17,6 +17,7 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
@@ -31,8 +32,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  */
 public class ClientServerCommunicator implements ServerCommunicator {
-	//"http://localhost:8080";//
-	private static final String INTERACTION_SERVER = "http://im-instantplaces.appspot.com";
+
 		
 	/**
 	 * The interval between input requests to the server varies between MIN_ASK_PERIOD
@@ -153,7 +153,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	public ClientServerCommunicator(String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
-		this.applicationUrl = INTERACTION_SERVER + "/place/" + placeId + "/application/"+ appId;
+		this.applicationUrl = WidgetManager.getApplicationUrl(placeId, appId);
 		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
 		
 		askPeriod = MIN_ASK_PERIOD;
@@ -193,7 +193,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 		try {
 			interactionService.deleteWidget(
-					this.getWidgetsUrl()+ (volatileOnly ? "&volatileonly=true" : ""),
+					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) + (volatileOnly ? "&volatileonly=true" : ""),
 					new AsyncCallback<String>() {
 
 						@Override
@@ -288,9 +288,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getApplicationsList( String placeId) {
-		Log.debug( this, "Getting applications from server: " + getApplicationsUrl(placeId) );
+		Log.debug( this, "Getting applications from server: " + WidgetManager.getApplicationsUrl(placeId, this.placeId) );
 		try {
-			interactionService.get(getApplicationsUrl(placeId), 
+			interactionService.get(WidgetManager.getApplicationsUrl(placeId, this.placeId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -316,9 +316,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getApplicationsList(String placeId, boolean active) {
-		Log.debug( this, "Getting applications from server: " + getApplicationsUrl(placeId)+"&active=" + (active?"true":"false") );
+		Log.debug( this, "Getting applications from server: " + WidgetManager.getApplicationsUrl(placeId, this.placeId) +"&active=" + (active?"true":"false") );
 		try {
-			interactionService.get(getApplicationsUrl(placeId)+"&active=" + (active?"true":"false"), 
+			interactionService.get(WidgetManager.getApplicationsUrl(placeId, this.placeId) +"&active=" + (active?"true":"false"), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -390,7 +390,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 		try {
 			this.interactionService.postWidget(widgetListJson.toJsonString(),
-					this.getWidgetsUrl(),
+					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId),
 					new AsyncCallback<String>() {
 
 						@Override
@@ -435,22 +435,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}	
 	
 	
-	private String getWidgetsUrl() {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + this.placeId + "/application/" + this.appId + "/widget?appid=" +this.appId ;
-	}
-	
-	
-	private String getWidgetsUrl(String placeId, String applicationId) {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +this.appId ;
-	}
-
-	private String getApplicationsUrl(String placeId) {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place/" + placeId + "/application?appid=" +this.appId ;
-	}
-	
-	private String getPlacesUrl() {
-		return ClientServerCommunicator.INTERACTION_SERVER + "/place?appid=" +this.appId ;
-	}
 	
 	/**
 	 * Helper method that maps a value in a source range to a value in a target
@@ -814,6 +798,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		}
 	}	
 	
+	public String getWidgetIdUrlEscaped(Widget widget) {
+		return com.google.gwt.http.client.URL.encode(widget.getWidgetId());
+	}
+	
 	/**
 	 * Removes a previously added Widget.
 	 * 
@@ -827,7 +815,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		 * 'widget' url parameter
 		 */
 		StringBuilder widgetsUrlParam = new StringBuilder();
-		widgetsUrlParam.append(this.getWidgetsUrl()).append("&widgets=");
+		widgetsUrlParam.append( WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
 		
 		for ( int i = 0; i < widgets.size(); i++) {
 			Widget w = widgets.get(i); 
@@ -835,11 +823,11 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			/*
 			 * Make sure we don't use Urls with more than 255 characters...
 			 */
-			if ( (widgetsUrlParam.length() + w.getWidgetIdUrlEscaped().length()) > 255 ) {
+			if ( (widgetsUrlParam.length() + this.getWidgetIdUrlEscaped(w).length()) > 255 ) {
 				widgetsUrlParam.deleteCharAt(widgetsUrlParam.length()-1);
 				break;
 			}
-			widgetsUrlParam.append(w.getWidgetIdUrlEscaped());
+			widgetsUrlParam.append(this.getWidgetIdUrlEscaped(w));
 			
 			if ( i < (widgets.size()-1) ) {
 				widgetsUrlParam.append(",");
@@ -898,9 +886,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	@Override
 	public void getWidgetsList(String placeId, String applicationId) {
-		Log.debug( this, "Getting widgets from server: " + this.getWidgetsUrl(placeId, applicationId));
+		Log.debug( this, "Getting widgets from server: " +  WidgetManager.getWidgetsUrl(placeId,  applicationId, this.appId) );
 		try {
-			interactionService.get(this.getWidgetsUrl(placeId, applicationId), 
+			interactionService.get( WidgetManager.getWidgetsUrl(placeId,  applicationId, this.appId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -963,9 +951,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getPlacesList() {
-		Log.debug( this, "Getting places from server: " + this.getPlacesUrl());
+		Log.debug( this, "Getting places from server: " +  WidgetManager.getPlacesUrl(this.appId) );
 		try {
-			interactionService.get(this.getPlacesUrl(), 
+			interactionService.get( WidgetManager.getPlacesUrl(this.appId), 
 					new AsyncCallback<String>() {
 
 						@Override

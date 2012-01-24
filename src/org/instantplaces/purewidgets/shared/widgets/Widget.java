@@ -450,9 +450,6 @@ public class Widget {
 		}
 	}
 	
-	public String getWidgetIdUrlEscaped() {
-		return com.google.gwt.http.client.URL.encode(this.widgetId);
-	}
 
 	/**
 	 * Sets this widget's options to the specified ArrayList. The existing
