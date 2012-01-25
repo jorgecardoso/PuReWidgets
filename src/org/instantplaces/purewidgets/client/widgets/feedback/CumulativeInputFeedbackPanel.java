@@ -11,7 +11,9 @@ import java.util.List;
 import org.instantplaces.purewidgets.client.widgets.GuiWidget;
 import org.instantplaces.purewidgets.shared.Log;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,10 +48,14 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	public final String DEFAULT_STYLENAME = "instantplaces-CumulativeInputFeedbackPanel";
 	
 	/**
-	 * The default style name of the ackground element of this input feedback panel.
+	 * The default style name of the background element of this input feedback panel.
 	 */
 	public final String BACKGROUND_DEFAULT_STYLENAME = "instantplaces-CumulativeInputFeedbackPanel-background";
 
+	/**
+	 * The style name for the widget title.
+	 */
+	public final String TITLE_STYLENAME_SUFFIX = "title";
 	
 	/**
 	 * The style name for accepted input feedback lines.
@@ -78,11 +84,14 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	public static final int DEFAULT_MAX_LINES = 5;
 
+	private VerticalPanel mainPanel;
 	
 	/**
 	 * The panel used to lay out the input feedback text lines.
 	 */
 	private VerticalPanel vPanel;
+	
+	private Label title;
 
 	
 	/**
@@ -138,9 +147,15 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		
 		this.accumulatedFeedback = new ArrayList<InputFeedback<? extends GuiWidget>>();
 		
+		this.mainPanel = new VerticalPanel();
+		this.add(mainPanel);
+		
+		title = new Label("");
+		title.addStyleName(TITLE_STYLENAME_SUFFIX);
+		mainPanel.add(title);
 		// infoLabel = new Label();
 		vPanel = new VerticalPanel();
-		this.add(vPanel);
+		mainPanel.add(vPanel);
 		
 		//this.setBackground(new ImagePanel("/instantplaces/icons/bubble.gif"));
 		super.setStyleName(DEFAULT_STYLENAME);
@@ -164,7 +179,6 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		
 		vPanel.clear();
 		
-		
 		for (InputFeedback<?> feed : this.accumulatedFeedback) {
 			
 				StringBuilder message = new StringBuilder();
@@ -182,7 +196,6 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 				case NOT_ACCEPTED:
 					l.setStyleName(NOTACCEPTED_INPUT_STYLENAME_SUFFIX);
 					break;
-				
 				}
 				
 				vPanel.add(l);
@@ -214,25 +227,29 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 
 	
 	/**
-	 * Fills the panel with available feedback lines and displays it. This method
-	 * also schedules the timer so that the panel is hidden and a new batch of
-	 * feedback lines can be shown.
+	 *  displays the feedback panel if the widget is currently being displayed.
 	 */
 	private void displayPanel() {
 		if (!this.isShowing()) {
 			if ( this.widget.isDisplaying() ) {
 				
+				this.title.setVisible(false);
 				super.show();
-			} /*else {
-				PopupPanel p = new PopupPanel();
+				this.alignPanel();
+			} else {
+				/*PopupPanel p = new PopupPanel();
 				this.widget.removeFromParent();
 				p.add(this.widget);
-				p.show();
+				p.show();*/
+				
+				this.title.setText( widget.getShortDescription() );
+				this.title.setVisible(true);
 				super.show();
-			}*/
+				this.setPopupPosition(Window.getClientWidth()/2-this.getOffsetWidth()/2, Window.getClientHeight()-this.getOffsetHeight());
+			}
 		}
 
-		this.alignPanel();
+		
 
 	}
 

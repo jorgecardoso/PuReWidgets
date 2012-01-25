@@ -20,16 +20,12 @@ public class WidgetInput {
 
 	private String widgetId;
 	
-
 	private String widgetOptionId;
 	
-
 	private String timeStamp;	
 	
-
 	private ArrayList<String> parameters;
 	
-
 	private String persona;	
 	
 	private String inputMechanism;
@@ -105,6 +101,38 @@ public class WidgetInput {
 	 */
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+
+	/**
+	 * @return the inputMechanism
+	 */
+	public String getInputMechanism() {
+		return inputMechanism;
+	}
+
+
+	/**
+	 * @param inputMechanism the inputMechanism to set
+	 */
+	public void setInputMechanism(String inputMechanism) {
+		this.inputMechanism = inputMechanism;
+	}
+
+
+	/**
+	 * @return the delivered
+	 */
+	public boolean isDelivered() {
+		return delivered;
+	}
+
+
+	/**
+	 * @param delivered the delivered to set
+	 */
+	public void setDelivered(boolean delivered) {
+		this.delivered = delivered;
 	}
 
 }

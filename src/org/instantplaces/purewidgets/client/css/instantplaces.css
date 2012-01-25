@@ -7,6 +7,11 @@
 	z-index: 910;
 }
 
+.instantplaces-CumulativeInputFeedbackPanel .title {
+	font-size: xx-large;
+}
+
+/*
 .instantplaces-CumulativeInputFeedbackPanel .content {
 
 	border-style: dotted;
@@ -15,7 +20,7 @@
 	padding: 5px;
 	color: #000;
 	z-index: 910;
-}
+}*/
 
 .instantplaces-CumulativeInputFeedbackPanel-background {
 	position:absolute;
