@@ -15,6 +15,7 @@ import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionI
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -36,12 +37,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ApplicationList extends Composite implements ApplicationListListener  {
-
+	interface Style extends CssResource {
+	    String list();
+	    //String disabled();
+	  }
 	private static ApplicationListUiBinder uiBinder = GWT.create(ApplicationListUiBinder.class);
 
 	interface ApplicationListUiBinder extends UiBinder<Widget, ApplicationList> {
 	}
 
+	@UiField Style style;
+	
 	private String placeId;
 	
 	private Timer timerApplications;
@@ -344,23 +350,26 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		
 		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
 		
-		FlowPanel flowPanel = new FlowPanel();
+		VerticalPanel panel = new VerticalPanel();
 
+		panel.add(new Label(publicDisplayWidget.getShortDescription()));
+		
 		ListBox listbox = new ListBox();
-		listbox.setVisibleItemCount(4);
+		listbox.addStyleName(style.list());
+		listbox.setVisibleItemCount(Math.min(4, widgetOptions.size()));
 		for (WidgetOption wo : widgetOptions) {
 			listbox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
 		}
 		
 		
-		flowPanel.add(listbox);
+		panel.add(listbox);
 		
 		Button button = new Button("Send");
 		button.addClickHandler(new MultipleOptionImperativeClickHandler(widgetOptions, listbox));
 		
-		flowPanel.add(button);
+		panel.add(button);
 		
-		return flowPanel;
+		return panel;
 	}
 
 	Widget getSingleOptionImperativeWidget(

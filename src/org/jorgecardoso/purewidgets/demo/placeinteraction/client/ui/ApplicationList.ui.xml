@@ -1,9 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
+	<ui:style type='org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.ApplicationList.Style'>
 		.inline {
 			display:inline;
+		}
+		.list {
+			font-size:x-large;
+			border:none;
+			overflow:auto;
+			width:100%;
+			text-align:center;
 		}
 	</ui:style>
 	<g:HTMLPanel>
