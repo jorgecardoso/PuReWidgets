@@ -12,7 +12,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.servlet.http.HttpServletRequest;
 import org.instantplaces.purewidgets.server.PMF;
-import org.instantplaces.purewidgets.server.RemoteStorage;
+import org.instantplaces.purewidgets.server.storage.RemoteStorage;
 import org.instantplaces.purewidgets.server.widgetmanager.ServerServerCommunicator;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;

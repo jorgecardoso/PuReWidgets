@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.instantplaces.purewidgets.server;
+package org.instantplaces.purewidgets.server.storage;
 
 import java.util.ArrayList;
 import javax.jdo.annotations.IdGeneratorStrategy;
