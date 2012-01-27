@@ -168,7 +168,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			player.cueVideoById(videoId, startSeconds, suggestedQuality);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 
@@ -183,7 +183,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			player.cueVideoById(videoId, startSeconds);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 
@@ -197,7 +197,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			player.cueVideoById(videoId);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -214,7 +214,7 @@ public class EmbeddedPlayer extends Widget {
 			player.loadVideoById(videoId, startSeconds, suggestedQuality);
 			//Log.debug("Loading: " + videoId);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -230,7 +230,7 @@ public class EmbeddedPlayer extends Widget {
 			player.loadVideoById(videoId, startSeconds);
 			Log.debug("Loading: " + videoId);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -246,7 +246,7 @@ public class EmbeddedPlayer extends Widget {
 			player.loadVideoById(videoId);
 			Log.debug("Loading: " + videoId);
 		} else {
-			Log.info("Cannot cue video yet. "
+			Log.warn(this, "Cannot cue video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -259,7 +259,7 @@ public class EmbeddedPlayer extends Widget {
 			player.playVideo();
 			Log.debug("Playing video.");
 		} else {
-			Log.info("Cannot play video yet. "
+			Log.warn(this, "Cannot play video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -272,7 +272,7 @@ public class EmbeddedPlayer extends Widget {
 			player.pauseVideo();
 			Log.debug("Pausing video.");
 		} else {
-			Log.info("Cannot pause video yet. "
+			Log.warn(this, "Cannot pause video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -286,7 +286,7 @@ public class EmbeddedPlayer extends Widget {
 			player.stopVideo();
 			Log.debug(this, "Stopping video.");
 		} else {
-			Log.info(this, "Cannot stop video yet. "
+			Log.warn(this, "Cannot stop video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -299,7 +299,7 @@ public class EmbeddedPlayer extends Widget {
 			player.seekTo(seconds, allowSeekAhead);
 			Log.debug("Seeking video to " + seconds + " seconds");
 		} else {
-			Log.info("Cannot seek video yet. "
+			Log.warn(this, "Cannot seek video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -311,9 +311,9 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 
 			player.clearVideo();
-			Log.debug("Clearing video.");
+			Log.debug(this, "Clearing video.");
 		} else {
-			Log.info("Cannot clear video yet. "
+			Log.warn(this, "Cannot clear video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -327,9 +327,9 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 
 			player.mute();
-			Log.debug("Muting video.");
+			Log.debug(this, "Muting video.");
 		} else {
-			Log.info("Cannot mute video yet. "
+			Log.warn(this, "Cannot mute video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -342,9 +342,9 @@ public class EmbeddedPlayer extends Widget {
 	public void unMute() {
 		if (player != null) {
 			player.unMute();
-			Log.debug("UnMuting video.");
+			Log.debug(this, "UnMuting video.");
 		} else {
-			Log.info("Cannot unmute video yet. "
+			Log.warn(this, "Cannot unmute video yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -358,7 +358,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.isMuted();
 		} else {
-			Log.info("Cannot get mute state yet. "
+			Log.warn(this, "Cannot get mute state yet. "
 					+ "Player not ready (not instantiated).");
 			return false;
 		}
@@ -375,9 +375,9 @@ public class EmbeddedPlayer extends Widget {
 	public void setVolume(int volume) {
 		if (player != null) {
 			player.setVolume(volume);
-			Log.debug("Setting volume to " + volume);
+			Log.debug(this, "Setting volume to " + volume);
 		} else {
-			Log.info("Cannot set volume yet. "
+			Log.warn(this, "Cannot set volume yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -393,7 +393,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVolume();
 		} else {
-			Log.info("Cannot get volume yet. "
+			Log.warn(this, "Cannot get volume yet. "
 					+ "Player not ready (not instantiated).");
 			return 0;
 		}
@@ -402,9 +402,9 @@ public class EmbeddedPlayer extends Widget {
 	public void setSize(int width, int height) {
 		if (player != null) {
 			player.setSize(width, height);
-			Log.debug("Setting size: " + width + " " + height);
+			Log.debug(this, "Setting size: " + width + " " + height);
 		} else {
-			Log.info("Cannot set size yet. "
+			Log.warn(this, "Cannot set size yet. "
 					+ "Player not ready (not instantiated).");
 		}
 	}
@@ -413,7 +413,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVideoBytesLoaded();
 		} else {
-			Log.info("Cannot get bytes loaded yet. "
+			Log.warn(this, "Cannot get bytes loaded yet. "
 					+ "Player not ready (not instantiated).");
 			return -1;
 		}
@@ -423,7 +423,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVideoBytesTotal();
 		} else {
-			Log.info("Cannot get bytes total yet. "
+			Log.warn(this, "Cannot get bytes total yet. "
 					+ "Player not ready (not instantiated).");
 			return -1;
 		}
@@ -433,7 +433,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVideoStartBytes();
 		} else {
-			Log.info("Cannot get start bytes yet. "
+			Log.warn(this, "Cannot get start bytes yet. "
 					+ "Player not ready (not instantiated).");
 			return -1;
 		}
@@ -448,7 +448,7 @@ public class EmbeddedPlayer extends Widget {
 				return null;
 			}
 		} else {
-			Log.info("Cannot get state yet. "
+			Log.warn(this, "Cannot get state yet. "
 					+ "Player not ready (not instantiated).");
 			return null;
 		}
@@ -458,7 +458,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getCurrentTime();
 		} else {
-			Log.info("Cannot get current time yet. "
+			Log.warn(this, "Cannot get current time yet. "
 					+ "Player not ready (not instantiated).");
 			return -1;
 		}
@@ -468,7 +468,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getPlaybackQuality();
 		} else {
-			Log.info("Cannot get playback quality yet. "
+			Log.warn(this, "Cannot get playback quality yet. "
 					+ "Player not ready (not instantiated).");
 			return "";
 		}
@@ -478,7 +478,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getAvailableQualityLevels();
 		} else {
-			Log.info("Cannot get available quality levels yet. "
+			Log.warn(this, "Cannot get available quality levels yet. "
 					+ "Player not ready (not instantiated).");
 			return null;
 		}
@@ -488,7 +488,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getDuration();
 		} else {
-			Log.info("Cannot get duration yet. "
+			Log.warn(this, "Cannot get duration yet. "
 					+ "Player not ready (not instantiated).");
 			return -1;
 		}
@@ -498,7 +498,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVideoUrl();
 		} else {
-			Log.info("Cannot get video url yet. "
+			Log.warn(this, "Cannot get video url yet. "
 					+ "Player not ready (not instantiated).");
 			return "";
 		}
@@ -508,7 +508,7 @@ public class EmbeddedPlayer extends Widget {
 		if (player != null) {
 			return player.getVideoEmbedCode();
 		} else {
-			Log.info("Cannot get video embed code yet. "
+			Log.warn(this, "Cannot get video embed code yet. "
 					+ "Player not ready (not instantiated).");
 			return "";
 		}

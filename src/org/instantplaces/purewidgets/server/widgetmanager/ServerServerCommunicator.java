@@ -114,13 +114,13 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		try {
 			json = mapper.writeValueAsString(wl);//widgetRepresentation);
 		} catch (JsonGenerationException e1) {
-			Log.error(e1.getMessage());
+			Log.error(this, e1.getMessage());
 			e1.printStackTrace();
 		} catch (JsonMappingException e1) {
-			Log.error(e1.getMessage());
+			Log.error(this, e1.getMessage());
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			Log.error(e1.getMessage());
+			Log.error(this, e1.getMessage());
 			e1.printStackTrace();
 		}
 
@@ -133,7 +133,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			response = interactionService.postWidget(json,
 					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (InteractionManagerException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		}
 		Log.debug(response);
@@ -149,13 +149,13 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				}
 			}
 		} catch (JsonParseException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		}
 		// read response and call serverlistener widget add
@@ -174,17 +174,17 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			}
 			String url = applicationUrl + "/input?output=json&from=" + lastTimeStamp + "&appid="+appId;
 			
-			Log.warn("Contacting application server for input..." + url);
+			Log.warn(this, "Contacting application server for input..." + url);
 			String response = null;
 			
 			try {
 				response = interactionService.get(url);
 			} catch (InteractionManagerException e) {
-				Log.error( e.getMessage());
+				Log.error(this, e.getMessage());
 				e.printStackTrace();
 				return;
 			}
-			Log.warn(response);
+			Log.warn(this, response);
 			
 			
 
@@ -210,13 +210,13 @@ public class ServerServerCommunicator implements ServerCommunicator {
 					this.serverListener.onWidgetInput(inputList.getInputs());
 				}
 			} catch (JsonParseException e) {
-				Log.error(e.getMessage());
+				Log.error(this, "Error parsing JSON " + e.getMessage());
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				Log.error(e.getMessage());
+				Log.error(this, "Error mapping JSON " + e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.error(e.getMessage());
+				Log.error(this, "IO Error: " + e.getMessage());
 				e.printStackTrace();
 			} 	
 	}
@@ -258,7 +258,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		try {
 			widgetsUrlParam.append(URLEncoder.encode(widget.getWidgetId(), "UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
-			Log.error("Could not URLencode." + e1.getMessage());
+			Log.error(this, "Could not URLencode." + e1.getMessage());
 			e1.printStackTrace();
 			return;
 		}
@@ -269,11 +269,11 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			response = interactionService.deleteWidget(widgetsUrlParam.toString());
 			
 		} catch (Exception e) {
-			Log.error( e.getMessage() );
+			Log.error(this, e.getMessage() );
 			e.printStackTrace();
 			return;
 		}
-		Log.warn(response);
+		
 		
 	
 		ObjectMapper mapper = new ObjectMapper();
@@ -290,13 +290,13 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				}
 			}
 		} catch (JsonParseException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.error(e.getMessage());
+			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		} 	
 		
@@ -328,7 +328,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		try {
 			return Long.parseLong(getLastTimeStampAsString());
 		} catch (Exception e) {
-			Log.error(e.getMessage());
+			Log.error(this, "Could not parse timestamp: " + e.getMessage());
 		}
 		return 0;
 	}
@@ -348,7 +348,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		try {
 			return Long.parseLong(value);
 		} catch (Exception e) {
-			Log.error(e.getMessage());
+			Log.error(this, "Could not parse long value:" + e.getMessage());
 		}
 		return 0;
 	}
@@ -360,17 +360,17 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		
 		String url = WidgetManager.getWidgetsUrl(placeId, applicationId, this.appId);
 		
-		Log.warn("Contacting application server for input..." + url);
+		Log.warn(this, "Asking application server for the widget list..." + url);
 		String response = null;
 		
 		try {
 			response = interactionService.get(url);
 		} catch (InteractionManagerException e) {
-			Log.error( e.getMessage());
+			Log.error(this,  e.getMessage());
 			e.printStackTrace();
 			return;
 		}
-		Log.warn(response);
+		
 	
 
 		try {
@@ -383,13 +383,13 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				this.serverListener.onWidgetsList(placeId, applicationId, widgetList.getWidgets());
 			}
 		} catch (JsonParseException e) {
-			Log.error(e.getMessage());
+			Log.error(this, "Error parsing JSON: " + e.getMessage());
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			Log.error(e.getMessage());
+			Log.error(this, "Error mapping JSON: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.error(e.getMessage());
+			Log.error(this, "IO Error: " + e.getMessage());
 			e.printStackTrace();
 		} 	
 		

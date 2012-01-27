@@ -36,7 +36,6 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public String get(String url) throws InteractionManagerException  {
 		String result = doMethod("GET", null, url);
-		Log.warn(result);
 		return result;
 	}
 	
@@ -126,7 +125,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 		
 		} catch (IOException e) {
 			
-			Log.error(e.getMessage());
+			Log.error(this, "IO Error: " + e.getMessage());
 			throw new InteractionManagerException(e.getMessage());
 		}
 		//return null;

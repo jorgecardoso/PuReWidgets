@@ -107,7 +107,7 @@ public class WidgetManager implements ServerListener {
 		if (this.communicator != null) {
 			this.communicator.addWidget(widget);
 		} else {
-			Log.error("WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
+			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
 		}
 		
 	}

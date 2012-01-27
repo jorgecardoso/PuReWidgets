@@ -419,7 +419,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		try {
 			return Long.parseLong(getLastTimeStampAsString());
 		} catch (Exception e) {
-			Log.error(e.getMessage());
+			Log.error(this, "Could no parse timestamp: " + e.getMessage());
 		}
 		return 0;
 	}

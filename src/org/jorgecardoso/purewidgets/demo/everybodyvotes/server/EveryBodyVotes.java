@@ -1,12 +1,25 @@
 package org.jorgecardoso.purewidgets.demo.everybodyvotes.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+
+import org.instantplaces.purewidgets.client.widgets.GuiTextBox;
 import org.instantplaces.purewidgets.server.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.server.application.ApplicationLifeCycle;
 import org.instantplaces.purewidgets.shared.Log;
@@ -79,6 +92,9 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 			listBox.addActionListener(this);
 		}
 		
+		TextBox suggest = new TextBox("suggest", "Suggest a poll");
+		suggest.addActionListener(this);
+		
 		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
 		
@@ -142,6 +158,8 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 					Dao.commitOrRollbackTransaction();
 				}
 			}
+		} else if ( source.getWidgetId().equals("suggest") ) {
+			this.sendMail(ae.getParam().toString());
 		}
 		
 //		if ( source.getWidgetId().equals("button_1") ) {
@@ -155,6 +173,34 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 //			message += ae.getParam() + "\n"; 
 //		}
 		
+		
+	}
+
+	private void sendMail(String suggestion) {
+		Log.warn(this, "Sending email: " + suggestion);
+		
+		Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+
+        String msgBody = suggestion;
+
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress("jorgediablu@gmail.com", "Jorge Cardoso"));
+            msg.addRecipient(Message.RecipientType.TO,
+                             new InternetAddress("jorgecardoso@ieee.org", "Mr. User"));
+            msg.setSubject("Poll suggestion");
+            msg.setText(msgBody);
+            Transport.send(msg);
+    
+        } catch (AddressException e) {
+            Log.warn(this, e.getMessage());
+        } catch (MessagingException e) {
+            Log.warn(this, e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+			Log.warn(this, e.getMessage());
+			e.printStackTrace();
+		}
 		
 	}
 

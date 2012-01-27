@@ -25,7 +25,7 @@ FINEST (lowest value)
 	 * SEVERE 
 	 */
 	
-	public static void error(String msg) {
+	private static void error(String msg) {
 		Log.get().log(Level.SEVERE, msg);
 	}
 	
@@ -40,7 +40,7 @@ FINEST (lowest value)
 	/*
 	 * WARNING
 	 */
-	public static void warn(String msg) {
+	private static void warn(String msg) {
 		Log.get().log(Level.WARNING, msg);
 	}
 	
@@ -56,7 +56,7 @@ FINEST (lowest value)
 	/*
 	 * INFO
 	 */
-	public static void info(String msg) {
+	private static void info(String msg) {
 		Log.get().log(Level.INFO, msg);
 	}	
 	

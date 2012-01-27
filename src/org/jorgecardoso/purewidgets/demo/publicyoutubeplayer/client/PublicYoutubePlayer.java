@@ -257,22 +257,22 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		 * These can be set in the URL or via the admin console
 		 */
 		this.maxVideoDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_MAX_VIDEO_DURATION, DEFAULT_MAX_VIDEO_DURATION);
-		Log.info("Loaded '" + URL_PARAMETER_MAX_VIDEO_DURATION + "' parameter with value: " + this.maxVideoDurationParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_MAX_VIDEO_DURATION + "' parameter with value: " + this.maxVideoDurationParameter);
 		
 		this.activityScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_ACTIVITY_SCREEN_DURATION, DEFAULT_ACTIVITY_SCREEN_DURATION);
-		Log.info("Loaded '" + URL_PARAMETER_ACTIVITY_SCREEN_DURATION + "' parameter with value: " + this.activityScreenDurationParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_ACTIVITY_SCREEN_DURATION + "' parameter with value: " + this.activityScreenDurationParameter);
 		
 		this.toPlayNextScreenDurationParameter = PublicDisplayApplication.getParameterInt(URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION, DEFAULT_TOPLAYNEXT_SCREEN_DURATION);
-		Log.info("Loaded '" + URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION + "' parameter with value: " + this.toPlayNextScreenDurationParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_TOPLAYNEXT_SCREEN_DURATION + "' parameter with value: " + this.toPlayNextScreenDurationParameter);
 		
 		this.allowUserTagsParameter =  PublicDisplayApplication.getParameterBoolean(URL_PARAMETER_ALLOW_USER_TAGS, false); //com.google.gwt.user.client.Window.Location.getParameter(URL_PARAMETER_ALLOW_USER_TAGS);
-		Log.info("Loaded '" + URL_PARAMETER_ALLOW_USER_TAGS + "' parameter with value: " + this.allowUserTagsParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_ALLOW_USER_TAGS + "' parameter with value: " + this.allowUserTagsParameter);
 		
 		this.placeTagsParameter = PublicDisplayApplication.getParameterString(URL_PARAMETER_PLACE_TAGS, "public,youtube,player");
-		Log.info("Loaded '" + URL_PARAMETER_PLACE_TAGS + "' parameter with value: " + this.placeTagsParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_PLACE_TAGS + "' parameter with value: " + this.placeTagsParameter);
 		
 		this.resetParameter = PublicDisplayApplication.getParameterBoolean(URL_PARAMETER_RESET, false);
-		Log.info("Loaded '" + URL_PARAMETER_RESET + "' parameter with value: " + this.resetParameter);
+		Log.info(this, "Loaded '" + URL_PARAMETER_RESET + "' parameter with value: " + this.resetParameter);
 		
 		PublicDisplayApplication.setParameterString(URL_PARAMETER_RESET, "false");
 		
@@ -336,7 +336,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		 */
 		for ( Video video : videos ) {
 			video.setOriginatingTags(this.lastSearchTags);
-			Log.info(video.getDescription());
+			//Log.info(this, video.getDescription());
 		}
 		
 		/*

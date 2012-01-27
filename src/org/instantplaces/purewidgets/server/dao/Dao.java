@@ -32,13 +32,13 @@ public class Dao extends DAOBase {
 			ofy.getTxn().commit();
 			success = true;
 		} catch (Exception e) {
-			Log.warn("Could not commit transaction: " + e.getMessage());
+			Log.warn(Dao.class.getName(), "Could not commit transaction: " + e.getMessage());
 		} finally {
 			if (ofy.getTxn().isActive()) {
 				try {
 					ofy.getTxn().rollback();
 				} catch (Exception e) {
-					Log.warn("Problem rolling back:" + e.getMessage());
+					Log.warn(Dao.class.getName(), "Problem rolling back:" + e.getMessage());
 				}
 			}
 		}

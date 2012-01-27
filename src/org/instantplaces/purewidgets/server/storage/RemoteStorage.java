@@ -60,6 +60,7 @@ public class RemoteStorage {
 		Dao.beginTransaction();
 		this.storage = Dao.getStorage(storageId);
 		this.storage.setString(name, value);
+		Dao.put(this.storage);
 		Dao.commitOrRollbackTransaction();
 	}
 	
