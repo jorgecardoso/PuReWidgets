@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map;
+
 import org.instantplaces.purewidgets.client.widgetmanager.InteractionService;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.exceptions.InteractionManagerException;
@@ -32,7 +35,9 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	public String get(String url) throws InteractionManagerException  {
-		return doMethod("GET", null, url);
+		String result = doMethod("GET", null, url);
+		Log.warn(result);
+		return result;
 	}
 	
 	
@@ -74,10 +79,12 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 				con.setDoOutput(true);
 			}
 			con.addRequestProperty("Content-type", "application/json");
-			
+			con.setRequestProperty("Accept-Charset", "UTF-8");
 			con.setUseCaches(false);
 			con.setRequestProperty("Cache-control", "max-age=0");
 		
+			//Log.warn(this, "REQUEST HEADERS");
+			//this.printHeaders(con.getRequestProperties());
 			con.connect();
 			
 			/*
@@ -92,7 +99,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 			/*
 			 * Read the response.
 			 */
-			BufferedReader bf = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			BufferedReader bf = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8" ));
 		
 			StringBuilder builder = new StringBuilder();
 			String line;
@@ -102,7 +109,11 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 					builder.append(line);
 				}
 			} while (null != line);
-		
+	
+			//this.printHeaders(con.getR)
+			//Log.warn(this, "RESPONSE HEADERS");
+			//this.printHeaders(con.getHeaderFields());
+			
 			if (con.getResponseCode() != 200 ) {
 			//	this.getThreadLocalResponse().sendError(con.getResponseCode(), con.getResponseMessage());
 				throw new InteractionManagerException(con.getResponseCode() + " : " + con.getResponseMessage() + " " +builder.toString()) ;
@@ -121,7 +132,15 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 		//return null;
 	}
 	
-	
+	private void printHeaders(Map<String, List<String>> map) {
+		for (String header : map.keySet() ) {
+			
+			//Log.warn(this, header);
+			for ( String value : map.get(header) ) {
+				Log.warn(this, header + " :  " + value );
+			}
+		}
+	}
 	
 	/**
 	 * Escape an html string. Escaping data received from the client helps to
