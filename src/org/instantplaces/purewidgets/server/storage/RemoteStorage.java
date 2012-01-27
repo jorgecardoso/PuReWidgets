@@ -3,13 +3,10 @@
  */
 package org.instantplaces.purewidgets.server.storage;
 
-import java.util.ArrayList;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-import org.instantplaces.purewidgets.shared.Log;
-import com.google.appengine.api.datastore.Key;
+
+import org.instantplaces.purewidgets.server.dao.Dao;
+import org.instantplaces.purewidgets.server.dao.StorageDao;
+
 
 
 /**
@@ -18,85 +15,64 @@ import com.google.appengine.api.datastore.Key;
  * 
  * @author Jorge C. S. Cardoso
  */
-@PersistenceCapable
 public class RemoteStorage {
 	
-	/**
-	 * The key for the object on the datastore. The class doesn't use this
-	 * but the datastore does.
-	 */
-	@SuppressWarnings("unused")
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
-	
-	
-	/**
-	 * Since the datastore can't store Hashmaps, we need to implement our
-	 * own hashmap like structure. 
-	 * The 'keys' variable holds the names of the name/value pair.
-	 */
-	@Persistent
-	private ArrayList<String> keys;
-	
-	/**
-	 * Since the datastore can't store Hashmaps, we need to implement our
-	 * own hashmap like structure. 
-	 * The 'values' variable holds the values of the name/value pair.
-	 */	
-	@Persistent
-	private ArrayList<String> values;
-	
-	
-	
+	private String storageId;
+	private StorageDao storage;
 	
 	/**
 	 * Creates and empty RemoteStorage object.
 	 */
-	public RemoteStorage() {
-		this.keys = new ArrayList<String>();
-		this.values = new ArrayList<String>();
+	private RemoteStorage(String placeName, String applicationName) {
+		this.storageId = placeName+"-"+applicationName;
+		
+		/*
+		 * Check if exists, if not create
+		 * 
+		 */
+		Dao.beginTransaction();
+		StorageDao storage = Dao.getStorage(this.storageId);
+		if ( null == storage ) {
+			storage = new StorageDao(this.storageId);
+			Dao.put(storage);
+		}
+		Dao.commitOrRollbackTransaction();
 	}
 	
+	public static RemoteStorage get(String placeName, String applicationName) {
+		RemoteStorage rs = new RemoteStorage(placeName, applicationName);
+		
+		
+		return rs;
+	}
 	
-
-
+	public void open() {
+		Dao.beginTransaction();
+		this.storage = Dao.getStorage(storageId);
+	}
 	
-	/**
-	 * Saves a name/value pair in the DS. If the name already exists, its value will be
-	 * replaced by the new one. If not, a new pair is created.
-	 * 
-	 * @param name The name to store.
-	 * @param value The value to store.
-	 */
+	public void close() {
+		Dao.put(this.storage);
+		Dao.commitOrRollbackTransaction();
+	}
+	
 	public void setString(String name, String value) {
-		Log.debug(this, "Saving " + name + " : " + value);
-		if (keys.contains(name)) {
-			int index = keys.indexOf(name);
-			values.set(index, value);
-		} else {
-			keys.add(name);
-			values.add(value);
-		}
-		
+		Dao.beginTransaction();
+		this.storage = Dao.getStorage(storageId);
+		this.storage.setString(name, value);
+		Dao.commitOrRollbackTransaction();
 	}
-
-	/**
-	 * Retrieves a value from the DS, given its name.
-	 * 
-	 * @param name The name of the value to retrieve.
-	 * @return The value associated with the name, or null if the name does not exist.
-	 */
+	
 	public String getString(String name) {
-		if (keys.contains(name)) {
-			int index = keys.indexOf(name);
-			return values.get(index);
-			
-		} else {
-			return null;
-		}
+		Dao.beginTransaction();
+		this.storage = Dao.getStorage(storageId);
 		
+		String value = this.storage.getString(name);
+		Dao.commitOrRollbackTransaction();
+		return value;
 	}
+	
+	
 	
 	public void setLong(String name, long value) {
 		this.setString(name, Long.toString(value));

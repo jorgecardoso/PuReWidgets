@@ -39,12 +39,15 @@ public class StorageDao {
 	
 	@SuppressWarnings("unused")
 	private StorageDao() {
+		this.keys = new ArrayList<String>();
+		this.values = new ArrayList<String>();
 	}
 	
 	public StorageDao(String storageId) {
+		this();
 		this.storageId = storageId;
-		this.keys = new ArrayList<String>();
-		this.values = new ArrayList<String>();
+		/*this.keys = new ArrayList<String>();
+		this.values = new ArrayList<String>();*/
 	}
 	
 	

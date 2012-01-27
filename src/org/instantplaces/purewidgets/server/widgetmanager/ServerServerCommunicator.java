@@ -15,9 +15,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.instantplaces.purewidgets.client.json.GenericJson;
-import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
-import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetListJson;
+
 import org.instantplaces.purewidgets.server.interactionmanager.InteractionServiceImpl;
 import org.instantplaces.purewidgets.server.storage.RemoteStorage;
 import org.instantplaces.purewidgets.shared.Log;
@@ -30,8 +28,6 @@ import org.instantplaces.purewidgets.shared.widgetmanager.WidgetList;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
-import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 
@@ -343,7 +339,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	
 
 	private void setTimeStamp(long timeStamp) {
-		Log.debug("Storing timestamp: " + timeStamp);
+		Log.debug(this, "Storing timestamp: " + timeStamp);
 		
 		remoteStorage.setString(TIMESTAMP_NAME, ""+timeStamp);
 	}

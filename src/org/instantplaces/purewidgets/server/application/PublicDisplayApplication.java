@@ -7,6 +7,7 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -64,7 +65,7 @@ public class PublicDisplayApplication  {
 	@Persistent
 	private String placeId;
 	
-	@Persistent
+	@NotPersistent
 	private RemoteStorage remoteStorage;
 	
 	/**
@@ -89,13 +90,14 @@ public class PublicDisplayApplication  {
 		this.appId = appId;
 		this.persistenceManager = pm;
 		this.applicationLifeCycle = acl;
-		remoteStorage = new RemoteStorage();
+		
+		
 	}
 	
 	
 	private void init() {
 		Log.info(this, "Initing application " + this.appId);
-		
+		this.remoteStorage = RemoteStorage.get(placeId, appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
 		
