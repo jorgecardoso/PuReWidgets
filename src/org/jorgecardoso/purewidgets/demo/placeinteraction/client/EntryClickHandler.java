@@ -18,7 +18,7 @@ public class EntryClickHandler extends BaseClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		
-		this.sendInput("tag."+this.referenceCode+ ":" + this.textbox.getText());
+		this.sendInput("tag.\""+this.referenceCode+ ":" + this.textbox.getText()+"\"");
 	}
 
 }

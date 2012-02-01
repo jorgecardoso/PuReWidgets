@@ -55,7 +55,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	private VideoActionListener videoEventListener;
 	private String action;
 	
-		public VideoActionEntry(Video video, String actionLabel, boolean showDownload) {
+		public VideoActionEntry(Video video, String actionLabel, boolean createDownloadButton) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.video = video;
 		
@@ -67,9 +67,9 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		//image.setHeight("100px");
 		likeGuiButton = createButton(video.getId(), actionLabel);
 		buttonPanel.add( likeGuiButton );
-		if ( showDownload ) {
+		if ( createDownloadButton ) {
 			downloadGuiButton =  createDownloadButton(video.getId(), actionLabel);
-			buttonPanel.add( downloadGuiButton );
+			//buttonPanel.add( downloadGuiButton );
 		}
 	}
 	
