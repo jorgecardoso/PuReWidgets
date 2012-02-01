@@ -26,4 +26,5 @@ public interface ServerCommunicator {
 	 * @param automatic
 	 */
 	public void setAutomaticInputRequests(boolean automatic);
+	
 }

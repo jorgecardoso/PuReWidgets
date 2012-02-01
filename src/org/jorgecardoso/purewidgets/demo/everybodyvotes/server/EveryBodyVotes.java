@@ -43,16 +43,21 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 	private static final long serialVersionUID = 1L;
 	
 	PublicDisplayApplication app;
+	
 	HttpServletRequest req;
+	
 	HttpServletResponse resp;
 	
 	List<EBVPollDao> polls = null;
 	
 	String message;
 	
+	ArrayList<Widget> oldWidgetList;
+	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
+		
 		this.resp = resp;
 		
 		PublicDisplayApplication.load(req, this, "EveryBodyVotes");
@@ -64,6 +69,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 		message = "";
 	}
 	
+	
 	/**
 	 * Called only on the first time
 	 */
@@ -73,7 +79,11 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 	
 	@Override
 	public void start() {
-
+		//WidgetManager.get().setAutomaticWidgetRequests(false);
+		WidgetManager.get().setApplicationListListener(this);
+		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
+		
+		
 		this.polls = Dao.getActivePolls("DefaultPlace");
 		
 		/*
@@ -82,34 +92,41 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 		for ( EBVPollDao poll : polls ) {
 			ArrayList<String> listOptions = new ArrayList<String>();
 			message += poll.getPollQuestion() + "<br>";
+			
 			for ( EBVPollOptionDao pollOption : poll.getPollOptions() ) {
 				listOptions.add(pollOption.getOption());
 				message += pollOption.getOption() + ": " + pollOption.getVotes() + "<br>";
 			}
 			message += "<br>";
 			
-			ListBox listBox = new ListBox("poll " + poll.getPollId(), poll.getPollQuestion(), listOptions);
+			String widgetId = "poll " + poll.getPollId();
+			if ( existsWidget(widgetId) ) {
+				WidgetManager.get().setAutomaticWidgetRequests(false);
+			} else {
+				WidgetManager.get().setAutomaticWidgetRequests(true);
+			}
+			
+			
+			ListBox listBox = new ListBox(widgetId, poll.getPollQuestion(), listOptions);
 			listBox.addActionListener(this);
 		}
 		
 		TextBox suggest = new TextBox("suggest", "Suggest a poll");
 		suggest.addActionListener(this);
 		
-		WidgetManager.get().setApplicationListListener(this);
-		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
 		
-//		Dao.beginTransaction();
-//		
-//		EBVPollDao poll = new EBVPollDao();
-//		poll.setPlaceId("DefaultPlace");
-//		poll.setPollQuestion("Test question");
-//		poll.getPollOptions().add(new EBVPollOptionDao("option 1"));
-//		poll.vote("jorge", "option 1");
-//		
-//		
-//		Dao.put(poll);
-		
-		//Dao.getPolls(placeId)
+		deleteUnusedWidgets();
+	
+	}
+	
+	
+	private boolean existsWidget(String widgetId) {
+		for ( Widget widget : this.oldWidgetList ) {
+			if ( widget.getWidgetId().equals(widgetId) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
@@ -126,8 +143,6 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 			
 		}*/
 		
-		
-		
 		if ( null != this.resp ) {
 			try {
 				resp.setContentType("text/html");
@@ -140,10 +155,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 	}
 
 	@Override
-	public void onAction(ActionEvent<?> ae) {
-		//ae = (ActionEvent<? extends Widget>)ae;
-		
-		
+	public void onAction(ActionEvent<?> ae) {		
 		Widget source = (Widget)ae.getSource();
 		
 		if ( source.getWidgetId().startsWith("poll") ) {
@@ -207,15 +219,18 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 	@Override
 	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList) {
+		this.oldWidgetList = widgetList;
+	}
+	
+	private void deleteUnusedWidgets() {
 		/*
 		 * Go through our widgets and delete the ones that refer to closed polls
 		 */
-		for ( Widget widget : widgetList ) {
+		for ( Widget widget : this.oldWidgetList ) {
 			if (widget.getWidgetId().equals("suggest")) continue;
 			
 			boolean exists = false;
@@ -228,12 +243,10 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 				WidgetManager.get().removeWidget(widget);
 			}
 		}
-		
 	}
 
 	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
 		// TODO Auto-generated method stub
-		
 	}
 }

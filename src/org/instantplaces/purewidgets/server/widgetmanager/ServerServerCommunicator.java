@@ -411,5 +411,6 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	public void getPlacesList() {
 		// TODO Auto-generated method stub
 		
-	}	
+	}
+
 }

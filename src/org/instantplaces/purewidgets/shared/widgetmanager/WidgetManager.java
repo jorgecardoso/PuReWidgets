@@ -62,6 +62,8 @@ public class WidgetManager implements ServerListener {
 	 */
 
 	private ArrayList<Widget> widgetList;
+
+	private boolean automaticWidgetRequests = true;
 	
 	/**
 	 * Creates a new Widget Manager.
@@ -105,7 +107,9 @@ public class WidgetManager implements ServerListener {
 		 * changed to decide if we need to send it to the server
 		 */
 		if (this.communicator != null) {
-			this.communicator.addWidget(widget);
+			if (this.automaticWidgetRequests) {
+				this.communicator.addWidget(widget);
+			}
 		} else {
 			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
 		}
@@ -329,7 +333,9 @@ public class WidgetManager implements ServerListener {
 		this.getWidgetList().remove(widget);
 
 		if (null != this.communicator) {
-			this.communicator.deleteWidget(widget);
+			if (this.automaticWidgetRequests) {
+				this.communicator.deleteWidget(widget);
+			}
 		} else {
 			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
 		}
@@ -347,8 +353,15 @@ public class WidgetManager implements ServerListener {
 		if ( this.communicator != null ) {
 			this.communicator.setAutomaticInputRequests(automatic);
 		}
-	}	
+	}
 	
+	/**
+	 * Enables or disables the automatic input requests
+	 * @param automatic
+	 */
+	public void setAutomaticWidgetRequests(boolean automatic) {
+		this.automaticWidgetRequests = automatic;
+	}	
 	
 	public void setServerCommunication(ServerCommunicator serverCommunication) {
 		this.communicator = serverCommunication;
