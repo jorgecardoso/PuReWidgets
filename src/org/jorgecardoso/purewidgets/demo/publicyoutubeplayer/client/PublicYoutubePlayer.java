@@ -242,7 +242,6 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 
 	@Override
 	public void onApplicationLoaded() {
-
 		ReferenceCodeFormatter.setLeftBracket("[");
 		ReferenceCodeFormatter.setRightBracket("]");
 		

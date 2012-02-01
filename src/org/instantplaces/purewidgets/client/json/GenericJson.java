@@ -12,7 +12,6 @@ public abstract class GenericJson extends JavaScriptObject {
 	  }-*/; 
 	  
 	  public static native <T> T fromJson(String json) /*-{
-	  	console.log(json);
 	  	return eval('('+json+')');
 	  }-*/;
 	  

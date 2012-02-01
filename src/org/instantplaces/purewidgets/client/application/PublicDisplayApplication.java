@@ -4,6 +4,7 @@
 package org.instantplaces.purewidgets.client.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.instantplaces.purewidgets.client.storage.LocalStorage;
@@ -259,10 +260,15 @@ public class PublicDisplayApplication {
 					if (null != result) {
 						PublicDisplayApplication.parameters = result;
 						
+						
 						for ( String key : result.keySet() ) {
 							
 							Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
 						}
+					} else {
+						
+						PublicDisplayApplication.parameters = new HashMap<String, String>();
+					
 					}
 					listener.onApplicationLoaded();
 				}

@@ -3,7 +3,6 @@
  <cron>
     <url>/everybodyvotes/server</url>
     <description>Updates the Everybody Votes app</description>
-    <schedule>every 1 minutes</schedule>
+    <schedule>every 10 minutes</schedule>
   </cron>
-  
 </cronentries>
