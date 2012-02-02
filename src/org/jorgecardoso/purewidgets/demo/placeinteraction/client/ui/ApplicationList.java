@@ -322,7 +322,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		flowPanel.add(textBox);
 		Button btn = new Button("Submit");
 		flowPanel.add(btn);
-		btn.addClickHandler(new EntryClickHandler(option.getReferenceCode(), textBox));
+		btn.addClickHandler(new EntryClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), textBox));
 		// }
 
 		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
@@ -365,7 +365,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		panel.add(listbox);
 		
 		Button button = new Button("Send");
-		button.addClickHandler(new MultipleOptionImperativeClickHandler(widgetOptions, listbox));
+		button.addClickHandler(new MultipleOptionImperativeClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), listbox));
 		
 		panel.add(button);
 		
@@ -384,7 +384,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		Button btn = new Button(publicDisplayWidget.getShortDescription() + " ["
 				+ option.getReferenceCode() + "]");
 		flowPanel.add(btn);
-		btn.addClickHandler(new ImperativeClickHandler(option.getReferenceCode()));
+		btn.addClickHandler(new ImperativeClickHandler( publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions()) );
 		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}

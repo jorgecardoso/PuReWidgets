@@ -47,6 +47,9 @@ public class WidgetManager implements ServerListener {
 	public static String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
 		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
 	}
+	public static String getWidgetInputUrl(String placeId, String applicationId, String widgetId, String callingApplicationId) {
+		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
+	}
 
 	private ApplicationListListener applicationListListener;
 	
@@ -383,5 +386,9 @@ public class WidgetManager implements ServerListener {
 			}
 		}
 		return -1;
+	}
+	
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, Callback<WidgetInput> callback) {
+		this.communicator.sendWidgetInput(placeName, applicationName, widgetInput, callback);
 	}
 }

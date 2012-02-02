@@ -85,6 +85,9 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		if ( null != likeGuiButton ) {
 			likeGuiButton.removeFromServer();
 		}
+		if ( null != likeGuiButton ) {
+			downloadGuiButton.removeFromServer();
+		}
 	}
 	
 	/**

@@ -4,18 +4,39 @@ import java.util.ArrayList;
 
 import org.instantplaces.purewidgets.client.json.GenericJson;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
-
 import com.google.gwt.core.client.JsArrayString;
 
 public class WidgetInputJson extends GenericJson {
+
+	/**
+	 * Converts a WidgetInput to a WidgetInputJson representation
+	 * 
+	 * @return
+	 */
+	public static WidgetInputJson create(WidgetInput widgetInput) {
+		WidgetInputJson widgetInputJson = GenericJson.getNew();
+		
+		widgetInputJson.setPersona(widgetInput.getPersona());
+		widgetInputJson.setParametersFromJavaArray(widgetInput.getParameters().toArray(new String[widgetInput.getParameters().size()]));
+		widgetInputJson.setTimeStamp(widgetInput.getTimeStamp());
+		widgetInputJson.setWidgetId(widgetInput.getWidgetId());
+		widgetInputJson.setWidgetOptionId(widgetInput.getWidgetOptionId());
+		widgetInputJson.setInputMechanism(widgetInput.getInputMechanism());
+		
+		return widgetInputJson;
+	}
 
 	// Overlay types always have protected, zero-arg ctors
 	protected WidgetInputJson() {
 
 	}
-
+	
 	public final native int getAge() /*-{
 		return this.age;
+	}-*/;
+
+	public final native String getInputMechanism() /*-{
+		return this.inputMechanism;
 	}-*/;
 
 	public final ArrayList<String> getParameters() {
@@ -52,9 +73,10 @@ public class WidgetInputJson extends GenericJson {
 		wi.setWidgetOptionId(this.getWidgetOptionId());
 		wi.setParameters(this.getParameters());
 		wi.setAge(this.getAge());
+		wi.setInputMechanism(this.getInputMechanism());
 		return wi;
 	}
-
+	
 	public final native String getWidgetOptionId() /*-{
 		return this.widgetOptionId;
 	}-*/;
@@ -63,9 +85,24 @@ public class WidgetInputJson extends GenericJson {
 		this.age = age;
 	}-*/;
 
-	public final native void setParameters(String[] parameters) /*-{
+	
+	public final native void setInputMechanism(String inputMechanism) /*-{
+		this.inputMechanism = inputMechanism;
+	}-*/;
+
+	public final native void setParameters(JsArrayString parameters) /*-{
 		this.parameters = parameters;
 	}-*/;
+
+
+	public final void setParametersFromJavaArray(String[] parameters) {
+		JsArrayString jsArray = (JsArrayString) JsArrayString.createArray();
+
+		for (String param : parameters) {
+			jsArray.push(param);
+		}
+		this.setParameters(jsArray);
+	}
 
 	public final native void setPersona(String persona) /*-{
 		this.persona = persona;
@@ -74,7 +111,7 @@ public class WidgetInputJson extends GenericJson {
 	public final native void setTimeStamp(String timeStamp) /*-{
 		this.timeStamp = timeStamp;
 	}-*/;
-
+	
 	public final native void setWidgetId(String widgetId) /*-{
 		this.widgetId = widgetId;
 	}-*/;
@@ -82,14 +119,4 @@ public class WidgetInputJson extends GenericJson {
 	public final native void setWidgetOptionId(String widgetOptionId) /*-{
 		this.widgetOptionId = widgetOptionId;
 	}-*/;
-
-	public final String toDebugString() {
-
-		return "WidgetInput(" + "persona: " + this.getPersona() + "; parameters "
-				+ this.getParameters().toString() + ")";
-
-		// return "WidgetInput(widget:"+ getWidgetId() + "; persona: " +
-		// getPersona() + "; parameters: ";
-	}
-
 }

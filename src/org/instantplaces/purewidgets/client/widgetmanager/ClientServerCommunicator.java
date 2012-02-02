@@ -10,10 +10,12 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.json.GenericJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.ApplicationListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.PlaceListJson;
+import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetInputJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.instantplaces.purewidgets.shared.Log;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
@@ -192,7 +194,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 		
 		try {
-			interactionService.deleteWidget(
+			interactionService.delete(
 					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) + (volatileOnly ? "&volatileonly=true" : ""),
 					new AsyncCallback<String>() {
 
@@ -389,7 +391,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		Log.debugFinest(this, "Sending " + widgetListJson.toJsonString() + " to server");
 
 		try {
-			this.interactionService.postWidget(widgetListJson.toJsonString(),
+			this.interactionService.post(widgetListJson.toJsonString(),
 					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId),
 					new AsyncCallback<String>() {
 
@@ -802,6 +804,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		return com.google.gwt.http.client.URL.encode(widget.getWidgetId());
 	}
 	
+	public String getWidgetIdUrlEscaped(String widgetId) {
+		return com.google.gwt.http.client.URL.encode(widgetId);
+	}
+	
 	/**
 	 * Removes a previously added Widget.
 	 * 
@@ -835,7 +841,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		}
 		
 		try {
-			interactionService.deleteWidget(
+			interactionService.delete(
 					widgetsUrlParam.toString(),
 					new AsyncCallback<String>() {
 
@@ -1010,6 +1016,37 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			Log.warn(this, "No widget manager to notify about place list");
 		}
 			
+		
+	}
+
+	@Override
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, final Callback<WidgetInput> callback) {
+		WidgetInputJson widgetInputJson = WidgetInputJson.create(widgetInput);
+		
+		Log.debug(this, "Sending widget input: " + widgetInputJson.toJsonString());
+		Log.debug(this, "to: "+ WidgetManager.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId));
+		
+		this.interactionService.post(widgetInputJson.toJsonString(), 
+				WidgetManager.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId), 
+				new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.warn(this, "Error posting input. " + caught.getMessage());
+						if ( null != callback ) {
+							callback.onFailure(caught);
+						}
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Log.debug(this, "Successfully posted input. " + result);
+						if ( null != callback ) {
+							callback.onSuccess(null);
+						}
+					}
+
+		});
 		
 	}
 	

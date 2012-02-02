@@ -8,6 +8,7 @@ import org.instantplaces.purewidgets.shared.widgets.Widget;
 public interface ServerCommunicator {
 
 	public void addWidget(Widget widget);
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, Callback<WidgetInput> callback);
 	
 	public void deleteWidget(Widget widget);
 	public void deleteAllWidgets(boolean volatileOnly);

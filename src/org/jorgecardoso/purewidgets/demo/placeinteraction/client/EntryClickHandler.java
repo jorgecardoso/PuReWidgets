@@ -1,5 +1,9 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client;
 
+import java.util.ArrayList;
+
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -8,8 +12,9 @@ public class EntryClickHandler extends BaseClickHandler {
 	private String referenceCode;
 	private TextBox textbox;
 	
-	public EntryClickHandler(String referenceCode, TextBox textbox) {
-		super();
+	public EntryClickHandler(String placeName, String applicationName, String widgetId, ArrayList<WidgetOption> widgetOptions, TextBox textbox) {
+		super(placeName, applicationName, widgetId, widgetOptions);
+		
 		this.referenceCode = referenceCode;
 		this.textbox = textbox;
 	}
@@ -18,7 +23,8 @@ public class EntryClickHandler extends BaseClickHandler {
 	@Override
 	public void onClick(ClickEvent event) {
 		
-		this.sendInput("tag.\""+this.referenceCode+ ":" + this.textbox.getText()+"\"");
+		//this.sendInput("tag.\""+this.referenceCode+ ":" + this.textbox.getText()+"\"");
+		this.sendInput(this.widgetOptions.get(0), this.textbox.getText());
 	}
 
 }

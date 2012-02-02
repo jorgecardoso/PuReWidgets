@@ -28,7 +28,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 //	}
 	
 	@Override
-	public String postWidget(String json, String url) throws InteractionManagerException  {
+	public String post(String json, String url) throws InteractionManagerException  {
 		return doMethod("POST", json, url);		
 	}
 	
@@ -47,7 +47,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 	
 	
 	@Override
-	public String deleteWidget( String url) throws InteractionManagerException  {
+	public String delete( String url) throws InteractionManagerException  {
 		return doMethod("DELETE", null, url);
 	}
 	

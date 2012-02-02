@@ -20,6 +20,7 @@ import org.instantplaces.purewidgets.server.interactionmanager.InteractionServic
 import org.instantplaces.purewidgets.server.storage.RemoteStorage;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.exceptions.InteractionManagerException;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.instantplaces.purewidgets.shared.widgetmanager.ServerListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
@@ -130,7 +131,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		Log.debug("Adding " + json + " to server");
 		String response = null;
 		try {
-			response = interactionService.postWidget(json,
+			response = interactionService.post(json,
 					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (InteractionManagerException e) {
 			Log.error(this, e.getMessage());
@@ -266,7 +267,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		String response;
 		
 		try {
-			response = interactionService.deleteWidget(widgetsUrlParam.toString());
+			response = interactionService.delete(widgetsUrlParam.toString());
 			
 		} catch (Exception e) {
 			Log.error(this, e.getMessage() );
@@ -409,6 +410,15 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getPlacesList() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput,
+			Callback<WidgetInput> callback) {
 		// TODO Auto-generated method stub
 		
 	}

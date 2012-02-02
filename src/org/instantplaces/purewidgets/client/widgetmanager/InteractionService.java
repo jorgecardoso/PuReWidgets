@@ -11,13 +11,13 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("../interactionservice")
 public interface InteractionService extends RemoteService {
 	
-	String postWidget(String json, String url) throws InteractionManagerException;
+	String post(String json, String url) throws InteractionManagerException;
 	
 	String get(String url) throws InteractionManagerException;
 	
 //	String getWidgetInput(String url) throws InteractionManagerException;
 	
-	String deleteWidget( String url) throws InteractionManagerException;
+	String delete( String url) throws InteractionManagerException;
 	
 //	String getApplicationsFromPlace(String url) throws InteractionManagerException;
 	
