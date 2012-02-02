@@ -51,14 +51,11 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 //		sightingService = GWT.create(SightingService.class);
 //		((ServiceDefTarget) sightingService).setServiceEntryPoint("/sighting");
 		
-		PublicDisplayApplication.load(this, "QRCoder", false);
+		PublicDisplayApplication.load(this, "QRCodeGenerator", false);
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
 		WidgetManager.get().setApplicationListListener(this);
-		WidgetManager.get().setAutomaticInputRequests(false);
-		
-		
-		
+		WidgetManager.get().setAutomaticInputRequests(false);	
 	}
 	
 	
@@ -149,9 +146,12 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 						for ( WidgetOption option : widget.getWidgetOptions() ) {
 							Log.debug(this,"Adding " + widget.getWidgetId() + " to panel");
 							//panel.add(this.getHtmlWidget(widget));
-							String data = "http://pw.jorgecardoso.org/QrCodeInteractor.html?place=" + widget.getPlaceId() + 
+							String data = "http://pw.jorgecardoso.org/qrcodeinteractor/index.html?place=" + widget.getPlaceId() + 
 									"&app="+widget.getApplicationId() + "&widget=" + widget.getWidgetId()
-									+"&type="+widget.getControlType() + "&ref=" + option.getReferenceCode();
+									+"&type="+widget.getControlType() + "&opid=" + option.getWidgetOptionId();
+							
+							String unencodedUrl = data;
+							
 							data = com.google.gwt.http.client.URL.encode(data);
 							data = data.replaceAll(";", "%2F");
 							data = data.replaceAll("/", "%2F");
@@ -169,19 +169,16 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 							Image im = new Image(url);
 						
 							v.add(new Label("Reference code: " + option.getReferenceCode()));
-							v.add(new Label("Encoded url:" +data));
+							v.add(new Label("Encoded url: " +data));
+							v.add(new Label("Unencoded url: " + unencodedUrl));
 							v.add(im);
 						}
 						panel.add(v);
-						//TODO: generate QrCode
+						
 					}
 				}
 			}
 		}
-		
-		//tabPanelApplications.getWidget(index)
-		
-		
 	}
 	
 	
