@@ -109,6 +109,8 @@ public class WidgetManager implements ServerListener {
 		if (this.communicator != null) {
 			if (this.automaticWidgetRequests) {
 				this.communicator.addWidget(widget);
+			} else {
+				Log.debug(this, "Not sending widget to server because 'automaticWidgetRequests' is false");
 			}
 		} else {
 			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
@@ -360,6 +362,7 @@ public class WidgetManager implements ServerListener {
 	 * @param automatic
 	 */
 	public void setAutomaticWidgetRequests(boolean automatic) {
+		Log.debug(this, "Setting 'automaticWidgetRequests' to: " + automatic);
 		this.automaticWidgetRequests = automatic;
 	}	
 	
