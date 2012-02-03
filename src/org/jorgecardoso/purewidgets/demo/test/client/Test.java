@@ -32,7 +32,7 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 	public void onModuleLoad() {
 		
 		PublicDisplayApplication.load(this, "Test", false);
-		//WidgetManager.get().setAutomaticInputRequests(false);
+		WidgetManager.get().setAutomaticInputRequests(false);
 		
 	}
 
@@ -43,7 +43,7 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 			Admin.run();
 			return;
 		}
-		
+		WidgetManager.get().setAutomaticInputRequests(false);
 		
 		
 		ArrayList<String> l = new ArrayList<String>();
@@ -51,7 +51,10 @@ public class Test implements PublicDisplayApplicationLoadedListener, EntryPoint{
 		l.add("Once a week");
 		l.add("Twice a week");
 		GuiListBox tb = new GuiListBox("lista", "On average, how many times to you go to the movies?", l);
+		GuiListBox tb1 = new GuiListBox("lista", "On average, how many times to you go to the movies?", l);
+		
 		RootPanel.get("content").add(tb);
+		RootPanel.get("content").add(tb1);
 		
 	}
 }

@@ -101,8 +101,10 @@ public class WidgetManager implements ServerListener {
 			this.widgetList.add(widget);
 			//Log.debug(this, "Adding new widget to widget list.");
 		} else {
-			this.widgetList.set(index, widget);
+			
 			Log.warn(this, "Widget already exists, replacing entry " + index + ".");
+			
+			this.widgetList.set(index, widget);
 		}
 
 		/*

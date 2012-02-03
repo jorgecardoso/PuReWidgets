@@ -6,6 +6,7 @@ package org.instantplaces.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.instantplaces.purewidgets.client.widgets.feedback.InputFeedback;
+import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
@@ -110,7 +111,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 		
 		this.widgetList = new org.instantplaces.purewidgets.shared.widgets.ListBox(widgetId, title, options);
 		this.setWidget(this.widgetList);
-		this.sendToServer();
+		//this.sendToServer();
 		
 		
 		/* Gui stuff 
@@ -150,7 +151,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 
 	@Override
 	public void onReferenceCodesUpdated() {
-		
+		Log.debug(this, "Updating " + this.getWidgetOptions().size() + " reference codes");
 		ArrayList<WidgetOption> widgetOptions = this.getWidgetOptions();
 		for (int i = 0; i < widgetOptions.size(); i++ ) {
 			HorizontalPanel hPanel = this.optionsHorizontalPanel.get(i);

@@ -90,7 +90,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 			 * Write the data out.
 			 */
 			if ( null != data ) {
-				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8" ));
 				bw.write(data);
 				bw.flush();
 			}

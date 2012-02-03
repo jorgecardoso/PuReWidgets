@@ -130,13 +130,14 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 					//Window.alert("no polls found");
 					Log.warn(EveryBodyVotes.class.getName(), "No active polls found");
 				}
+				Log.debug(EveryBodyVotes.class.getName(), "Received " + result.size() + " open polls");
 				/*
 				 * The active polls are the first in the list
 				 */
 				EveryBodyVotes.this.polls.addAll(0, result);
 				
 				//EveryBodyVotes.this.advancePoll();
-				EveryBodyVotes.this.advancePoll();
+				//EveryBodyVotes.this.advancePoll();
 			}
 		});
 		
@@ -154,6 +155,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 					//Window.alert("no polls found");
 					Log.warn(EveryBodyVotes.class.getName(), "No closed polls found");
 				}
+				Log.debug(EveryBodyVotes.class.getName(), "Received " + result.size() + " closed polls");
 				/*
 				 * The closed polls are the last in the list
 				 */
@@ -285,6 +287,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 	
 	
 	private void advancePoll() {
+		Log.debug(this, "Advancing poll");
 		if ( null == this.polls || this.polls.size() < 1 ) {
 			return;
 		}
@@ -308,6 +311,8 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 				}
 			};
 		}
+		
+		
 		timer.schedule(POLL_DISPLAY_INTERVAL);
 	}
 

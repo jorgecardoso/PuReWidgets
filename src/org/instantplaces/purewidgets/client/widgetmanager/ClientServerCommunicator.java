@@ -180,11 +180,28 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 */
 	@Override
 	public void addWidget(Widget widget) {
-		this.toAddWidgetPool.add(widget);
+		int index = indexOf(widget);
+		if (-1 == index) {
+			this.toAddWidgetPool.add(widget);
+		} else {
+			Log.warn(this, "Widget already exists, replacing entry " + index + ".");
+			
+			this.toAddWidgetPool.set(index, widget);
+		}
+		
 		this.nextWidgetAction = NextWidgetAction.ADD;
 		
 		startTimerWidget();
 
+	}
+	
+	private int indexOf(Widget widget) {
+		for (Widget w : this.toAddWidgetPool) {
+			if (w.getWidgetId().equals(widget.getWidgetId())) {
+				return this.toAddWidgetPool.indexOf(w);
+			}
+		}
+		return -1;
 	}
 
 	
