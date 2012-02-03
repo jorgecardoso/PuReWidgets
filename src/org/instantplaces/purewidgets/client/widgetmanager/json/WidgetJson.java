@@ -51,10 +51,7 @@ public class WidgetJson extends GenericJson {
 		return this.applicationId;
 	}-*/;
 
-	public final String getBaseURL() {
-		return "/place/" + this.getPlaceId() + "/application/" + this.getApplicationId()
-				+ "/widget";
-	}
+
 
 	public final native String getContentUrl() /*-{
 		return this.contentUrl;
@@ -76,9 +73,7 @@ public class WidgetJson extends GenericJson {
 		return this.shortDescription;
 	}-*/;
 
-	public final String getURL() {
-		return this.getBaseURL() + "/" + this.getWidgetId() + "?output=json";
-	}
+
 
 	public final native String getUserResponse() /*-{
 		return this.userResponse;
