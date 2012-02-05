@@ -5,6 +5,18 @@
 
 <web-app>
   <!-- Servlets -->
+  
+  <servlet>
+    <servlet-name>updateapplication</servlet-name>
+    <servlet-class>org.instantplaces.purewidgets.server.cron.UpdateApplication</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>updateapplication</servlet-name>
+    <url-pattern>/updateapplication</url-pattern>
+  </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>interactionServlet</servlet-name>
     <servlet-class>org.instantplaces.purewidgets.server.interactionmanager.InteractionServiceImpl</servlet-class>

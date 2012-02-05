@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-<!--
+
  <cron>
-    <url>/everybodyvotes/server</url>
+    <url>/updateapplication?servlet=/everybodyvotes/server</url>
     <description>Updates the Everybody Votes app</description>
-    <schedule>every 10 minutes</schedule>
+    <schedule>every 5 minutes</schedule>
   </cron>
-    -->
+    
 </cronentries>

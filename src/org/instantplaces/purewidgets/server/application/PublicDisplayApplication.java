@@ -30,12 +30,12 @@ public class PublicDisplayApplication  {
 	/**
 	 * The URL query string parameter name that holds the application id
 	 */
-	private static final String APP_NAME_PARAMETER = "appname";
+	public static final String APP_NAME_PARAMETER = "appname";
 	
 	/**
 	 * The URL query string parameter name that holds the place id
 	 */
-	private static final String PLACE_NAME_PARAMETER = "placename";	
+	public static final String PLACE_NAME_PARAMETER = "placename";	
 	
 	/**
 	 * If the URL does not contain the application id, this application id will be used as default
