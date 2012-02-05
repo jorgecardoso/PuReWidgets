@@ -84,7 +84,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
 		
 		
-		this.polls = Dao.getActivePolls("DefaultPlace");
+		this.polls = Dao.getActivePolls(this.app.getPlaceId());
 		
 		/*
 		 * Create the list widgets

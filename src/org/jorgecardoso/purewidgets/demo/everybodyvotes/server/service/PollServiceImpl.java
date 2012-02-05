@@ -7,6 +7,7 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.server.service;
 import java.util.List;
 
 import org.instantplaces.purewidgets.server.application.PublicDisplayApplication;
+import org.instantplaces.purewidgets.shared.Log;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.EveryBodyVotes;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
@@ -27,6 +28,7 @@ public class PollServiceImpl extends RemoteServiceServlet implements PollService
 
 	@Override
 	public void updatePolls(String placeId, String applicationId) {
+		Log.info(this, "Updating polls");
 		EveryBodyVotes ebvApp = new EveryBodyVotes();
 		PublicDisplayApplication.load(placeId, applicationId, ebvApp);
 	}

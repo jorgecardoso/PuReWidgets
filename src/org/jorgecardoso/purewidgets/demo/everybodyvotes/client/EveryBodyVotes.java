@@ -103,6 +103,29 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 		pollService = GWT.create(PollService.class);
 		((ServiceDefTarget)pollService).setServiceEntryPoint("/pollservice"); 
 		
+		
+		/*
+		 * This makes sure that the application is created on the server side
+		 * 
+		 */
+		pollService.updatePolls(PublicDisplayApplication.getPlaceName(), 
+				PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.warn(EveryBodyVotes.class.getName(), "Could not update polls!");
+						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						Log.warn(EveryBodyVotes.class.getName(), "Polls updated successfully");
+						
+					}
+		
+		});
+
+			
 		this.askForPollList();
 		
 	}
