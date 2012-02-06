@@ -114,11 +114,17 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 			//this.printHeaders(con.getHeaderFields());
 			
 			if (con.getResponseCode() != 200 ) {
+				Log.warn(this, "Received response: " );
+				Log.warn(this, "\t Code:" + con.getResponseCode() );
+				Log.warn(this, "\t Message:" + con.getResponseMessage() );
+				Log.warn(this, "\t Body:" + builder.toString() );
+				
 			//	this.getThreadLocalResponse().sendError(con.getResponseCode(), con.getResponseMessage());
-				throw new InteractionManagerException(con.getResponseCode() + " : " + con.getResponseMessage() + " " +builder.toString()) ;
+				throw new InteractionManagerException(con.getResponseCode() + " : " + con.getResponseMessage() + " " + builder.toString()) ;
 			}
 			//this.getThreadLocalResponse().setS setStatus(con.getResponseCode(), con.getResponseMessage());
 			
+			Log.warn(this, "Response Body:" + builder.toString() );
 			return builder.toString();
 			
 		
