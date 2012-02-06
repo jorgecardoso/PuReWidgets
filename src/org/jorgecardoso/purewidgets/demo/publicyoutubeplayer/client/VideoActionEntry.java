@@ -66,9 +66,12 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		image.setUrl( video.getThumbnail() );
 		//image.setHeight("100px");
 		likeGuiButton = createButton(video.getId(), actionLabel);
+		//likeGuiButton.setShortDescription(video.getTitle());
+		likeGuiButton.setLongDescription(actionLabel + " " + video.getTitle());
 		buttonPanel.add( likeGuiButton );
 		if ( createDownloadButton ) {
 			downloadGuiButton =  createDownloadButton(video.getId(), actionLabel);
+			downloadGuiButton.setLongDescription(video.getTitle());
 			//buttonPanel.add( downloadGuiButton );
 		}
 	}
