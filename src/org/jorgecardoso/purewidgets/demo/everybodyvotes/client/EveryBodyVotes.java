@@ -5,6 +5,7 @@ package org.jorgecardoso.purewidgets.demo.everybodyvotes.client;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
@@ -47,37 +48,37 @@ import com.google.gwt.visualization.client.visualizations.corechart.Options;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, EntryPoint{
+public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationLoadedListener, EntryPoint{
 	
 	private static final String LS_CURRENT_POLL_INDEX = "currentPollIndex";
 	
 	private static final int POLL_DISPLAY_INTERVAL = 60000; 
 	
-	private List<EBVPollDao> polls;
-	
-	private PollServiceAsync pollService;
+	private int currentPollIndex;
 	
 	private LocalStorage localStorage;
 	
-	private int currentPollIndex;
+	private List<EBVPollDao> polls;
+	
+	private HashMap<String, GuiListBox> widgets;
+	
+	private PollServiceAsync pollService;
+	
+	/*
+	 * Indicates if we are showing the poll or the poll result due to user interaction
+	 */
+	private boolean showingPollResult = false;
 	
 	private Timer timer;
 	
-	@Override
-	public void onModuleLoad() {
-		/*
-		 * Load the Google visualization API and then the PublicDisplayApplication
-		 */
-		VisualizationUtils.loadVisualizationApi(new Runnable() {
-			@Override
-			public void run() {
-				PublicDisplayApplication.load(EveryBodyVotes.this, "EveryBodyVotes", false);
-			}
-		} , CoreChart.PACKAGE);
-		
-		
-	}
-
+	private long timerRegularStart;
+	private long timerResultStart;
+	/*
+	 * Indicates how many service responses we got. Used to trigger the gui when we have received both
+	 * the closed polls and the active polls. 
+	 */
+	private int receivedCount = 0;
+	
 	@Override
 	public void onApplicationLoaded() {
 		String page = Window.Location.getPath();
@@ -114,26 +115,103 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.warn(EveryBodyVotes.class.getName(), "Could not update polls!");
-						
 					}
 
 					@Override
 					public void onSuccess(Void result) {
 						Log.warn(EveryBodyVotes.class.getName(), "Polls updated successfully");
-						
 					}
-		
 		});
 
-			
+		
 		this.askForPollList();
+		
+	}
+
+	@Override
+	public void onModuleLoad() {
+		/*
+		 * Load the Google visualization API and then the PublicDisplayApplication
+		 */
+		VisualizationUtils.loadVisualizationApi(new Runnable() {
+			@Override
+			public void run() {
+				PublicDisplayApplication.load(EveryBodyVotes.this, "EveryBodyVotes", false);
+			}
+		} , CoreChart.PACKAGE);
+		
+		
+	}
+	
+	private void startRegularTimer(int delay) {
+		if ( null == timer ) {
+			timer = new Timer() {
+				@Override
+				public void run() {
+					EveryBodyVotes.this.onTimerElapsed();
+				}
+			};
+		}
+		timer.schedule(delay);
+		this.timerRegularStart = System.currentTimeMillis();
+		this.showingPollResult = false;
+	}
+	
+	private void startRegularTimer() {
+		this.startRegularTimer(POLL_DISPLAY_INTERVAL);
+	}
+	
+	private void startResultTimer(){
+		if ( null == timer ) {
+			timer = new Timer() {
+				@Override
+				public void run() {
+					EveryBodyVotes.this.onTimerElapsed();
+				}
+			};
+		}
+		timer.schedule(10000);
+		this.timerResultStart = System.currentTimeMillis();
+		this.showingPollResult = true;
+	}
+
+	private void onTimerElapsed() {
+		if ( this.showingPollResult ) {
+			this.startRegularTimer((int)(POLL_DISPLAY_INTERVAL- (this.timerResultStart-this.timerRegularStart)) );
+			this.showPoll(this.polls.get(this.currentPollIndex));
+		} else {
+			this.advancePoll();
+		}
 		
 	}
 	
 	
+	private void advancePoll() {
+		Log.debug(this, "Advancing poll");
+		if ( null == this.polls || this.polls.size() < 1 ) {
+			return;
+		}
+		
+		this.currentPollIndex++;
+		
+		if ( this.currentPollIndex > this.polls.size()-1 ) {
+			this.currentPollIndex = 0;
+		}
+		
+		this.localStorage.setInt(LS_CURRENT_POLL_INDEX, this.currentPollIndex);
+		
+		
+		this.showPoll(this.polls.get(this.currentPollIndex));
+		
+		this.startRegularTimer();
+		
+		
+	}
 	
-
 	private void askForPollList() {
+		
+		this.receivedCount = 0;
+		
 		if ( null != this.polls ) {
 			this.polls.clear();
 		} else {
@@ -145,6 +223,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.warn(EveryBodyVotes.class.getName(), "Oops! " + caught.getMessage() );
+				EveryBodyVotes.this.checkAdvancePoll(++EveryBodyVotes.this.receivedCount);
 			}
 
 			@Override
@@ -159,8 +238,20 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 				 */
 				EveryBodyVotes.this.polls.addAll(0, result);
 				
-				//EveryBodyVotes.this.advancePoll();
-				//EveryBodyVotes.this.advancePoll();
+				EveryBodyVotes.this.widgets = new HashMap<String, GuiListBox>();
+				for ( EBVPollDao poll : result ) {
+					ArrayList<String> l = new ArrayList<String>();
+					for ( EBVPollOptionDao pollOption : poll.getPollOptions() ) {
+						l.add(pollOption.getOption());
+					}
+					
+					GuiListBox tb = new GuiListBox("poll " + poll.getPollId(), poll.getPollQuestion(), l);
+					tb.addActionListener(EveryBodyVotes.this);
+					EveryBodyVotes.this.widgets.put(poll.getPollId().toString(), tb);
+				}
+				
+				
+				EveryBodyVotes.this.checkAdvancePoll(++EveryBodyVotes.this.receivedCount);
 			}
 		});
 		
@@ -169,7 +260,7 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.warn(EveryBodyVotes.class.getName(), "Oops! " + caught.getMessage() );
-				
+				EveryBodyVotes.this.checkAdvancePoll(++EveryBodyVotes.this.receivedCount);
 			}
 
 			@Override
@@ -184,79 +275,18 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 				 */
 				EveryBodyVotes.this.polls.addAll(result);
 				
-				EveryBodyVotes.this.advancePoll();
+				EveryBodyVotes.this.checkAdvancePoll(++EveryBodyVotes.this.receivedCount);
 				
 			}
 		});
 	}
 	
 	
-	private void showPoll(EBVPollDao poll) {
-		long today = new Date().getTime();
-		
-		if ( poll.getClosesOn() < today ) { // closed poll
-			showClosedPoll(poll);
-		} else {
-			showOpenPoll(poll);
-		}	
-	}
-	
-	private void showOpenPoll(EBVPollDao poll) {
-		ArrayList<String> l = new ArrayList<String>();
-		for ( EBVPollOptionDao pollOption : poll.getPollOptions() ) {
-			l.add(pollOption.getOption());
+	private void checkAdvancePoll(int count) {
+		Log.debug(this, count+"");
+		if ( count >= 2 ) {
+			this.advancePoll();
 		}
-		
-		GuiListBox tb = new GuiListBox("poll " + poll.getPollId(), poll.getPollQuestion(), l);
-		tb.addActionListener(new ActionListener() {
-
-			@Override
-			public void onAction(final ActionEvent<?> e) {
-				GuiWidget widget = (GuiWidget)e.getSource();
-				EveryBodyVotes.this.showPollResult(widget.getWidgetId().substring(5));
-
-			}
-			
-		});
-		RootPanel.get("content").clear();
-		RootPanel.get("content").add(tb);
-		
-	}
-	
-	private void showPollResult(final String pollId) {
-		if ( null != this.timer ) {
-			timer.schedule(POLL_DISPLAY_INTERVAL);
-		}
-		pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Oops. " + caught.getMessage());
-				
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				
-				pollService.getPoll(pollId, new AsyncCallback<EBVPollDao>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert(caught.getMessage());
-						
-					}
-
-					@Override
-					public void onSuccess(EBVPollDao result) {
-						EveryBodyVotes.this.showClosedPoll(result);
-						
-					}
-					
-				});
-				
-			}
-			
-		});
 	}
 	
 	private void showClosedPoll(EBVPollDao poll) {
@@ -308,38 +338,73 @@ public class EveryBodyVotes implements PublicDisplayApplicationLoadedListener, E
 		RootPanel.get("content").add(suggest);
 	}
 	
+	private void showOpenPoll(EBVPollDao poll) {
+		
+		GuiListBox tb = EveryBodyVotes.this.widgets.get(poll.getPollId().toString());
+		RootPanel.get("content").clear();
+		RootPanel.get("content").add(tb);
+		
+	}
 	
-	private void advancePoll() {
-		Log.debug(this, "Advancing poll");
-		if ( null == this.polls || this.polls.size() < 1 ) {
-			return;
-		}
+	
+	private void showPoll(EBVPollDao poll) {
+		long today = new Date().getTime();
 		
-		this.currentPollIndex++;
-		
-		if ( this.currentPollIndex > this.polls.size()-1 ) {
-			this.currentPollIndex = 0;
-		}
-		
-		this.localStorage.setInt(LS_CURRENT_POLL_INDEX, this.currentPollIndex);
-		
-		
-		this.showPoll(this.polls.get(this.currentPollIndex));
-		
-		if ( null == timer ) {
-			timer = new Timer() {
-				@Override
-				public void run() {
-					EveryBodyVotes.this.timerElapsed();
-				}
-			};
-		}
-		
-		
-		timer.schedule(POLL_DISPLAY_INTERVAL);
+		if ( poll.getClosesOn() < today ) { // closed poll
+			showClosedPoll(poll);
+		} else {
+			showOpenPoll(poll);
+		}	
 	}
 
-	protected void timerElapsed() {
-		this.advancePoll();
+	private void showPollResult(final String pollId) {
+		Log.debug(this, "Showing poll result for poll: " + pollId);
+		this.startResultTimer();
+		pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Oops. " + caught.getMessage());
+				
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				
+				pollService.getPoll(pollId, new AsyncCallback<EBVPollDao>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert(caught.getMessage());
+						
+					}
+
+					@Override
+					public void onSuccess(EBVPollDao result) {
+						EveryBodyVotes.this.showClosedPoll(result);
+						
+					}
+					
+				});
+				
+			}
+			
+		});
+	}
+
+	@Override
+	public void onAction(ActionEvent<?> e) {
+		
+		GuiWidget widget = (GuiWidget)e.getSource();
+		String pollId = widget.getWidgetId().substring(5).trim();
+		Log.debug(this, "Current poll: " + this.polls.get( this.currentPollIndex ).getPollId());
+		Log.debug(this, "Received poll interaction: " + pollId);
+		Log.debug(this, "Equal: " + this.polls.get( this.currentPollIndex ).getPollId().toString().equals(pollId) );
+		if ( this.polls.get( this.currentPollIndex ).getPollId().toString().equals(pollId) && !this.showingPollResult) {
+			Log.debug(this, "Showing result");
+			this.showPollResult(pollId);
+		}
+
+		
 	}
 }
