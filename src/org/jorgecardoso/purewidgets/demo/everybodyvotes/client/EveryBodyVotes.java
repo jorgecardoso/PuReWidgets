@@ -53,6 +53,7 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 	private static final String LS_CURRENT_POLL_INDEX = "currentPollIndex";
 	
 	private static final int POLL_DISPLAY_INTERVAL = 60000; 
+	private static final int POLL_RESULT_DISPLAY_INTERVAL = 15000; 
 	
 	private int currentPollIndex;
 	
@@ -170,7 +171,7 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 				}
 			};
 		}
-		timer.schedule(10000);
+		timer.schedule(POLL_RESULT_DISPLAY_INTERVAL);
 		this.timerResultStart = System.currentTimeMillis();
 		this.showingPollResult = true;
 	}
@@ -359,12 +360,12 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 
 	private void showPollResult(final String pollId) {
 		Log.debug(this, "Showing poll result for poll: " + pollId);
-		this.startResultTimer();
+		
 		pollService.updatePolls(PublicDisplayApplication.getPlaceName(), PublicDisplayApplication.getApplicationName(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Oops. " + caught.getMessage());
+				Window.alert("Oops. Could not update poll" + caught.getMessage());
 				
 			}
 
@@ -381,8 +382,8 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 
 					@Override
 					public void onSuccess(EBVPollDao result) {
+						EveryBodyVotes.this.startResultTimer();
 						EveryBodyVotes.this.showClosedPoll(result);
-						
 					}
 					
 				});
