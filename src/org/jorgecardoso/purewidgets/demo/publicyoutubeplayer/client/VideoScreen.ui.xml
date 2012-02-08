@@ -11,7 +11,7 @@
   
 	<g:DeckPanel ui:field='deckPanelTop' styleName='all'>
 		
-		<g:SimplePanel ui:field='simplePanelPlayer' styleName='youtube'/>
+		<g:SimplePanel ui:field='simplePanelPlayer' styleName='{style.youtube}'/>
 
 	
 		<g:HTMLPanel ui:field='htmlPanel'>
