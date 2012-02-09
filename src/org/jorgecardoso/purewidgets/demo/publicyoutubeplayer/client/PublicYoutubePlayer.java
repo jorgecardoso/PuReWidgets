@@ -318,9 +318,9 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 		Log.debug(this, "Youtube player ready");
 		
 		if ( this.toPlay != null ) {
-		//	this.youtube.loadVideoById(this.toPlay.getId());
-			this.youtube.loadVideoById(this.toPlay.getId());
-			this.youtube.play();
+			//	this.youtube.loadVideoById(this.toPlay.getId());
+				this.youtube.loadVideoById(this.toPlay.getId());
+				this.youtube.play();
 		}
 		
 	}
@@ -587,7 +587,8 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 			Log.info(this, "Going to Play state (video: " + this.toPlay.getTitle() + ")");
 			this.currentState = State.PLAYING;
 			this.screen.showVideo();
-			//this.initVideoPlayer();
+	
+			this.initVideoPlayer();
 			
 			
 			
@@ -978,6 +979,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	}
 
 	private void videoEnded() {
+		this.youtube.clear();
 		this.stalledTimer.cancel();
 		Log.debug(this, "Finished playing " + this.toPlay.getTitle());
 		this.addToAllPlayedVideos( this.toPlay );
