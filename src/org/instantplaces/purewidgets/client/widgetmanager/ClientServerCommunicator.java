@@ -62,7 +62,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * MIN_ASK_PERIOD and MAX_ASK_PERIOD.
 	 * 
 	 */
-	private static final int MIN_ASK_PERIOD = 10000;
+	private static final int MIN_ASK_PERIOD = 15000;
 
 	private static final String TIMESTAMP = "lastTimeStamp";
 	
@@ -70,7 +70,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/**
 	 * The interval between widget requests to the server
 	 */
-	private static final int WIDGET_REQUEST_PERIOD = 10000;
+	private static final int WIDGET_REQUEST_PERIOD = 15000;
 
 	
 	private static enum NextWidgetAction {ADD, DELETE};
