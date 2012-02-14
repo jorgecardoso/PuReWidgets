@@ -79,7 +79,7 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 @JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = Visibility.ANY)
-public class Widget {
+public class Widget implements Comparable<Widget> {
 
 	public static String CONTROL_TYPE_IMPERATIVE_SELECTION = "imperative_selection";
 	public static String CONTROL_TYPE_ENTRY = "entry";
@@ -614,6 +614,12 @@ public class Widget {
 	 */
 	public void setUserResponse(String userResponse) {
 		this.userResponse = userResponse;
+	}
+
+
+	@Override
+	public int compareTo(Widget other) {
+		return this.widgetId.compareTo(other.getWidgetId());
 	}
 
 }

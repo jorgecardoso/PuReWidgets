@@ -1,6 +1,7 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
@@ -124,11 +125,18 @@ public class ApplicationList extends Composite implements ApplicationListListene
 
 	}
 
+	
 	@Override
 	public void onWidgetsList(String placeId, String applicationId,
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 
+		/*
+		 * Sort the widgets by id
+		 */
+		Collections.sort(widgetList);
+		
+		
 		/*
 		 * Get the tab that holds this application
 		 */
