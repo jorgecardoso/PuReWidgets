@@ -134,7 +134,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		/*
 		 * Sort the widgets by id
 		 */
-		Collections.sort(widgetList);
+		//Collections.sort(widgetList);
 		
 		
 		/*
@@ -148,6 +148,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 				break;
 			}
 		}
+		
 		
 		if ( null == widgetList || widgetList.size() == 0 ) {
 			if ( null != panel ) {
@@ -192,22 +193,49 @@ public class ApplicationList extends Composite implements ApplicationListListene
 				}
 
 				/*
-				 * Add the new widgets
+				 * Add the new widgets. Widgets are inserted in alphabetical order
 				 */
-
 				for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
 					boolean exists = false;
+					
+					/*
+					 * The new widget will be inserted before this index (the index of the first existing widget 
+					 * with name greater than the widget to be inserted)
+					 */
+					int indexInPanel = 0; 
+					/*
+					 * If we found the place for the widget to be inserted (tentatively, because the widget may 
+					 * already exist)
+					 */
+					boolean foundPlace = false;
+					
 					for (i = 0; i < panel.getWidgetCount(); i++) {
-						String existingWidgetName = panel.getWidget(i).getElement()
-								.getPropertyString("id");
-						if (existingWidgetName.equals(widget.getWidgetId())) {
+						String existingWidgetName = panel.getWidget(i).getElement().getPropertyString("id");
+						
+						/*
+						 * If the widget already exists in the panel, skip it
+						 */
+						if ( existingWidgetName.equals(widget.getWidgetId()) ) {
 							exists = true;
+							break;
+						}
+						
+						/*
+						 * If we found a widget with a name greater than the widget to be inserted mark its index
+						 */
+						if ( !foundPlace && existingWidgetName.compareTo(widget.getWidgetId()) > 0 ) {
+							indexInPanel = i;
+							foundPlace = true;
 						}
 					}
 
 					if (!exists) {
 						Log.debug(this, "Adding " + widget.getWidgetId() + " to panel");
-						panel.add(this.getHtmlWidget(widget));
+						if ( foundPlace ) {
+							panel.insert(this.getHtmlWidget(widget), indexInPanel);
+						} else {
+							panel.add(this.getHtmlWidget(widget) );
+						}
 					}
 				}
 			}
