@@ -3,71 +3,56 @@
  */
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
-import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
-import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
-import org.instantplaces.purewidgets.shared.widgets.Application;
-import org.instantplaces.purewidgets.shared.widgets.Place;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.ApplicationList;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.PlaceList;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.PlaceListListener;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application.ApplicationListUi;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.place.PlaceListUi;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget.WidgetListUi;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author "Jorge C. S. Cardoso"
  * 
  */
-public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedListener, EntryPoint, PlaceListListener {
-	
+public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedListener, EntryPoint {
 
 	public static String userIdentity = "Anonymous1984";
 
 	public static SightingServiceAsync sightingService;
-
 	
 	public static LoginInfo loginInfo = null;
+	
 	private Anchor signInLink = new Anchor("Sign In");
+	
 	private Label labelId;
 	
+	private PlaceListUi placeListUi;
 	
-	private PlaceList placeListUi;
-	private ApplicationList applicationListUi;
+	private ApplicationListUi applicationListUi;
+	
+	private WidgetListUi widgetListUi;
+	
+	private UiType uiType;
 
 	@Override
 	public void onModuleLoad() {
-		
-		//RootPanel.get().add(new Label(com.google.gwt.user.client.Window.Navigator.getUserAgent()));
-		//MyResources.INSTANCE.css().ensureInjected();
-		
 		/*
 		 * Check/set the user's identity.
 		 * 
@@ -106,8 +91,7 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 		PublicDisplayApplication.load(this, "PlaceInteractionWebpage", false);
 		
 		WidgetManager.get().setAutomaticInputRequests(false);
-
-		
+		this.uiType = UiType.Desktop;
 	}
 
 	/**
@@ -117,10 +101,15 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 	protected void show(String historyToken) {
 		if (null == historyToken || historyToken.length() == 0) {
 			this.showPlaces();
-		}
-	  if ( historyToken.startsWith("place-") ) {
-		 
-			this.showApps(historyToken.substring(6) );
+		} else {
+			int indexOfDash = historyToken.indexOf("-");
+		    if (  indexOfDash < 0 ) { // no dash: this is a place name
+				this.showApps( historyToken );
+			} else  {
+				String placeName = historyToken.substring(0, indexOfDash);
+				String applicationName = historyToken.substring(indexOfDash+1);
+				this.showWidgets(placeName, applicationName);
+			}
 		}
 	}
 
@@ -128,41 +117,92 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 	 *  Show the place list screen
 	 */
 	private void showPlaces() {
+		Log.debug(this, "Showing places");
 		if ( null != this.applicationListUi ) {
 			this.applicationListUi.stop();
+		}
+		if ( null != this.widgetListUi ) {
+			this.widgetListUi.stop();
+		}
+		if ( null == this.placeListUi ) {
+			this.placeListUi = new PlaceListUi(this.uiType); // TODO: Check UiType
+			this.placeListUi.addSelectionHandler(new SelectionHandler<String>() {
+				@Override
+				public void onSelection(SelectionEvent<String> event) {
+					PlaceInteractionWebpage.this.onPlaceSelected(event.getSelectedItem());
+				}
+			});
 		}
 		RootPanel.get("features").clear();
 		RootPanel.get("features").add(this.placeListUi);
 		this.placeListUi.start();
 	}
 
+	
 	/**
 	 * Show the application list (and widgets) screen
 	 */
-	private void showApps(String placeId) {
+	private void showApps(final String placeId) {
+		Log.debug(this, "Showing applications");
 		if ( null != this.placeListUi ) {
 			this.placeListUi.stop();
+		} 
+		if ( null != this.widgetListUi ) {
+			this.widgetListUi.stop();
 		}
-		applicationListUi = new ApplicationList(placeId);
+		
+		if ( null == this.applicationListUi || !this.applicationListUi.getPlaceId().equals(placeId) ) {
+			this.applicationListUi = new ApplicationListUi(this.uiType, placeId); // TODO: Check the uiType
+			this.applicationListUi.addSelectionHandler(new SelectionHandler<String>() {
+				@Override
+				public void onSelection(SelectionEvent<String> event) {
+					PlaceInteractionWebpage.this.onApplicationSelected(placeId, event.getSelectedItem());
+				}
+			});
+		}
 		RootPanel.get("features").clear();
 		RootPanel.get("features").add(this.applicationListUi);
 		this.applicationListUi.start();
 	}
 
+	/**
+	 * Show the widget list for a given application
+	 */
+	private void showWidgets( String placeName, String applicationName) {
+		Log.debug(this, "Showing widgets");
+		if ( null != this.placeListUi ) {
+			this.placeListUi.stop();
+		} 
+		if ( null != this.applicationListUi ) {
+			this.applicationListUi.stop();
+		}
+		if ( null == this.widgetListUi || !this.widgetListUi.getPlaceName().equals(placeName) || !this.widgetListUi.getApplicationName().equals(applicationName) ) {
+			this.widgetListUi = new WidgetListUi(this.uiType, placeName, applicationName); // TODO: Check the uiType
+		}
+		RootPanel.get("features").clear();
+		RootPanel.get("features").add(this.widgetListUi);
+		this.widgetListUi.start();
+	}
+
+	
 	
 
-
-	@Override
 	public void onPlaceSelected(String placeId) {
-		Log.debug(this, "User selected " + placeId);
+		Log.debug(this, "User selected place " + placeId);
+		History.newItem(placeId);
+	}
+	
+	public void onApplicationSelected(String placeName, String applicationName) {
+		Log.debug(this, "User selected application" + applicationName);
 		
-		History.newItem("place-"+placeId);
+		History.newItem(placeName+"-"+applicationName);
 	}
 
 	@Override
 	public void onApplicationLoaded() {
 
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				String historyToken = event.getValue();
 				show(historyToken);
@@ -198,9 +238,6 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 				}
 			}
 		});
-		
-		this.placeListUi = new PlaceList();
-		this.placeListUi.setPlaceListener(this);
 		
 		this.show(History.getToken());
 		

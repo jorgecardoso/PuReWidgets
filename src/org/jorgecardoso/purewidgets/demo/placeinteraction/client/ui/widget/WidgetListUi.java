@@ -1,7 +1,6 @@
-package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui;
+package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
@@ -12,71 +11,74 @@ import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.EntryClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionImperativeClickHandler;
-
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ApplicationList extends Composite implements ApplicationListListener  {
-	interface Style extends CssResource {
-	    String list();
-	    //String disabled();
-	  }
-	private static ApplicationListUiBinder uiBinder = GWT.create(ApplicationListUiBinder.class);
+public class WidgetListUi extends Composite implements ApplicationListListener {
 
-	interface ApplicationListUiBinder extends UiBinder<Widget, ApplicationList> {
+	
+	@UiTemplate("WidgetListDesktop.ui.xml")
+	interface WidgetListUiBinder extends UiBinder<Widget, WidgetListUi> {
 	}
-
-	@UiField Style style;
+	private static WidgetListUiBinder desktopUiBinder = GWT.create(WidgetListUiBinder.class);
 	
-	private String placeId;
 	
-	private Timer timerApplications;
+	/*
+	 * The ui type we will generate
+	 */
+	private UiType uiType;
+	
+	@UiField VerticalPanel panel;
+	@UiField Label panelApplicationName;
+	
+	/*
+	 * The timer to trigger requests to get the list of widgets of the application.
+	 */
 	private Timer timerWidgets;
 
+	private String placeName;
+	private String applicationName;
 	
-	public ApplicationList(String placeId) {
-		initWidget(uiBinder.createAndBindUi(this));
-		this.placeId = placeId;
-		this.placeName.setText(placeId);
+	public WidgetListUi( UiType uiType, String placeName, String applicationName ) {
+		this.uiType = uiType;
+		initWidget(this.getUiBinder(uiType).createAndBindUi(this));
+		
+		this.placeName = placeName;
+		this.applicationName = applicationName;
+		this.panelApplicationName.setText(this.applicationName);
 	}
-
-	@UiField
-	StackPanel stackPanelApplications;
 	
-	@UiField 
-	Label placeName;
-
+	private UiBinder<Widget, WidgetListUi> getUiBinder(UiType uiType) {
+		switch ( uiType ) {
+		
+		case Desktop:
+			return desktopUiBinder;
+			
+		case Mobile:
+			return null;
+			
+		default:
+			return null;
+		}
+	}
 
 	public void start() {
 		WidgetManager.get().setApplicationListListener(this);
-
-		timerApplications = new Timer() {
-			@Override
-			public void run() {
-				refreshApplications();
-			}
-		};
 
 		timerWidgets = new Timer() {
 			@Override
@@ -84,48 +86,23 @@ public class ApplicationList extends Composite implements ApplicationListListene
 				refreshWidgets();
 			}
 		};
-
-		
-		stackPanelApplications.addHandler(new ClickHandler() {
-	        @Override
-	        public void onClick(ClickEvent event) {
-	        	if ( null!= timerWidgets ) {
-	        		timerWidgets.cancel();
-	        		timerWidgets.scheduleRepeating(15 * 1000);
-	        	}
-	    		
-	    		refreshWidgets();
-	            
-	        }
-	    }, ClickEvent.getType());
-		
-		
-		this.timerApplications.scheduleRepeating(60 * 1000);
-		this.refreshApplications();
+		timerWidgets.scheduleRepeating(15 * 1000);
+		this.refreshWidgets();
 	}
 	
-
-	protected void refreshApplications() {
-		Log.debug(this, "Asking server for list of applications");
-		WidgetManager.get().getApplicationsList(this.placeId);
-	}
-
-	protected void refreshWidgets() {
-		if (null != this.stackPanelApplications) {
-			int selected = stackPanelApplications.getSelectedIndex();// .getTabBar().getSelectedTab();
-			Log.debug(this, "Selected Tab: " + selected);
-			if (selected >= 0) {
-				String currentApplicationId = this.stackPanelApplications.getWidget(selected).getElement().getPropertyString("id");//this.currentApplications.get(selected).getApplicationId(); // tabPanelApplications.getTabBar().getTabHTML(selected);
-				Log.debug(this, "Asking server for list of widgets for application: "
-						+ currentApplicationId);
-
-				WidgetManager.get().getWidgetsList(this.placeId, currentApplicationId);
-			}
+	public void stop() {
+		if ( null != this.timerWidgets ) {
+			this.timerWidgets.cancel();
+			this.timerWidgets = null;
 		}
-
 	}
 
 	
+	protected void refreshWidgets() {
+		WidgetManager.get().getWidgetsList(this.placeName, this.applicationName);
+	}
+	
+
 	@Override
 	public void onWidgetsList(String placeId, String applicationId,
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
@@ -135,20 +112,6 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		 * Sort the widgets by id
 		 */
 		//Collections.sort(widgetList);
-		
-		
-		/*
-		 * Get the tab that holds this application
-		 */
-		VerticalPanel panel = null;
-		for (int i = 0; i < this.stackPanelApplications.getWidgetCount(); i++) {
-			String tabName = this.stackPanelApplications.getWidget(i).getElement().getPropertyString("id");//this.currentApplications.get(i).getApplicationId(); // tabPanelApplications.getTabBar().getTabHTML(i);
-			if (tabName.equals(applicationId)) {
-				panel = (VerticalPanel) stackPanelApplications.getWidget(i);
-				break;
-			}
-		}
-		
 		
 		if ( null == widgetList || widgetList.size() == 0 ) {
 			if ( null != panel ) {
@@ -245,83 +208,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		// tabPanelApplications.getWidget(index)
 
 	}
-
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
-		Log.debug(this, "Received applications: " + applicationList);
-		if (null != timerWidgets) {
-			timerWidgets.cancel();
-		}
-
-//		if (null == this.currentApplications) {
-//			this.currentApplications = new ArrayList<Application>();
-//		}
-
-		/*
-		 * Create a temporary list just with the app names
-		 */
-		ArrayList<String> applicationIds = new ArrayList<String>();
-		for (Application app : applicationList) {
-			applicationIds.add(app.getApplicationId());
-		}
-
-		
-		/*
-		 * Delete applications that no longer exist
-		 */
-		int i = 0;
-		// for ()
-		while (i <  this.stackPanelApplications.getWidgetCount()) {
-			String tabName = this.stackPanelApplications.getWidget(i).getElement().getPropertyString("id"); // this.currentApplications.get(i).getApplicationId(); // tabPanelApplications.getTabBar().getTabHTML(i);
-			if (!applicationIds.contains(tabName)) {
-				stackPanelApplications.remove(i);
-				
-			} else {
-				// only increment if we haven't deleted anything because if we
-				// did, indexed may have changed
-				i++;
-			}
-		}
-
-		/*
-		 * Add new applications
-		 */
-		for (int j = 0; j < applicationList.size(); j++) {
-			String appName = applicationList.get(j).getApplicationId();
-
-			boolean exists = false;
-			for (i = 0; i < this.stackPanelApplications.getWidgetCount(); i++) {
-				String tabName = this.stackPanelApplications.getWidget(i).getElement().getPropertyString("id");//this.currentApplications.get(i).getApplicationId();
-				if ( tabName.equals(appName) ) {
-					exists = true;
-					break;
-				}
-			}
-
-			if ( !exists ) {
-				VerticalPanel p = new VerticalPanel();
-				p.getElement().setPropertyString("id", appName);
-				
-				Image img = new Image("placeinteractiondemo/ajax-loader.gif");
-				p.add(img);
-				stackPanelApplications.insert(p, j);
-				stackPanelApplications.setStackText(j, appName);
-			}
-		}
-
-		//this.currentApplications = applicationList;
-
-		/*
-		 * Set the selected tab
-		 */
-		int selected = stackPanelApplications.getSelectedIndex();// .getTabBar().getSelectedTab();
-		if (selected < 0) {
-			this.stackPanelApplications.showStack(0); // .getTabBar().selectTab(0);
-		}
-
-		timerWidgets.scheduleRepeating(15 * 1000);
-		this.refreshWidgets();
-	}
+	
 
 	Widget getHtmlWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		Widget toReturn = null;
@@ -391,7 +278,7 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		panel.add(new Label(publicDisplayWidget.getShortDescription()));
 		
 		ListBox listbox = new ListBox();
-		listbox.addStyleName(style.list());
+		//listbox.addStyleName(style.list());
 		listbox.setVisibleItemCount(Math.min(4, widgetOptions.size()));
 		for (WidgetOption wo : widgetOptions) {
 			listbox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
@@ -438,24 +325,30 @@ public class ApplicationList extends Composite implements ApplicationListListene
 		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
 	}
-	
-	public void stop() {
-		if ( null != this.timerApplications ) {
-			this.timerApplications.cancel();
-			this.timerApplications = null;
-		}
-		if ( null != this.timerWidgets ) {
-			this.timerWidgets.cancel();
-			this.timerWidgets = null;
-		}
-	}
 
+	@Override
+	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
+	}
 
 	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
-		// TODO Auto-generated method stub
-		
 	}
-	
 
+	/**
+	 * @return the placeName
+	 */
+	public String getPlaceName() {
+		return placeName;
+	}
+
+	
+	/**
+	 * @return the applicationName
+	 */
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	
+	
 }
