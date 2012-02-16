@@ -880,69 +880,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 
-	@Override
-	public void getPlacesList() {
-		Log.debug( this, "Getting places from server: " +  WidgetManager.getPlacesUrl(this.appId) );
-		try {
-			interactionService.get( WidgetManager.getPlacesUrl(this.appId), 
-					new AsyncCallback<String>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processPlacesResponse(
-									false, null, caught);
-
-						}
-
-						@Override
-						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processPlacesResponse(
-									true, result, null);
-
-						}
-
-					});
-		} catch (Exception e) {
-			ClientServerCommunicator.this.processPlacesResponse(false, null, e);
-			e.printStackTrace();
-		}
-		
-	}
 	
-
-	private void processPlacesFailure(Throwable error) {
-		Log.warn(this, "Error getting list of places from server."
-				+ error.getMessage());
-	}
-	
-	private void processPlacesResponse(boolean success, String result, Throwable error) {
-		
-		if ( success ) {
-			Log.debugFinest(this, result);
-			this.processPlacesSuccess(result);
-		} else {
-			this.processPlacesFailure(error);
-		}
-	}
-	
-	private void processPlacesSuccess(String json) {
-		
-		PlaceListJson placeListJson = GenericJson.fromJson(json);
-		
-		ArrayList<Place> placeList = placeListJson.getPlaces();
-			
-		/*
-		 * Notify the WidgetManager
-		 * 
-		 */
-		if (this.serverListener != null) {
-			this.serverListener.onPlacesList(placeList);
-		} else {
-			Log.warn(this, "No widget manager to notify about place list");
-		}
-			
-		
-	}
 
 	@Override
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, final Callback<WidgetInput> callback) {
@@ -1058,7 +996,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	private void getApplicationsList(String placeId, Application.STATE state,
 			final Callback<ArrayList<Application>> callback) {
-		
 		/*
 		 * Create the request url with the proper parameters based on the intended application state
 		 */
@@ -1086,7 +1023,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 								Log.warn(this, "Error getting list of applications from server."
 										+ caught.getMessage());
 							}
-
 						}
 
 						@Override
@@ -1102,9 +1038,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 							} else {
 								Log.warn(this, "No callback to notify about application list");
 							}
-
 						}
-
 					});
 		} catch (Exception e) {
 			if ( null != callback ) {
@@ -1115,6 +1049,48 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			}
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void getPlacesList(final Callback<ArrayList<Place>> callback) {
+		Log.debug( this, "Getting places from server: " +  WidgetManager.getPlacesUrl(this.appId) );
+		try {
+			interactionService.get( WidgetManager.getPlacesUrl(this.appId), 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							if ( null != callback ) {
+								callback.onFailure(caught);
+							} else {
+								Log.warn(this, "Error getting list of places from server:"	+ caught.getMessage() );
+							}
+						}
+
+						@Override
+						public void onSuccess(String json) {
+							PlaceListJson placeListJson = GenericJson.fromJson(json);
+							
+							ArrayList<Place> placeList = placeListJson.getPlaces();
+								
+							/*
+							 * Notify the callback 
+							 */
+							if ( null != callback ) {
+								callback.onSuccess(placeList);
+							} else {
+								Log.warn(this, "No callback to notify about place list");
+							}
+						}
+					});
+		} catch (Exception e) {
+			if ( null != callback ) {
+				callback.onFailure(e);
+			} else {
+				Log.warn(this, "Error getting list of places from server: "	+ e.getMessage());
+			}
+			e.printStackTrace();
+		}		
 	}
 
 	

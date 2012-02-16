@@ -9,14 +9,11 @@ import java.util.HashMap;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
-import org.instantplaces.purewidgets.shared.widgets.Application;
-import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
 
 /**
  * @author Jorge C. S. Cardoso
- * 
  */
 public class WidgetManager implements ServerListener {
 	//"http://localhost:8080";//
@@ -126,10 +123,10 @@ public class WidgetManager implements ServerListener {
 		
 	}
 	
-	public void getPlacesList() {
-		Log.debug(this, "Asking for place list");
-		this.communicator.getPlacesList();
-	}
+//	public void getPlacesList() {
+//		Log.debug(this, "Asking for place list");
+//		this.communicator.getPlacesList();
+//	}
 	
 	public ServerCommunicator getServerCommunicator() {
 		return this.communicator;
@@ -147,14 +144,12 @@ public class WidgetManager implements ServerListener {
 		this.communicator.getWidgetsList( placeId, applicationId );
 	}
 
-	
-	@Override
-	public void onPlacesList(ArrayList<Place> placeList) {
-		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onPlaceList( placeList );
-		}
-		
-	}
+//	@Override
+//	public void onPlacesList(ArrayList<Place> placeList) {
+//		if ( null != this.applicationListListener ) {
+//			this.applicationListListener.onPlaceList( placeList );
+//		}
+//	}
 	
 	@Override
 	public  void onWidgetAdd(Widget widgetFromServer) {
@@ -357,7 +352,6 @@ public class WidgetManager implements ServerListener {
 		this.widgetList = widgetList;
 	}
 
-
 	private int indexOf(Widget widget) {
 		for (Widget w : this.widgetList) {
 			if (w.getWidgetId().equals(widget.getWidgetId())) {
@@ -370,6 +364,4 @@ public class WidgetManager implements ServerListener {
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, Callback<WidgetInput> callback) {
 		this.communicator.sendWidgetInput(placeName, applicationName, widgetInput, callback);
 	}
-	
-	
 }

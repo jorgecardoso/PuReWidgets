@@ -3,24 +3,15 @@ package org.instantplaces.purewidgets.shared.widgetmanager;
 import java.util.ArrayList;
 
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
-
-
-
 public interface ServerCommunicator {
-
-	
-	public void addWidget(Widget widget);
-	
-	public void deleteWidget(Widget widget);
-	public void deleteAllWidgets(boolean volatileOnly);
-	
 	
 	/*
 	 * Places
 	 */
-	public void getPlacesList();
+	public void getPlacesList(Callback<ArrayList<Place>> callback);
 	
 	/*
 	 * Applications
@@ -37,6 +28,13 @@ public interface ServerCommunicator {
 	
 	public void setApplication(String placeId, String applicationId, Application application, Callback<Application> callback);
 	
+	/*
+	 * Widgets
+	 */
+	public void addWidget(Widget widget);
+	
+	public void deleteWidget(Widget widget);
+	public void deleteAllWidgets(boolean volatileOnly);
 	
 	public void getWidgetsList( String placeId, String applicationId );
 	

@@ -28,6 +28,7 @@ import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInputList;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetList;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
+import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
 
@@ -400,14 +401,6 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 
 	@Override
-	public void getPlacesList() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput,
 			Callback<WidgetInput> callback) {
 		// TODO Auto-generated method stub
@@ -436,6 +429,12 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	@Override
 	public void getApplicationsList(String placeId, boolean active,
 			Callback<ArrayList<Application>> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getPlacesList(Callback<ArrayList<Place>> callback) {
 		// TODO Auto-generated method stub
 		
 	}

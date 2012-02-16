@@ -2,12 +2,15 @@ package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.place;
 
 import java.util.ArrayList;
 
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application.ApplicationListUi;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,7 +27,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class PlaceListUi extends Composite  implements ApplicationListListener, ClickHandler, HasSelectionHandlers<String> {
+public class PlaceListUi extends Composite  implements ClickHandler, HasSelectionHandlers<String> {
 	
 	@UiTemplate("PlaceListDesktop.ui.xml")
 	interface PlaceListDesktopUiBinder extends UiBinder<Widget, PlaceListUi> {
@@ -85,7 +88,6 @@ public class PlaceListUi extends Composite  implements ApplicationListListener, 
 	 * Starts asking for the place list and updating the ui when with the list of places.
 	 */
 	public void start() {
-		WidgetManager.get().setApplicationListListener(this);
 		timerPlaces = new Timer() {
 			@Override
 			public void run() {
@@ -98,11 +100,21 @@ public class PlaceListUi extends Composite  implements ApplicationListListener, 
 
 	private void refreshPlaces() {
 		Log.debug(this, "Asking server for list of places");
-		WidgetManager.get().getPlacesList();
+		
+		PublicDisplayApplication.getServerCommunicator().getPlacesList( new Callback<ArrayList<Place>> () {
+			@Override
+			public void onFailure(Throwable exception) {
+				Log.warn(PlaceListUi.this, "Could not get place list: " + exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Place> placeList) {
+				PlaceListUi.this.onPlaceList(placeList);
+			}
+		});		
 	}
 	
 
-	@Override
 	public void onPlaceList(ArrayList<Place> placeList) {
 		
 		this.panel.clear();
@@ -143,15 +155,6 @@ public class PlaceListUi extends Composite  implements ApplicationListListener, 
 //	public void setPlaceListener(PlaceListListener placeListener) {
 //		this.placeListener = placeListener;
 //	}
-
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
-	}
-
-	@Override
-	public void onWidgetsList(String placeId, String applicationId,
-			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
-	}
 
 	@Override
 	public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {

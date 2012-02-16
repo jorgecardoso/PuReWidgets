@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ApplicationListUi extends Composite implements ClickHandler, ApplicationListListener, HasSelectionHandlers<String>  {
+public class ApplicationListUi extends Composite implements ClickHandler, HasSelectionHandlers<String>  {
 	/**
 	 * The period for updating the list of applications from the server
 	 */
@@ -84,15 +84,12 @@ public class ApplicationListUi extends Composite implements ClickHandler, Applic
 	}
 	
 	public void start() {
-		WidgetManager.get().setApplicationListListener(this);
-
 		timerApplications = new Timer() {
 			@Override
 			public void run() {
 				refreshApplications();
 			}
 		};
-		
 		
 		this.timerApplications.scheduleRepeating(PERIOD_MILLIS);
 		this.refreshApplications();
@@ -214,18 +211,6 @@ public class ApplicationListUi extends Composite implements ClickHandler, Applic
 			this.timerApplications = null;
 		}
 	}
-
-
-	@Override
-	public void onPlaceList(ArrayList<Place> placeList) {
-	}
-	
-
-	@Override
-	public void onWidgetsList(String placeId, String applicationId,
-			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
-	}
-
 	
 	@Override
 	public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
@@ -245,7 +230,4 @@ public class ApplicationListUi extends Composite implements ClickHandler, Applic
 	public String getPlaceId() {
 		return placeId;
 	}
-
-	
-
 }
