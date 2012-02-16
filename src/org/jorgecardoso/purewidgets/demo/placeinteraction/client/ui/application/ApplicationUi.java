@@ -1,5 +1,6 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application;
 
+import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 
 import com.google.gwt.core.client.GWT;
@@ -19,7 +20,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ApplicationUi extends Composite implements HasText, HasClickHandlers {
+public class ApplicationUi extends Composite implements HasClickHandlers {
 
 	@UiTemplate("ApplicationUiDesktop.ui.xml")
 	interface ApplicationUiDesktopUiBinder extends UiBinder<Widget, ApplicationUi> {	}
@@ -32,16 +33,15 @@ public class ApplicationUi extends Composite implements HasText, HasClickHandler
 
 	
 
-	private String applicationName;
+	private Application application;
 
 	
 
-	public ApplicationUi( UiType uiType, String applicationName) {
+	public ApplicationUi( UiType uiType, Application application) {
 		initWidget(this.getUiBinder(uiType).createAndBindUi(this));
 		this.uiType = uiType;
-		this.applicationName = applicationName;
-		this.name.setText(this.applicationName);
-		this.icon.setUrl("http://upload.wikimedia.org/wikipedia/commons/0/0d/Icono_web_store.png");
+		this.setApplication(application);
+		
 	}
 	
 	private UiBinder<Widget, ApplicationUi> getUiBinder(UiType uiType) {
@@ -59,18 +59,30 @@ public class ApplicationUi extends Composite implements HasText, HasClickHandler
 	}
 
 	
-	public void setText(String text) {
-		this.applicationName = text;
-		this.name.setText(text);
-	}
-
-	public String getText() {
-		return this.name.getText();
-	}
 
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
 		return addDomHandler(handler, ClickEvent.getType());
+	}
+
+	/**
+	 * @return the application
+	 */
+	public Application getApplication() {
+		return application;
+	}
+
+	/**
+	 * @param application the application to set
+	 */
+	public void setApplication(Application application) {
+		this.application = application;
+		this.name.setText(this.application.getApplicationId());
+		String url = this.application.getIconBaseUrl();
+		if ( null == url ) {
+			url = "http://upload.wikimedia.org/wikipedia/commons/0/0d/Icono_web_store.png";
+		}
+		this.icon.setUrl(url);
 	}
 
 }

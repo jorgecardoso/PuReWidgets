@@ -397,17 +397,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		
 	}
 
-	@Override
-	public void getApplicationsList(String placeId, boolean active) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void getApplicationsList(String placeId) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void getPlacesList() {
@@ -433,6 +423,19 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 	@Override
 	public void getApplication(String placeId, String applicationId, Callback<Application> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getApplicationsList(String placeId, Callback<ArrayList<Application>> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getApplicationsList(String placeId, boolean active,
+			Callback<ArrayList<Application>> callback) {
 		// TODO Auto-generated method stub
 		
 	}

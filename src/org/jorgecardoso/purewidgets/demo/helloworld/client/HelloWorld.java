@@ -33,7 +33,7 @@ public class HelloWorld implements PublicDisplayApplicationLoadedListener, Entry
 	public void onApplicationLoaded() {
 		Application app = PublicDisplayApplication.getApplication();
 		if ( null != app ) {
-			if ( null == app.getIconBaseUrl() ) {
+			if ( "http://www.thetechcheck.com/wp-content/uploads/2011/02/GMail.png" != app.getIconBaseUrl() ) {
 				app.setIconBaseUrl("http://www.thetechcheck.com/wp-content/uploads/2011/02/GMail.png");
 				WidgetManager.get().getServerCommunicator().setApplication(app.getPlaceId(), app.getApplicationId(), app, null);
 			}

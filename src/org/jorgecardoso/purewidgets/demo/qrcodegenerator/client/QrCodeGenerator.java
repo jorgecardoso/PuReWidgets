@@ -9,10 +9,12 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Place;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application.ApplicationListUi;
 
 
 
@@ -61,7 +63,23 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 	
 	protected void refreshApplications() {
 		Log.debug(this, "Asking server for list of applications");
-		WidgetManager.get().getApplicationsList("DefaultPlace");	
+		final String placeId = "DefaultPlace";
+		PublicDisplayApplication.getServerCommunicator().getApplicationsList(placeId, new Callback<ArrayList<Application>> () {
+
+			@Override
+			public void onSuccess(ArrayList<Application> applicationList) {
+				QrCodeGenerator.this.onApplicationList(placeId, applicationList);
+			}
+
+			@Override
+			public void onFailure(Throwable exception) {
+				Log.warn(QrCodeGenerator.this, "Could not get application list: " + exception.getMessage());
+			}
+			
+		});
+		
+		//Log.debug(this, "Asking server for list of applications");
+		//WidgetManager.get().getApplicationsList("DefaultPlace");	
 	}
 
 	protected void refreshWidgets() {

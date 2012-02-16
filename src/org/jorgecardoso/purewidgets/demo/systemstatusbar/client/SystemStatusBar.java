@@ -10,10 +10,13 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
+import org.jorgecardoso.purewidgets.demo.qrcodegenerator.client.QrCodeGenerator;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
@@ -50,8 +53,23 @@ public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, 
 		 */
 		if ( System.currentTimeMillis()-this.lastApplicationsUpdate > 30*1000 ) {
 			Log.debug(this, "Asking server for list of applications");
-			WidgetManager.get().getApplicationsList("DefaultPlace", false);
-			this.lastApplicationsUpdate = System.currentTimeMillis();
+			final String placeId = "DefaultPlace";
+			PublicDisplayApplication.getServerCommunicator().getApplicationsList(placeId, new Callback<ArrayList<Application>> () {
+
+				@Override
+				public void onSuccess(ArrayList<Application> applicationList) {
+					SystemStatusBar.this.onApplicationList(placeId, applicationList);
+				}
+
+				@Override
+				public void onFailure(Throwable exception) {
+					Log.warn(SystemStatusBar.this, "Could not get application list: " + exception.getMessage());
+				}
+				
+			});
+			
+			//WidgetManager.get().getApplicationsList("DefaultPlace", false);
+			//this.lastApplicationsUpdate = System.currentTimeMillis();
 		}
 		
 		

@@ -1,8 +1,11 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application;
 
 import java.util.ArrayList;
+
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.Place;
@@ -30,6 +33,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ApplicationListUi extends Composite implements ClickHandler, ApplicationListListener, HasSelectionHandlers<String>  {
+	/**
+	 * The period for updating the list of applications from the server
+	 */
+	private static final int PERIOD_MILLIS = 2 * 60 * 1000; // every 2 minutes
+
 	interface Style extends CssResource {
 	    String list();
 	    //String disabled();
@@ -86,27 +94,40 @@ public class ApplicationListUi extends Composite implements ClickHandler, Applic
 		};
 		
 		
-		this.timerApplications.scheduleRepeating(60 * 1000);
+		this.timerApplications.scheduleRepeating(PERIOD_MILLIS);
 		this.refreshApplications();
 	}
 	
 
 	protected void refreshApplications() {
 		Log.debug(this, "Asking server for list of applications");
-		WidgetManager.get().getApplicationsList(this.placeId);
+		final String placeId = this.placeId;
+		PublicDisplayApplication.getServerCommunicator().getApplicationsList(this.placeId, new Callback<ArrayList<Application>> () {
+
+			@Override
+			public void onSuccess(ArrayList<Application> applicationList) {
+				ApplicationListUi.this.onApplicationList(placeId, applicationList);
+				
+			}
+
+			@Override
+			public void onFailure(Throwable exception) {
+				Log.warn(ApplicationListUi.this, "Could not get application list: " + exception.getMessage());
+				
+			}
+			
+		});
+		
 	}
 
 	
 
-	
-
-	@Override
 	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		
 		this.panel.clear();
 		
 		for (Application application : applicationList) {
-			ApplicationUi appUi = new ApplicationUi(this.uiType, application.getApplicationId());
+			ApplicationUi appUi = new ApplicationUi(this.uiType, application);
 			
 			appUi.getElement().setPropertyString("id", application.getApplicationId());
 			
@@ -214,7 +235,7 @@ public class ApplicationListUi extends Composite implements ClickHandler, Applic
 	@Override
 	public void onClick(ClickEvent event) {
 		ApplicationUi p = (ApplicationUi) event.getSource();
-		Log.debug("ApplicationUi clicked:" + p.getText());	
+		Log.debug("ApplicationUi clicked:" + p.getApplication().getApplicationId());	
 		SelectionEvent.fire(this, p.getElement().getPropertyString("id"));
 	}
 

@@ -306,61 +306,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 
-	@Override
-	public void getApplicationsList( String placeId) {
-		Log.debug( this, "Getting applications from server: " + WidgetManager.getApplicationsUrl(placeId, this.placeId) );
-		try {
-			interactionService.get(WidgetManager.getApplicationsUrl(placeId, this.placeId), 
-					new AsyncCallback<String>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processApplicationsResponse(
-									false, null, caught);
-
-						}
-
-						@Override
-						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processApplicationsResponse(
-									true, result, null);
-
-						}
-
-					});
-		} catch (Exception e) {
-			ClientServerCommunicator.this.processApplicationsResponse(false, null, e);
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void getApplicationsList(String placeId, boolean active) {
-		Log.debug( this, "Getting applications from server: " + WidgetManager.getApplicationsUrl(placeId, this.placeId) +"&active=" + (active?"true":"false") );
-		try {
-			interactionService.get(WidgetManager.getApplicationsUrl(placeId, this.placeId) +"&active=" + (active?"true":"false"), 
-					new AsyncCallback<String>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processApplicationsResponse(
-									false, null, caught);
-
-						}
-
-						@Override
-						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processApplicationsResponse(
-									true, result, null);
-
-						}
-
-					});
-		} catch (Exception e) {
-			ClientServerCommunicator.this.processWidgetDeleteResponse(false, null, e);
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Enables or disables the automatic input requests
@@ -575,45 +520,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		}
 	}
 	
-	private void processApplicationsFailure(Throwable error) {
-		Log.warn(this, "Error getting list of applications from server."
-				+ error.getMessage());
-	}
 	
-	private void processApplicationsResponse(boolean success, String result, Throwable error) {
-		if ( success ) {
-			Log.debugFinest(this, result);
-			this.processApplicationsSuccess(result);
-		} else {
-			this.processApplicationsFailure(error);
-		}
-	}
-	
-	private void processApplicationsSuccess(String json) {
-		Log.debug(this, "Received applications list." );
-		
-		
-		
-		ApplicationListJson applicationListJson = GenericJson.fromJson(json);
-		
-
-		
-		ArrayList<Application> applicationList = applicationListJson.getApplications();
-		
-		
-			
-		/*
-		 * Notify the WidgetManager
-		 * 
-		 */
-		if (this.serverListener != null) {
-			this.serverListener.onApplicationsList(applicationListJson.getPlaceId(), applicationList);
-		} else {
-			Log.warn(this, "No widget manager to notify about application list");
-		}
-			
-		
-	}
 	
 	private void processInputFailure(Throwable caught) {
 		Log.warn(this, "Problem receiving input from application server. Will retry... " + (caught != null ? caught.getMessage() : "") );
@@ -1135,5 +1042,80 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		});
 		
 	}
+
+	
+	@Override
+	public void getApplicationsList(String placeId, final Callback<ArrayList<Application>> callback) {
+		this.getApplicationsList(placeId, Application.STATE.All, callback);
+	}
+
+	@Override
+	public void getApplicationsList(String placeId, boolean active,
+			Callback<ArrayList<Application>> callback) {
+		this.getApplicationsList(placeId, active?Application.STATE.Active : Application.STATE.Inactive, callback);
+		
+	}
+	
+	private void getApplicationsList(String placeId, Application.STATE state,
+			final Callback<ArrayList<Application>> callback) {
+		
+		/*
+		 * Create the request url with the proper parameters based on the intended application state
+		 */
+		String url = WidgetManager.getApplicationsUrl(placeId, this.placeId);
+		switch (state) {
+		case All: 
+			break;
+		case Active:
+			url += "&active=true";
+			break;
+		case Inactive:
+			url += "&active=false";
+		}
+		
+		Log.debug( this, "Getting applications from server: " + url );
+		try {
+			interactionService.get(url, 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							if ( null != callback ) {
+								callback.onFailure(caught);
+							} else {
+								Log.warn(this, "Error getting list of applications from server."
+										+ caught.getMessage());
+							}
+
+						}
+
+						@Override
+						public void onSuccess(String json) {
+							Log.debug(this, "Received applications list: " + json );
+							
+							ApplicationListJson applicationListJson = GenericJson.fromJson(json);
+					
+							ArrayList<Application> applicationList = applicationListJson.getApplications();
+							
+							if ( null != callback ) {
+								callback.onSuccess(applicationList);
+							} else {
+								Log.warn(this, "No callback to notify about application list");
+							}
+
+						}
+
+					});
+		} catch (Exception e) {
+			if ( null != callback ) {
+				callback.onFailure(e);
+			} else {
+				Log.warn(this, "Error getting list of applications from server."
+						+ e.getMessage());
+			}
+			e.printStackTrace();
+		}
+	}
+
 	
 }

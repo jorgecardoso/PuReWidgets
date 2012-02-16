@@ -8,7 +8,8 @@ package org.instantplaces.purewidgets.shared.widgets;
  *
  */
 public class Application {
-
+	public static enum STATE {All, Active, Inactive};
+	
 	private String placeId;
 	
 	private String applicationId;

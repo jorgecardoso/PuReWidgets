@@ -126,26 +126,6 @@ public class WidgetManager implements ServerListener {
 		
 	}
 	
-	/**
-	 * Returns the list of all applications.
-	 * @param active
-	 */
-	public void getApplicationsList(String placeId) {
-		Log.debug(this, "Asking for applications list");
-		this.communicator.getApplicationsList( placeId );
-	}
-	
-
-	/**
-	 * Returns the list of active or inactive applications.
-	 * @param active
-	 */
-	public void getApplicationsList(String placeId, boolean active) {
-		Log.debug(this, "Asking for applications list");
-		this.communicator.getApplicationsList( placeId, active );
-	}
-
-	
 	public void getPlacesList() {
 		Log.debug(this, "Asking for place list");
 		this.communicator.getPlacesList();
@@ -167,12 +147,6 @@ public class WidgetManager implements ServerListener {
 		this.communicator.getWidgetsList( placeId, applicationId );
 	}
 
-	@Override
-	public void onApplicationsList(String placeId, ArrayList<Application> applications) {
-		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onApplicationList(placeId, applications);
-		}
-	}
 	
 	@Override
 	public void onPlacesList(ArrayList<Place> placeList) {
