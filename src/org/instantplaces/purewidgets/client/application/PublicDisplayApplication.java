@@ -11,7 +11,9 @@ import org.instantplaces.purewidgets.client.storage.LocalStorage;
 import org.instantplaces.purewidgets.client.storage.RemoteStorage;
 import org.instantplaces.purewidgets.client.widgetmanager.ClientServerCommunicator;
 import org.instantplaces.purewidgets.shared.Log;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.Application;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -88,6 +90,13 @@ public class PublicDisplayApplication {
 	 * The RemoteStorage for this application
 	 */
 	private static RemoteStorage remoteStorage;
+
+	/**
+	 * The ServerCommunicator used to communicate with the interaction manager
+	 */
+	private static ClientServerCommunicator serverCommunicator;
+
+	private static Application application;
 
 	/**
 	 * @return the applicationName
@@ -216,8 +225,8 @@ public class PublicDisplayApplication {
 		Log.debug(PublicDisplayApplication.class.getName(), "Using application name: "
 				+ applicationName);
 
-		WidgetManager.get().setServerCommunication(
-				new ClientServerCommunicator(placeName, applicationName));
+		serverCommunicator = new ClientServerCommunicator(placeName, applicationName);
+		WidgetManager.get().setServerCommunication( serverCommunicator );
 
 		/*
 		 * Delete all volatile widgets that may have left on the server before
@@ -235,7 +244,6 @@ public class PublicDisplayApplication {
 		remoteStorage = new RemoteStorage(placeName, applicationName);
 
 		Window.addCloseHandler(new CloseHandler<Window>() {
-
 			@Override
 			public void onClose(CloseEvent<Window> event) {
 				if (PublicDisplayApplication.autoDeleteVolatile) {
@@ -247,35 +255,61 @@ public class PublicDisplayApplication {
 
 		
 		
-			remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
+		remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					listener.onApplicationLoaded();
+					PublicDisplayApplication.handleParametersFromServer(null);
+					
 
 				}
 
 				@Override
 				public void onSuccess(Map<String, String> result) {
-					if (null != result) {
-						PublicDisplayApplication.parameters = result;
-						
-						
-						for ( String key : result.keySet() ) {
-							
-							Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
-						}
-					} else {
-						
-						PublicDisplayApplication.parameters = new HashMap<String, String>();
-					
-					}
-					listener.onApplicationLoaded();
+					PublicDisplayApplication.handleParametersFromServer(result);
+
 				}
 
 			});
 		
 			org.instantplaces.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
+	}
+
+	protected static void handleParametersFromServer(Map<String, String> result) {
+		if (null != result) {
+			PublicDisplayApplication.parameters = result;
+			
+			
+			for ( String key : result.keySet() ) {
+				
+				Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
+			}
+		} else {
+			
+			PublicDisplayApplication.parameters = new HashMap<String, String>();
+		
+		}
+		
+		serverCommunicator.getApplication(placeName, applicationName, new Callback<Application>() {
+
+			@Override
+			public void onSuccess(Application application) {
+				Log.debug(PublicDisplayApplication.class.getName(), "Received application: " + application);
+				PublicDisplayApplication.application = application;
+				listener.onApplicationLoaded();
+				
+			}
+
+			@Override
+			public void onFailure(Throwable exception) {
+				Log.debug(PublicDisplayApplication.class.getName(), "Could not get Application");
+				listener.onApplicationLoaded();
+				
+			}
+			
+		});
+		
+		
 	}
 
 	/**
@@ -310,4 +344,34 @@ public class PublicDisplayApplication {
 	public static void setPlaceName(String placeName) {
 		PublicDisplayApplication.placeName = placeName;
 	}
+
+	/**
+	 * @return the serverCommunicator
+	 */
+	public static ClientServerCommunicator getServerCommunicator() {
+		return serverCommunicator;
+	}
+
+	/**
+	 * @param serverCommunicator the serverCommunicator to set
+	 */
+	public static void setServerCommunicator(ClientServerCommunicator serverCommunicator) {
+		PublicDisplayApplication.serverCommunicator = serverCommunicator;
+	}
+
+	/**
+	 * @return the application
+	 */
+	public static Application getApplication() {
+		return application;
+	}
+
+	/**
+	 * @param application the application to set
+	 */
+	public static void setApplication(Application application) {
+		PublicDisplayApplication.application = application;
+	}
+	
+	
 }

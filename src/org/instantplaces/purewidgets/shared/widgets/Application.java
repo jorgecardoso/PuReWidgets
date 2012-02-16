@@ -9,12 +9,11 @@ package org.instantplaces.purewidgets.shared.widgets;
  */
 public class Application {
 
-	
 	private String placeId;
-	
 	
 	private String applicationId;
 	
+	private String iconBaseUrl;
 	
 	public Application(String placeId, String appId) {
 		this.placeId = placeId;
@@ -51,6 +50,22 @@ public class Application {
 	 */
 	public void setApplicationId(String appId) {
 		this.applicationId = appId;
+	}
+
+
+	/**
+	 * @return the iconBaseUrl
+	 */
+	public String getIconBaseUrl() {
+		return iconBaseUrl;
+	}
+
+
+	/**
+	 * @param iconBaseUrl the iconBaseUrl to set
+	 */
+	public void setIconBaseUrl(String iconBaseUrl) {
+		this.iconBaseUrl = iconBaseUrl;
 	}
 	
 }

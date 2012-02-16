@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.client.json.GenericJson;
+import org.instantplaces.purewidgets.client.widgetmanager.json.ApplicationJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.ApplicationListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.PlaceListJson;
 import org.instantplaces.purewidgets.client.widgetmanager.json.WidgetInputJson;
@@ -1060,6 +1061,74 @@ public class ClientServerCommunicator implements ServerCommunicator {
 						Log.debug(this, "Successfully posted input. " + result);
 						if ( null != callback ) {
 							callback.onSuccess(null);
+						}
+					}
+
+		});
+		
+	}
+
+	@Override
+	public void setApplication(String placeId, String applicationId, Application application, final Callback<Application> callback) {
+		ApplicationJson applicationJson = ApplicationJson.create(application);
+		
+		Log.debug(this, "Sending application: " + applicationJson.toJsonString());
+		Log.debug(this, "to: "+ WidgetManager.getApplicationUrl(placeId, applicationId, this.appId));
+		
+		this.interactionService.post(applicationJson.toJsonString(), 
+				WidgetManager.getApplicationUrl(placeId, applicationId, this.appId), 
+				new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.warn(this, "Error posting application. " + caught.getMessage());
+						if ( null != callback ) {
+							callback.onFailure(caught);
+						}
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Log.debug(this, "Successfully posted application. " + result);
+						if ( null != callback ) {
+							Application application = (Application)(ApplicationJson.fromJson(result));
+							callback.onSuccess(application);
+						}
+					}
+
+		});
+	}
+
+	@Override
+	public void getApplication(String placeId, String applicationId, final Callback<Application> callback) {
+		
+		
+		Log.debug(this, "Asking application: " + placeId +":"+applicationId);
+		
+		
+		this.interactionService.get(
+				WidgetManager.getApplicationUrl(placeId, applicationId, this.appId), 
+				new AsyncCallback<String>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.warn(this, "Error asking for  application. " + caught.getMessage());
+						if ( null != callback ) {
+							callback.onFailure(caught);
+						}
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Log.debug(this, "Received data " + result + ".");
+						if ( null != callback ) {
+							if ( null != result && result.length() > 0) {
+								Log.debug(this, "Received application " + result + ".");
+								Application application = ((ApplicationJson)ApplicationJson.fromJson(result)).getApplication();
+								callback.onSuccess(application);
+							} else {
+								callback.onFailure(new Exception("Received null application"));
+							}
 						}
 					}
 
