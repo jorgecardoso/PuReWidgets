@@ -25,6 +25,7 @@ import org.instantplaces.purewidgets.server.application.ApplicationLifeCycle;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.ListBox;
@@ -35,7 +36,7 @@ import org.jorgecardoso.purewidgets.demo.everybodyvotes.server.dao.Dao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollOptionDao;
 
-public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle, ApplicationListListener {
+public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle {
 
 	/**
 	 * 
@@ -76,13 +77,29 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 	@Override
 	public void setup() {
 	}
+
+	private void onWidgetsList(ArrayList<Widget> widgetList) {
+		this.oldWidgetList = widgetList;
+	}
+
 	
 	@Override
 	public void start() {
 		//WidgetManager.get().setAutomaticWidgetRequests(false);
-		WidgetManager.get().setApplicationListListener(this);
-		WidgetManager.get().getWidgetsList(this.app.getPlaceId(), this.app.getAppId());
 		
+		app.getServerCommunicator().getWidgetsList(this.app.getPlaceId(), this.app.getAppId(), new Callback<ArrayList<Widget>>() {
+
+			@Override
+			public void onSuccess(ArrayList<Widget> widgetList) {
+				EveryBodyVotes.this.onWidgetsList(widgetList);
+			}
+
+			@Override
+			public void onFailure(Throwable exception) {
+				Log.warn(EveryBodyVotes.this, "Could not get list of widgets from server: " + exception.getMessage());
+			}
+			
+		});
 		
 		this.polls = Dao.getActivePolls(this.app.getPlaceId());
 		
@@ -215,16 +232,6 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 		}
 		
 	}
-
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList) {
-		this.oldWidgetList = widgetList;
-	}
 	
 	private void deleteUnusedWidgets() {
 		/*
@@ -245,8 +252,4 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle,
 		}
 	}
 
-	@Override
-	public void onPlaceList(ArrayList<Place> placeList) {
-		// TODO Auto-generated method stub
-	}
 }

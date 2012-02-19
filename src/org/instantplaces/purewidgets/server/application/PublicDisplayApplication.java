@@ -81,7 +81,7 @@ public class PublicDisplayApplication  {
 	/**
 	 * The ServerCommunicator object used to communicate with the InteractionManager.
 	 */
-	private ServerServerCommunicator ssCommunicator;
+	private ServerServerCommunicator serverCommunicator;
 	
 	private boolean firstTime;
 	
@@ -101,8 +101,8 @@ public class PublicDisplayApplication  {
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
 		
-		ssCommunicator = new ServerServerCommunicator(persistenceManager, this.remoteStorage, this.placeId, this.appId);
-		WidgetManager.get().setServerCommunication(ssCommunicator);
+		serverCommunicator = new ServerServerCommunicator(persistenceManager, this.remoteStorage, this.placeId, this.appId);
+		WidgetManager.get().setServerCommunication(serverCommunicator);
 	}
 	
 	public void run() {
@@ -118,7 +118,7 @@ public class PublicDisplayApplication  {
     	
 		this.applicationLifeCycle.start();
 		
-		ssCommunicator.askForInputFromServer();
+		serverCommunicator.askForInputFromServer();
 		
 		
 		this.applicationLifeCycle.finish();
@@ -287,6 +287,15 @@ public class PublicDisplayApplication  {
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
 	}
+
+
+	/**
+	 * @return the serverCommunicator
+	 */
+	public ServerServerCommunicator getServerCommunicator() {
+		return serverCommunicator;
+	}
+
 	
 	
 	

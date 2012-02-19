@@ -816,7 +816,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 	
 	@Override
-	public void getWidgetsList(String placeId, String applicationId) {
+	public void getWidgetsList(String placeId, String applicationId, final Callback<ArrayList<Widget>> callback) {
 		Log.debug( this, "Getting widgets from server: " +  WidgetManager.getWidgetsUrl(placeId,  applicationId, this.appId) );
 		try {
 			interactionService.get( WidgetManager.getWidgetsUrl(placeId,  applicationId, this.appId), 
@@ -824,62 +824,46 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processWidgetsResponse(
-									false, null, caught);
+							if ( null != callback ) {
+								callback.onFailure(caught);
+							} else {
+								Log.warn(this, "Error getting list of widgets from server." + caught.getMessage());
+								caught.printStackTrace();
+							}
 
 						}
 
 						@Override
-						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processWidgetsResponse(
-									true, result, null);
+						public void onSuccess(String json) {
+							
+							WidgetListJson widgetListJson = GenericJson.fromJson(json);
+							
+							ArrayList<Widget> widgetList = widgetListJson.getWidgets();
+								
+							/*
+							 * Notify the callback
+							 */
+							if ( null != callback ) {
+								callback.onSuccess(widgetList);
+							} else {
+								Log.warn(this, "No callback to notify about widget list");
+							}
+
 
 						}
 
 					});
 		} catch (Exception e) {
-			ClientServerCommunicator.this.processWidgetsResponse(false, null, e);
-			e.printStackTrace();
-		}
-		
-	}
-	
-
-	private void processWidgetsFailure(Throwable error) {
-		Log.warn(this, "Error getting list of widgets from server."
-				+ error.getMessage());
-	}
-	
-	private void processWidgetsResponse(boolean success, String result, Throwable error) {
-		
-		if ( success ) {
-			Log.debugFinest(this, result);
-			this.processWidgetsSuccess(result);
-		} else {
-			this.processWidgetsFailure(error);
-		}
-	}
-	
-	private void processWidgetsSuccess(String json) {
-		
-		WidgetListJson widgetListJson = GenericJson.fromJson(json);
-		
-		ArrayList<Widget> widgetList = widgetListJson.getWidgets();
+			if ( null != callback ) {
+				callback.onFailure(e);
+			} else {
+				Log.warn(this, "Error getting list of widgets from server." + e.getMessage());
+				e.printStackTrace();
+			}
 			
-		/*
-		 * Notify the WidgetManager
-		 * 
-		 */
-		if (this.serverListener != null) {
-			this.serverListener.onWidgetsList(widgetListJson.getPlaceId(), widgetListJson.getApplicationId(), widgetList);
-		} else {
-			Log.warn(this, "No widget manager to notify about application list");
 		}
-			
 		
 	}
-
-
 	
 
 	@Override

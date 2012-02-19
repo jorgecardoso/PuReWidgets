@@ -357,7 +357,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	}
 
 	@Override
-	public void getWidgetsList(String placeId, String applicationId) {
+	public void getWidgetsList(String placeId, String applicationId, Callback<ArrayList<Widget>> callback) {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		
@@ -371,6 +371,9 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		} catch (InteractionManagerException e) {
 			Log.error(this,  e.getMessage());
 			e.printStackTrace();
+			if ( null != callback ) {
+				callback.onFailure(e);	
+			}
 			return;
 		}
 		
@@ -382,18 +385,30 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			/*
 			 * Notify the widgetManager
 			 */
-			if (this.serverListener != null) {
-				this.serverListener.onWidgetsList(placeId, applicationId, widgetList.getWidgets());
+			if ( null != callback ) {
+				callback.onSuccess(widgetList.getWidgets());
 			}
+//			if (this.serverListener != null) {
+//				this.serverListener.onWidgetsList(placeId, applicationId, widgetList.getWidgets());
+//			}
 		} catch (JsonParseException e) {
 			Log.error(this, "Error parsing JSON: " + e.getMessage());
 			e.printStackTrace();
+			if ( null != callback ) {
+				callback.onFailure(e);	
+			}
 		} catch (JsonMappingException e) {
 			Log.error(this, "Error mapping JSON: " + e.getMessage());
 			e.printStackTrace();
+			if ( null != callback ) {
+				callback.onFailure(e);	
+			}
 		} catch (IOException e) {
 			Log.error(this, "IO Error: " + e.getMessage());
 			e.printStackTrace();
+			if ( null != callback ) {
+				callback.onFailure(e);	
+			}
 		} 	
 		
 	}

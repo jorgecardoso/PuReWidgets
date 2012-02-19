@@ -36,7 +36,7 @@ public interface ServerCommunicator {
 	public void deleteWidget(Widget widget);
 	public void deleteAllWidgets(boolean volatileOnly);
 	
-	public void getWidgetsList( String placeId, String applicationId );
+	public void getWidgetsList( String placeId, String applicationId, Callback<ArrayList<Widget>> callback);
 	
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, Callback<WidgetInput> callback);
 	

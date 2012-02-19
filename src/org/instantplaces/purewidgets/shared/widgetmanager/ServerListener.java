@@ -9,6 +9,4 @@ public interface ServerListener {
 	public void onWidgetInput(ArrayList<WidgetInput> inputList);
 	public void onWidgetAdd(Widget widget);
 	public void onWidgetDelete(Widget widget);
-	
-	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList);
 }

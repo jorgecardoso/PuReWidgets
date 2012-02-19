@@ -136,13 +136,6 @@ public class WidgetManager implements ServerListener {
 		return widgetList;
 	}
 
-	/**
-	 * Returns the list of widgets from the specified application.
-	 * @param active
-	 */
-	public void getWidgetsList(String placeId, String applicationId) {
-		this.communicator.getWidgetsList( placeId, applicationId );
-	}
 
 //	@Override
 //	public void onPlacesList(ArrayList<Place> placeList) {
@@ -285,14 +278,6 @@ public class WidgetManager implements ServerListener {
 		
 
 	}
-
-	@Override
-	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgets) {
-		if ( null != this.applicationListListener ) {
-			this.applicationListListener.onWidgetsList( placeId, applicationId, widgets );
-		}
-	}
-	
 	
 	public void removeAllWidgets(boolean volatileOnly) {
 		if ( null != this.communicator ) {

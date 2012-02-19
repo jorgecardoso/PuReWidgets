@@ -2,8 +2,10 @@ package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
 import java.util.ArrayList;
 
+import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.instantplaces.purewidgets.shared.widgets.Application;
@@ -29,7 +31,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class WidgetListUi extends Composite implements ApplicationListListener {
+public class WidgetListUi extends Composite  {
 
 	
 	@UiTemplate("WidgetListDesktop.ui.xml")
@@ -78,7 +80,6 @@ public class WidgetListUi extends Composite implements ApplicationListListener {
 	}
 
 	public void start() {
-		WidgetManager.get().setApplicationListListener(this);
 
 		timerWidgets = new Timer() {
 			@Override
@@ -99,12 +100,30 @@ public class WidgetListUi extends Composite implements ApplicationListListener {
 
 	
 	protected void refreshWidgets() {
-		WidgetManager.get().getWidgetsList(this.placeName, this.applicationName);
+		final String placeName = this.placeName;
+		final String applicationName = this.applicationName;
+		PublicDisplayApplication.getServerCommunicator().getWidgetsList(this.placeName, this.applicationName, 
+				new Callback<ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>>() {
+
+					@Override
+					public void onSuccess(
+							ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+						WidgetListUi.this.onWidgetsList(placeName, applicationName, widgetList);
+						
+					}
+
+					@Override
+					public void onFailure(Throwable exception) {
+						Log.warn(WidgetListUi.this, "Could not get list of widgets from server: " + exception.getMessage());
+						
+					}
+			
+		});
 	}
 	
 
-	@Override
-	public void onWidgetsList(String placeId, String applicationId,
+	
+	private void onWidgetsList(String placeId, String applicationId,
 			ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 
@@ -324,14 +343,6 @@ public class WidgetListUi extends Composite implements ApplicationListListener {
 
 		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		return flowPanel;
-	}
-
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
-	}
-
-	@Override
-	public void onPlaceList(ArrayList<Place> placeList) {
 	}
 
 	/**

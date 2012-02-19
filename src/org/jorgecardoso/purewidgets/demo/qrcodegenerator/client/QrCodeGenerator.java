@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, EntryPoint, ApplicationListListener {
+public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, EntryPoint {
 	
 	
 	private TabPanel tabPanelApplications;
@@ -56,8 +56,6 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 		PublicDisplayApplication.load(this, "QRCodeGenerator", false);
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
-		WidgetManager.get().setApplicationListListener(this);
-		WidgetManager.get().setAutomaticInputRequests(false);	
 	}
 	
 	
@@ -86,11 +84,25 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 		if ( null != this.tabPanelApplications ) {
 			int selected = tabPanelApplications.getTabBar().getSelectedTab();
 			Log.debug(this, "Selected Tab: " + selected);
-			String currentApplicationId = tabPanelApplications.getTabBar().getTabHTML(selected);
+			final String currentApplicationId = tabPanelApplications.getTabBar().getTabHTML(selected);
 			Log.debug(this, "Asking server for list of widgets for application: " + currentApplicationId );
 			
 			
-			WidgetManager.get().getWidgetsList("DefaultPlace", currentApplicationId);
+			PublicDisplayApplication.getServerCommunicator().getWidgetsList("DefaultPlace", currentApplicationId,
+					new Callback<ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget>>() {
+
+						@Override
+						public void onSuccess(
+								ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
+							QrCodeGenerator.this.onWidgetsList("DefaultPlace", currentApplicationId, widgetList);	
+						}
+
+						@Override
+						public void onFailure(Throwable exception) {
+							Log.warn(QrCodeGenerator.this, "Could not list of widgets from server: " + exception.getMessage());
+						}
+				
+			});
 
 		}
 
@@ -98,8 +110,7 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 	}
 	
 
-	@Override
-	public void onWidgetsList(
+	private void onWidgetsList(
 			String placeId, String applicationId, ArrayList<org.instantplaces.purewidgets.shared.widgets.Widget> widgetList) {
 		Log.debug(this, "Received widget list" + widgetList.toString());
 		
@@ -200,8 +211,8 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 	}
 	
 	
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applicationList) {
+	
+	private void onApplicationList(String placeId, ArrayList<Application> applicationList) {
 		Log.debug(this, "Received applications: " + applicationList);
 		
 		/*
@@ -256,13 +267,6 @@ public class QrCodeGenerator implements PublicDisplayApplicationLoadedListener, 
 			this.tabPanelApplications.getTabBar().selectTab(0);
 		}
 		refreshWidgets();
-	}
-
-
-	@Override
-	public void onPlaceList(ArrayList<Place> placeList) {
-		// TODO Auto-generated method stub
-		
 	}
 
 
