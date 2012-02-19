@@ -9,7 +9,6 @@ import java.util.Iterator;
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
-import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.Application;
@@ -25,7 +24,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * @author "Jorge C. S. Cardoso"
  */
-public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, EntryPoint, ApplicationListListener {
+public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, EntryPoint {
 
 	Timer timer;
 	
@@ -37,12 +36,7 @@ public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, 
 	@Override
 	public void onModuleLoad() {
 		PublicDisplayApplication.load(this, "SystemStatusBar", true);
-		
-		
-		WidgetManager.get().setApplicationListListener(this);
 		WidgetManager.get().setAutomaticInputRequests(false);
-		
-	
 	}
 
 	
@@ -108,8 +102,8 @@ public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, 
 		
 	}
 
-	@Override
-	public void onApplicationList(String placeId, ArrayList<Application> applications) {
+
+	private void onApplicationList(String placeId, ArrayList<Application> applications) {
 		Log.debug(this, "Received list of applications: " + applications.size() );
 		/*
 		 * Remove apps with no widgets
@@ -148,24 +142,9 @@ public class SystemStatusBar implements PublicDisplayApplicationLoadedListener, 
 		
 	}
 
-
-	@Override
-	public void onWidgetsList(String placeId, String applicationId, ArrayList<Widget> widgetList) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void onPlaceList(ArrayList<Place> placeList) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	@Override
 	public void onApplicationLoaded() {
-lastApplicationsUpdate = System.currentTimeMillis();
+		lastApplicationsUpdate = System.currentTimeMillis();
 		
 		timer = new Timer() {
 			@Override

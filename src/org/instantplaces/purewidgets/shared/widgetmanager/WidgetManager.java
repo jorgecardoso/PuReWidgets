@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.instantplaces.purewidgets.shared.Log;
-import org.instantplaces.purewidgets.shared.events.ApplicationListListener;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 
@@ -51,7 +50,6 @@ public class WidgetManager implements ServerListener {
 		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
 	}
 
-	private ApplicationListListener applicationListListener;
 	
 	/**
 	 * Communication with the Interaction manager is done via a
@@ -304,10 +302,6 @@ public class WidgetManager implements ServerListener {
 			Log.error(this, "WidgetManager does not have a ServerCommunicator! Cannot communicate with Interaction Manager.");
 		}
 	}	
-	
-	public void setApplicationListListener(ApplicationListListener listener) {
-		this.applicationListListener = listener;
-	}
 	
 	/**
 	 * Enables or disables the automatic input requests
