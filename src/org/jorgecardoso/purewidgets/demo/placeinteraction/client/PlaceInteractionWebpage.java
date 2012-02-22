@@ -15,11 +15,14 @@ import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget.Widge
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -37,9 +40,11 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 
 	public static SightingServiceAsync sightingService;
 	
-	public static LoginInfo loginInfo = null;
 	
-	private Anchor signInLink = new Anchor("Sign In");
+	private Anchor signOutLink = new Anchor("Sign Out");
+	private Anchor signInLink = Anchor.wrap(DOM.getElementById("janrainlogin"));
+	
+	private boolean loggedIn = false;
 	
 	private Label labelId;
 	
@@ -55,32 +60,35 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 	public void onModuleLoad() {
 		/*
 		 * Check/set the user's identity.
-		 * 
-		 * We generate a random identity name, starting with "Anonymous" and set
-		 * a cookie with it so that we can retrieve it later if the user uses
-		 * the webpage again.
 		 */
-		userIdentity = Cookies.getCookie("userIdentity");
-		if (null == userIdentity) {
-			userIdentity = "Anonymous" + ((int) (Math.random() * 10000));
-			/*
-			 * The cookie is valid for one week
-			 */
-			Date future = new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000); // 7
-																							// days
-																							// in
-																							// the
-																							// future
-			Cookies.setCookie("userIdentity", userIdentity, future);
+		userIdentity = com.google.gwt.user.client.Window.Location.getParameter("preferredUsername");
+		if ( null == userIdentity ) {
+			
+			userIdentity = this.getAnonymousId();
+		} else {
+			loggedIn = true;
 		}
 		
+		signOutLink.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				PlaceInteractionWebpage.this.logout();
+				
+			}
+			
+		});
 		/*
 		 * Put the user id at the bottom of the page, and a link so that the
 		 * user can sign in
 		 */
 		labelId = new Label("Your identity is " + userIdentity);
-		RootPanel.get("user").add(labelId);
-		RootPanel.get("user").add(signInLink);
+		RootPanel.get("user").insert(labelId, 0);
+		if (loggedIn) {
+			RootPanel.get("user").add(signOutLink);
+			//RootPanel.get("user").getWidget(1).setVisible(false);
+			signInLink.setVisible(false);
+		}
 
 		/*
 		 * Create the sightinh service to post input to instant places
@@ -92,6 +100,36 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 		
 		WidgetManager.get().setAutomaticInputRequests(false);
 		this.uiType = UiType.Desktop;
+	}
+	
+	private String getAnonymousId() {
+		/* 
+		 * We generate a random identity name, starting with "Anonymous" and set
+		 * a cookie with it so that we can retrieve it later if the user uses
+		 * the webpage again.
+		 */
+		String id = Cookies.getCookie("userIdentity");
+		if (null == id) {
+			id = "Anonymous" + ((int) (Math.random() * 10000));
+			/*
+			 * The cookie is valid for one week
+			 */
+			Date future = new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000); // 7
+																							// days
+																							// in
+																							// the
+																							// future
+			Cookies.setCookie("userIdentity", id, future);
+		}
+		return id;
+	}
+	
+	private void logout(){
+		this.loggedIn = false;
+		this.userIdentity = this.getAnonymousId();
+		this.labelId.setText("Your identity is " + userIdentity);
+		this.signInLink.setVisible(true);
+		this.signOutLink.setVisible(false);
 	}
 
 	/**
@@ -183,7 +221,6 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 		RootPanel.get("features").add(this.widgetListUi);
 		this.widgetListUi.start();
 	}
-
 	
 	
 
@@ -194,13 +231,11 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 	
 	public void onApplicationSelected(String placeName, String applicationName) {
 		Log.debug(this, "User selected application" + applicationName);
-		
 		History.newItem(placeName+"-"+applicationName);
 	}
 
 	@Override
 	public void onApplicationLoaded() {
-
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
@@ -208,39 +243,8 @@ public class PlaceInteractionWebpage implements PublicDisplayApplicationLoadedLi
 				show(historyToken);
 			}
 		});
-
-		// Check login status using login service.
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-			@Override
-			public void onFailure(Throwable error) {
-				Log.debug(this, "error; " + error.getMessage());
-			}
-
-			@Override
-			public void onSuccess(LoginInfo result) {
-				loginInfo = result;
-				Log.debug(this, loginInfo.getLoginUrl());
-				if (loginInfo.isLoggedIn()) {
-					Log.debug(this, loginInfo.getEmailAddress());
-					userIdentity = loginInfo.getEmailAddress();
-					//todo: remove this
-					int at = userIdentity.indexOf('@');
-					String toReplace = userIdentity.substring(at-5, at);
-					userIdentity = userIdentity.replaceFirst(toReplace, "...");
-					labelId.setText("Your identity is: " + userIdentity);
-					signInLink.setText("Sign out");
-					signInLink.setHref(loginInfo.getLogoutUrl());
-				} else {
-					signInLink.setText("Sign in");
-					signInLink.setHref(loginInfo.getLoginUrl());
-
-				}
-			}
-		});
 		
 		this.show(History.getToken());
-		
 	}
 
 
