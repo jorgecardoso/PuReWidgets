@@ -76,16 +76,6 @@
   <servlet-mapping>
     <servlet-name>sightingServlet</servlet-name>
     <url-pattern>/sighting</url-pattern>
-  </servlet-mapping>  
-     
- <servlet>
-    <servlet-name>loginService</servlet-name>
-    <servlet-class>org.jorgecardoso.purewidgets.demo.placeinteraction.server.LoginServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>loginService</servlet-name>
-    <url-pattern>/placeinteractiondemo/login</url-pattern>
   </servlet-mapping>     
 
  <!-- 

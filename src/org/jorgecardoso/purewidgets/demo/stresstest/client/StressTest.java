@@ -11,8 +11,8 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.client.widgets.GuiButton;
 import org.instantplaces.purewidgets.client.widgets.GuiWidget;
 import org.instantplaces.purewidgets.shared.Log;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.LoginInfo;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.PlaceInteractionWebpage;
+
+
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.SightingService;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.SightingServiceAsync;
 

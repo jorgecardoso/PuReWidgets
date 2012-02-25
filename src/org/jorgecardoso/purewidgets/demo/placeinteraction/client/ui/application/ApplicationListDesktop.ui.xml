@@ -22,7 +22,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="{style.main}">
-		<div class="title">Applications in <b><g:InlineLabel  ui:field="placeName"/></b></div> 
+		<div class="title">Applications in <b><g:InlineLabel ui:field="placeName"/></b></div> 
 		<g:HTMLPanel styleName="{style.applications}" ui:field="panel"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 

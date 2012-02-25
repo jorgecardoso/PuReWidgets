@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.login">
+	<ui:style>
+
+	.content {
+		width: 70%;
+		margin-left:auto;
+		margin-right:auto;
+		border:1px solid black;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="{style.content}" ui:field="mainContent">
+		<g:HTMLPanel ui:field="features"> </g:HTMLPanel>
+		<p:LoginUi ui:field="loginUi"> </p:LoginUi>
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 

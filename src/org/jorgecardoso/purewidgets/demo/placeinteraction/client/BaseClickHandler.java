@@ -17,7 +17,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Navigator;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -27,6 +26,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  */
 public abstract class BaseClickHandler implements ClickHandler {
 
+	
 	private Label message;
 	private Timer timer;
 	private PopupPanel popup;
@@ -53,6 +53,7 @@ public abstract class BaseClickHandler implements ClickHandler {
 				timerExpired();
 			}
 		};
+		
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public abstract class BaseClickHandler implements ClickHandler {
 
 	protected void sendInput(WidgetOption widgetOption, String input) {
 
-		String user = PlaceInteractionWebpage.userIdentity;
+		String user = UserInfo.getUserIdentity();
 
 		Log.debug(this, "Sending input: " + input);
 		message.setText("Sending input from user " + user);
@@ -100,25 +101,7 @@ public abstract class BaseClickHandler implements ClickHandler {
 					}
 			
 		});
-		/*
-		PlaceInteractionWebpage.sightingService.sighting(user + " " + input, dtf.format(d),
-				new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.debug(this, "An error ocurred.");
-						message.setText(message.getText() + "\n Oops, an error ocurred!");
-						timer.schedule(5000);
-					}
 
-					@Override
-					public void onSuccess(Void result) {
-						Log.debug(this, "Sent.");
-						message.setText(message.getText() + "\n Sent!");
-						timer.schedule(5000);
-					}
-
-				});
-				*/
 	}
 
 	void timerExpired() {
