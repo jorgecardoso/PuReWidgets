@@ -63,6 +63,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 		PublicDisplayApplication.load(req, this, "EveryBodyVotes");
 	}
 	
+	
 	@Override
 	public void loaded(PublicDisplayApplication application) {
 		this.app = application;
@@ -84,7 +85,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 	
 	@Override
 	public void start() {
-		//WidgetManager.get().setAutomaticWidgetRequests(false);
+		WidgetManager.get().setAutomaticWidgetRequests(false);
 		
 		app.getServerCommunicator().getWidgetsList(this.app.getPlaceId(), this.app.getAppId(), new Callback<ArrayList<Widget>>() {
 
@@ -116,19 +117,30 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 			message += "<br>";
 			
 			String widgetId = "poll " + poll.getPollId();
-			if ( existsWidget(widgetId) ) {
-				WidgetManager.get().setAutomaticWidgetRequests(false);
-			} else {
-				WidgetManager.get().setAutomaticWidgetRequests(true);
-			}
+			
 			
 			
 			ListBox listBox = new ListBox(widgetId, poll.getPollQuestion(), listOptions);
-			listBox.addActionListener(this);
+			listBox.setShortDescription("Vote");
+			listBox.setLongDescription( poll.getPollQuestion() );
+			listBox.addActionListener( this );
+			
+			if ( !existsWidget(widgetId) ) {
+				listBox.sendToServer();
+				//WidgetManager.get().addWidget(listBox); //setAutomaticWidgetRequests(false);
+			} //else {
+				//WidgetManager.get().setAutomaticWidgetRequests(false);
+			//}
 		}
 		
 		TextBox suggest = new TextBox("suggest", "Suggest a poll");
+		suggest.setShortDescription("Suggest a poll");
+		//suggest.setLongDescription("Suggest a poll");
 		suggest.addActionListener(this);
+		if ( !existsWidget("suggest") ) {
+			suggest.sendToServer();
+			//WidgetManager.get().addWidget(listBox); //setAutomaticWidgetRequests(false);
+		} 
 		
 		
 		deleteUnusedWidgets();

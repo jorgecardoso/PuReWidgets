@@ -18,6 +18,7 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.ActionListener;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollService;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.client.service.PollServiceAsync;
 import org.jorgecardoso.purewidgets.demo.everybodyvotes.shared.dao.EBVPollDao;
@@ -82,6 +83,12 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 	
 	@Override
 	public void onApplicationLoaded() {
+		Application app = PublicDisplayApplication.getApplication();
+		if ( "/everybodyvotes/icon.jpg" != app.getIconBaseUrl() ) {
+			app.setIconBaseUrl("/everybodyvotes/icon.jpg");
+			WidgetManager.get().getServerCommunicator().setApplication(app.getPlaceId(), app.getApplicationId(), app, null);
+			
+		} 
 		String page = Window.Location.getPath();
 		if ( page.contains("admin.html") ) {
 			new Admin().run();
@@ -247,6 +254,8 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 					}
 					
 					GuiListBox tb = new GuiListBox("poll " + poll.getPollId(), poll.getPollQuestion(), l);
+					tb.setShortDescription("Vote");
+					tb.setLongDescription(poll.getPollQuestion() );
 					tb.addActionListener(EveryBodyVotes.this);
 					EveryBodyVotes.this.widgets.put(poll.getPollId().toString(), tb);
 				}

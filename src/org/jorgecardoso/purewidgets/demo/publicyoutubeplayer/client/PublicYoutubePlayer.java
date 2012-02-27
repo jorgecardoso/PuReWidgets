@@ -27,6 +27,8 @@ import org.instantplaces.purewidgets.client.widgets.youtube.Video;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.ActionListener;
+import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
+import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.instantplaces.purewidgets.shared.widgets.TagCloud;
 
 
@@ -242,6 +244,12 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 
 	@Override
 	public void onApplicationLoaded() {
+		Application app = PublicDisplayApplication.getApplication();
+		if ( "/publicyoutubeplayer/icon.jpg" != app.getIconBaseUrl() ) {
+			app.setIconBaseUrl("/publicyoutubeplayer/icon.jpg");
+			WidgetManager.get().getServerCommunicator().setApplication(app.getPlaceId(), app.getApplicationId(), app, null);
+		} 
+		
 		ReferenceCodeFormatter.setLeftBracket("[");
 		ReferenceCodeFormatter.setRightBracket("]");
 		

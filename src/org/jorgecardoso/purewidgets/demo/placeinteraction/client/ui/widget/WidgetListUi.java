@@ -14,14 +14,23 @@ import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionI
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IndexedPanel;
@@ -33,7 +42,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WidgetListUi extends Composite  {
-
+	interface Style extends CssResource {
+	    String center();
+	    String over();
+	  }
 	
 	@UiTemplate("WidgetListDesktop.ui.xml")
 	interface WidgetListUiBinder extends UiBinder<Widget, WidgetListUi> {
@@ -54,6 +66,8 @@ public class WidgetListUi extends Composite  {
 	@UiField Image applicationIcon;
 	@UiField TabPanel tabPanel;
 	@UiField Label labelNoWidgetFound;
+	@UiField HTML goBackPanel;
+	@UiField Style style;
 	
 	/*
 	 * The timer to trigger requests to get the list of widgets of the application.
@@ -76,6 +90,29 @@ public class WidgetListUi extends Composite  {
 		this.spanApplicationName.setInnerText(this.applicationName);
 		
 		panelsMap = new HashMap<String, FlowPanel>();
+		
+		this.goBackPanel.addMouseOverHandler(new MouseOverHandler() {
+			@Override
+			public void onMouseOver(MouseOverEvent event) {
+				WidgetListUi.this.goBackPanel.addStyleName(WidgetListUi.this.style.over());	
+			}
+		});
+		
+		this.goBackPanel.addMouseOutHandler(new MouseOutHandler() {
+
+			@Override
+			public void onMouseOut(MouseOutEvent event) {
+				WidgetListUi.this.goBackPanel.removeStyleName(WidgetListUi.this.style.over());
+			}
+		});
+		
+		this.goBackPanel.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.newItem(WidgetListUi.this.placeName);
+			}
+			
+		});
 		
 		PublicDisplayApplication.getServerCommunicator().getApplication(placeName, applicationName, new Callback<Application>(){
 
@@ -222,8 +259,10 @@ public class WidgetListUi extends Composite  {
 				}
 				FlowPanel panel = this.panelsMap.get(tabName) ;
 				
+				
 				if ( null == panel ) {
 					FlowPanel flowPanel = new FlowPanel();
+					flowPanel.setStyleName(style.center());
 					this.panelsMap.put(tabName, flowPanel);
 					this.tabPanel.add(flowPanel, tabName);
 					panel = flowPanel;
@@ -276,6 +315,9 @@ public class WidgetListUi extends Composite  {
 					}
 				}
 			}
+			if ( this.tabPanel.getTabBar().getSelectedTab() < 0 ) {
+				this.tabPanel.selectTab(0);
+			}
 		}
 
 	}
@@ -297,30 +339,30 @@ public class WidgetListUi extends Composite  {
 		}
 		
 		if ( null != toReturn ) {
-			toReturn.setStyleName("widget");
+			//toReturn.setStyleName("widget");
 			toReturn.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 		}
 		return toReturn;
 	}
 
 	Widget getEntryWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-
-		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
-
-		FlowPanel flowPanel = new FlowPanel();
-		// for ( WidgetOption wo : widgetOptions ) {
-		Label label = new Label(publicDisplayWidget.getShortDescription() + " ["
-				+ option.getReferenceCode() + "]");
-		flowPanel.add(label);
-		TextBox textBox = new TextBox();
-		flowPanel.add(textBox);
-		Button btn = new Button("Submit");
-		flowPanel.add(btn);
-		btn.addClickHandler(new EntryClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), textBox));
-		// }
-
-		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
-		return flowPanel;
+		return new EntryWidgetUi(this.uiType, publicDisplayWidget);
+//		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
+//
+//		FlowPanel flowPanel = new FlowPanel();
+//		// for ( WidgetOption wo : widgetOptions ) {
+//		Label label = new Label(publicDisplayWidget.getShortDescription() + " ["
+//				+ option.getReferenceCode() + "]");
+//		flowPanel.add(label);
+//		TextBox textBox = new TextBox();
+//		flowPanel.add(textBox);
+//		Button btn = new Button("Submit");
+//		flowPanel.add(btn);
+//		btn.addClickHandler(new EntryClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), textBox));
+//		// }
+//
+//		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
+//		return flowPanel;
 	}
 
 	Widget getImperativeWidget(
@@ -341,60 +383,62 @@ public class WidgetListUi extends Composite  {
 	
 	Widget getMultipleOptionImperativeWidget(
 			org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		
-		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
-		
-		VerticalPanel panel = new VerticalPanel();
-
-		panel.add(new Label(publicDisplayWidget.getShortDescription()));
-		
-		ListBox listbox = new ListBox();
-		//listbox.addStyleName(style.list());
-		listbox.setVisibleItemCount(Math.min(4, widgetOptions.size()));
-		for (WidgetOption wo : widgetOptions) {
-			listbox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
-		}
-		
-		
-		panel.add(listbox);
-		
-		Button button = new Button("Send");
-		button.addClickHandler(new MultipleOptionImperativeClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), listbox));
-		
-		panel.add(button);
-		
-		return panel;
+		return new ImperativeMultipleOptionWidgetUi(this.uiType, publicDisplayWidget);
+//		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
+//		
+//		VerticalPanel panel = new VerticalPanel();
+//
+//		panel.add(new Label(publicDisplayWidget.getShortDescription()));
+//		
+//		ListBox listbox = new ListBox();
+//		//listbox.addStyleName(style.list());
+//		listbox.setVisibleItemCount(Math.min(4, widgetOptions.size()));
+//		for (WidgetOption wo : widgetOptions) {
+//			listbox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
+//		}
+//		
+//		
+//		panel.add(listbox);
+//		
+//		Button button = new Button("Send");
+//		button.addClickHandler(new MultipleOptionImperativeClickHandler(publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions(), listbox));
+//		
+//		panel.add(button);
+//		
+//		return panel;
 	}
 
 	Widget getSingleOptionImperativeWidget(
 			org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
-		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
-
-		FlowPanel flowPanel = new FlowPanel();
-		Label label = new Label(publicDisplayWidget.getLongDescription());
-		flowPanel.add(label);
-
-		Button btn = new Button(publicDisplayWidget.getShortDescription() + " ["
-				+ option.getReferenceCode() + "]");
-		flowPanel.add(btn);
-		btn.addClickHandler(new ImperativeClickHandler( publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions()) );
-		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
-		return flowPanel;
+		return new ImperativeSingleOptionWidgetUi(this.uiType, publicDisplayWidget);
+//		ArrayList<WidgetOption> widgetOptions = publicDisplayWidget.getWidgetOptions();
+//		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
+//
+//		FlowPanel flowPanel = new FlowPanel();
+//		Label label = new Label(publicDisplayWidget.getLongDescription());
+//		flowPanel.add(label);
+//
+//		Button btn = new Button(publicDisplayWidget.getShortDescription() + " ["
+//				+ option.getReferenceCode() + "]");
+//		flowPanel.add(btn);
+//		btn.addClickHandler(new ImperativeClickHandler( publicDisplayWidget.getPlaceId(), publicDisplayWidget.getApplicationId(), publicDisplayWidget.getWidgetId(), publicDisplayWidget.getWidgetOptions()) );
+//		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
+//		return flowPanel;
 	}
 
 	Widget getDownloadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
-		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
-
-		FlowPanel flowPanel = new FlowPanel();
-		//flowPanel.add(new Label("Download: "));
-		Anchor a = new Anchor(publicDisplayWidget.getShortDescription() + " ["
-				+ option.getReferenceCode() + "]", publicDisplayWidget.getContentUrl());
-
-		flowPanel.add(a);
-
-		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
-		return flowPanel;
+		return new DownloadWidgetUi(this.uiType, publicDisplayWidget);
+//		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
+//
+//		FlowPanel flowPanel = new FlowPanel();
+//		//flowPanel.add(new Label("Download: "));
+//		Anchor a = new Anchor(publicDisplayWidget.getShortDescription() + " ["
+//				+ option.getReferenceCode() + "]", publicDisplayWidget.getContentUrl());
+//
+//		flowPanel.add(a);
+//
+//		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
+//		return flowPanel;
 	}
 
 	/**

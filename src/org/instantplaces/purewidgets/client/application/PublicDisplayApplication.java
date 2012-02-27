@@ -303,6 +303,7 @@ public class PublicDisplayApplication {
 			@Override
 			public void onFailure(Throwable exception) {
 				Log.debug(PublicDisplayApplication.class.getName(), "Could not get Application");
+				PublicDisplayApplication.application = new Application(placeName, applicationName);
 				listener.onApplicationLoaded();
 				
 			}
