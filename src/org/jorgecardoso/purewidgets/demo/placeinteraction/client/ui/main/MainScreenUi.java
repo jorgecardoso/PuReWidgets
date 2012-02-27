@@ -1,8 +1,7 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.main;
 
-import org.instantplaces.purewidgets.client.application.PublicDisplayApplicationLoadedListener;
 import org.instantplaces.purewidgets.shared.Log;
-import org.jorgecardoso.purewidgets.demo.placeinteraction.client.PlaceInteractionWebpage;
+import org.instantplaces.purewidgets.shared.widgets.Application;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.application.ApplicationListUi;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.login.LoginUi;
@@ -12,8 +11,6 @@ import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget.Widge
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -21,7 +18,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainScreenUi extends Composite    {
@@ -105,9 +101,9 @@ public class MainScreenUi extends Composite    {
 		
 		if ( null == this.applicationListUi || !this.applicationListUi.getPlaceId().equals(placeId) ) {
 			this.applicationListUi = new ApplicationListUi(this.uiType, placeId); 
-			this.applicationListUi.addSelectionHandler(new SelectionHandler<String>() {
+			this.applicationListUi.addSelectionHandler(new SelectionHandler<Application>() {
 				@Override
-				public void onSelection(SelectionEvent<String> event) {
+				public void onSelection(SelectionEvent<Application> event) {
 					MainScreenUi.this.onApplicationSelected(placeId, event.getSelectedItem());
 				}
 			});
@@ -148,9 +144,9 @@ public class MainScreenUi extends Composite    {
 		History.newItem(placeId);
 	}
 	
-	public void onApplicationSelected(String placeName, String applicationName) {
-		Log.debug(this, "User selected application" + applicationName);
-		History.newItem(placeName+"-"+applicationName);
+	public void onApplicationSelected(String placeName, Application application) {
+		Log.debug(this, "User selected application" + application.getApplicationId());
+		History.newItem(placeName+"-"+application.getApplicationId());
 	}
 
 	

@@ -10,7 +10,7 @@
 	<g:HTMLPanel>
 		Your identity is <g:InlineLabel ui:field="identityName"/>. 
 		
-		<g:HTML styleName="{style.janrainWrapper}" ui:field="signInLinkWrapper">  <a class="janrainEngage" href="#">Sign-In</a> </g:HTML>
+		<g:HTML styleName="{style.janrainWrapper}" ui:field="signInLinkWrapper">  <a class="janrainEngage" href="#">Sign-In to change your identity</a> </g:HTML>
 		 <g:Anchor ui:field="signOutLink" href="#">Sign out</g:Anchor>
 	</g:HTMLPanel>
 </ui:UiBinder> 

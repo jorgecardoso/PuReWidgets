@@ -5,15 +5,24 @@
 	<ui:style>
 
 	.content {
-		width: 70%;
+		width: 100%;
 		margin-left:auto;
 		margin-right:auto;
-		border:1px solid black;
+		/*border:1px solid black;*/
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+	}
+	
+	.loginBar {
+		text-align:right;
+		padding: 5px 10px 5px 0px;
+		background-color: #C0C0C0;
+		color: white;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="{style.content}" ui:field="mainContent">
+		<p:LoginUi styleName="{style.loginBar}" ui:field="loginUi"> </p:LoginUi>
 		<g:HTMLPanel ui:field="features"> </g:HTMLPanel>
-		<p:LoginUi ui:field="loginUi"> </p:LoginUi>
+		
 		
 	</g:HTMLPanel>
 </ui:UiBinder> 

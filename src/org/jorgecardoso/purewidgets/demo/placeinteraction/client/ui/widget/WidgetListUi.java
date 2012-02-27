@@ -1,21 +1,19 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.instantplaces.purewidgets.client.application.PublicDisplayApplication;
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
-import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.instantplaces.purewidgets.shared.widgets.Application;
-import org.instantplaces.purewidgets.shared.widgets.Place;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.EntryClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
@@ -24,8 +22,12 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +46,14 @@ public class WidgetListUi extends Composite  {
 	 */
 	private UiType uiType;
 	
-	@UiField VerticalPanel panel;
-	@UiField Label panelApplicationName;
+	/** 
+	 * The tabpanel that holds one tab for each different widget short description
+	 */
+	@UiField HTMLPanel mainPanel;
+	@UiField SpanElement spanApplicationName;
+	@UiField Image applicationIcon;
+	@UiField TabPanel tabPanel;
+	@UiField Label labelNoWidgetFound;
 	
 	/*
 	 * The timer to trigger requests to get the list of widgets of the application.
@@ -55,13 +63,37 @@ public class WidgetListUi extends Composite  {
 	private String placeName;
 	private String applicationName;
 	
+	
+	
+	private HashMap<String, FlowPanel> panelsMap;
+	
 	public WidgetListUi( UiType uiType, String placeName, String applicationName ) {
 		this.uiType = uiType;
 		initWidget(this.getUiBinder(uiType).createAndBindUi(this));
 		
 		this.placeName = placeName;
 		this.applicationName = applicationName;
-		this.panelApplicationName.setText(this.applicationName);
+		this.spanApplicationName.setInnerText(this.applicationName);
+		
+		panelsMap = new HashMap<String, FlowPanel>();
+		
+		PublicDisplayApplication.getServerCommunicator().getApplication(placeName, applicationName, new Callback<Application>(){
+
+			@Override
+			public void onSuccess(Application application) {
+				if ( null != application ) {
+					WidgetListUi.this.applicationIcon.setUrl(application.getIconBaseUrl());
+				}
+				
+			}
+
+			@Override
+			public void onFailure(Throwable exception) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}); 
 	}
 	
 	private UiBinder<Widget, WidgetListUi> getUiBinder(UiType uiType) {
@@ -132,13 +164,16 @@ public class WidgetListUi extends Composite  {
 		//Collections.sort(widgetList);
 		
 		if ( null == widgetList || widgetList.size() == 0 ) {
-			if ( null != panel ) {
-				panel.clear();
-				Label l = new Label("No widgets found!");
-				l.setStyleName("nowidgets");
-				panel.add(l);
-				return;
-			}
+			
+			//this.mainPanel.clear();
+			this.labelNoWidgetFound.setVisible(true);
+			this.tabPanel.setVisible(false);
+			return;
+			
+		} else {
+			this.tabPanel.setVisible(true);
+			this.labelNoWidgetFound.setVisible(false);
+			//this.mainPanel.add(this.tabPanel);
 		}
 			
 		if (null != widgetList) {
@@ -151,79 +186,97 @@ public class WidgetListUi extends Composite  {
 			// //widgetList.get(0).getApplicationId();
 			Log.debug(this, "Received widgets for application: " + applicationId);
 
-		
 
-			if (null != panel) {
-				Log.debug(this, panel.toString());
 
-				/*
-				 * Delete widgets that no longer exist
-				 */
+			/*
+			 * Delete widgets that no longer exist
+			 */
+			for ( IndexedPanel p : panelsMap.values() ) {
 				int i = 0;
-				while (i < panel.getWidgetCount()) {
-					String widgetName = panel.getWidget(i).getElement().getPropertyString("id");
-
+				while (i < p.getWidgetCount()) {
+					String widgetName = p.getWidget(i).getElement().getPropertyString("id");
+	
 					if (!widgetIds.contains(widgetName)) {
-						panel.remove(i);
-						// currentWidgets.remove(i);
+						p.remove(i);
 					} else {
 						// only increment if we haven't deleted anything because
-						// if we did, indexed may have changed
+						// if we did, indexes may have changed
 						i++;
 					}
 				}
+			}
 
+			/*
+			 * Add the new widgets. Widgets are inserted in alphabetical order
+			 */
+			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
+				
 				/*
-				 * Add the new widgets. Widgets are inserted in alphabetical order
+				 * Create the tab panel if it does not exist
 				 */
-				for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
-					boolean exists = false;
+				String tabName;
+				if ( null == widget.getShortDescription() || widget.getShortDescription().trim().length() == 0 ) {
+					tabName = "Other";
+				} else {
+					tabName = widget.getShortDescription();
+				}
+				FlowPanel panel = this.panelsMap.get(tabName) ;
+				
+				if ( null == panel ) {
+					FlowPanel flowPanel = new FlowPanel();
+					this.panelsMap.put(tabName, flowPanel);
+					this.tabPanel.add(flowPanel, tabName);
+					panel = flowPanel;
+				} 
+				
+				
+				/*
+				 * Check if the widget is already on that panel and insert it if not
+				 */
+				boolean exists = false;
+				
+				/*
+				 * The new widget will be inserted before this index (the index of the first existing widget 
+				 * with name greater than the widget to be inserted)
+				 */
+				int indexInPanel = 0; 
+				/*
+				 * If we found the place for the widget to be inserted (tentatively, because the widget may 
+				 * already exist)
+				 */
+				boolean foundPlace = false;
+				
+				for (int i = 0; i < panel.getWidgetCount(); i++) {
+					String existingWidgetName = panel.getWidget(i).getElement().getPropertyString("id");
 					
 					/*
-					 * The new widget will be inserted before this index (the index of the first existing widget 
-					 * with name greater than the widget to be inserted)
+					 * If the widget already exists in the panel, skip it
 					 */
-					int indexInPanel = 0; 
-					/*
-					 * If we found the place for the widget to be inserted (tentatively, because the widget may 
-					 * already exist)
-					 */
-					boolean foundPlace = false;
-					
-					for (i = 0; i < panel.getWidgetCount(); i++) {
-						String existingWidgetName = panel.getWidget(i).getElement().getPropertyString("id");
-						
-						/*
-						 * If the widget already exists in the panel, skip it
-						 */
-						if ( existingWidgetName.equals(widget.getWidgetId()) ) {
-							exists = true;
-							break;
-						}
-						
-						/*
-						 * If we found a widget with a name greater than the widget to be inserted mark its index
-						 */
-						if ( !foundPlace && existingWidgetName.compareTo(widget.getWidgetId()) > 0 ) {
-							indexInPanel = i;
-							foundPlace = true;
-						}
+					if ( existingWidgetName.equals(widget.getWidgetId()) ) {
+						exists = true;
+						break;
 					}
+					
+					/*
+					 * If we found a widget with a name greater than the widget to be inserted mark its index
+					 */
+					if ( !foundPlace && existingWidgetName.compareTo(widget.getWidgetId()) > 0 ) {
+						indexInPanel = i;
+						foundPlace = true;
+					}
+				}
 
-					if (!exists) {
-						Log.debug(this, "Adding " + widget.getWidgetId() + " to panel");
-						if ( foundPlace ) {
-							panel.insert(this.getHtmlWidget(widget), indexInPanel);
-						} else {
-							panel.add(this.getHtmlWidget(widget) );
-						}
+				if (!exists) {
+					Log.debug(this, "Adding " + widget.getWidgetId() + " to panel");
+					
+					if ( foundPlace ) {
+						panel.insert(this.getHtmlWidget(widget), indexInPanel);
+					} else {
+						panel.add(this.getHtmlWidget(widget));
 					}
 				}
 			}
-			// this.currentWidgetsMap.put(applicationId, widgetList);
 		}
-
-		// tabPanelApplications.getWidget(index)
 
 	}
 	

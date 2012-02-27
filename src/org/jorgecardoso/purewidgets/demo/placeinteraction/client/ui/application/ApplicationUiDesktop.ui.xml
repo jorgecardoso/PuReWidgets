@@ -3,22 +3,32 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 	.main {
-		border: 1px solid red;
-		margin: 5px;
+		font-family:inherit;
+		font-size:inherit;
+		border: 2px solid black;
+		border-radius: 15px;
+		margin: 10px;
+		padding: 5px 5px 10px 5px;
 		display: inline-table;
+		width: 150px;
+		height: 150px;
+	}
+	.main td {
+		font-family:inherit;
+		font-size:inherit;
+		text-align:center;	
 	}
 	
 	.image {
-	width:128px;
-	height:128px;
-
+		width:128px;
+		height:128px;
 	}
 		
 	.name {
 	}
 	</ui:style>
 	<g:VerticalPanel styleName="{style.main}">
-		<g:Image styleName="{style.image}" ui:field="icon" />
-		<g:InlineLabel styleName="{style.name}" ui:field="name"/>
+		<g:cell> <g:Image styleName="{style.image}" ui:field="icon" /></g:cell>
+		<g:cell> <g:InlineLabel styleName="{style.name}" ui:field="name"/></g:cell>
 	</g:VerticalPanel>
 </ui:UiBinder> 

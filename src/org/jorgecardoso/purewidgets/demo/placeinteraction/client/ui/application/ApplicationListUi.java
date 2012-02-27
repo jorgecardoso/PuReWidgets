@@ -12,6 +12,7 @@ import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.place.PlaceUi;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
@@ -31,24 +32,25 @@ import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ApplicationListUi extends Composite implements ClickHandler, HasSelectionHandlers<String>  {
+public class ApplicationListUi extends Composite implements ClickHandler, HasSelectionHandlers<Application>  {
 	/**
 	 * The period for updating the list of applications from the server
 	 */
 	private static final int PERIOD_MILLIS = 2 * 60 * 1000; // every 2 minutes
 
-	interface Style extends CssResource {
+	/*interface Style extends CssResource {
 	    String list();
 	    //String disabled();
 	  }
-	
+
+	 */
 	@UiTemplate("ApplicationListDesktop.ui.xml")
 	interface ApplicationListDesktopUiBinder extends UiBinder<Widget, ApplicationListUi> {	}
 	private static ApplicationListDesktopUiBinder desktopUiBinder = GWT.create(ApplicationListDesktopUiBinder.class);
 
 	private UiType uiType;
 
-	@UiField Style style;
+	//@UiField Style style;
 	
 	private String placeId;
 	
@@ -59,13 +61,13 @@ public class ApplicationListUi extends Composite implements ClickHandler, HasSel
 	HTMLPanel panel;
 	
 	@UiField 
-	Label placeName;
+	SpanElement placeName;
 
 	public ApplicationListUi( UiType uiType, String placeId ) {
 		this.uiType = uiType;
 		initWidget(this.getUiBinder(uiType).createAndBindUi(this));
 		this.placeId = placeId;
-		this.placeName.setText(placeId);
+		this.placeName.setInnerText(placeId);
 	}
 	
 	private UiBinder<Widget, ApplicationListUi> getUiBinder(UiType uiType) {
@@ -212,7 +214,7 @@ public class ApplicationListUi extends Composite implements ClickHandler, HasSel
 	}
 	
 	@Override
-	public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
+	public HandlerRegistration addSelectionHandler(SelectionHandler<Application> handler) {
 		return this.addHandler(handler, SelectionEvent.getType());
 	}
 
@@ -220,7 +222,7 @@ public class ApplicationListUi extends Composite implements ClickHandler, HasSel
 	public void onClick(ClickEvent event) {
 		ApplicationUi p = (ApplicationUi) event.getSource();
 		Log.debug("ApplicationUi clicked:" + p.getApplication().getApplicationId());	
-		SelectionEvent.fire(this, p.getElement().getPropertyString("id"));
+		SelectionEvent.fire(this, p.getApplication());//p.getElement().getPropertyString("id"));
 	}
 
 	/**
