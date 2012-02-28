@@ -30,8 +30,7 @@
 	}
 	
 	.icon  {
-		width: 64px;
-		height: 64px;
+		display:none;
 	}
 	
 	.title {
@@ -56,29 +55,24 @@
 	}
 	
 	</ui:style>
-	<g:HorizontalPanel height="100%" width="100%"> 
-		<g:cell width="100px" height="100%">
+	<g:VerticalPanel height="100%" width="100%"> 
+		<g:cell height="64px">
 			<g:HTML styleName="{style.back}" ui:field="goBackPanel">  </g:HTML>
 		</g:cell>
+		
+		<g:cell>	
+		    <g:HTML styleName="{style.title}"><b><span  ui:field="spanApplicationName"/></b> Application</g:HTML>
+		</g:cell>
 		<g:cell>
-			<g:HTMLPanel styleName="{style.main}">
-				<g:HorizontalPanel styleName="{style.titleBar}">
-					<g:cell width="64px">
-		        		<g:Image styleName="{style.icon}" ui:field="applicationIcon"/> 
-		    		</g:cell>
-		    		<g:cell>
-		       			<g:HTML styleName="{style.title}"><b><span  ui:field="spanApplicationName"/></b> Application</g:HTML> 
-		    		</g:cell>
-			 	</g:HorizontalPanel>
-				<g:HTMLPanel ui:field="mainPanel"> 
-					<g:TabPanel styleName="{style.widgetsPanel}" ui:field="tabPanel"> </g:TabPanel>
-					
-					<g:Label ui:field="labelNoWidgetFound"> No widgets found!</g:Label>
-				</g:HTMLPanel>
+			<g:HTMLPanel ui:field="mainPanel"> 
+				<g:StackPanel styleName="{style.widgetsPanel}" ui:field="stackPanel"> </g:StackPanel> 
+				<g:Label ui:field="labelNoWidgetFound"> No widgets found!</g:Label>
 			</g:HTMLPanel>
 		</g:cell>
 		
-		<!--  Not used in this template (removed by code)-->
-		<g:StackPanel styleName="{style.widgetsPanel}" ui:field="stackPanel"> </g:StackPanel> 
-	</g:HorizontalPanel>
+		<!-- not used in this template -->
+		<g:TabPanel styleName="{style.widgetsPanel}" ui:field="tabPanel"> </g:TabPanel>
+		<g:Image styleName="{style.icon}" ui:field="applicationIcon"/> 
+		
+	</g:VerticalPanel>
 </ui:UiBinder> 

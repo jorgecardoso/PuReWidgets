@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -45,26 +46,33 @@ public class WidgetListUi extends Composite  {
 	interface Style extends CssResource {
 	    String center();
 	    String over();
+	    String widgetsPanel();
 	  }
 	
 	@UiTemplate("WidgetListDesktop.ui.xml")
-	interface WidgetListUiBinder extends UiBinder<Widget, WidgetListUi> {
-	}
-	private static WidgetListUiBinder desktopUiBinder = GWT.create(WidgetListUiBinder.class);
+	interface WidgetListDesktopUiBinder extends UiBinder<Widget, WidgetListUi> {}
+	private static WidgetListDesktopUiBinder desktopUiBinder = GWT.create(WidgetListDesktopUiBinder.class);
 	
+	@UiTemplate("WidgetListSmartphone.ui.xml")
+	interface WidgetListSmartphoneUiBinder extends UiBinder<Widget, WidgetListUi> {}
+	private static WidgetListSmartphoneUiBinder smartphoneUiBinder = GWT.create(WidgetListSmartphoneUiBinder.class);
+		
 	
 	/*
 	 * The ui type we will generate
 	 */
 	private UiType uiType;
 	
-	/** 
-	 * The tabpanel that holds one tab for each different widget short description
-	 */
+	
 	@UiField HTMLPanel mainPanel;
 	@UiField SpanElement spanApplicationName;
 	@UiField Image applicationIcon;
+	
+	/** 
+	 * The tabpanel that holds one tab for each different widget short description
+	 */
 	@UiField TabPanel tabPanel;
+	@UiField StackPanel stackPanel;
 	@UiField Label labelNoWidgetFound;
 	@UiField HTML goBackPanel;
 	@UiField Style style;
@@ -77,7 +85,12 @@ public class WidgetListUi extends Composite  {
 	private String placeName;
 	private String applicationName;
 	
-	
+
+	/*
+	 * Indicates whether we should load the application icon. This is determined according to the
+	 * template being used.
+	 */
+	private boolean loadApplicationIcon;
 	
 	private HashMap<String, FlowPanel> panelsMap;
 	
@@ -114,31 +127,53 @@ public class WidgetListUi extends Composite  {
 			
 		});
 		
-		PublicDisplayApplication.getServerCommunicator().getApplication(placeName, applicationName, new Callback<Application>(){
-
-			@Override
-			public void onSuccess(Application application) {
-				if ( null != application ) {
-					WidgetListUi.this.applicationIcon.setUrl(application.getIconBaseUrl());
+		if ( this.loadApplicationIcon ) {
+			
+			PublicDisplayApplication.getServerCommunicator().getApplication(placeName, applicationName, new Callback<Application>(){
+	
+				@Override
+				public void onSuccess(Application application) {
+					if ( null != application ) {
+						WidgetListUi.this.applicationIcon.setUrl(application.getIconBaseUrl());
+					}
+				}
+	
+				@Override
+				public void onFailure(Throwable exception) {
 				}
 				
-			}
-
-			@Override
-			public void onFailure(Throwable exception) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		}); 
+			}); 
+		} else {
+			/*
+			 * If we don't show the icon, then remove the element from the dom
+			 */
+			this.applicationIcon.removeFromParent();
+		}
+		
+		/*
+		 * Remove the panel that is not used by this template
+		 */
+		switch (this.uiType) {
+		case Desktop:
+			this.stackPanel.removeFromParent();
+			this.stackPanel = null;
+			break;
+		case Smartphone:
+			this.tabPanel.removeFromParent();
+			this.tabPanel = null;
+			break;
+		}
 	}
 	
 	private UiBinder<Widget, WidgetListUi> getUiBinder(UiType uiType) {
-		switch ( uiType ) {
+		this.loadApplicationIcon = true;
 		
+		switch ( uiType ) {
 		case Desktop:
 			return desktopUiBinder;
-
+		case Smartphone:
+			this.loadApplicationIcon = false;
+			return smartphoneUiBinder;
 		default:
 			return desktopUiBinder;
 		}
@@ -186,6 +221,42 @@ public class WidgetListUi extends Composite  {
 		});
 	}
 	
+	private void setPanelVisible(boolean visible) {
+		if ( null != this.tabPanel ) {
+			this.tabPanel.setVisible(visible);
+		}
+		if ( null != this.stackPanel ) {
+			this.stackPanel.setVisible(visible);
+		}
+	}
+	
+	private void addTab(Widget w, String tabName) {
+		if ( null != this.tabPanel ) {
+			this.tabPanel.add(w, tabName);
+		}
+		if ( null != this.stackPanel ) {
+			this.stackPanel.add(w, tabName);
+		}
+	}
+	
+	private int getSelectedTab() {
+		if ( null != this.tabPanel ) {
+			return this.tabPanel.getTabBar().getSelectedTab();
+		}
+		if ( null != this.stackPanel ) {
+			return this.stackPanel.getSelectedIndex();
+		}
+		return -1;
+	}
+	
+	private void selectTab(int index) {
+		if ( null != this.tabPanel ) {
+			this.tabPanel.selectTab(index);
+		}
+		if ( null != this.stackPanel ) {
+			this.stackPanel.showStack(index);
+		}
+	}
 
 	
 	private void onWidgetsList(String placeId, String applicationId,
@@ -201,17 +272,16 @@ public class WidgetListUi extends Composite  {
 			
 			//this.mainPanel.clear();
 			this.labelNoWidgetFound.setVisible(true);
-			this.tabPanel.setVisible(false);
+			this.setPanelVisible(false);
 			return;
 			
 		} else {
-			this.tabPanel.setVisible(true);
+			this.setPanelVisible(true);
 			this.labelNoWidgetFound.setVisible(false);
 			//this.mainPanel.add(this.tabPanel);
 		}
 			
-		if (null != widgetList) {
-					
+		if (null != widgetList) {	
 			ArrayList<String> widgetIds = new ArrayList<String>();
 			for (org.instantplaces.purewidgets.shared.widgets.Widget widget : widgetList) {
 				widgetIds.add(widget.getWidgetId());
@@ -225,7 +295,7 @@ public class WidgetListUi extends Composite  {
 			/*
 			 * Delete widgets that no longer exist
 			 */
-			for ( IndexedPanel p : panelsMap.values() ) {
+			for ( FlowPanel p : panelsMap.values() ) {
 				int i = 0;
 				while (i < p.getWidgetCount()) {
 					String widgetName = p.getWidget(i).getElement().getPropertyString("id");
@@ -261,7 +331,9 @@ public class WidgetListUi extends Composite  {
 					FlowPanel flowPanel = new FlowPanel();
 					flowPanel.setStyleName(style.center());
 					this.panelsMap.put(tabName, flowPanel);
-					this.tabPanel.add(flowPanel, tabName);
+					
+					this.addTab(flowPanel, tabName);
+					
 					panel = flowPanel;
 				} 
 				
@@ -312,8 +384,9 @@ public class WidgetListUi extends Composite  {
 					}
 				}
 			}
-			if ( this.tabPanel.getTabBar().getSelectedTab() < 0 ) {
-				this.tabPanel.selectTab(0);
+			
+			if ( this.getSelectedTab() < 0 ) {
+				this.selectTab(0);
 			}
 		}
 
