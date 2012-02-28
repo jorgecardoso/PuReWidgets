@@ -47,7 +47,11 @@ public class ApplicationListUi extends Composite implements ClickHandler, HasSel
 	@UiTemplate("ApplicationListDesktop.ui.xml")
 	interface ApplicationListDesktopUiBinder extends UiBinder<Widget, ApplicationListUi> {	}
 	private static ApplicationListDesktopUiBinder desktopUiBinder = GWT.create(ApplicationListDesktopUiBinder.class);
+	@UiTemplate("ApplicationListSmartphone.ui.xml")
+	interface ApplicationListSmartphoneUiBinder extends UiBinder<Widget, ApplicationListUi> {	}
+	private static ApplicationListSmartphoneUiBinder smartphoneUiBinder = GWT.create(ApplicationListSmartphoneUiBinder.class);
 
+	
 	private UiType uiType;
 
 	//@UiField Style style;
@@ -75,12 +79,10 @@ public class ApplicationListUi extends Composite implements ClickHandler, HasSel
 		
 		case Desktop:
 			return desktopUiBinder;
-			
-		case Mobile:
-			return null;
-			
+		case Smartphone:
+			return smartphoneUiBinder;
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 	

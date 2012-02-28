@@ -8,10 +8,13 @@ import org.instantplaces.purewidgets.client.application.PublicDisplayApplication
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.main.MainScreenUi;
+import org.jorgecardoso.purewidgets.demo.test.client.Admin;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -28,7 +31,14 @@ public class PlaceInteractionWebpage implements EntryPoint, PublicDisplayApplica
 		PublicDisplayApplication.load(this, "PlaceInteractionWebpage", false);
 		
 		WidgetManager.get().setAutomaticInputRequests(false);
-		this.uiType = UiType.Desktop;
+		
+		if ( Window.Location.getPath().contains("mobile.html") ) {
+			this.uiType = UiType.Smartphone;
+		} else {
+			this.uiType = UiType.Desktop;
+		}
+		
+		
 		
 		this.mainScreen = new MainScreenUi(this.uiType);
 		RootPanel.get().add(this.mainScreen);

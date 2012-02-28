@@ -37,12 +37,9 @@ public class PopupUi extends PopupPanel implements HasText {
 		
 		case Desktop:
 			return desktopUiBinder;
-			
-		case Mobile:
-			return null;
-			
+
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 

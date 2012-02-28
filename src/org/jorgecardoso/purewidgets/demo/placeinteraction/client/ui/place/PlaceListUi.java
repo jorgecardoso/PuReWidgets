@@ -65,11 +65,8 @@ public class PlaceListUi extends Composite  implements ClickHandler, HasSelectio
 		case Desktop:
 			return desktopUiBinder;
 			
-		case Mobile:
-			return null;
-			
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 	

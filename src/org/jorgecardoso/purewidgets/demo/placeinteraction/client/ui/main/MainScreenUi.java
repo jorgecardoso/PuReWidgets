@@ -52,11 +52,8 @@ public class MainScreenUi extends Composite    {
 		case Desktop:
 			return desktopUiBinder;
 			
-		case Mobile:
-			return null;
-			
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 

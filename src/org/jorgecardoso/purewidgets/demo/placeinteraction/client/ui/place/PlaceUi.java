@@ -47,11 +47,8 @@ public class PlaceUi extends Composite implements HasText, HasClickHandlers {
 		case Desktop:
 			return desktopUiBinder;
 			
-		case Mobile:
-			return null;
-			
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 	

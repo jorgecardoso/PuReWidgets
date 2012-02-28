@@ -8,5 +8,5 @@ package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui;
  *
  */
 public enum UiType {
-	Desktop, Mobile
+	Desktop, Mobile, Smartphone
 }

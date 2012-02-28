@@ -26,6 +26,11 @@ public class ApplicationUi extends Composite implements HasClickHandlers {
 	interface ApplicationUiDesktopUiBinder extends UiBinder<Widget, ApplicationUi> {	}
 	private static ApplicationUiDesktopUiBinder desktopUiBinder = GWT.create(ApplicationUiDesktopUiBinder.class);
 	
+	@UiTemplate("ApplicationUiSmartphone.ui.xml")
+	interface ApplicationUiSmartphoneUiBinder extends UiBinder<Widget, ApplicationUi> {	}
+	private static ApplicationUiSmartphoneUiBinder smartphoneUiBinder = GWT.create(ApplicationUiSmartphoneUiBinder.class);
+	
+	
 	@UiField Image icon;
 	@UiField Label name;
 	
@@ -50,11 +55,11 @@ public class ApplicationUi extends Composite implements HasClickHandlers {
 		case Desktop:
 			return desktopUiBinder;
 			
-		case Mobile:
-			return null;
+		case Smartphone:
+			return smartphoneUiBinder;
 			
 		default:
-			return null;
+			return desktopUiBinder;
 		}
 	}
 
