@@ -3,6 +3,7 @@ package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.place.PlaceListUi;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget.WidgetListUi.WidgetListUiBinder;
 
 import com.google.gwt.core.client.GWT;
@@ -62,7 +63,7 @@ public class ImperativeSingleOptionWidgetUi extends Composite {
 		}
 		
 		this.actionButton.addClickHandler(new ImperativeClickHandler( this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
-				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions()) );
+				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions(), new PopupUi(this.uiType)) );
 		
 //		//flowPanel.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
 	}

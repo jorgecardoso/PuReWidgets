@@ -4,6 +4,7 @@ import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.place.PlaceListUi;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget.WidgetListUi.WidgetListUiBinder;
 
 import com.google.gwt.core.client.GWT;
@@ -70,7 +71,7 @@ public class ImperativeMultipleOptionWidgetUi extends Composite {
 		}
 		
 		this.actionButton.addClickHandler(new MultipleOptionImperativeClickHandler(this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
-				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions(), this.optionsListBox));
+				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions(), this.optionsListBox, new PopupUi(this.uiType)));
 //		
 	}
 

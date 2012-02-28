@@ -1,6 +1,9 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.EntryClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -53,6 +56,9 @@ public class EntryWidgetUi extends Composite {
 		if ( true ) { /* check icon */
 			this.mainHorizontalPanel.remove(0); // remove icon
 		}
+		
+		this.actionButton.addClickHandler(new EntryClickHandler(this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
+				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions(), this.entryTextBox, new PopupUi(this.uiType) ));	
 	}
 
 	private UiBinder<Widget, EntryWidgetUi> getUiBinder(UiType uiType) {

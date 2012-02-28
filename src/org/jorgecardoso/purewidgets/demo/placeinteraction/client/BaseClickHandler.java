@@ -11,6 +11,7 @@ import org.instantplaces.purewidgets.shared.widgetmanager.Callback;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetInput;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -26,27 +27,24 @@ import com.google.gwt.user.client.ui.PopupPanel;
  */
 public abstract class BaseClickHandler implements ClickHandler {
 
-	
-	private Label message;
 	private Timer timer;
-	private PopupPanel popup;
+	private PopupUi popup;
 
 	protected String placeName;
 	protected String applicationName;
 	protected String widgetId;
 	protected ArrayList<WidgetOption> widgetOptions;
 	
-	public BaseClickHandler(String placeName, String applicationName, String widgetId, ArrayList<WidgetOption> widgetOptions) {
+	public BaseClickHandler(String placeName, String applicationName, String widgetId, ArrayList<WidgetOption> widgetOptions,
+			PopupUi popup) {
 		this.placeName = placeName;
 		this.applicationName = applicationName;
 		this.widgetId = widgetId;
 		this.widgetOptions = widgetOptions;
 		
-		message = new Label();
-		popup = new PopupPanel(true, true);
-		popup.add(message);
-		popup.setSize("200px", "100px");
-
+		
+		this.popup = popup;
+		
 		timer = new Timer() {
 			@Override
 			public void run() {
@@ -64,13 +62,13 @@ public abstract class BaseClickHandler implements ClickHandler {
 		String user = UserInfo.getUserIdentity();
 
 		Log.debug(this, "Sending input: " + input);
-		message.setText("Sending input from user " + user);
+		popup.setText("Sending input from user " + user);
 
 		popup.center();
 		popup.show();
 
-		DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'hh:mm:ss");
-		Date d = new Date();
+//		DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'hh:mm:ss");
+//		Date d = new Date();
 		
 		ArrayList<String>parameters = new ArrayList<String>();
 		parameters.add(input);
@@ -87,7 +85,7 @@ public abstract class BaseClickHandler implements ClickHandler {
 					@Override
 					public void onSuccess(WidgetInput returnValue) {
 						Log.debug(this, "Sent.");
-						message.setText(message.getText() + "\n Sent!");
+						popup.setText(popup.getText() + "\n Sent!");
 						timer.schedule(5000);
 						
 					}
@@ -95,7 +93,7 @@ public abstract class BaseClickHandler implements ClickHandler {
 					@Override
 					public void onFailure(Throwable exception) {
 						Log.debug(this, "An error ocurred.");
-						message.setText(message.getText() + "\n Oops, an error ocurred!");
+						popup.setText(popup.getText() + "\n Oops, an error ocurred!");
 						timer.schedule(5000);
 						
 					}
