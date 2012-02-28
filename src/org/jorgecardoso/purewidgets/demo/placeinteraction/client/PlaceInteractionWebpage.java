@@ -32,10 +32,10 @@ public class PlaceInteractionWebpage implements EntryPoint, PublicDisplayApplica
 		
 		WidgetManager.get().setAutomaticInputRequests(false);
 		
-		if ( Window.Location.getPath().contains("mobile.html") ) {
-			this.uiType = UiType.Smartphone;
-		} else {
+		if ( Window.Location.getPath().contains("index.html") ) {
 			this.uiType = UiType.Desktop;
+		} else {
+			this.uiType = UiType.Smartphone;
 		}
 		
 		

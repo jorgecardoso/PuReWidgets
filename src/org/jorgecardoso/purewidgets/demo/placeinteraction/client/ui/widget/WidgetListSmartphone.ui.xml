@@ -34,7 +34,7 @@
 	}
 	
 	.title {
-		font-size: 2em;
+		font-size: 1.5em;
 		margin-bottom:25px;
 		margin-top:15px;
 		text-align: center;
@@ -46,6 +46,7 @@
 	}
 	
 	.back {
+		margin-top: 3em;
 		width: 100%;
 		height: 100%;
 		/*background-color: #f4f4f4;*/
@@ -56,10 +57,7 @@
 	
 	</ui:style>
 	<g:VerticalPanel height="100%" width="100%"> 
-		<g:cell height="64px">
-			<g:HTML styleName="{style.back}" ui:field="goBackPanel">  </g:HTML>
-		</g:cell>
-		
+
 		<g:cell>	
 		    <g:HTML styleName="{style.title}"><b><span  ui:field="spanApplicationName"/></b> Application</g:HTML>
 		</g:cell>
@@ -68,6 +66,10 @@
 				<g:StackPanel styleName="{style.widgetsPanel}" ui:field="stackPanel"> </g:StackPanel> 
 				<g:Label ui:field="labelNoWidgetFound"> No widgets found!</g:Label>
 			</g:HTMLPanel>
+		</g:cell>
+		
+		<g:cell height="64px">
+			<g:HTML styleName="{style.back}" ui:field="goBackPanel">  </g:HTML>
 		</g:cell>
 		
 		<!-- not used in this template -->

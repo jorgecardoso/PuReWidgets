@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ImperativeMultipleOptionWidgetUi extends Composite {
@@ -24,18 +25,27 @@ public class ImperativeMultipleOptionWidgetUi extends Composite {
 	interface ImperativeMultipleOptionUiDesktopUiBinder extends UiBinder<Widget, ImperativeMultipleOptionWidgetUi> {	}
 	private static ImperativeMultipleOptionUiDesktopUiBinder desktopUiBinder = GWT.create(ImperativeMultipleOptionUiDesktopUiBinder.class);
 	
+	@UiTemplate("ImperativeMultipleOptionWidgetSmartphone.ui.xml")
+	interface ImperativeMultipleOptionUiSmartphoneUiBinder extends UiBinder<Widget, ImperativeMultipleOptionWidgetUi> {	}
+	private static ImperativeMultipleOptionUiSmartphoneUiBinder smartphoneUiBinder = GWT.create(ImperativeMultipleOptionUiSmartphoneUiBinder.class);
+	
 	
 	/*
 	 * The ui type we will generate
 	 */
 	private UiType uiType;
 	
-	@UiField HorizontalPanel mainHorizontalPanel;
+	@UiField Panel mainHorizontalPanel;
 	@UiField Image iconImage;
 	@UiField Label descriptionLabel;
 	@UiField Button actionButton;
 	@UiField ListBox optionsListBox;
 	
+	/*
+	 * Indicates whether we should load the widget icon. This is determined according to the
+	 * template being used.
+	 */
+	private boolean loadWidgetIcon;
 	
 	private org.instantplaces.purewidgets.shared.widgets.Widget pureWidget;
 
@@ -55,8 +65,12 @@ public class ImperativeMultipleOptionWidgetUi extends Composite {
 		this.descriptionLabel.setText(description);
 		this.actionButton.setText(this.pureWidget.getShortDescription());
 		
-		if ( true ) { /* TODO: check icon */
-			this.iconImage.removeFromParent(); // remove icon
+		if ( this.loadWidgetIcon ) {
+			if ( true ) { /* TODO: check icon */
+				this.iconImage.removeFromParent(); // remove icon
+			}
+		} else {
+			this.iconImage.removeFromParent();
 		}
 		
 		this.optionsListBox.setVisibleItemCount(Math.min(4, this.pureWidget.getWidgetOptions().size()));
@@ -73,8 +87,11 @@ public class ImperativeMultipleOptionWidgetUi extends Composite {
 		switch ( uiType ) {
 		
 		case Desktop:
+			this.loadWidgetIcon = true;
 			return desktopUiBinder;
-
+		case Smartphone:
+			this.loadWidgetIcon = false;
+			return smartphoneUiBinder;
 		default:
 			return desktopUiBinder;
 		}

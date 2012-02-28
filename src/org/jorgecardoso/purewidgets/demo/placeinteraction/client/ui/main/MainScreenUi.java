@@ -26,6 +26,11 @@ public class MainScreenUi extends Composite    {
 	interface MainScreenUiDesktopUiBinder extends UiBinder<Widget, MainScreenUi> {	}
 	private static MainScreenUiDesktopUiBinder desktopUiBinder = GWT.create(MainScreenUiDesktopUiBinder.class);
 	
+	@UiTemplate("MainScreenUiSmartphone.ui.xml")
+	interface MainScreenUiSmartphoneUiBinder extends UiBinder<Widget, MainScreenUi> {	}
+	private static MainScreenUiSmartphoneUiBinder smartPhoneUiBinder = GWT.create(MainScreenUiSmartphoneUiBinder.class);
+	
+	
 	private UiType uiType;
 
 	@UiField HTMLPanel features;
@@ -51,7 +56,8 @@ public class MainScreenUi extends Composite    {
 		
 		case Desktop:
 			return desktopUiBinder;
-			
+		case Smartphone:
+			return smartPhoneUiBinder;
 		default:
 			return desktopUiBinder;
 		}

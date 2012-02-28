@@ -13,8 +13,8 @@
 		padding: 15px 15px 15px 15px;
 		/*display: inline-table;*/
 		display: block-table;
-		width: 250px;
-		height: 64px;
+		width: 75%;
+		height: 100px;
 	}
 	.main td {
 		font-family:inherit;
@@ -23,15 +23,16 @@
 	}
 	
 	.image {
-		width:32px;
-		height:32px;
+		width:64px;
+		height:64px;
+		margin-right:5px;
 	}
 		
 	.name {
 	}
 	</ui:style>
 	<g:HorizontalPanel styleName="{style.main}">
-		<g:cell width="64px"> <g:Image styleName="{style.image}" ui:field="icon" /></g:cell>
+		<g:cell width="64px" verticalAlignment="middle"> <g:Image styleName="{style.image}" ui:field="icon" /></g:cell>
 		<g:cell verticalAlignment="middle" > <g:InlineLabel styleName="{style.name}" ui:field="name"/></g:cell>
 	</g:HorizontalPanel>
 </ui:UiBinder> 

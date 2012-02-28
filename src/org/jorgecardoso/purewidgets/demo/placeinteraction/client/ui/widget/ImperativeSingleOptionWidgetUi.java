@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ImperativeSingleOptionWidgetUi extends Composite {
@@ -22,16 +23,26 @@ public class ImperativeSingleOptionWidgetUi extends Composite {
 	interface ImperativeSingleOptionUiDesktopUiBinder extends UiBinder<Widget, ImperativeSingleOptionWidgetUi> {	}
 	private static ImperativeSingleOptionUiDesktopUiBinder desktopUiBinder = GWT.create(ImperativeSingleOptionUiDesktopUiBinder.class);
 	
+	@UiTemplate("ImperativeSingleOptionWidgetSmartphone.ui.xml")
+	interface ImperativeSingleOptionUiSmartphoneUiBinder extends UiBinder<Widget, ImperativeSingleOptionWidgetUi> {	}
+	private static ImperativeSingleOptionUiSmartphoneUiBinder smartphoneUiBinder = GWT.create(ImperativeSingleOptionUiSmartphoneUiBinder.class);
+	
 	
 	/*
 	 * The ui type we will generate
 	 */
 	private UiType uiType;
 	
-	@UiField HorizontalPanel mainHorizontalPanel;
+	@UiField Panel mainHorizontalPanel;
 	@UiField Image iconImage;
 	@UiField Label descriptionLabel;
 	@UiField Button actionButton;
+	
+	/*
+	 * Indicates whether we should load the widget icon. This is determined according to the
+	 * template being used.
+	 */
+	private boolean loadWidgetIcon;
 	
 	
 	private org.instantplaces.purewidgets.shared.widgets.Widget pureWidget;
@@ -52,8 +63,13 @@ public class ImperativeSingleOptionWidgetUi extends Composite {
 		this.descriptionLabel.setText(description);
 		this.actionButton.setText(this.pureWidget.getShortDescription());
 		
-		if ( true ) { /* check icon */
-			this.mainHorizontalPanel.remove(0); // remove icon
+		if ( this.loadWidgetIcon ) {
+			if ( true ) { /* TODO: load icon */
+				//this.mainHorizontalPanel.remove(0); // remove icon
+				this.iconImage.removeFromParent();
+			}
+		} else {
+			this.iconImage.removeFromParent();
 		}
 		
 		this.actionButton.addClickHandler(new ImperativeClickHandler( this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
@@ -66,8 +82,12 @@ public class ImperativeSingleOptionWidgetUi extends Composite {
 		switch ( uiType ) {
 		
 		case Desktop:
+			this.loadWidgetIcon = true;
 			return desktopUiBinder;
-
+			
+		case Smartphone:
+			this.loadWidgetIcon = false;
+			return smartphoneUiBinder;
 		default:
 			return desktopUiBinder;
 		}

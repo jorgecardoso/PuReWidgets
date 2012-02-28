@@ -3,20 +3,13 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 		.main {
-			display: inline-block;
-			font-family:inherit;
-			font-size:inherit;
+			font-family: inherit;
+			font-size: inherit;
 			border: 1px solid black;
 			border-radius: 5px;
 			width: 300px;
-			height: 130px;
 			padding: 5px;
-			margin: 5px;
-		}
-		
-		.main * td {
-			font-family:inherit;
-			font-size:inherit;
+			margin: 5px auto 5px auto;
 		}
 		
 		.icon {

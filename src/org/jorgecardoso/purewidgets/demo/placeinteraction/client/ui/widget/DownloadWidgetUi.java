@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DownloadWidgetUi extends Composite {
@@ -21,6 +22,11 @@ public class DownloadWidgetUi extends Composite {
 	@UiTemplate("DownloadWidgetDesktop.ui.xml")
 	interface DownloadUiDesktopUiBinder extends UiBinder<Widget, DownloadWidgetUi> {	}
 	private static DownloadUiDesktopUiBinder desktopUiBinder = GWT.create(DownloadUiDesktopUiBinder.class);
+
+	
+	@UiTemplate("DownloadWidgetSmartphone.ui.xml")
+	interface DownloadUiSmartphoneUiBinder extends UiBinder<Widget, DownloadWidgetUi> {	}
+	private static DownloadUiSmartphoneUiBinder smartphoneUiBinder = GWT.create(DownloadUiSmartphoneUiBinder.class);
 	
 	
 	/*
@@ -28,11 +34,16 @@ public class DownloadWidgetUi extends Composite {
 	 */
 	private UiType uiType;
 	
-	@UiField HorizontalPanel mainHorizontalPanel;
+	@UiField Panel mainHorizontalPanel;
 	@UiField Image iconImage;
 	@UiField Label descriptionLabel;
 	@UiField Button actionButton;
 	
+	/*
+	 * Indicates whether we should load the widget icon. This is determined according to the
+	 * template being used.
+	 */
+	private boolean loadWidgetIcon;
 	
 	private org.instantplaces.purewidgets.shared.widgets.Widget pureWidget;
 
@@ -52,8 +63,13 @@ public class DownloadWidgetUi extends Composite {
 		this.descriptionLabel.setText(description);
 		this.actionButton.setText("Download");
 		
-		if ( true ) { /* check icon */
-			this.mainHorizontalPanel.remove(0); // remove icon
+		if ( this.loadWidgetIcon ) {
+			if ( true ) { /* TODO: check icon */
+				//this.mainHorizontalPanel.remove(0); // remove icon
+				this.iconImage.removeFromParent();
+			}
+		} else {
+			this.iconImage.removeFromParent();
 		}
 		this.actionButton.addClickHandler(new ClickHandler() {
 
@@ -66,18 +82,18 @@ public class DownloadWidgetUi extends Composite {
 		});
 	}
 
+	
 	private UiBinder<Widget, DownloadWidgetUi> getUiBinder(UiType uiType) {
 		switch ( uiType ) {
-		
 		case Desktop:
+			this.loadWidgetIcon = true;
 			return desktopUiBinder;
-			
+		case Smartphone:
+			this.loadWidgetIcon = false;
+			return smartphoneUiBinder;
 		default:
 			return desktopUiBinder;
 		}
 	}
 	
-
-	
-
 }
