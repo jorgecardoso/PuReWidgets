@@ -1,5 +1,6 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
+import org.instantplaces.purewidgets.client.widgets.ReferenceCodeFormatter;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -61,7 +62,7 @@ public class DownloadWidgetUi extends Composite {
 			description = this.pureWidget.getShortDescription();
 		}
 		this.descriptionLabel.setText(description);
-		this.actionButton.setText("Download");
+		this.actionButton.setText(this.pureWidget.getShortDescription() + " " + ReferenceCodeFormatter.format(this.pureWidget.getWidgetOptions().get(0).getReferenceCode()) );
 		
 		if ( this.loadWidgetIcon ) {
 			if ( true ) { /* TODO: check icon */

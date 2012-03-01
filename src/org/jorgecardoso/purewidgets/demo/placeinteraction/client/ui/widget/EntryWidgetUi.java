@@ -1,5 +1,6 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
+import org.instantplaces.purewidgets.client.widgets.ReferenceCodeFormatter;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.EntryClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
@@ -62,7 +63,7 @@ public class EntryWidgetUi extends Composite {
 			description = this.pureWidget.getShortDescription();
 		}
 		this.descriptionLabel.setText(description);
-		this.actionButton.setText(this.pureWidget.getShortDescription());
+		this.actionButton.setText(this.pureWidget.getShortDescription() + " " + ReferenceCodeFormatter.format(this.pureWidget.getWidgetOptions().get(0).getReferenceCode()));
 		
 		if ( this.loadWidgetIcon ) {
 			if ( true ) { /* check icon */

@@ -1,5 +1,6 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
+import org.instantplaces.purewidgets.client.widgets.ReferenceCodeFormatter;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetOption;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.MultipleOptionImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
@@ -75,7 +76,7 @@ public class ImperativeMultipleOptionWidgetUi extends Composite {
 		
 		this.optionsListBox.setVisibleItemCount(Math.min(4, this.pureWidget.getWidgetOptions().size()));
 		for (WidgetOption wo : this.pureWidget.getWidgetOptions() ) {
-			this.optionsListBox.addItem(wo.getShortDescription() + " [" + wo.getReferenceCode() + "]");
+			this.optionsListBox.addItem(wo.getShortDescription() + " " + ReferenceCodeFormatter.format(wo.getReferenceCode()));
 		}
 		
 		this.actionButton.addClickHandler(new MultipleOptionImperativeClickHandler(this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
