@@ -76,7 +76,7 @@ public class VideoActionEntry extends Composite implements ActionListener {
 		buttonPanel.add( likeGuiButton );
 		if ( createDownloadButton ) {
 			downloadGuiButton =  createDownloadButton(video, actionLabel);
-			downloadGuiButton.setLongDescription(video.getTitle());
+			
 		}
 		if ( showDownloadButton ) {
 			buttonPanel.add( downloadGuiButton );
@@ -117,7 +117,9 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	 * 
 	 */
 	private GuiDownloadButton createDownloadButton(Video video, String label) {
-		GuiDownloadButton btn = new GuiDownloadButton(this.encodeLabel("Download")+"-"+video.getId(), "Download", "http://youtube.com/"+video.getId());
+		GuiDownloadButton btn = new GuiDownloadButton(this.encodeLabel("Download")+"-"+video.getId(), "Get Link", "http://youtube.com/"+video.getId());
+		btn.setLongDescription(video.getTitle());
+		//btn.setShortDescription("Get Link");
 		
 		//btn.setSize("200px", "50px");
 		btn.setVolatile(true);
