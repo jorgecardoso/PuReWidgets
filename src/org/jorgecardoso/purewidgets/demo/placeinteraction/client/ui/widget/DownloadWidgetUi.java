@@ -1,7 +1,10 @@
 package org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.widget;
 
 import org.instantplaces.purewidgets.client.widgets.ReferenceCodeFormatter;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ImperativeClickHandler;
 import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.UiType;
+import org.jorgecardoso.purewidgets.demo.placeinteraction.client.ui.popup.PopupUi;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,8 +42,8 @@ public class DownloadWidgetUi extends Composite {
 	@UiField Image iconImage;
 	@UiField Label descriptionLabel;
 	@UiField Button actionButton;
-	
-	/*
+	 
+	/* 
 	 * Indicates whether we should load the widget icon. This is determined according to the
 	 * template being used.
 	 */
@@ -72,6 +75,10 @@ public class DownloadWidgetUi extends Composite {
 		} else {
 			this.iconImage.removeFromParent();
 		}
+		
+		this.actionButton.addClickHandler(new ImperativeClickHandler( this.pureWidget.getPlaceId(), this.pureWidget.getApplicationId(), 
+				this.pureWidget.getWidgetId(), this.pureWidget.getWidgetOptions(), new PopupUi(this.uiType)) );
+		
 		this.actionButton.addClickHandler(new ClickHandler() {
 
 			@Override

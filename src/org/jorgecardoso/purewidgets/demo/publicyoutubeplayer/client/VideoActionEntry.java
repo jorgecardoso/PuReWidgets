@@ -162,6 +162,4 @@ public class VideoActionEntry extends Composite implements ActionListener {
 	public Video getVideo() {
 		return video;
 	}
-
-
 }
