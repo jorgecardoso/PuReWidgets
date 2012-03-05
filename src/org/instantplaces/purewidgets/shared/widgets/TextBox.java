@@ -29,7 +29,7 @@ public class TextBox extends Widget {
 		this.setControlType(Widget.CONTROL_TYPE_ENTRY);
 		
 		this.caption = label;
-		this.sendToServer();
+		//this.sendToServer();
 	}
 	
 	@Override

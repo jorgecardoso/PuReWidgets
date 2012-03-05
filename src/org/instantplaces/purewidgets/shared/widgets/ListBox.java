@@ -46,7 +46,7 @@ public class ListBox extends Widget {
 			widgetOptions.add(wo);
 		}
 		this.setWidgetOptions(widgetOptions);
-		this.sendToServer();
+		//this.sendToServer();
 	}
 	
 	@Override
