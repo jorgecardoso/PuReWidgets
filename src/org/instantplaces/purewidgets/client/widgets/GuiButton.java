@@ -75,7 +75,7 @@ public class GuiButton extends GuiWidget {
 		widgetButton = new org.instantplaces.purewidgets.shared.widgets.Button(widgetId, caption);
 
 		this.setWidget(widgetButton);
-		this.sendToServer();
+		
 
 		this.button = new com.google.gwt.user.client.ui.Button();
 
@@ -105,6 +105,7 @@ public class GuiButton extends GuiWidget {
 		this.setStyleName(DEFAULT_STYLENAME);
 		this.lblCaption.addStyleName(GuiButton.CAPTION_STYLENAME_SUFFIX);
 		this.lblReferenceCode.addStyleName(GuiButton.REFERENCECODE_STYLENAME_SUFFIX);
+		this.sendToServer();
 	}
 
 	@Override

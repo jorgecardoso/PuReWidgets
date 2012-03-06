@@ -16,7 +16,12 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
  */
 @JsonAutoDetect(value=JsonMethod.FIELD, fieldVisibility=Visibility.ANY)
 public class WidgetInput {
+	private String placeId;
 	
+	private String applicationId;
+
+	private String referenceCode;
+		
 
 	private String widgetId;
 	
@@ -133,6 +138,54 @@ public class WidgetInput {
 	 */
 	public void setDelivered(boolean delivered) {
 		this.delivered = delivered;
+	}
+
+
+	/**
+	 * @return the placeId
+	 */
+	public String getPlaceId() {
+		return placeId;
+	}
+
+
+	/**
+	 * @param placeId the placeId to set
+	 */
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
+
+
+	/**
+	 * @return the applicationId
+	 */
+	public String getApplicationId() {
+		return applicationId;
+	}
+
+
+	/**
+	 * @param applicationId the applicationId to set
+	 */
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
+	}
+
+
+	/**
+	 * @return the referenceCode
+	 */
+	public String getReferenceCode() {
+		return referenceCode;
+	}
+
+
+	/**
+	 * @param referenceCode the referenceCode to set
+	 */
+	public void setReferenceCode(String referenceCode) {
+		this.referenceCode = referenceCode;
 	}
 
 }

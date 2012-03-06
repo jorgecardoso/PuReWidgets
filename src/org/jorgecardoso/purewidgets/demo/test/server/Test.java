@@ -43,6 +43,7 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 	@Override
 	public void loaded(PublicDisplayApplication application) {
 		this.app = application;
+		message = "";
 	}
 	
 	/**
@@ -52,9 +53,6 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 	public void setup() {
 		
 		Log.debug(this, "Setup");
-		
-		
-		app.setLong("button_1", 0);
 		
 	}
 	
@@ -67,23 +65,19 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 		
 		list.sendToServer();
 		Upload upload = new Upload("uploadsomething", "Upload");
+		upload.addActionListener(this);
 		upload.sendToServer();
 	}
 	
 	@Override
 	public void finish() {
 		Log.debug(this, "Finish");
-		
-		
-		app.setLong("button_1", clicks);
-		
-		message += "Clicks: " + clicks + "\n";
+
 		for (Widget w : WidgetManager.get().getWidgetList()) {
 			
 				message += w.toDebugString() + ";";
 			
 		}
-		
 		
 		
 		try {
@@ -97,7 +91,7 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 	@Override
 	public void onAction(ActionEvent<?> ae) {
 		//ae = (ActionEvent<? extends Widget>)ae;
-		
+		message += " onAction: ";
 		Log.debug(this, ae.toDebugString());
 		Widget source = (Widget)ae.getSource();
 		
@@ -111,6 +105,8 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 		} else if ( source.getWidgetId().equals("txt_1")) {
 			message += ae.getParam() + "\n"; 
 				
+		} else if ( source.getWidgetId().equals("uploadsomething") ) {
+			message += ae.getParam() + "\n"; 
 		}
 		
 		

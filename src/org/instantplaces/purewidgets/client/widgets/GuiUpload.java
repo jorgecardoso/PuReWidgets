@@ -11,6 +11,7 @@ import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
 import org.instantplaces.purewidgets.shared.widgets.TextBox;
+import org.instantplaces.purewidgets.shared.widgets.Upload;
 
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -49,7 +50,7 @@ import com.google.gwt.user.client.Timer;
  * 
  * @author Jorge C. S. Cardoso
  */
-public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandler {
+public class GuiUpload extends GuiWidget implements KeyPressHandler, FocusHandler {
 	/**
 	 * The default style name for the TextBox widget.
 	 */
@@ -98,26 +99,27 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	String caretOn = "|";
 	String caretOff = "";
 	
-	private org.instantplaces.purewidgets.shared.widgets.TextBox widgetTextBox;
+	private org.instantplaces.purewidgets.shared.widgets.Upload widgetTextBox;
 	
 	/**
 	 *  The input text
 	 */
 	private String text = "";
 	
-	public GuiTextBox(String caption) {
+	public GuiUpload(String caption) {
 		this((String)null, caption);
 	}
 	
-	public GuiTextBox(String widgetID, String caption) {
+	public GuiUpload(String widgetID, String caption) {
 		this(widgetID, caption, null);
 	}
 		
-	public GuiTextBox(String widgetId, String caption, String suggestedReference) {
-		this(new org.instantplaces.purewidgets.shared.widgets.TextBox(widgetId, caption), suggestedReference);
+	public GuiUpload(String widgetId, String caption, String suggestedReference) {
+		this(new org.instantplaces.purewidgets.shared.widgets.Upload(widgetId, caption), suggestedReference);
 		
 	}
-	public GuiTextBox(TextBox widgetTextBox, String suggestedReference) {
+	
+	public GuiUpload(Upload widgetTextBox, String suggestedReference) {
 		super();
 		
 		this.widgetTextBox = widgetTextBox;
@@ -134,7 +136,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		textBox.addFocusHandler(this);
 		//textBox.setText(caption);
 		
-		setLblCaption( new Label( this.widgetTextBox.getCaption() ) );
+		//setLblCaption( new Label( this.widgetTextBox.getCaption() ) );
 		
 		
 		
@@ -143,7 +145,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		lblFlashingCaret = new Label("I");
 		
 		captionContainer = new HorizontalPanel();
-		captionContainer.add(this.getLblCaption());
+	//	captionContainer.add(this.getLblCaption());
 		captionContainer.add(this.lblReferenceCode);
 		
 		htmlPanel = new HTMLPanel("<div id='textbox'></div><div id='caret'></div><div id='caption'></div>");
@@ -159,33 +161,14 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		
 	    // Give the overall composite a style name.
 	    setStyleName(DEFAULT_STYLENAME);
-		this.textBox.addStyleName(GuiTextBox.TEXTBOX_STYLENAME_SUFFIX);
-		this.captionContainer.addStyleName(GuiTextBox.CAPTIONCONTAINER_STYLENAME_SUFFIX);
-		this.lblFlashingCaret.addStyleName(GuiTextBox.CARET_STYLENAME_SUFFIX);
-		this.lblReferenceCode.addStyleName(GuiTextBox.CAPTIONCONTAINERREFERENCECODE_STYLENAME_SUFFIX);
-		this.getLblCaption().addStyleName(GuiTextBox.CAPTIONCONTAINERCAPTION_STYLENAME_SUFFIX);
+		this.textBox.addStyleName(GuiUpload.TEXTBOX_STYLENAME_SUFFIX);
+		this.captionContainer.addStyleName(GuiUpload.CAPTIONCONTAINER_STYLENAME_SUFFIX);
+		this.lblFlashingCaret.addStyleName(GuiUpload.CARET_STYLENAME_SUFFIX);
+		this.lblReferenceCode.addStyleName(GuiUpload.CAPTIONCONTAINERREFERENCECODE_STYLENAME_SUFFIX);
+		//this.getLblCaption().addStyleName(GuiUpload.CAPTIONCONTAINERCAPTION_STYLENAME_SUFFIX);
 		
-		caretTimer = new Timer() {
-
-			@Override
-			public void run() {
-				flashCaret();
-				isCaretOn = !isCaretOn;
-			}
-			
-		};
-		caretTimer.scheduleRepeating(1000);
+		
 		this.sendToServer();
-	}
-	
-	private void flashCaret() {
-		if (isCaretOn) {
-			GuiTextBox.this.lblFlashingCaret.setText(caretOff);
-			
-		} else {
-			GuiTextBox.this.lblFlashingCaret.setText(caretOn);
-		}
-		
 	}
 	
 		
@@ -221,11 +204,11 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	}
 	
 	@Override
-	public InputFeedback<GuiTextBox> handleInput(InputEvent ie) {
-		InputFeedback<GuiTextBox> feedback = new InputFeedback<GuiTextBox>(ie);
+	public InputFeedback<GuiUpload> handleInput(InputEvent ie) {
+		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
-			ActionEvent<GuiTextBox> ae = new ActionEvent<GuiTextBox>(
+			ActionEvent<GuiUpload> ae = new ActionEvent<GuiUpload>(
 					this, // source widget 
 					ie, // input event
 					ie.getParameters().get(0));
@@ -252,14 +235,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		this.text = text;
 	}
 	
-	public void setCaret(boolean on) {
-		if (on) {
-			caretOn = "|";
-		} else {
-			caretOn = "";
-		}
-		this.flashCaret();
-	}
+
 	
 	@Override
 	public void setEnabled(boolean enabled) {
@@ -272,7 +248,6 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	@Override
 	public void setInputEnabled(boolean inputEnabled) {
 		super.setInputEnabled(inputEnabled);
-		this.setCaret(inputEnabled);
 	}
 	/*
 	@Override

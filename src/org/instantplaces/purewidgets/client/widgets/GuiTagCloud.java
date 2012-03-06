@@ -144,7 +144,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 		 */
 		
 		this.updateGui();
-		
+		this.sendToServer();
 	}
 	
 

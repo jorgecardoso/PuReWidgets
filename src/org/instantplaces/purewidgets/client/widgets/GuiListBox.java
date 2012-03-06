@@ -146,7 +146,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 		}
 		
 		this.initWidget(this.mainVerticalPanel);
-		
+		this.sendToServer();
 	}
 
 	@Override
