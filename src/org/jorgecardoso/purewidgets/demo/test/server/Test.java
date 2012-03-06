@@ -13,6 +13,7 @@ import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.widgetmanager.WidgetManager;
 import org.instantplaces.purewidgets.shared.widgets.ListBox;
 import org.instantplaces.purewidgets.shared.widgets.TextBox;
+import org.instantplaces.purewidgets.shared.widgets.Upload;
 import org.instantplaces.purewidgets.shared.widgets.Widget;
 import org.instantplaces.purewidgets.shared.widgets.Button;
 
@@ -63,6 +64,10 @@ public class Test extends HttpServlet implements ApplicationLifeCycle {
 		l.add("op 1");
 		l.add("op 2");
 		ListBox list = new ListBox("listid", "Lista xpto", l);
+		
+		list.sendToServer();
+		Upload upload = new Upload("uploadsomething", "Upload");
+		upload.sendToServer();
 	}
 	
 	@Override

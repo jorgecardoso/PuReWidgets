@@ -406,8 +406,10 @@ public class WidgetListUi extends Composite  {
 		} else if (publicDisplayWidget.getControlType().equals(
 				org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_DOWNLOAD)) {
 			toReturn =  getDownloadWidget(publicDisplayWidget);
+		} else if ( publicDisplayWidget.getControlType().equals(
+				org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_UPLOAD) ) {
+			toReturn =  getUploadWidget(publicDisplayWidget);
 		}
-		
 		if ( null != toReturn ) {
 			//toReturn.setStyleName("widget");
 			toReturn.getElement().setPropertyString("id", publicDisplayWidget.getWidgetId());
@@ -415,6 +417,9 @@ public class WidgetListUi extends Composite  {
 		return toReturn;
 	}
 
+	Widget getUploadWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
+		return new UploadWidgetUi(this.uiType, publicDisplayWidget);
+	}
 	Widget getEntryWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		return new EntryWidgetUi(this.uiType, publicDisplayWidget);
 //		WidgetOption option = publicDisplayWidget.getWidgetOptions().get(0);
