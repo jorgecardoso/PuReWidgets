@@ -36,11 +36,11 @@
        					<g:Label ui:field="descriptionLabel"> </g:Label>
        				</g:cell>
        				<g:cell verticalAlignment="bottom">
-       					<g:TextBox ui:field="entryTextBox"> </g:TextBox>
+       					<g:HTMLPanel>Enter URL: <g:TextBox ui:field="entryTextBox"> </g:TextBox></g:HTMLPanel>
        				</g:cell>
        			</g:VerticalPanel>
     		</g:cell>
-    		<g:cell>
+    		<g:cell verticalAlignment="middle">
     			<g:Button ui:field="actionButton"></g:Button>
     		</g:cell>
 	</g:HorizontalPanel>
