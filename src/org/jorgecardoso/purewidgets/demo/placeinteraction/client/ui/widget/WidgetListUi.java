@@ -134,7 +134,7 @@ public class WidgetListUi extends Composite  {
 				@Override
 				public void onSuccess(Application application) {
 					if ( null != application ) {
-						WidgetListUi.this.applicationIcon.setUrl(application.getIconBaseUrl());
+						WidgetListUi.this.applicationIcon.setUrl(application.getIconBaseUrl()+"icon_128.png");
 					}
 				}
 	
@@ -395,7 +395,7 @@ public class WidgetListUi extends Composite  {
 
 	Widget getHtmlWidget(org.instantplaces.purewidgets.shared.widgets.Widget publicDisplayWidget) {
 		Widget toReturn = null;
-		
+		Log.error(this, publicDisplayWidget.getControlType());
 		if (publicDisplayWidget.getControlType().equals(
 				org.instantplaces.purewidgets.shared.widgets.Widget.CONTROL_TYPE_ENTRY)) {
 			toReturn = getEntryWidget(publicDisplayWidget);

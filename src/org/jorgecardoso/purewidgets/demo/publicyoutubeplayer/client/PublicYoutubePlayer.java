@@ -246,7 +246,7 @@ public class PublicYoutubePlayer implements PublicDisplayApplicationLoadedListen
 	public void onApplicationLoaded() {
 		Application app = PublicDisplayApplication.getApplication();
 		if ( "/publicyoutubeplayer/icon.jpg" != app.getIconBaseUrl() ) {
-			app.setIconBaseUrl("/publicyoutubeplayer/icon.jpg");
+			app.setIconBaseUrl("/publicyoutubeplayer/");
 			WidgetManager.get().getServerCommunicator().setApplication(app.getPlaceId(), app.getApplicationId(), app, null);
 		} 
 		

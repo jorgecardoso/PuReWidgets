@@ -86,6 +86,8 @@ public class ApplicationUi extends Composite implements HasClickHandlers {
 		String url = this.application.getIconBaseUrl();
 		if ( null == url ) {
 			url = "http://upload.wikimedia.org/wikipedia/commons/0/0d/Icono_web_store.png";
+		} else {
+			url += "icon_128.png";
 		}
 		this.icon.setUrl(url);
 	}
