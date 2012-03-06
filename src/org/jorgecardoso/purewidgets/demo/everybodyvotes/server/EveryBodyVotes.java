@@ -199,7 +199,7 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 				}
 			}
 		} else if ( source.getWidgetId().equals("suggest") ) {
-			this.sendMail(ae.getParam().toString());
+			this.sendMail(ae.getPersona(), ae.getParam().toString());
 		}
 		
 //		if ( source.getWidgetId().equals("button_1") ) {
@@ -216,13 +216,13 @@ public class EveryBodyVotes extends HttpServlet implements ApplicationLifeCycle 
 		
 	}
 
-	private void sendMail(String suggestion) {
+	private void sendMail(String persona, String suggestion) {
 		Log.warn(this, "Sending email: " + suggestion);
 		
 		Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
-        String msgBody = suggestion;
+        String msgBody = persona + " suggested: \n " + suggestion;
 
         try {
             Message msg = new MimeMessage(session);
