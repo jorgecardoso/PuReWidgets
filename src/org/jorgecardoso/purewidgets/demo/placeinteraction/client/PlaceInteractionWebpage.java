@@ -42,8 +42,13 @@ public class PlaceInteractionWebpage implements EntryPoint, PublicDisplayApplica
 		
 		this.mainScreen = new MainScreenUi(this.uiType);
 		RootPanel.get().add(this.mainScreen);
+		this.loadJanRain();
 	}
 	
+	// A Java method using JSNI
+	native void loadJanRain() /*-{
+	  $wnd.loadJanRain(); // $wnd is a JSNI synonym for 'window'
+	}-*/;
 
 	@Override
 	public void onApplicationLoaded() {
