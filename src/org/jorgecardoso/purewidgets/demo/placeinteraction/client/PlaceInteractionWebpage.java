@@ -46,10 +46,15 @@ public class PlaceInteractionWebpage implements EntryPoint, PublicDisplayApplica
 	}
 	
 	// A Java method using JSNI
+	
 	native void loadJanRain() /*-{
 	  $wnd.loadJanRain(); // $wnd is a JSNI synonym for 'window'
 	}-*/;
-
+	
+	native void setTokenUrl() /*-{
+	  $wnd.setTokenUrl(); // $wnd is a JSNI synonym for 'window'
+	}-*/;
+	
 	@Override
 	public void onApplicationLoaded() {
 		History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -81,5 +86,7 @@ public class PlaceInteractionWebpage implements EntryPoint, PublicDisplayApplica
 				this.mainScreen.showWidgets(placeName, applicationName);
 			}
 		}
+		
+		this.setTokenUrl();
 	}
 }
