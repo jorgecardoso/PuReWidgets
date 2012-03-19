@@ -59,10 +59,10 @@ public abstract class BaseClickHandler implements ClickHandler {
 
 	protected void sendInput(WidgetOption widgetOption, String input) {
 
-		String user = UserInfo.getUserIdentity();
+	
 
 		Log.debug(this, "Sending input: " + input);
-		popup.setText("Sending input from user " + user);
+		popup.setText("Sending input from user " + UserInfo.getUsername());
 
 		popup.center();
 		popup.show();
@@ -73,11 +73,13 @@ public abstract class BaseClickHandler implements ClickHandler {
 		ArrayList<String>parameters = new ArrayList<String>();
 		parameters.add(input);
 		WidgetInput widgetInput = new WidgetInput();
-		widgetInput.setPersona(user);
+		widgetInput.setUserIdentifier(UserInfo.getIdentity());
+		widgetInput.setPersona(UserInfo.getUsername());
 		widgetInput.setInputMechanism("PlaceInteractionWebpage:"+Navigator.getUserAgent());
 		widgetInput.setParameters(parameters);
 		widgetInput.setWidgetId(this.widgetId);
 		widgetInput.setWidgetOptionId(widgetOption.getWidgetOptionId());
+		
 		
 		WidgetManager.get().sendWidgetInput(this.placeName, this.applicationName, widgetInput, 
 				new Callback<WidgetInput>() {

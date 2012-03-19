@@ -16,6 +16,7 @@ public class WidgetInputJson extends GenericJson {
 	public static WidgetInputJson create(WidgetInput widgetInput) {
 		WidgetInputJson widgetInputJson = GenericJson.getNew();
 		
+		widgetInputJson.setUserIdentifier(widgetInput.getUserIdentifier());
 		widgetInputJson.setPersona(widgetInput.getPersona());
 		widgetInputJson.setParametersFromJavaArray(widgetInput.getParameters().toArray(new String[widgetInput.getParameters().size()]));
 		widgetInputJson.setTimeStamp(widgetInput.getTimeStamp());
@@ -53,6 +54,10 @@ public class WidgetInputJson extends GenericJson {
 		return this.parameters;
 	}-*/;
 
+	public final native String getUserIdentifier() /*-{
+	return this.userIdentifier;
+}-*/;
+	
 	public final native String getPersona() /*-{
 		return this.persona;
 	}-*/;
@@ -67,6 +72,7 @@ public class WidgetInputJson extends GenericJson {
 
 	public final WidgetInput getWidgetInput() {
 		WidgetInput wi = new WidgetInput();
+		wi.setUserIdentifier(this.getUserIdentifier());
 		wi.setPersona(this.getPersona());
 		wi.setTimeStamp(this.getTimeStamp());
 		wi.setWidgetId(this.getWidgetId());
@@ -107,6 +113,10 @@ public class WidgetInputJson extends GenericJson {
 	public final native void setPersona(String persona) /*-{
 		this.persona = persona;
 	}-*/;
+	
+	public final native void setUserIdentifier(String userIdentifier) /*-{
+	this.userIdentifier = userIdentifier;
+}-*/;	
 
 	public final native void setTimeStamp(String timeStamp) /*-{
 		this.timeStamp = timeStamp;

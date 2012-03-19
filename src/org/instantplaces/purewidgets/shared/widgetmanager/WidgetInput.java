@@ -31,6 +31,8 @@ public class WidgetInput {
 	
 	private ArrayList<String> parameters;
 	
+	private String userIdentifier;
+	
 	private String persona;	
 	
 	private String inputMechanism;
@@ -186,6 +188,22 @@ public class WidgetInput {
 	 */
 	public void setReferenceCode(String referenceCode) {
 		this.referenceCode = referenceCode;
+	}
+
+
+	/**
+	 * @return the userIdentifier
+	 */
+	public String getUserIdentifier() {
+		return userIdentifier;
+	}
+
+
+	/**
+	 * @param userIdentifier the userIdentifier to set
+	 */
+	public void setUserIdentifier(String userIdentifier) {
+		this.userIdentifier = userIdentifier;
 	}
 
 }

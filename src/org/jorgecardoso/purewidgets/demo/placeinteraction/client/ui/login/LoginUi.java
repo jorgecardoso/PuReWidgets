@@ -66,14 +66,20 @@ public class LoginUi extends Composite {
 		/*
 		 * Check/set the user's identity.
 		 */
-		UserInfo.setUserIdentity(com.google.gwt.user.client.Window.Location.getParameter("preferredUsername"));
-		if ( null == UserInfo.getUserIdentity() ) {
-			UserInfo.setUserIdentity( this.getAnonymousId() );
+		String anonymousId = this.getAnonymousId();
+		UserInfo.setIdentity(com.google.gwt.user.client.Window.Location.getParameter("identifier"));
+		if ( null == UserInfo.getIdentity() ) {
+			UserInfo.setIdentity( anonymousId );
 		} else {
 			loggedIn = true;
 		}
 		
-		this.identityName.setText(UserInfo.getUserIdentity());
+		UserInfo.setUsername(com.google.gwt.user.client.Window.Location.getParameter("preferredUsername"));
+		if ( null == UserInfo.getUsername() ) {
+			UserInfo.setUsername( anonymousId );
+		} 
+		
+		this.identityName.setText(UserInfo.getUsername());
 		
 		if (loggedIn) {
 			//RootPanel.get("user").add(signOutLink);
@@ -91,8 +97,8 @@ public class LoginUi extends Composite {
 	
 	private void logout(){
 		this.loggedIn = false;
-		UserInfo.setUserIdentity( this.getAnonymousId() );
-		this.identityName.setText(UserInfo.getUserIdentity());
+		UserInfo.setUsername( this.getAnonymousId() );
+		this.identityName.setText(UserInfo.getUsername());
 		this.signInLinkWrapper.setVisible(true);
 		this.signOutLink.setVisible(false);
 	}
