@@ -29,7 +29,9 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -77,6 +79,7 @@ public class WidgetListUi extends Composite  {
 	@UiField HTML goBackPanel;
 	@UiField Style style;
 	
+
 	/*
 	 * The timer to trigger requests to get the list of widgets of the application.
 	 */

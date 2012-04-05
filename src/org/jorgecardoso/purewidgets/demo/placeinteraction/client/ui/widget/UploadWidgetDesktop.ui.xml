@@ -32,12 +32,26 @@
     		</g:cell>
     		<g:cell>
        			<g:VerticalPanel styleName="{style.rightPanel}" >
-       				<g:cell verticalAlignment="top">
-       					<g:Label ui:field="descriptionLabel"> </g:Label>
-       				</g:cell>
-       				<g:cell verticalAlignment="bottom">
-       					<g:HTMLPanel>Enter URL: <g:TextBox ui:field="entryTextBox"> </g:TextBox></g:HTMLPanel>
-       				</g:cell>
+       				
+       					<g:cell verticalAlignment="top">
+       						<g:Label ui:field="descriptionLabel"> </g:Label>
+       					</g:cell>
+       					
+       					<g:cell>
+       						<g:FormPanel ui:field="formPanel">
+       							<g:FileUpload ui:field="fileUpload"/>
+       						</g:FormPanel>
+       					</g:cell>
+       					<g:cell>
+       						<g:HTMLPanel>Or</g:HTMLPanel>
+       					</g:cell>
+       					
+       					<g:cell verticalAlignment="bottom">
+       						<g:HTMLPanel>Enter URL: <g:TextBox ui:field="entryTextBox"> </g:TextBox></g:HTMLPanel>
+       					</g:cell>
+       			
+       					
+       				
        			</g:VerticalPanel>
     		</g:cell>
     		<g:cell verticalAlignment="middle">

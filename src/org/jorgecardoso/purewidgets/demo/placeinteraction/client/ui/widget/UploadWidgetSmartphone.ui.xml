@@ -37,6 +37,12 @@
    			<g:TextBox ui:field="entryTextBox" styleName="{style.textbox}"/> 
 		</g:cell>
     			
+      	<g:cell verticalAlignment="middle" >
+   			<g:FormPanel ui:field="formPanel">
+   				<g:FileUpload ui:field="fileUpload"></g:FileUpload>
+   			</g:FormPanel> 
+		</g:cell>
+		
 		<g:cell verticalAlignment="bottom"  horizontalAlignment="center">
 			<g:Button ui:field="actionButton" styleName="{style.button}"/>
 		</g:cell>

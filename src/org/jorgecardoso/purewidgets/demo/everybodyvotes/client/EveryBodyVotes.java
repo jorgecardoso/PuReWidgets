@@ -84,7 +84,7 @@ public class EveryBodyVotes implements ActionListener, PublicDisplayApplicationL
 	@Override
 	public void onApplicationLoaded() {
 		Application app = PublicDisplayApplication.getApplication();
-		if ( "/everybodyvotes/icon.jpg" != app.getIconBaseUrl() ) {
+		if ( "/everybodyvotes/" != app.getIconBaseUrl() ) {
 			app.setIconBaseUrl("/everybodyvotes/");
 			WidgetManager.get().getServerCommunicator().setApplication(app.getPlaceId(), app.getApplicationId(), app, null);
 			
