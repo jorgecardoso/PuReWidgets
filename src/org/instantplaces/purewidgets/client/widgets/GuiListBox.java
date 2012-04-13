@@ -158,7 +158,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 			
 			Label refCode = (Label)hPanel.getWidget(1);
 			
-			refCode.setText( ReferenceCodeFormatter.format(widgetOptions.get(i).getReferenceCode()) );
+			refCode.setText( ReferenceCodeFormatter.format("w."+widgetOptions.get(i).getReferenceCode()) );
 		}
 		
 	}
