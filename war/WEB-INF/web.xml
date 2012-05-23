@@ -8,7 +8,7 @@
   
   <servlet>
     <servlet-name>updateapplication</servlet-name>
-    <servlet-class>org.instantplaces.purewidgets.server.cron.UpdateApplication</servlet-class>
+    <servlet-class>org.purewidgets.server.cron.UpdateApplication</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -19,7 +19,7 @@
   
   <servlet>
     <servlet-name>interactionServlet</servlet-name>
-    <servlet-class>org.instantplaces.purewidgets.server.interactionmanager.InteractionServiceImpl</servlet-class>
+    <servlet-class>org.purewidgets.server.interactionmanager.InteractionServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -30,7 +30,7 @@
   
   <servlet>
     <servlet-name>remoteStorageServlet</servlet-name>
-    <servlet-class>org.instantplaces.purewidgets.server.storage.RemoteStorageServiceImpl</servlet-class>
+    <servlet-class>org.purewidgets.server.storage.RemoteStorageServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
