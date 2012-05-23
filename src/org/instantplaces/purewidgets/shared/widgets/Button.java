@@ -2,17 +2,15 @@
  * 
  */
 package org.instantplaces.purewidgets.shared.widgets;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+
 
 /**
  * @author Jorge C. S. Cardoso
  *
  */
-@PersistenceCapable
 public class Button extends Widget {	
 	
-	@Persistent
+	
 	String label;
 	
 	/*

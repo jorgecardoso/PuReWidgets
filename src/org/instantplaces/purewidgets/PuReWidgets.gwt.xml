@@ -22,12 +22,11 @@
 -->
  
 
-  <!-- We need this because we have shared code that uses JDO annotations
-  and Jackson Json annotations. Since these are not necessary for the client
+  <!-- We need this because we have shared code that uses  Jackson Json annotations. Since these are not necessary for the client
   we have some dummy code in this super-source path.
-   -->
+ -->
   <super-source path="jre" />
-
+  
    
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/> 

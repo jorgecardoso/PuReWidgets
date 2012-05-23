@@ -6,14 +6,6 @@ package org.instantplaces.purewidgets.shared.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonMethod;
@@ -76,8 +68,7 @@ import com.google.appengine.api.datastore.Key;
  * @author Jorge C. S. Cardoso
  * 
  */
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
+
 @JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = Visibility.ANY)
 public class Widget implements Comparable<Widget> {
 
@@ -87,9 +78,7 @@ public class Widget implements Comparable<Widget> {
 	public static String CONTROL_TYPE_DOWNLOAD = "download";
 	public static String CONTROL_TYPE_CHECKIN = "checkin";
 	//TODO: composite
-	
-	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+
 	@JsonIgnore
 	private Key key;
 
@@ -108,19 +97,17 @@ public class Widget implements Comparable<Widget> {
 	/**
 	 * The id of this widget.
 	 */
-	@Persistent
+
 	protected String widgetId;
 	
 	/**
 	 * The type of control that this widget implements
 	 */
-	@Persistent
 	private String controlType;
 	
 	/**
 	 * The volatile property of this widget
 	 */
-	@Persistent
 	private boolean volatileWidget;
 
 	/**
@@ -128,40 +115,38 @@ public class Widget implements Comparable<Widget> {
 	 * can be used to generate a more informative GUI by other system applications.
 	 *
 	 */
-	@Persistent
 	private String shortDescription;
 	
 	/**
 	 * A long description for the widget. The descriptions
 	 * can be used to generate a more informative GUI by other system applications.
 	 */
-	@Persistent
+
 	private String longDescription;
 	
-	@Persistent
+
 	private String contentUrl;
 	
-	@Persistent
+
 	private String userResponse;
 	
 	/**
 	 * The list of options of this widget
 	 */
-	@Persistent
 	protected ArrayList<WidgetOption> widgetOptions = new ArrayList<WidgetOption>();
 
 	/**
 	 * The ActionListeners registered to receive high-level events from this
 	 * widget.
 	 */
-	@NotPersistent
+
 	@JsonIgnore
 	protected List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
 	/**
 	 * The InputListener for this widget. 
 	 */
-	@NotPersistent
+
 	@JsonIgnore
 	protected InputListener inputListener;
 
@@ -170,7 +155,6 @@ public class Widget implements Comparable<Widget> {
 	 * ReferenceCodeListeners but also propagate reference codes to other
 	 * listeners (e.g. GuiWidgets)
 	 */
-	@NotPersistent
 	@JsonIgnore
 	protected ReferenceCodeListener referenceCodeListener;
 
@@ -178,7 +162,6 @@ public class Widget implements Comparable<Widget> {
 	/**
 	 * A Widget can be composed by other widgets.
 	 */
-	@NotPersistent
 	@JsonIgnore
 	protected ArrayList<Widget> dependentWidgets;
 

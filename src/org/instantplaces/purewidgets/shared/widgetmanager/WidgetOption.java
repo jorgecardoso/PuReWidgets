@@ -3,10 +3,6 @@
  */
 package org.instantplaces.purewidgets.shared.widgetmanager;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -31,39 +27,37 @@ import com.google.appengine.api.datastore.Key;
  * @author Jorge C. S. Cardoso
  *
  */
-@PersistenceCapable
+
 @JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = Visibility.ANY)
 public class WidgetOption  {
 	
 	@SuppressWarnings("unused")
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+
     @JsonIgnore
     private Key key;
 	
 	/**
 	 * The application defined identifier for the option.
 	 */
-	@Persistent
 	protected String widgetOptionId;
 	
 	/**
 	 * The application suggested reference code.
 	 */
-	@Persistent
+
 	protected String suggestedReferenceCode;
 	
 	/**
 	 * The actual reference code in use.
 	 */
-	@Persistent
+
 	protected String referenceCode;
 	
 	
-	@Persistent
+
 	private String longDescription;
 	
-	@Persistent
+
 	private String shortDescription;
 	
 	

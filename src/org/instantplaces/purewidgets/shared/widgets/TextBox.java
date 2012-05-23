@@ -5,8 +5,6 @@ package org.instantplaces.purewidgets.shared.widgets;
 
 import java.util.ArrayList;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
 import org.instantplaces.purewidgets.shared.events.InputEvent;
@@ -15,9 +13,9 @@ import org.instantplaces.purewidgets.shared.events.InputEvent;
  * @author Jorge C. S. Cardoso
  *
  */
-@PersistenceCapable
+
 public class TextBox extends Widget {
-	@Persistent
+
 	private String caption;
 	
 	

@@ -90,7 +90,6 @@ public class WidgetManager implements ServerListener {
 	public void addWidget(Widget widget) {
 		Log.debug(this, "Adding widget: " + widget.getWidgetId());
 		
-		
 		/*
 		 * Register the widget locally
 		 */

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="purewidgets" default="build" basedir=".">
-  <!-- Arguments to gwtc and devmode targets -->
-  <property name="gwt.args" value="" />
-
+<project name="PuReWidgets" default="build" basedir=".">
   <!-- Configure path to GWT SDK -->
-  <property name="gwt.sdk" location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r37v201106211634/gwt-2.3.0" />
+  <property name="gwt.sdk" location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201205091048-rel-r37/gwt-2.4.0" />
+  <property name="appengine.sdk" location="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.6.4.v201203300216r37/appengine-java-sdk-1.6.4" />
 
+	
   <path id="project.class.path">
     <pathelement location="war/WEB-INF/classes"/>
     <pathelement location="${gwt.sdk}/gwt-user.jar"/>
@@ -14,16 +13,30 @@
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
   </path>
 
+<path id="tools.class.path">
+	    <path refid="project.class.path"/>
+	    <pathelement location="${appengine.sdk}/lib/appengine-tools-api.jar"/>
+	    <fileset dir="${appengine.sdk}/lib/tools">
+	      <include name="**/asm-*.jar"/>
+	      <include name="**/datanucleus-enhancer-*.jar"/>
+	    </fileset>
+</path>	
+	
   <target name="libs" description="Copy libs to WEB-INF/lib">
     <mkdir dir="war/WEB-INF/lib" />
+  	<!-- Copy GWT libs -->
     <copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet.jar" />
-    <copy todir="war/WEB-INF/lib" file="${gwt.sdk}/gwt-servlet-deps.jar" />
-  	<copy todir="war/WEB-INF/lib" file="externalLibraries/jackson-all-1.8.2.jar" />
-  	 	  	
-    <!-- Add any additional server libs that need to be copied -->
+    <!-- Copy appengine libs -->
+  	<copy todir="war/WEB-INF/lib" flatten="true">
+  	      <fileset dir="${appengine.sdk}/lib/user" includes="**/*.jar"/>
+  	</copy>	
+  	<!-- Copy user libs -->
+  	<copy todir="war/WEB-INF/lib" > 
+  		<fileset dir="serverLibraries" includes="**/*.jar"/>
+  	</copy>	
   </target>
 
-  <target name="javac" depends="libs" description="Compile java source to bytecode">
+  <target name="javac" depends="libs" description="Compile java source">
     <mkdir dir="war/WEB-INF/classes"/>
     <javac srcdir="src" includes="**" encoding="utf-8"
         destdir="war/WEB-INF/classes"
@@ -32,43 +45,31 @@
       <classpath refid="project.class.path"/>
     </javac>
     <copy todir="war/WEB-INF/classes">
-      <fileset dir="src" excludes="**/*.java"/>
+      <fileset dir="src"/> <!-- excludes="**/*.java"/> -->
     </copy>
+  	<taskdef
+  	       name="datanucleusenhancer" 
+  	       classpathref="tools.class.path"
+  	       classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+  	    <datanucleusenhancer
+  	       classpathref="tools.class.path" verbose="true"
+  	       failonerror="true">
+  	      <fileset dir="war/WEB-INF/classes" includes="**/*.class" />
+  	    </datanucleusenhancer>
+  	<jar destfile="purewidgets.jar"
+  		  	         basedir="war/WEB-INF/classes" />
   </target>
 
-	  <target name="deploymodule" depends="libs" description="Bundles module in jar file to be used by other apps">
-	    <mkdir dir="tmp"/>
-	    <javac srcdir="src" includes="**" encoding="utf-8"
-	        destdir="tmp"
-	        source="1.5" target="1.5" nowarn="true"
-	        debug="true" debuglevel="lines,vars,source">
-	      <classpath refid="project.class.path"/>
-	    </javac>
-	    <copy todir="tmp">
-	      <fileset dir="src" />
-	    </copy>
-	  	
-	  	<jar destfile="purewidgets.jar"
-	  	         basedir="tmp"        />
-	  	<delete dir="tmp" />
-	  </target>
-	
-	
-  <target name="gwtc" depends="javac" description="GWT compile to JavaScript (production mode)">
+  <target name="gwtc" depends="javac" description="GWT compile to JavaScript">
     <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
       <classpath>
         <pathelement location="src"/>
         <path refid="project.class.path"/>
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r37v201106211634/gwt-2.3.0/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r37v201106211634/gwt-2.3.0/validation-api-1.0.0.GA-sources.jar" />
       </classpath>
       <!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
       <jvmarg value="-Xmx256M"/>
-      <arg line="-war"/>
-      <arg value="war"/>
       <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-      <arg line="${gwt.args}"/>
-      <arg value="org.instantplaces.purewidgets.PuReWidgets"/>
+      <arg value="com.google.gwt.sample.stockwatcher.StockWatcher"/>
     </java>
   </target>
 
@@ -77,43 +78,18 @@
       <classpath>
         <pathelement location="src"/>
         <path refid="project.class.path"/>
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA-sources.jar" />
       </classpath>
       <jvmarg value="-Xmx256M"/>
       <arg value="-startupUrl"/>
-      <arg value="purewidgets.html"/>
-      <arg line="-war"/>
-      <arg value="war"/>
+      <arg value="StockWatcher.html"/>
       <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-      <arg line="${gwt.args}"/>
-      <arg value="org.instantplaces.purewidgets.PuReWidgets"/>
+      <arg value="com.google.gwt.sample.stockwatcher.StockWatcher"/>
     </java>
   </target>
-
-	<target name="javadoc">
-	        <javadoc access="private" author="true" 
-	        	destdir="\Users\jorge\Dropbox\jorge\PhD\Work\0-Code-EclipseWorkspace\PuReWidgets\doc" 
-	        	nodeprecated="false" 
-	        	nodeprecatedlist="false" 
-	        	noindex="false" 
-	        	nonavbar="false" 
-	        	notree="false" 
-	        	packagenames="org.instantplaces.purewidgets.shared.widgets,org.instantplaces.purewidgets.client.widgetmanager,org.instantplaces.purewidgets.client.widgets,org.instantplaces.purewidgets.client.widgetmanager.json,org.instantplaces.purewidgets.shared.widgetmanager,org.instantplaces.purewidgets.shared,org.instantplaces.purewidgets.shared.events,org.jorgecardoso.purewidgets.demo.server,org.instantplaces.purewidgets.server.application,org.instantplaces.purewidgets.jre.org.codehaus.jackson.annotate,org.instantplaces.purewidgets.server.interactionmanager,org.instantplaces.purewidgets.jre.com.google.appengine.api.datastore,org.instantplaces.purewidgets.server.widgetmanager,org.instantplaces.purewidgets.server,org.instantplaces.purewidgets.client.widgets.events,org.instantplaces.purewidgets.client.widgets.feedback,org.jorgecardoso.purewidgets.demo.client" 
-	        	source="1.5" 
-	        	sourcepath="\Users\jorge\Dropbox\jorge\PhD\Work\0-Code-EclipseWorkspace\PuReWidgets\src" 
-	        	splitindex="true" use="true" version="true">
-	        	<classpath refid="project.class.path"/>
-			</javadoc>
-	    </target>
-	
-<!--
-Test targets suppressed because -junit argument was not specified when running webAppCreator.
 
   <target name="javac.tests" depends="javac" description="Compiles test code">
     <javac srcdir="test" includes="**" encoding="utf-8"
       source="1.5" target="1.5" nowarn="true"
-      destdir="war/WEB-INF/classes"
       debug="true" debuglevel="lines,vars,source">
       <classpath location="path_to_the_junit_jar"/>
       <classpath refid="project.class.path"/>
@@ -124,14 +100,12 @@ Test targets suppressed because -junit argument was not specified when running w
     <mkdir dir="reports/htmlunit.dev" />
     <junit fork="yes" printsummary="yes" haltonfailure="yes">
       <jvmarg line="-Xmx256m" />
-      <sysproperty key="gwt.args" value="-standardsMode -logLevel WARN" />
+      <sysproperty key="gwt.args" value="-logLevel WARN" />
       <sysproperty key="java.awt.headless" value="true" />
       <classpath>
-        <pathelement location="src" />
-        <pathelement location="test" />
+      	<pathelement location="src" />
+      	<pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA-sources.jar" />
         <pathelement location="path_to_the_junit_jar" />
       </classpath>
       <batchtest todir="reports/htmlunit.dev" >
@@ -148,14 +122,12 @@ Test targets suppressed because -junit argument was not specified when running w
     <mkdir dir="reports/htmlunit.prod" />
     <junit fork="yes" printsummary="yes" haltonfailure="yes">
       <jvmarg line="-Xmx256m" />
-      <sysproperty key="gwt.args" value="-prod -standardsMode -logLevel WARN -standardsMode -out www-test" />
+      <sysproperty key="gwt.args" value="-prod -logLevel WARN -out www-test" />
       <sysproperty key="java.awt.headless" value="true" />
       <classpath>
         <pathelement location="src" />
         <pathelement location="test" />
         <path refid="project.class.path" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r36v201105191508/gwt-2.3.0/validation-api-1.0.0.GA-sources.jar" />
         <pathelement location="path_to_the_junit_jar" />
       </classpath>
       <batchtest todir="reports/htmlunit.prod" >
@@ -172,19 +144,55 @@ Test targets suppressed because -junit argument was not specified when running w
     <antcall target="test.dev" />
     <antcall target="test.prod" />
   </target>
--->
 
   <target name="hosted" depends="devmode" description="Run development mode (NOTE: the 'hosted' target is deprecated)" />
 
   <target name="build" depends="gwtc" description="Build this project" />
 
   <target name="war" depends="build" description="Create a war file">
-    <zip destfile="purewidgets.war" basedir="war"/>
+    <zip destfile="StockWatcher.war" basedir="war"/>
   </target>
 
   <target name="clean" description="Cleans this project">
     <delete dir="war/WEB-INF/classes" failonerror="false" />
-    <delete dir="war/purewidgets" failonerror="false" />
+    <delete dir="war/stockwatcher" failonerror="false" />
   </target>
 
+	<target name="javadoc-public">
+	        <javadoc access="public" author="true" 
+	        	destdir="doc-public" 
+	        	nodeprecated="false" 
+	        	nodeprecatedlist="false" 
+	        	noindex="false" 
+	        	nonavbar="false" 
+	        	notree="false" 
+	        	packagenames="org.instantplaces.purewidgets.shared.widgets,org.instantplaces.purewidgets.client.widgetmanager,org.instantplaces.purewidgets.client.widgets,org.instantplaces.purewidgets.client.widgetmanager.json,org.instantplaces.purewidgets.shared.widgetmanager,org.instantplaces.purewidgets.shared,org.instantplaces.purewidgets.shared.events,org.jorgecardoso.purewidgets.demo.server,org.instantplaces.purewidgets.server.application,org.instantplaces.purewidgets.jre.org.codehaus.jackson.annotate,org.instantplaces.purewidgets.server.interactionmanager,org.instantplaces.purewidgets.jre.com.google.appengine.api.datastore,org.instantplaces.purewidgets.server.widgetmanager,org.instantplaces.purewidgets.server,org.instantplaces.purewidgets.client.widgets.events,org.instantplaces.purewidgets.client.widgets.feedback,org.jorgecardoso.purewidgets.demo.client" 
+	        	source="1.5" 
+	        	sourcepath="src" 
+	        	splitindex="true" use="true" version="true">
+	            
+	        	<classpath>  
+	              	<path refid="project.class.path"/>
+	            </classpath>
+	        </javadoc>
+ 	</target>	
+	
+	<target name="javadoc-private">
+	        <javadoc access="private" author="true" 
+	        	destdir="doc-private" 
+	        	nodeprecated="false" 
+	        	nodeprecatedlist="false" 
+	        	noindex="false" 
+	        	nonavbar="false" 
+	        	notree="false" 
+	        	packagenames="org.instantplaces.purewidgets.shared.widgets,org.instantplaces.purewidgets.client.widgetmanager,org.instantplaces.purewidgets.client.widgets,org.instantplaces.purewidgets.client.widgetmanager.json,org.instantplaces.purewidgets.shared.widgetmanager,org.instantplaces.purewidgets.shared,org.instantplaces.purewidgets.shared.events,org.jorgecardoso.purewidgets.demo.server,org.instantplaces.purewidgets.server.application,org.instantplaces.purewidgets.jre.org.codehaus.jackson.annotate,org.instantplaces.purewidgets.server.interactionmanager,org.instantplaces.purewidgets.jre.com.google.appengine.api.datastore,org.instantplaces.purewidgets.server.widgetmanager,org.instantplaces.purewidgets.server,org.instantplaces.purewidgets.client.widgets.events,org.instantplaces.purewidgets.client.widgets.feedback,org.jorgecardoso.purewidgets.demo.client" 
+	        	source="1.5" 
+	        	sourcepath="src" 
+	        	splitindex="true" use="true" version="true">
+	            
+	        	<classpath>  
+	              	<path refid="project.class.path"/>
+	            </classpath>
+	        </javadoc>
+ 	</target>	
 </project>

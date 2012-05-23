@@ -10,7 +10,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.instantplaces.purewidgets.shared.Log;
 import org.instantplaces.purewidgets.shared.events.ActionEvent;
@@ -22,7 +21,7 @@ import org.instantplaces.purewidgets.shared.events.ActionListener;
  * 
  * @author "Jorge C. S. Cardoso"
  */
-@PersistenceCapable
+
 public class TagCloud extends Widget implements ActionListener {
 
 	/**
