@@ -118,6 +118,7 @@ public class GuiDownloadButton extends GuiWidget {
 				ie, // input event
 				null);
 		feedback.setActionEvent(ae);
+		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		return feedback;
 	}
 

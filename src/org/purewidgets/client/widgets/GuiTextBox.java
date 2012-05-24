@@ -50,6 +50,8 @@ import com.google.gwt.user.client.Timer;
  * @author Jorge C. S. Cardoso
  */
 public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandler {
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %P[0]%";
+	
 	/**
 	 * The default style name for the TextBox widget.
 	 */
@@ -119,6 +121,12 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	}
 	public GuiTextBox(TextBox widgetTextBox, String suggestedReference) {
 		super();
+		
+		/*
+		 * Set the default user feedback pattern
+		 */
+		this.userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
+		
 		
 		this.widgetTextBox = widgetTextBox;
 		this.setWidget(widgetTextBox);
@@ -230,7 +238,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 					ie, // input event
 					ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
-			feedback.setInfo(ie.getParameters().get(0));
+			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		} else {
 			feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 		}

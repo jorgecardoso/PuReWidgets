@@ -30,6 +30,20 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
+	/**
+	 * The default pattern to apply to generate the input feedback message.
+	 * Consists simply on showing the user's nickname.
+	 * 
+	 * Available fields:
+	 * %U% - user nickname
+	 * %P[i]% - Input parameter i
+	 * %WS% - widget short description
+	 * %WL% - widget long description
+	 * %WOS% - widget option short description
+	 * %WOL% - widget option long description
+	 * %WOR% - widget option reference code
+	 */
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%";
 	
 	/**
 	 * The widget that supports this guiwidget.
@@ -53,6 +67,10 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	private FeedbackSequencer feedbackSequencer;
 
+	/**
+	 * The pattern to apply to generate the input feedback message.
+	 */
+	protected String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 
 	/**
 	 * The visual state of the widget.
@@ -610,5 +628,47 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	public void setLongDescription(String longDescription) {
 		this.widget.setLongDescription(longDescription);
+	}
+
+	/**
+	 * @return the userInputFeedbackPattern
+	 */
+	public String getUserInputFeedbackPattern() {
+		return userInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userInputFeedbackPattern the userInputFeedbackPattern to set
+	 */
+	public void setUserInputFeedbackPattern(String userInputFeedbackPattern) {
+		this.userInputFeedbackPattern = userInputFeedbackPattern;
+	}
+	
+	protected String generateUserInputFeedbackMessage(InputEvent inputEvent) {
+		String msg = new String(this.userInputFeedbackPattern);
+		
+		
+		 /* %U% - user nickname
+		  * %P[i]% - Input parameter i
+		 * %WS% - widget short description
+		 * %WL% - widget long description
+		 * %WOS% - widget option short description
+		 * %WOL% - widget option long description
+		 * %WOR% - widget option reference code
+		 */
+		msg = msg.replaceAll("%U%", inputEvent.getPersona());
+		msg = msg.replaceAll("%WS%", this.getShortDescription());
+		msg = msg.replaceAll("%WL%", this.getLongDescription());
+		msg = msg.replaceAll("%WOS%", inputEvent.getWidgetOption().getShortDescription());
+		msg = msg.replaceAll("%WOL%", inputEvent.getWidgetOption().getLongDescription());
+		msg = msg.replaceAll("%WOR%", inputEvent.getWidgetOption().getReferenceCode());
+		
+		if ( null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0 ) {
+			for (int i = 0; i < inputEvent.getParameters().size(); i++ ) {
+				msg = msg.replaceAll("%P\\["+i+"\\]%", inputEvent.getParameters().get(i));
+			}
+		
+		}
+		return msg;
 	}
 }

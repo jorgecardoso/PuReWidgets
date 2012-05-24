@@ -180,11 +180,8 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		for (InputFeedback<?> feed : this.accumulatedFeedback) {
 			
 				StringBuilder message = new StringBuilder();
-				message.append(feed.getInputEvent().getPersona());
-				if (feed.getInfo() != null && feed.getInfo().length() > 0) {
-					message.append(": ").append(feed.getInfo());
-				}
-				
+				message.append(feed.getInfo());
+
 				HTML l = new HTML( message.toString() );
 				
 				switch( feed.getType() ) {
@@ -231,15 +228,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		if (!this.isShowing()) {
 			if ( this.widget.isDisplaying() ) {
 				
-				this.title.setVisible(false);
+				this.title.setVisible(true);
 				super.show();
 				this.alignPanel();
 			} else {
-				/*PopupPanel p = new PopupPanel();
-				this.widget.removeFromParent();
-				p.add(this.widget);
-				p.show();*/
-				
+
 				this.title.setText( widget.getShortDescription() );
 				this.title.setVisible(true);
 				super.show();

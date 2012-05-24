@@ -41,6 +41,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  */
 public class GuiListBox extends GuiWidget implements ClickHandler {
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %WOS%";
+	
 	/**
 	 * The default style name for the ListBox.
 	 */
@@ -99,6 +101,10 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 	public GuiListBox(String widgetId, String title, ArrayList<String> options) {
 		super();
 		
+		/*
+		 * Set the default user feedback pattern
+		 */
+		this.userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 		
 		this.widgetList = new org.purewidgets.shared.widgets.ListBox(widgetId, title, options);
 		this.setWidget(this.widgetList);
@@ -165,7 +171,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 				null);
 		feedback.setActionEvent(ae);
 		
-		feedback.setInfo(ie.getWidgetOption().getReferenceCode());
+		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		return feedback;
 	}
 

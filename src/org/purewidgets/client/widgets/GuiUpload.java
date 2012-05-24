@@ -50,6 +50,8 @@ import com.google.gwt.user.client.Timer;
  * @author Jorge C. S. Cardoso
  */
 public class GuiUpload extends GuiWidget implements KeyPressHandler, FocusHandler {
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %P[0]%";
+	
 	/**
 	 * The default style name for the TextBox widget.
 	 */
@@ -121,6 +123,12 @@ public class GuiUpload extends GuiWidget implements KeyPressHandler, FocusHandle
 	
 	public GuiUpload(Upload widgetTextBox, String suggestedReference) {
 		super();
+
+		
+		/*
+		 * Set the default user feedback pattern
+		 */
+		this.userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 		
 		this.widgetTextBox = widgetTextBox;
 		this.setWidget(widgetTextBox);
@@ -206,15 +214,16 @@ public class GuiUpload extends GuiWidget implements KeyPressHandler, FocusHandle
 	@Override
 	public InputFeedback<GuiUpload> handleInput(InputEvent ie) {
 		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(ie);
-		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
+		if ( null != ie.getParameters() && ie.getParameters().size() > 0 && ie.getParameters().get(0).length() > "http".length() ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<GuiUpload> ae = new ActionEvent<GuiUpload>(
 					this, // source widget 
 					ie, // input event
 					ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
-			feedback.setInfo(ie.getParameters().get(0));
+			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		} else {
+			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 			feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 		}
 		
