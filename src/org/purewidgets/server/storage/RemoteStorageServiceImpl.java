@@ -25,7 +25,7 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 	private static final long serialVersionUID = 1L;
 
 	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.client.storage.RemoteStorageService#get(java.lang.String)
+	 * @see org.purewidgets.client.storage.RemoteStorageService#get(java.lang.String)
 	 */
 	@Override
 	public String[] get(String storageId, String name) {
@@ -67,7 +67,7 @@ public class RemoteStorageServiceImpl extends RemoteServiceServlet implements Re
 	
 	
 	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.client.storage.RemoteStorageService#set(java.lang.String, java.lang.String)
+	 * @see org.purewidgets.client.storage.RemoteStorageService#set(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void set(String storageId, String name, String value) {

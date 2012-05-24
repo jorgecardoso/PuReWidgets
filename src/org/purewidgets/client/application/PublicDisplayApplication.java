@@ -106,7 +106,7 @@ public class PublicDisplayApplication {
 
 	public static LocalStorage getLocalStorage() {
 		if (!loaded) {
-			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication",
+			Log.error("org.purewidgets.client.aplication.PublicDisplayApplication",
 					"Error getting Local Storage: application not loaded yet. Call load() first");
 			return null;
 		} else {
@@ -190,7 +190,7 @@ public class PublicDisplayApplication {
 
 	public static RemoteStorage getRemoteStorage() {
 		if (!loaded) {
-			Log.error("org.instantplaces.purewidgets.client.aplication.PublicDisplayApplication",
+			Log.error("org.purewidgets.client.aplication.PublicDisplayApplication",
 					"Error getting Remote Storage: application not loaded yet. Call load() first");
 			return null;
 		} else {

@@ -177,7 +177,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
+	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 	@Override
 	public void addWidget(Widget widget) {
@@ -267,7 +267,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 	
 	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
+	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 	@Override
 	public void deleteWidget(Widget widget) {
@@ -322,7 +322,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	
 	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
+	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
 	 */
 	@Override
 	public void setServerListener(ServerListener listener) {

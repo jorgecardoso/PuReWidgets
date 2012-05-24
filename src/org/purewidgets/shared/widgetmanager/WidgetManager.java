@@ -16,7 +16,7 @@ import org.purewidgets.shared.widgets.Widget;
  */
 public class WidgetManager implements ServerListener {
 	//"http://localhost:8080";//
-	private static final String INTERACTION_SERVER = "http://im-instantplaces.appspot.com";
+	private static final String INTERACTION_SERVER = "http://pw-interactionmanager.appspot.com";
 	
 	/**
 	 * "There can be only one"! Singleton pattern.
