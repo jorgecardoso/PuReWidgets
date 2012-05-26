@@ -656,19 +656,39 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		 * %WOL% - widget option long description
 		 * %WOR% - widget option reference code
 		 */
-		msg = msg.replaceAll("%U%", inputEvent.getPersona());
-		msg = msg.replaceAll("%WS%", this.getShortDescription());
-		msg = msg.replaceAll("%WL%", this.getLongDescription());
-		msg = msg.replaceAll("%WOS%", inputEvent.getWidgetOption().getShortDescription());
-		msg = msg.replaceAll("%WOL%", inputEvent.getWidgetOption().getLongDescription());
-		msg = msg.replaceAll("%WOR%", inputEvent.getWidgetOption().getReferenceCode());
 		
+		Log.debugFinest(this, "Replacing Username: " + msg + " : " + noNull(inputEvent.getPersona()));
+		msg = msg.replaceAll("%U%", noNull(inputEvent.getPersona()) );
+		
+		Log.debugFinest(this, "Replacing widget short description: " + msg + " : " + noNull(this.getShortDescription()));
+		msg = msg.replaceAll("%WS%", noNull(this.getShortDescription()) );
+		
+		Log.debugFinest(this, "Replacing widget long description: " + msg + " : " + noNull(this.getLongDescription()));
+		msg = msg.replaceAll("%WL%", noNull(this.getLongDescription()) );
+		
+		Log.debugFinest(this, "Replacing widget option short description: " + msg + " : " + noNull(inputEvent.getWidgetOption().getShortDescription()));
+		msg = msg.replaceAll("%WOS%", noNull(inputEvent.getWidgetOption().getShortDescription()) );
+		
+		Log.debugFinest(this, "Replacing widget option long description: " + msg + " : " + noNull(inputEvent.getWidgetOption().getLongDescription()));
+		msg = msg.replaceAll("%WOL%", noNull(inputEvent.getWidgetOption().getLongDescription()) );
+		
+		Log.debugFinest(this, "Replacing widget option reference code: " + msg + " : " + noNull(inputEvent.getWidgetOption().getReferenceCode()));
+		msg = msg.replaceAll("%WOR%", noNull(inputEvent.getWidgetOption().getReferenceCode()) );
+		
+		Log.debugFinest(this, "Replacing widget parameters: " + msg);
 		if ( null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0 ) {
 			for (int i = 0; i < inputEvent.getParameters().size(); i++ ) {
-				msg = msg.replaceAll("%P\\["+i+"\\]%", inputEvent.getParameters().get(i));
+				msg = msg.replaceAll("%P\\["+i+"\\]%", noNull(inputEvent.getParameters().get(i)) );
 			}
 		
 		}
 		return msg;
+	}
+	
+	private String noNull(String s) {
+		if (null == s) {
+			return "";
+		}
+		return s;
 	}
 }

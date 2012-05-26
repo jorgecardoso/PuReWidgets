@@ -24,7 +24,19 @@ FINEST (lowest value)
 	/* 
 	 * SEVERE 
 	 */
-	
+   private static void logStackTrace(Exception e) {
+		StringBuilder sb = new StringBuilder();
+		if ( e.getStackTrace() == null || e.getStackTrace().length == 0 ) {
+			sb.append("No stack trace to print");
+		} else {
+			sb.append("Stack trace:\n");
+		}
+		for ( StackTraceElement s : e.getStackTrace() ) {
+			sb.append(s.toString()+"\n");
+		}
+		error(sb.toString());
+	}
+
 	private static void error(String msg) {
 		Log.get().log(Level.SEVERE, msg);
 	}
@@ -36,7 +48,10 @@ FINEST (lowest value)
 	public static void error(String s, String msg) {
 		error(s + ": " + msg);
 	}
-	
+	public static void error(Object s, String msg, Exception e) {
+		error(s.getClass().getName() + ": " + msg);
+		logStackTrace(e);
+	}
 	/*
 	 * WARNING
 	 */

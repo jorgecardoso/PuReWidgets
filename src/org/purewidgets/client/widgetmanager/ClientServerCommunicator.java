@@ -579,11 +579,13 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 			
 		} catch (Exception e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "Error processing input. " +  e.getMessage(), e);
+		
 		}
 		
 	}
+	
+	
 
 	private void processWidgetAddFailure(Throwable error) {
 		Log.warn(this, "Error adding widget to server."
@@ -799,7 +801,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		try {
 			return Long.parseLong(value);
 		} catch (Exception e) {
-			Log.error(this, e.getMessage());
+			Log.error(this, "Error parsing " + value + " to long." +  e.getMessage());
 		}
 		return 0;
 	}
