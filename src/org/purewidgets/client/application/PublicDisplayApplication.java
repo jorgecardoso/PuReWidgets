@@ -20,9 +20,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * The PublicDisplayApplication class represents the graphical part of the
- * public display application. Its main purpose is to extract the application id
- * from the URL query string and initialize the WidgetManager.
+ * The PublicDisplayApplication class represents the client part of the
+ * public display application. 
+ * 
+ * A PublicDisplayApplication provides a standard way to read and store application parameters that
+ * can be set on the URL query, but which are also stored at the server.
  * 
  * @author Jorge C. S. Cardoso
  * 
