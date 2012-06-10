@@ -27,6 +27,10 @@ public class WidgetManager implements ServerListener {
 		return wm;
 	}
 
+	public static String getServerUrl() {
+		return INTERACTION_SERVER;
+	}
+	
 	public static String getApplicationsUrl(String placeId, String callingApplicationId) {
 		return INTERACTION_SERVER + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
 	}

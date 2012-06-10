@@ -226,6 +226,12 @@ public class PublicDisplayApplication {
 		Log.debug(PublicDisplayApplication.class.getName(), "Using application name: "
 				+ applicationName);
 
+		localStorage = new LocalStorage(applicationName);
+
+		remoteStorage = new RemoteStorage(placeName, applicationName);
+		
+		PublicDisplayApplication.loaded = true;
+		
 		serverCommunicator = new ClientServerCommunicator(placeName, applicationName);
 		WidgetManager.get().setServerCommunication( serverCommunicator );
 
@@ -238,11 +244,9 @@ public class PublicDisplayApplication {
 			WidgetManager.get().removeAllWidgets(true);
 		}
 
-		PublicDisplayApplication.loaded = true;
+		
 
-		localStorage = new LocalStorage(applicationName);
-
-		remoteStorage = new RemoteStorage(placeName, applicationName);
+		
 
 		Window.addCloseHandler(new CloseHandler<Window>() {
 			@Override

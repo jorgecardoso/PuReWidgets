@@ -10,6 +10,7 @@ import org.purewidgets.client.application.PublicDisplayApplication;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.client.widgetmanager.json.ApplicationJson;
 import org.purewidgets.client.widgetmanager.json.ApplicationListJson;
+import org.purewidgets.client.widgetmanager.json.ChannelTokenJson;
 import org.purewidgets.client.widgetmanager.json.PlaceListJson;
 import org.purewidgets.client.widgetmanager.json.WidgetInputJson;
 import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
@@ -25,6 +26,11 @@ import org.purewidgets.shared.widgets.Application;
 import org.purewidgets.shared.widgets.Place;
 import org.purewidgets.shared.widgets.Widget;
 
+import com.google.gwt.appengine.channel.client.Channel;
+import com.google.gwt.appengine.channel.client.ChannelFactory;
+import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCallback;
+import com.google.gwt.appengine.channel.client.SocketError;
+import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
@@ -37,6 +43,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class ClientServerCommunicator implements ServerCommunicator {
 
 		
+
 	/**
 	 * The interval between input requests to the server varies between MIN_ASK_PERIOD
 	 * and MAX_ASK_PERIOD, depending on the result from the last requests. If
@@ -164,7 +171,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		failureCount = 0;
 		
 		interactionService = GWT.create(InteractionService.class);
-			
+		
 		timerInput = new Timer() {
 			@Override
 			public void run() {
@@ -173,7 +180,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		};
 		timerInput.schedule(askPeriod);
 		
-		
+		this.createChannel();
 	}
 	
 	/* (non-Javadoc)
@@ -469,6 +476,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	private void periodicallySendWidgetsToServer() {
 		//TODO: Send a list of widgets instead of one by one.
@@ -1078,6 +1086,91 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			e.printStackTrace();
 		}		
 	}
+	
+	private void createChannel() {
+		String token = PublicDisplayApplication.getLocalStorage().getString("ChannelToken");
+		if (null != token && token.length() > 0) {
+			this.openChannel(token);
+		} else {
+			getChannelToken();
+		}
+	}
+	
+	private void openChannel(String token) {	
+		ChannelFactory.createChannel(token, new ChannelCreatedCallback() {
+			  @Override
+			  public void onChannelCreated(Channel channel) {
+			    channel.open(new SocketListener() {
+			      @Override
+			      public void onOpen() {
+			    	  Log.debug(this, "Channel opened");
+			      }
+			      @Override
+			      public void onMessage(String message) {
+			        Log.debug(this, "Received message on channel: " + message);
+			        WidgetInputJson widgetInputJson = GenericJson.fromJson(message);
+			        
+			        ArrayList<WidgetInput> inputList = new ArrayList<WidgetInput>();
+			        inputList.add( widgetInputJson.getWidgetInput() );
+			        
+					/*
+					 * Notify the widgetManager
+					 */
+					if (ClientServerCommunicator.this.serverListener != null) {
+						ClientServerCommunicator.this.serverListener.onWidgetInput(inputList);
+					}
+			        
+			      }
+			      @Override
+			      public void onError(SocketError error) {
+			        Log.warn(this, "Error on channel. " + error.getDescription());
+			      }
+			      @Override
+			      public void onClose() {
+			    	  Log.warn(this, "Channel closed");
+			      }
+			    });
+			  }
+			});
+	}
 
+	private String getChannelUrl() {
+		return WidgetManager.getServerUrl()+"/place/"+this.placeId+"/application/"+this.appId + "/channel?appid="+this.appId;
+	}
+	
+	private void getChannelToken() {
+		try {
+			interactionService.get( getChannelUrl(), 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							
+							Log.warn(this, "Error getting channel token from server:", caught);
+							
+						}
+
+						@Override
+						public void onSuccess(String json) {
+							Log.debug(this, "Received channel token data: " + json);
+							ChannelTokenJson channelTokenJson = GenericJson.fromJson(json);
+							
+							/*
+							 * Store the token on local storage so that the next time, we try to reuse the 
+							 * channel
+							 */
+							PublicDisplayApplication.getLocalStorage().setString("ChannelToken", channelTokenJson.getToken());
+							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
+							
+							ClientServerCommunicator.this.openChannel(channelTokenJson.getToken());
+							
+						}
+					});
+		} catch (Exception e) {
+			
+			Log.warn(this, "Error getting channel token from server: ", e);
+			
+		}	
+	}
 	
 }

@@ -14,7 +14,7 @@
   <inherits name="com.google.gwt.http.HTTP"/>
   <inherits name="com.google.gwt.logging.Logging"/>
   <inherits name="com.google.gwt.resources.Resources" />
-  
+  <inherits name='com.google.gwt.appengine.channel.Channel'/>
 
   <!-- We need this because we have shared code that uses  Jackson Json annotations. Since these are not necessary for the client
   we have some dummy code in this super-source path.
