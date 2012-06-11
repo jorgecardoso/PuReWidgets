@@ -185,4 +185,17 @@ public void setString(String item, String value) {
 		name = this.appName+"-"+name;
 		org.purewidgets.client.storage.json.LocalStorage.setString(name, encode(values));
 	}
+
+	public Long getLong(String item) {
+		String valueString = this.getString(item);
+		
+		try {
+			long value = Long.parseLong(valueString);
+			
+			return new Long(value);
+		} catch (NumberFormatException nfe) {
+			Log.warn(this, "Could not parse value from localStorage as long.");
+			return null;
+		}
+	}
 }

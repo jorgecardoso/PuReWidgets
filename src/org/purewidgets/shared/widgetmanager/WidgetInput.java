@@ -206,4 +206,18 @@ public class WidgetInput {
 		this.userIdentifier = userIdentifier;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if ( !(other instanceof WidgetInput) ) {
+			return false;
+		}
+		
+		WidgetInput otherWI = (WidgetInput)other;
+		
+		if ( !this.timeStamp.equals(otherWI.getTimeStamp()) || !this.placeId.equals(otherWI.getPlaceId()) 
+				|| !this.applicationId.equals(otherWI.getApplicationId()) || !this.userIdentifier.equals(otherWI.getUserIdentifier())) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -139,7 +139,19 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * Timer for scheduling widget requests to the server.
 	 */
 	private Timer timerWidget;
+	
+	/**
+	 * Timer used for channel connection retries.
+	 */
+	private Timer timerChannel;
 
+	/**
+	 * The delay for the timer channel.
+	 */
+	private int timerChannelPeriod = DEFAULT_TIMER_CHANNEL_PERIOD;
+	
+	private static final int DEFAULT_TIMER_CHANNEL_PERIOD = 5000;
+	
 	private NextWidgetAction nextWidgetAction;
 	
 	/**
@@ -158,7 +170,13 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 */
 	private int currentWidgetRequestInterval;
 	
-	
+	/**
+	 * Keeps a list of the most recently processed input.
+	 * Used to make sure we don't trigger the same input event more than once.
+	 */
+	private ArrayList<WidgetInput> processedInput = new ArrayList<WidgetInput>();
+
+	protected boolean channelOpen;
 	
 	public ClientServerCommunicator(String placeId, String appId) {
 		this.placeId = placeId;
@@ -180,6 +198,14 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		};
 		timerInput.schedule(askPeriod);
 		
+		timerChannel = new Timer() {
+
+			@Override
+			public void run() {
+				createChannel();
+			}
+			
+		};
 		this.createChannel();
 	}
 	
@@ -325,6 +351,14 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		} else {
 			this.timerInput.cancel();
 		}
+	}
+	
+	private void stopInputTimer() {
+		this.timerInput.cancel();
+	}
+	
+	private void startInputTimer() {
+		this.timerInput.schedule(askPeriod);
 	}
 	
 	
@@ -558,7 +592,9 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	private void processInputSuccess(String result) {
-		
+		if ( this.channelOpen ) {
+			this.stopInputTimer();
+		}
 		try {
 
 			WidgetInputListJson inputListJSON = GenericJson.fromJson(result);
@@ -567,8 +603,11 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			
 			/*
 			 * Update our most recent input timeStamp so that in the next round we ask only
-			 * for newer input
+			 * for newer input.
+			 * 
+			 * Mark already processed input
 			 */
+			ArrayList<WidgetInput> toDelete = new ArrayList<WidgetInput>();
 			for (WidgetInput widgetInput : inputList ) {
 				/*
 				 * Save the new timeStamp locally
@@ -576,6 +615,19 @@ public class ClientServerCommunicator implements ServerCommunicator {
 				if (toLong(widgetInput.getTimeStamp()) > this.getLastTimeStampAsLong()) {
 					this.setTimeStamp(toLong(widgetInput.getTimeStamp()));
 				}
+				
+				if (this.isProcessed(widgetInput)) {
+					toDelete.add(widgetInput);
+				} else {
+					this.addToProcessedInput(widgetInput);
+				}
+			}
+			
+			/*
+			 * Remove processed input
+			 */
+			for ( WidgetInput wi : toDelete ) {
+				inputList.remove(wi);
 			}
 			
 			/*
@@ -1089,11 +1141,26 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	
 	private void createChannel() {
 		String token = PublicDisplayApplication.getLocalStorage().getString("ChannelToken");
-		if (null != token && token.length() > 0) {
-			this.openChannel(token);
+		Long tokenTimestamp = PublicDisplayApplication.getLocalStorage().getLong("ChannelTokenTimestamp");
+		
+		/*
+		 * If the token expire is due in more than one our we take the token and open the channel
+		 * Otherwise, we ask a new token. 
+		 * 
+		 * This is needed because re-opening a channel after token has expired does not work:
+		 * https://groups.google.com/forum/?fromgroups#!searchin/google-appengine-java/channel/google-appengine-java/kD3H6BWNYuA/NivXiDrqW7QJ
+		 * 
+		 * This assumes that the server sets the expiration time to the maximum: 24 hours!
+		 */
+		if ( null == tokenTimestamp ||  (System.currentTimeMillis() - tokenTimestamp.longValue()) > 23*60*60*1000 ) {
+			this.getChannelToken();
 		} else {
-			getChannelToken();
-		}
+			if ( null != token && token.length() > 0 ) { 
+				this.openChannel(token);
+			} else {
+				this.getChannelToken();
+			}
+		} 
 	}
 	
 	private void openChannel(String token) {	
@@ -1103,31 +1170,37 @@ public class ClientServerCommunicator implements ServerCommunicator {
 			    channel.open(new SocketListener() {
 			      @Override
 			      public void onOpen() {
-			    	  Log.debug(this, "Channel opened");
+			    	  Log.debug(this, "Channel open");
+			    	  ClientServerCommunicator.this.channelOpen = true;
+			    	  timerChannelPeriod = DEFAULT_TIMER_CHANNEL_PERIOD;
 			      }
 			      @Override
 			      public void onMessage(String message) {
-			        Log.debug(this, "Received message on channel: " + message);
-			        WidgetInputJson widgetInputJson = GenericJson.fromJson(message);
-			        
-			        ArrayList<WidgetInput> inputList = new ArrayList<WidgetInput>();
-			        inputList.add( widgetInputJson.getWidgetInput() );
-			        
-					/*
-					 * Notify the widgetManager
-					 */
-					if (ClientServerCommunicator.this.serverListener != null) {
-						ClientServerCommunicator.this.serverListener.onWidgetInput(inputList);
-					}
+			    	  
+			        ClientServerCommunicator.this.processInputSuccess(message);
 			        
 			      }
 			      @Override
 			      public void onError(SocketError error) {
-			        Log.warn(this, "Error on channel. " + error.getDescription());
+			    	  Log.warn(this, "Error on channel. " + error.getDescription());
+			    	  
+			    	  
+			    	  ClientServerCommunicator.this.channelOpen = false;
+			    	  ClientServerCommunicator.this.startInputTimer();
+			    	  
+			    	  ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+			    	  timerChannelPeriod *= 2;
 			      }
 			      @Override
 			      public void onClose() {
 			    	  Log.warn(this, "Channel closed");
+			    	  
+			 
+			    	  ClientServerCommunicator.this.channelOpen = false;
+			    	  ClientServerCommunicator.this.startInputTimer();
+			    	  
+			    	  ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+			    	  timerChannelPeriod *= 2;
 			      }
 			    });
 			  }
@@ -1138,6 +1211,11 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		return WidgetManager.getServerUrl()+"/place/"+this.placeId+"/application/"+this.appId + "/channel?appid="+this.appId;
 	}
 	
+	/**
+	 * Asks the server for a channel token. 
+	 * 
+	 * see https://developers.google.com/appengine/docs/java/channel/
+	 */
 	private void getChannelToken() {
 		try {
 			interactionService.get( getChannelUrl(), 
@@ -1147,12 +1225,15 @@ public class ClientServerCommunicator implements ServerCommunicator {
 						public void onFailure(Throwable caught) {
 							
 							Log.warn(this, "Error getting channel token from server:", caught);
-							
+							ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+					    	timerChannelPeriod *= 2;
 						}
 
 						@Override
 						public void onSuccess(String json) {
 							Log.debug(this, "Received channel token data: " + json);
+							timerChannelPeriod = DEFAULT_TIMER_CHANNEL_PERIOD;
+							
 							ChannelTokenJson channelTokenJson = GenericJson.fromJson(json);
 							
 							/*
@@ -1160,6 +1241,7 @@ public class ClientServerCommunicator implements ServerCommunicator {
 							 * channel
 							 */
 							PublicDisplayApplication.getLocalStorage().setString("ChannelToken", channelTokenJson.getToken());
+							PublicDisplayApplication.getLocalStorage().setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
 							ClientServerCommunicator.this.openChannel(channelTokenJson.getToken());
@@ -1169,8 +1251,24 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		} catch (Exception e) {
 			
 			Log.warn(this, "Error getting channel token from server: ", e);
-			
+			ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+	    	timerChannelPeriod *= 2;
 		}	
 	}
 	
+	
+	private void addToProcessedInput(WidgetInput wi) {
+		this.processedInput.add(wi);
+		
+		if (this.processedInput.size() > 50) {
+			this.processedInput.remove(0);
+		}
+	}
+	
+	private boolean isProcessed(WidgetInput wi) {
+		if ( this.processedInput.contains(wi) ) {
+			return true;
+		}
+		return false;
+	}
 }
