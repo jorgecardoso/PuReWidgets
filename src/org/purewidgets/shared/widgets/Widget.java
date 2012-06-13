@@ -76,7 +76,7 @@ public class Widget implements Comparable<Widget> {
 	public static String CONTROL_TYPE_ENTRY = "entry";
 	public static String CONTROL_TYPE_UPLOAD = "upload";
 	public static String CONTROL_TYPE_DOWNLOAD = "download";
-	public static String CONTROL_TYPE_CHECKIN = "checkin";
+	public static String CONTROL_TYPE_PRESENCE = "presence";
 	//TODO: composite
 
 	@JsonIgnore
