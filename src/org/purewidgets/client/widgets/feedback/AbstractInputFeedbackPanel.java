@@ -7,6 +7,8 @@ import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.client.widgets.TransparentPopupPanel;
 
+import com.google.gwt.user.client.ui.PopupPanel;
+
 
 
 
@@ -14,7 +16,7 @@ import org.purewidgets.client.widgets.TransparentPopupPanel;
  * @author Jorge C. S. Cardoso
  *
  */
-public abstract class AbstractInputFeedbackPanel extends TransparentPopupPanel implements FeedbackDisplay {
+public abstract class AbstractInputFeedbackPanel extends PopupPanel implements FeedbackDisplay {
 
 	/**
 	 * The widget that wishes to provide input feedback;
@@ -35,7 +37,7 @@ public abstract class AbstractInputFeedbackPanel extends TransparentPopupPanel i
 	protected Align widgetReferencePoint;
 	
 	public AbstractInputFeedbackPanel(GuiWidget widget) {
-		this.panelReferencePoint = Align.CENTER;
+		this.panelReferencePoint = Align.BOTTOM;
 		this.widgetReferencePoint = Align.TOP;
 
 		this.widget = widget;

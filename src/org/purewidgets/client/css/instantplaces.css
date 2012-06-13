@@ -3,11 +3,17 @@
 
 /************************ CumulativeInputFeedbackPanel */
 
-.instantplaces-CumulativeInputFeedbackPanel {
+.purewidgets-CumulativeInputFeedbackPanel {
+	position:absolute;
+	background: rgb(255, 255, 255);
+	background: rgba(255, 255, 255, 0.6);
 	z-index: 910;
+	
+	border: 1px dotted black;
+	border-radius: 5px;
 }
 
-.instantplaces-CumulativeInputFeedbackPanel .title {
+.purewidgets-CumulativeInputFeedbackPanel .title {
 	font-size: xx-large;
 }
 
@@ -20,7 +26,7 @@
 	padding: 5px;
 	color: #000;
 	z-index: 910;
-}*/
+}
 
 .instantplaces-CumulativeInputFeedbackPanel-background {
 	position:absolute;
@@ -29,27 +35,29 @@
   	filter: literal("alpha(opacity=90)");
   	z-index:900;  
 }
+*/
 
-
-.instantplaces-CumulativeInputFeedbackPanel .accepted {
+.purewidgets-CumulativeInputFeedbackPanel .accepted {
 	background-image:url('purewidgetsicons/16px-Crystal_Clear_action_apply.png');
+	background-size:32px 32px;
 	background-repeat:no-repeat;
 	background-position: center left;
-	padding-left:20px;
+	padding-left:40px;
 	color: green;
-		font-family: Verdana, Geneva, sans-serif;
+	font-family: Verdana, Geneva, sans-serif;
 	font-size:xx-large;
 	word-wrap:normal;
 	white-space:nowrap;
 }
 
-.instantplaces-CumulativeInputFeedbackPanel .notaccepted {
+.purewidgets-CumulativeInputFeedbackPanel .notaccepted {
 	background-image:url('purewidgetsicons/16px-Crystal_Clear_action_editdelete.png');
+	background-size:32px 32px;
 	background-repeat:no-repeat;
 	background-position: center left;
-	padding-left:20px;
+	padding-left:40px;
 	color: red;
-		font-family: Verdana, Geneva, sans-serif;
+	font-family: Verdana, Geneva, sans-serif;
 	font-size:xx-large;
 	word-wrap:normal;
 	white-space:nowrap;

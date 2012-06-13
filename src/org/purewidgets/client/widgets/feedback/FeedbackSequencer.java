@@ -58,7 +58,7 @@ public class FeedbackSequencer {
 	 * If there is no more feedback to show, the panel will stay
 	 * visible during DEFAULT_FINAL_DELAY milliseconds, be default.
 	 */
-	public static final int DEFAULT_FINAL_DELAY = 20000;
+	public static final int DEFAULT_FINAL_DELAY = 10000;
 	
 	
 	/**

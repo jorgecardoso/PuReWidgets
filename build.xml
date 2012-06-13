@@ -58,6 +58,10 @@
   	    </datanucleusenhancer>
   	<jar destfile="purewidgets.jar"
   		  	         basedir="war/WEB-INF/classes" />
+  	<copy todir="../PuReWidgets Demos/war/WEB-INF/lib" file="purewidgets.jar"/>
+    <copy todir="../PuReWidgets System Apps/war/WEB-INF/lib" file="purewidgets.jar"/>
+ <copy todir="../EveryBodyVotes/war/WEB-INF/lib" file="purewidgets.jar"/>
+ <copy todir="../PublicYoutubePlayer/war/WEB-INF/lib" file="purewidgets.jar"/>
   </target>
 
   <target name="gwtc" depends="javac" description="GWT compile to JavaScript">

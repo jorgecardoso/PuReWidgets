@@ -43,7 +43,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	/**
 	 * The default style name of the outer element of this input feedback panel.
 	 */
-	public final String DEFAULT_STYLENAME = "instantplaces-CumulativeInputFeedbackPanel";
+	public final String DEFAULT_STYLENAME = "purewidgets-CumulativeInputFeedbackPanel";
 	
 	/**
 	 * The default style name of the background element of this input feedback panel.
@@ -73,8 +73,6 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	public final String SYSTEMINFO_INPUT_STYLENAME_SUFFIX = "systeminfo";
 
 
-
-	
 	
 	/**
 	 * The default value for the maximum number of simultaneous feedback lines
@@ -157,7 +155,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		
 		//this.setBackground(new ImagePanel("/instantplaces/icons/bubble.gif"));
 		super.setStyleName(DEFAULT_STYLENAME);
-		this.getBackground().setClassName(BACKGROUND_DEFAULT_STYLENAME);
+		//this.getBackground().setClassName(BACKGROUND_DEFAULT_STYLENAME);
 	}
 	
 
@@ -232,12 +230,18 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 				super.show();
 				this.alignPanel();
 			} else {
-
 				this.title.setText( widget.getShortDescription() );
 				this.title.setVisible(true);
 				super.show();
+				
 				this.setPopupPosition(Window.getClientWidth()/2-this.getOffsetWidth()/2, Window.getClientHeight()-this.getOffsetHeight());
 			}
+			
+		} else {
+			/*
+			 * The contents may make the popup larger, so we need to re-align it
+			 */
+			this.alignPanel();
 		}
 
 		
