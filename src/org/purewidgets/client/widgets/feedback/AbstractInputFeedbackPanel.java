@@ -36,11 +36,18 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	 */
 	protected Align widgetReferencePoint;
 	
+	
+	private int alignDisplacementX;
+	private int alignDisplacementY;
+	
 	public AbstractInputFeedbackPanel(GuiWidget widget) {
 		this.panelReferencePoint = Align.BOTTOM;
 		this.widgetReferencePoint = Align.TOP;
 
 		this.widget = widget;
+		
+		alignDisplacementX = 0;
+		alignDisplacementY = 25;
 	}
 	
 	protected void alignPanel() {
@@ -59,6 +66,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 		case BOTTOM:
 			x = widgetLeft+widgetWidth/2;
 			y = widgetTop+widgetHeight;
+			
 			break;
 		case TOP:
 			x = widgetLeft+widgetWidth/2;
@@ -77,6 +85,9 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 			y = widgetTop+widgetHeight/2;
 			break;
 		}
+		
+		x += alignDisplacementX;
+		y += alignDisplacementY;
 		
 		/*
 		 * Position the popup panel, aligned according to the panel alignment.
@@ -137,6 +148,34 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	@Override
 	public void setPanelReferencePoint(Align panelReferencePoint) {
 		this.panelReferencePoint = panelReferencePoint;
+	}
+
+	/**
+	 * @return the alignDisplacementX
+	 */
+	public int getAlignDisplacementX() {
+		return alignDisplacementX;
+	}
+
+	/**
+	 * @param alignDisplacementX the alignDisplacementX to set
+	 */
+	public void setAlignDisplacementX(int alignDisplacementX) {
+		this.alignDisplacementX = alignDisplacementX;
+	}
+
+	/**
+	 * @return the alignDisplacementY
+	 */
+	public int getAlignDisplacementY() {
+		return alignDisplacementY;
+	}
+
+	/**
+	 * @param alignDisplacementY the alignDisplacementY to set
+	 */
+	public void setAlignDisplacementY(int alignDisplacementY) {
+		this.alignDisplacementY = alignDisplacementY;
 	}
 	
 }
