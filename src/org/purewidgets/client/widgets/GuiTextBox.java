@@ -50,7 +50,7 @@ import com.google.gwt.user.client.Timer;
  * @author Jorge C. S. Cardoso
  */
 public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandler {
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %P[0]%";
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %P[0]%";
 	
 	/**
 	 * The default style name for the TextBox widget.

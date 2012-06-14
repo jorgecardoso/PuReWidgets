@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  */
 public class GuiListBox extends GuiWidget implements ClickHandler {
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %WOS%";
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %WOS%";
 	
 	/**
 	 * The default style name for the ListBox.
