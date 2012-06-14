@@ -7,6 +7,7 @@ import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.client.widgets.TransparentPopupPanel;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 
 
@@ -37,8 +38,8 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	protected Align widgetReferencePoint;
 	
 	
-	private int alignDisplacementX;
-	private int alignDisplacementY;
+	protected int alignDisplacementX;
+	protected int alignDisplacementY;
 	
 	public AbstractInputFeedbackPanel(GuiWidget widget) {
 		this.panelReferencePoint = Align.BOTTOM;
@@ -51,11 +52,23 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 	
 	protected void alignPanel() {
-		int widgetWidth = this.widget.getWidth();
-		int widgetHeight = this.widget.getHeight();
-		int widgetLeft = this.widget.getLeft();
-		int widgetTop = this.widget.getTop();
 		
+		int widgetWidth; 
+		int widgetHeight;
+		int widgetLeft; 
+		int widgetTop;
+		
+		if ( null != this.widget ) {
+			widgetWidth = this.widget.getWidth();
+			widgetHeight = this.widget.getHeight();
+			widgetLeft = this.widget.getLeft();
+			widgetTop = this.widget.getTop();
+		} else {
+			widgetWidth = Window.getClientWidth();
+			widgetHeight = Window.getClientHeight();
+			widgetLeft = 0;
+			widgetTop = 0;
+		}
 		
 		/* Calculate the (x,y) coordinates of the screen where the
 		 * panel will appear.

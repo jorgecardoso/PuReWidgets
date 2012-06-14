@@ -230,7 +230,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	
 	@Override
 	public InputFeedback<GuiTextBox> handleInput(InputEvent ie) {
-		InputFeedback<GuiTextBox> feedback = new InputFeedback<GuiTextBox>(ie);
+		InputFeedback<GuiTextBox> feedback = new InputFeedback<GuiTextBox>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<GuiTextBox> ae = new ActionEvent<GuiTextBox>(

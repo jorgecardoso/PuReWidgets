@@ -110,7 +110,7 @@ public class GuiButton extends GuiWidget {
 
 	@Override
 	public InputFeedback<GuiButton> handleInput(InputEvent ie) {
-		InputFeedback<GuiButton> feedback = new InputFeedback<GuiButton>(ie);
+		InputFeedback<GuiButton> feedback = new InputFeedback<GuiButton>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 
 		ActionEvent<GuiButton> ae = new ActionEvent<GuiButton>(this, // source

@@ -213,7 +213,7 @@ public class GuiUpload extends GuiWidget implements KeyPressHandler, FocusHandle
 	
 	@Override
 	public InputFeedback<GuiUpload> handleInput(InputEvent ie) {
-		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(ie);
+		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 && ie.getParameters().get(0).length() > "http".length() ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<GuiUpload> ae = new ActionEvent<GuiUpload>(

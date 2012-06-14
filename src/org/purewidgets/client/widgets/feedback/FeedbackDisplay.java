@@ -43,7 +43,8 @@ public interface FeedbackDisplay  {
 	 */
 	public void setPanelReferencePoint(Align panelReferencePoint);
 	
-	
+	public void setAlignDisplacementX(int alignDisplacementX);
+	public void setAlignDisplacementY(int alignDisplacementY);
 	
 	/**
 	 * Shows the feedback.

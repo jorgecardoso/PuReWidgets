@@ -241,7 +241,9 @@ public class FeedbackSequencer {
 		/*
 		 * Trigger the input feedback event on the widget. 
 		 */
-		this.listener.inputFeedbackEnded( current, this.input.size() == 0 );
+		if ( null != this.listener )  {
+			this.listener.inputFeedbackEnded( current, this.input.size() == 0 );
+		}
 		current = null;
 		
 	}
@@ -260,7 +262,9 @@ public class FeedbackSequencer {
 		/*
 		 * Trigger the input feedback started event on the widget.
 		 */
-		this.listener.inputFeedbackStarted(current);
+		if ( null != this.listener ) {
+			this.listener.inputFeedbackStarted(current);
+		}
 		
 	}
 	

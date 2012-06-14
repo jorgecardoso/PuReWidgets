@@ -42,6 +42,8 @@ public class InputFeedback<T extends GuiWidget> {
 	 */
 	private ActionEvent<T> actionEvent;
 	
+	private T widget;
+	
 	/**
 	 * Creates a new InputFeedback object with the given information text and
 	 * with the given indication of whether the widget accepted the input or not.
@@ -50,8 +52,8 @@ public class InputFeedback<T extends GuiWidget> {
 	 * @param info The text to show.
 	 * @param type The type of feedback.
 	 */
-	public InputFeedback(InputEvent event) {
-		this(event, Type.ACCEPTED, null);
+	public InputFeedback(T widget, InputEvent event) {
+		this(widget, event, Type.ACCEPTED, null);
 	}
 
 	
@@ -63,7 +65,8 @@ public class InputFeedback<T extends GuiWidget> {
 	 * @param info The text to show.
 	 * @param type The type of feedback.
 	 */
-	public InputFeedback(InputEvent event,  Type type, ActionEvent<T> ae) {
+	public InputFeedback(T widget, InputEvent event,  Type type, ActionEvent<T> ae) {
+		this.widget = widget;
 		this.inputEvent =  event;
 		this.actionEvent = ae;
 		this.info = "";
@@ -161,5 +164,21 @@ public class InputFeedback<T extends GuiWidget> {
 
 	public ActionEvent<T> getActionEvent() {
 		return actionEvent;
+	}
+
+
+	/**
+	 * @return the widget
+	 */
+	public T getWidget() {
+		return widget;
+	}
+
+
+	/**
+	 * @param widget the widget to set
+	 */
+	public void setWidget(T widget) {
+		this.widget = widget;
 	}
 }

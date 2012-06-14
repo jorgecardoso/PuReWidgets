@@ -110,16 +110,7 @@ public class GuiDownloadButton extends GuiWidget {
 
 	@Override
 	public InputFeedback<GuiDownloadButton> handleInput(InputEvent ie) {
-		InputFeedback<GuiDownloadButton> feedback = new InputFeedback<GuiDownloadButton>(ie);
-		feedback.setType(InputFeedback.Type.ACCEPTED);
-
-		ActionEvent<GuiDownloadButton> ae = new ActionEvent<GuiDownloadButton>(this, // source
-																		// widget
-				ie, // input event
-				null);
-		feedback.setActionEvent(ae);
-		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
-		return feedback;
+		return null;
 	}
 
 	@Override

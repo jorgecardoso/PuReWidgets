@@ -25,15 +25,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-CumulativeInputFeedbackPanel</dt>
+ * <dt>.purewidgets-CumulativeInputFeedbackPanel</dt>
  * <dd>the outer element</dd>
- * <dt>.instantplaces-CumulativeInputFeedbackPanel .content</dt>
- * <dd>the inner element</dd>
- * <dt>.instantplaces-CumulativeInputFeedbackPanel-background</dt>
- * <dd>the background element</dd>
- * <dt>.instantplaces-CumulativeInputFeedbackPanel .accepted</dt>
+ * <dt>.purewidgets-SequentialInputFeedbackPanel .title</dt>
+ * <dd> The Title of the panel (displayed for feedback for not visible widgets)</dd>
+ * <dt>.purewidgets-CumulativeInputFeedbackPanel .accepted</dt>
  * <dd>the accepted input feedback element</dd>
- * <dt>.instantplaces-SequentialInputFeedbackPanel .notaccepted</dt>
+ * <dt>.purewidgets-SequentialInputFeedbackPanel .notaccepted</dt>
  * <dd>the not accepted input feedback element</dd>
  * 
  * @author Jorge C. S. Cardoso
@@ -45,10 +43,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	public final String DEFAULT_STYLENAME = "purewidgets-CumulativeInputFeedbackPanel";
 	
-	/**
-	 * The default style name of the background element of this input feedback panel.
-	 */
-	public final String BACKGROUND_DEFAULT_STYLENAME = "instantplaces-CumulativeInputFeedbackPanel-background";
+	
 
 	/**
 	 * The style name for the widget title.
@@ -88,6 +83,8 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	private VerticalPanel vPanel;
 	
 	private Label title;
+	
+	private boolean showTitles = false;
 
 	
 	/**
@@ -102,6 +99,8 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	private boolean newOnTop;
 	
+	
+
 
 	/**
 	 * This panel saves the previous feedback (during a pre-defined period of time)
@@ -156,6 +155,8 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		//this.setBackground(new ImagePanel("/instantplaces/icons/bubble.gif"));
 		super.setStyleName(DEFAULT_STYLENAME);
 		//this.getBackground().setClassName(BACKGROUND_DEFAULT_STYLENAME);
+		
+
 	}
 	
 
@@ -180,6 +181,12 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 				StringBuilder message = new StringBuilder();
 				message.append(feed.getInfo());
 
+				if ( this.showTitles ) {
+					Label title = new Label(feed.getWidget().getShortDescription());
+					title.setStyleName(TITLE_STYLENAME_SUFFIX);
+					vPanel.add(title);
+				}
+				
 				HTML l = new HTML( message.toString() );
 				
 				switch( feed.getType() ) {
@@ -191,10 +198,12 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 					break;
 				}
 				
+				
 				vPanel.add(l);
 		
 		}
-				
+		
+
 		this.displayPanel();
 	}
 
@@ -224,19 +233,19 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	private void displayPanel() {
 		if (!this.isShowing()) {
-			if ( this.widget.isDisplaying() ) {
+			//if ( this.widget.isDisplaying() ) {
 				
-				this.title.setVisible(true);
+				//this.title.setVisible(true);
 				super.show();
 				this.alignPanel();
-			} else {
+			/*} else {
 				this.title.setText( widget.getShortDescription() );
 				this.title.setVisible(true);
 				super.show();
 				
 				this.setPopupPosition(Window.getClientWidth()/2-this.getOffsetWidth()/2, Window.getClientHeight()-this.getOffsetHeight());
 			}
-			
+			*/
 		} else {
 			/*
 			 * The contents may make the popup larger, so we need to re-align it
@@ -256,6 +265,22 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 
 	public boolean isNewOnTop() {
 		return newOnTop;
+	}
+
+
+	/**
+	 * @return the showTitles
+	 */
+	public boolean isShowTitles() {
+		return showTitles;
+	}
+
+
+	/**
+	 * @param showTitles the showTitles to set
+	 */
+	public void setShowTitles(boolean showTitles) {
+		this.showTitles = showTitles;
 	}
 
 

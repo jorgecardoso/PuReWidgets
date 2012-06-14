@@ -57,10 +57,14 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	private Align inputFeedbackPanelReferencePoint = Align.CENTER;
 */
 	
+	protected static CumulativeInputFeedbackPanel sharedFeedbackDisplay; 
+	protected static FeedbackSequencer sharedFeedbackSequencer;
+	
+	
 	/**
 	 * The panel used to display user input info feedback.
 	 */
-	protected FeedbackDisplay inputFeedbackDisplay;
+	protected CumulativeInputFeedbackPanel inputFeedbackDisplay;
 
 	/**
 	 * The feedback sequencer for internal feedback.
@@ -119,6 +123,17 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	public GuiWidget() {
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
+		
+		if ( null == sharedFeedbackDisplay ) {
+			sharedFeedbackDisplay = new CumulativeInputFeedbackPanel(null);
+			sharedFeedbackDisplay.setWidgetReferencePoint(Align.BOTTOM);
+			sharedFeedbackDisplay.setAlignDisplacementY(0);
+			sharedFeedbackDisplay.setShowTitles(true);
+		}
+		if ( null == sharedFeedbackSequencer ) {
+			sharedFeedbackSequencer = new FeedbackSequencer(sharedFeedbackDisplay, null);
+		}
+		
 	}
 
 	public boolean isDisplaying() {
@@ -243,7 +258,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	}
 	
 	protected InputFeedback<? extends GuiWidget> handleInput(InputEvent ie) {
-		InputFeedback<GuiWidget> feedback = new InputFeedback<GuiWidget>(ie);
+		InputFeedback<GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
 		ActionEvent<GuiWidget> ae = new ActionEvent<GuiWidget>(
@@ -335,7 +350,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 			 */
 			} else {
 				
-				InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(ie);
+				InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
 				if( this.isInputEnabled() ) {
 					
 					/*
@@ -350,9 +365,15 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 				}
 			
 				/*
-				 * Schedule the feedback to appear
+				 * Schedule the feedback to appear. Widgets may return null as an indication that no feedback should be displayed
 				 */
-				this.feedbackSequencer.add(feedback);
+				if ( null != feedback ) {
+					if ( this.isDisplaying() ) {
+						this.feedbackSequencer.add(feedback);
+					} else {
+						sharedFeedbackSequencer.add(feedback);
+					}
+				}
 			}
 		}
 
