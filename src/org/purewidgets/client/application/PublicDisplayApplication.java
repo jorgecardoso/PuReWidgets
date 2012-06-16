@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PublicDisplayApplication {
+public class PublicDisplayApplication  {
 	/**
 	 * The URL query string parameter name that holds the application id
 	 */
@@ -378,6 +378,7 @@ public class PublicDisplayApplication {
 	public static void setApplication(Application application) {
 		PublicDisplayApplication.application = application;
 	}
-	
+
+
 	
 }

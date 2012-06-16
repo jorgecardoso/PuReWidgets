@@ -62,7 +62,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 	 */
 	private String doMethod(String method, String data, String urlString) throws InteractionManagerException {
 		Log.debug(this, method + " " + urlString );
-		Log.debug(this, "  BODY: " + data);
+		Log.debugFinest(this, "Request Body: " + data);
 		System.setProperty("sun.net.http.retryPos", "false");
 		try {
 			java.net.URL url = new java.net.URL(urlString);
@@ -124,7 +124,7 @@ public class InteractionServiceImpl extends RemoteServiceServlet implements
 			}
 			//this.getThreadLocalResponse().setS setStatus(con.getResponseCode(), con.getResponseMessage());
 			
-			Log.warn(this, "Response Body:" + builder.toString() );
+			Log.debug(this, "Response Body:" + builder.toString() );
 			return builder.toString();
 			
 		

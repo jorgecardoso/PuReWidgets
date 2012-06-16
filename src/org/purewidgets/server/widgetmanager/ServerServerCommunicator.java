@@ -177,7 +177,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			}
 			String url = applicationUrl + "/input?output=json&from=" + lastTimeStamp + "&appid="+appId;
 			
-			Log.warn(this, "Contacting application server for input..." + url);
+			Log.debug(this, "Contacting application server for input..." + url);
 			String response = null;
 			
 			try {
@@ -187,7 +187,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				e.printStackTrace();
 				return;
 			}
-			Log.warn(this, response);
+			Log.debug(this, response);
 			
 			
 
@@ -363,7 +363,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		
 		String url = WidgetManager.getWidgetsUrl(placeId, applicationId, this.appId);
 		
-		Log.warn(this, "Asking application server for the widget list..." + url);
+		Log.debug(this, "Asking application server for the widget list..." + url);
 		String response = null;
 		
 		try {

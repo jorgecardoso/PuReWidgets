@@ -25,6 +25,7 @@ public class WidgetInputJson extends GenericJson {
 		widgetInputJson.setWidgetId(widgetInput.getWidgetId());
 		widgetInputJson.setWidgetOptionId(widgetInput.getWidgetOptionId());
 		widgetInputJson.setInputMechanism(widgetInput.getInputMechanism());
+		widgetInputJson.setReferenceCode(widgetInput.getReferenceCode());
 		
 		return widgetInputJson;
 	}
@@ -71,6 +72,10 @@ public class WidgetInputJson extends GenericJson {
 	public final native String getWidgetId() /*-{
 		return this.widgetId;
 	}-*/;
+	
+	public final native String getReferenceCode() /*-{
+	return this.referenceCode;
+}-*/;		
 
 	public final WidgetInput getWidgetInput() {
 		WidgetInput wi = new WidgetInput();
@@ -131,4 +136,8 @@ public class WidgetInputJson extends GenericJson {
 	public final native void setWidgetOptionId(String widgetOptionId) /*-{
 		this.widgetOptionId = widgetOptionId;
 	}-*/;
+	
+	public final native void setReferenceCode(String referenceCode) /*-{
+	this.referenceCode = referenceCode;
+}-*/;	
 }

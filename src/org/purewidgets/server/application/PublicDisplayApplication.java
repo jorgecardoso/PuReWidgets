@@ -3,6 +3,7 @@
  */
 package org.purewidgets.server.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -27,7 +28,7 @@ import com.google.appengine.api.datastore.Key;
  *
  */
 @PersistenceCapable
-public class PublicDisplayApplication  {
+public class PublicDisplayApplication {
 
 	/**
 	 * The URL query string parameter name that holds the application id
@@ -73,17 +74,27 @@ public class PublicDisplayApplication  {
 	/**
 	 * The PersistenceManager used to access the datastore.
 	 */
+	@NotPersistent
 	private PersistenceManager persistenceManager;
 	
 	/**
 	 * The ApplicationLifeCycle object.
 	 */
+	@NotPersistent
 	private ApplicationLifeCycle applicationLifeCycle;
 	
 	/**
 	 * The ServerCommunicator object used to communicate with the InteractionManager.
 	 */
+	@NotPersistent
 	private ServerServerCommunicator serverCommunicator;
+	
+	
+	/**
+	 * The widgets used by the app
+	 */
+	@NotPersistent
+	private ArrayList<Widget> widgets;
 	
 	private boolean firstTime;
 	
@@ -93,18 +104,21 @@ public class PublicDisplayApplication  {
 		this.persistenceManager = pm;
 		this.applicationLifeCycle = acl;
 		
-		
 	}
 	
 	
 	private void init() {
 		Log.info(this, "Initing application " + this.appId);
+		this.widgets = new ArrayList<Widget>();
 		this.remoteStorage = RemoteStorage.get(placeId, appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
 		
 		serverCommunicator = new ServerServerCommunicator(persistenceManager, this.remoteStorage, this.placeId, this.appId);
-		WidgetManager.get().setServerCommunication(serverCommunicator);
+//		WidgetManager.get().setServerCommunication(serverCommunicator);
+//		
+//		Log.debug("Clearing widget manager");
+//		WidgetManager.get().getWidgetList().clear();
 	}
 	
 	public void run() {
@@ -118,11 +132,13 @@ public class PublicDisplayApplication  {
 			this.applicationLifeCycle.setup();
 		}
     	
+		Log.debug(this, "Triggering 'start' event");
 		this.applicationLifeCycle.start();
 		
+		Log.debug(this, "Asking for input");
 		serverCommunicator.askForInputFromServer();
 		
-		
+		Log.debug(this, "Triggering 'finish' event");
 		this.applicationLifeCycle.finish();
 		//remoteStorage.saveWidgets(WidgetManager.get().getWidgetList(), persistenceManager);
 		persistenceManager.makePersistent(this);
@@ -153,7 +169,7 @@ public class PublicDisplayApplication  {
 	}
 	
 	public static void load(String placeId, String appId, ApplicationLifeCycle acl) {
-		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Loading application ");
+		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Launching application '" + appId + "'");
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 				
@@ -171,7 +187,7 @@ public class PublicDisplayApplication  {
 	        
 	        if (!results.isEmpty()) {
 	        	application = results.get(0);
-	        	Log.info(PublicDisplayApplication.class.getCanonicalName(), "Loaded application " + application.appId);
+	        	Log.info(PublicDisplayApplication.class.getCanonicalName(), "Retrieved application " + application.appId);
 
 	        	if (results.size() > 1) {
 	        		Log.warn(PublicDisplayApplication.class.getCanonicalName(), "But found more matching applications in the DS");
@@ -200,7 +216,10 @@ public class PublicDisplayApplication  {
 	    }  finally {
 	        query.closeAll();
 	    }	    
+	    Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Triggering 'loaded' event");
 	    acl.loaded(application);
+	    
+	    Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Running application");
 	    application.run();
 		//return application;
 	}
@@ -236,8 +255,26 @@ public class PublicDisplayApplication  {
 		return this.remoteStorage.getLong(name);
 	}
 	
-	public void addWidget(Widget w) {
-		WidgetManager.get().addWidget(w);
+	public void addWidget(Widget w, boolean propagateToServer) {
+		Log.debug(this, "Adding widget '" + w.getWidgetId() + "' to application.");
+		if ( !this.widgets.contains(w) ) {
+			this.widgets.add(w);
+		}
+		
+		if ( propagateToServer ) {
+			Log.debug(this, "Sending widget '" + w.getWidgetId() + "' to server.");
+			this.serverCommunicator.addWidget(w);
+		}
+	}
+	
+	public void removeWidget(Widget w, boolean propagateToServer) {
+		Log.debug(this, "Removing widget '" + w.getWidgetId() + "' from application.");
+		this.widgets.remove(w);
+		
+		if ( propagateToServer ) {
+			Log.debug(this, "Removing widget '" + w.getWidgetId() + "' from server.");
+			this.serverCommunicator.deleteWidget(w);
+		}
 	}
 
 	private void setPersistenceManager(PersistenceManager pm) {
@@ -292,13 +329,34 @@ public class PublicDisplayApplication  {
 
 
 	/**
+	 * @return the widgets
+	 */
+	public ArrayList<Widget> getWidgets() {
+		return widgets;
+	}
+
+
+	/**
+	 * @param widgets the widgets to set
+	 */
+	public void setWidgets(ArrayList<Widget> widgets) {
+		this.widgets = widgets;
+	}
+
+
+	/**
 	 * @return the serverCommunicator
 	 */
 	public ServerServerCommunicator getServerCommunicator() {
 		return serverCommunicator;
 	}
 
-	
-	
-	
+
+	/**
+	 * @param serverCommunicator the serverCommunicator to set
+	 */
+	public void setServerCommunicator(ServerServerCommunicator serverCommunicator) {
+		this.serverCommunicator = serverCommunicator;
+	}
+
 }

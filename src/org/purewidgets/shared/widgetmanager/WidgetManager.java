@@ -22,6 +22,8 @@ public class WidgetManager implements ServerListener {
 	 * "There can be only one"! Singleton pattern.
 	 */
 	private static WidgetManager wm = new WidgetManager();
+	
+	//private static HashMap<String, WidgetManager> wmMap = new HashMap<String, WidgetManager>();
 
 	public static WidgetManager get() {
 		return wm;
@@ -103,7 +105,7 @@ public class WidgetManager implements ServerListener {
 			//Log.debug(this, "Adding new widget to widget list.");
 		} else {
 			
-			Log.warn(this, "Widget already exists, replacing entry " + index + ".");
+			Log.warn(this, "Widget '" + widget.getWidgetId() + "' already exists, replacing entry " + index + ".");
 			
 			this.widgetList.set(index, widget);
 		}

@@ -3,11 +3,10 @@ package org.purewidgets.shared.widgetmanager;
 import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.widgets.Widget;
 
-@JsonAutoDetect(value=JsonMethod.FIELD, fieldVisibility=Visibility.ANY)
+@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class WidgetList {
 	
 	private String applicationId;
