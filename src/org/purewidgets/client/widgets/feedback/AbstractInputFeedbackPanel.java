@@ -9,6 +9,7 @@ import org.purewidgets.client.widgets.TransparentPopupPanel;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 
@@ -193,5 +194,9 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	
 	public GuiWidget getWidget() {
 		return this.widget;
+	}
+	
+	public Widget getFeedbackDisplayWidget() {
+		return this;
 	}
 }

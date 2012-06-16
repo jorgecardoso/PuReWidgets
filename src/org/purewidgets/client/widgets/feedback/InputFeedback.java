@@ -6,7 +6,6 @@ import org.purewidgets.shared.events.InputEvent;
 
 
 
-
 /**
  * 
  * Represents the feedback information given by widgets to the users.
