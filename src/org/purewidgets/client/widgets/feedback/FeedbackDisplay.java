@@ -14,6 +14,7 @@ import org.purewidgets.client.widgets.GuiWidget;
  */
 public interface FeedbackDisplay  {
 
+	public GuiWidget getWidget();
 	
 	/**
 	 * Sets the reference point on the widget  that will be used to align the 
@@ -51,7 +52,7 @@ public interface FeedbackDisplay  {
 	 * 
 	 * @param feedback
 	 */
-	public void show(InputFeedback<? extends GuiWidget> feedback);
+	public void show(InputFeedback<? extends GuiWidget> feedback, int duration);
 	
 	/**
 	 * Hides the feedback.

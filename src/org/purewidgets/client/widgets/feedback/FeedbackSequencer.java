@@ -6,11 +6,16 @@ package org.purewidgets.client.widgets.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.client.widgets.events.InputFeedbackListener;
 import org.purewidgets.shared.Log;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  * 
@@ -69,8 +74,14 @@ public class FeedbackSequencer {
 	/**
 	 * The display panel for the input feedback.
 	 */
-	private FeedbackDisplay display;
-
+	private CumulativeInputFeedbackPanel display;
+	
+	
+	
+	protected static CumulativeInputFeedbackPanel sharedFeedbackDisplay; 
+	protected static FeedbackSequencer lastToShare = null;
+	
+	
 	/**
 	 * The duration of each feedback on the display 
 	 */
@@ -92,9 +103,14 @@ public class FeedbackSequencer {
 	protected Timer timer;
 	
 	/**
+	 * The timer used to periodically check if the widget is still visible.
+	 */
+	protected Timer timerCheckVisibility;
+	
+	/**
 	 * The list of input feedback to display.
 	 */
-	protected List<InputFeedback<? extends GuiWidget>> input;
+	private List<InputFeedback<? extends GuiWidget>> input;
 	
 	/**
 	 * The current input feedback being processed
@@ -113,12 +129,12 @@ public class FeedbackSequencer {
 	protected STATE state;
 	
 	
-	public  FeedbackSequencer (FeedbackDisplay display, InputFeedbackListener listener) {
+	public  FeedbackSequencer (CumulativeInputFeedbackPanel display, InputFeedbackListener listener) {
 		this(display, listener, DEFAULT_FEEDBACK_DURATION, DEFAULT_FEEDBACK_DELAY, DEFAULT_FINAL_DELAY);
 	}
 	
 	
-	public FeedbackSequencer (FeedbackDisplay display, InputFeedbackListener listener, 
+	public FeedbackSequencer (CumulativeInputFeedbackPanel display, InputFeedbackListener listener, 
 			int feedbackDuration, 
 			int feedbackIntervalDelay,
 			int feedbackFinalDelay) {
@@ -138,13 +154,54 @@ public class FeedbackSequencer {
 				FeedbackSequencer.this.timerElapsed();				
 			}
 		};
+		
+		timerCheckVisibility = new Timer() {
+			@Override
+			public void run() {
+				FeedbackSequencer.this.timerCheckVisibilityElapsed();				
+			}
+		};
+		if ( null == sharedFeedbackDisplay ) {
+			sharedFeedbackDisplay = new CumulativeInputFeedbackPanel(null);
+			sharedFeedbackDisplay.setWidgetReferencePoint(Align.BOTTOM);
+			sharedFeedbackDisplay.setAlignDisplacementY(0);
+			sharedFeedbackDisplay.setShowTitles(true);
+		}
+		
 	}
 	
+	protected void timerCheckVisibilityElapsed() {
+		Log.debug(this, "Checking visibility of widget '" + this.display.getWidget().getWidgetId() +"'");
+		if ( null != this.display.getWidget() && this.display.getWidget().isDisplaying() ) {
+			this.timerCheckVisibility.schedule(200);
+		} else {
+			Log.debug(this, "Widget '" + this.display.getWidget().getWidgetId() +"' not visible.");
+			PositionAnimation animate = new PositionAnimation(this.display, 
+					Window.getClientWidth()/2-this.display.getOffsetWidth()/2, 
+					Window.getClientHeight()-this.display.getOffsetHeight());
+			animate.run(1500);
+			Timer t = new Timer() {
+				@Override
+				public void run() {
+					sharedFeedbackDisplay.show(FeedbackSequencer.this.current, DEFAULT_FINAL_DELAY+DEFAULT_FEEDBACK_DURATION);
+					FeedbackSequencer.this.display.hide();
+					lastToShare = FeedbackSequencer.this;
+				}
+			};
+			t.schedule(1500);
+			
+			
+		}
+		
+	}
+
+
 	public boolean isShowing() {
 		
 		return state == STATE.SHOWING;
 		
 	}
+	
 	
 	
 	public void add(InputFeedback<? extends GuiWidget> feedback) {
@@ -155,7 +212,18 @@ public class FeedbackSequencer {
 		
 	}
 	
+	public void stop() {
+		if ( null != this.timer ) {
+			this.timer.cancel();
+		}
+	}
 	
+	public void clear() {
+		if ( null != this.input ) {
+			this.input.clear();
+		}
+		
+	}
 	
 	
 	/////////// Implementation of the sequencer
@@ -169,15 +237,15 @@ public class FeedbackSequencer {
 	private void start() {
 		
 		if ( STATE.STOPPED == state || STATE.FINAL == state ) {
-			
 			timer.cancel();
 			state = STATE.SHOWING;
 			startShowingFeedback();
 			timer.schedule( this.getFeedbackDuration() );
 			Log.debug(this, "Scheduling timer " + this.getFeedbackDuration());
-			
 		}
-		
+		if ( null != this.display.getWidget() && this.display.getWidget().isDisplaying() ) {
+			timerCheckVisibility.schedule(300);
+		}
 	}
 	
 	/**
@@ -234,9 +302,12 @@ public class FeedbackSequencer {
 	 * This method stops showing the current feedback by hiding its display.
 	 */
 	private void stopShowingFeedback() {
+		timerCheckVisibility.cancel();
 		
 		Log.debug(this, "Stopping feedback.");
-		this.display.hide( current, this.input.size() == 0 );
+	//	this.display.hide( current, this.input.size() == 0 );
+		
+
 		
 		/*
 		 * Trigger the input feedback event on the widget. 
@@ -256,8 +327,11 @@ public class FeedbackSequencer {
 		
 		Log.debug(this, "Starting to show feedback.");
 		current = this.input.remove(0);
-		
-		this.display.show(current);
+		if ( null != this.display.getWidget() && this.display.getWidget().isDisplaying() ) {
+			this.display.show(current, DEFAULT_FINAL_DELAY);
+		} else {
+			sharedFeedbackDisplay.show(current, DEFAULT_FINAL_DELAY);
+		}
 		
 		/*
 		 * Trigger the input feedback started event on the widget.
@@ -299,5 +373,42 @@ public class FeedbackSequencer {
 
 	public int getFeedbackFinalDelay() {
 		return feedbackFinalDelay;
+	}
+
+
+	/**
+	 * @return the input
+	 */
+	public List<InputFeedback<? extends GuiWidget>> getInput() {
+		return input;
+	}
+
+
+	/**
+	 * @param input the input to set
+	 */
+	public void setInput(List<InputFeedback<? extends GuiWidget>> input) {
+		this.input = input;
+	}
+	
+	class PositionAnimation extends Animation {
+		
+		int startX, startY;
+		int targetX, targetY;
+		PopupPanel panel;
+		PositionAnimation(PopupPanel panel, int targetX, int targetY) {
+			super();
+			startX = panel.getAbsoluteLeft();
+			startY = panel.getAbsoluteTop();
+			this.targetX = targetX;
+			this.targetY = targetY;
+			this.panel = panel;
+		}
+
+		@Override
+		protected void onUpdate(double progress) {
+			
+			panel.setPopupPosition( (int)(startX+(targetX-startX)*progress), (int)(startY+(targetY-startY)*progress) );
+		}
 	}
 }

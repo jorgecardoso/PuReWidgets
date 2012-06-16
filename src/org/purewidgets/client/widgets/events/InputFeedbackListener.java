@@ -28,4 +28,10 @@ public interface InputFeedbackListener {
 	 * @param feedback The feedback to stop showing. 
 	 */
 	public void inputFeedbackEnded(InputFeedback<? extends GuiWidget> feedback, boolean noMore);
+
+
+	/**
+	 * Triggered when the widget stops being visible
+	 */
+	public void widgetVisibilityChanged();
 }

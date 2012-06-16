@@ -57,8 +57,8 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	private Align inputFeedbackPanelReferencePoint = Align.CENTER;
 */
 	
-	protected static CumulativeInputFeedbackPanel sharedFeedbackDisplay; 
-	protected static FeedbackSequencer sharedFeedbackSequencer;
+
+
 	
 	
 	/**
@@ -122,18 +122,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 */
 	public GuiWidget() {
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
-		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
-		
-		if ( null == sharedFeedbackDisplay ) {
-			sharedFeedbackDisplay = new CumulativeInputFeedbackPanel(null);
-			sharedFeedbackDisplay.setWidgetReferencePoint(Align.BOTTOM);
-			sharedFeedbackDisplay.setAlignDisplacementY(0);
-			sharedFeedbackDisplay.setShowTitles(true);
-		}
-		if ( null == sharedFeedbackSequencer ) {
-			sharedFeedbackSequencer = new FeedbackSequencer(sharedFeedbackDisplay, null);
-		}
-		
+		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);		
 	}
 
 	public boolean isDisplaying() {
@@ -368,17 +357,29 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 				 * Schedule the feedback to appear. Widgets may return null as an indication that no feedback should be displayed
 				 */
 				if ( null != feedback ) {
-					if ( this.isDisplaying() ) {
-						this.feedbackSequencer.add(feedback);
-					} else {
-						sharedFeedbackSequencer.add(feedback);
-					}
+					
+					this.feedbackSequencer.add(feedback);
+					
 				}
 			}
 		}
 
 	}
 
+	
+	
+	@Override
+	public void widgetVisibilityChanged() {
+//		Log.debug(this, "Widget visibility changed, transfering feedback.");
+//		/*
+//		 * Transfer the feedback to the bottom panel
+//		 */
+//		this.feedbackSequencer.stop();
+//		for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput() ) {
+//			sharedFeedbackSequencer.add(inputfeedback);
+//		}
+//		this.feedbackSequencer.clear();
+	}
 	
 	/**
 	 * Concrete widgets should override this method to update their Gui with the correct reference codes.
@@ -712,4 +713,6 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		}
 		return s;
 	}
+
+
 }

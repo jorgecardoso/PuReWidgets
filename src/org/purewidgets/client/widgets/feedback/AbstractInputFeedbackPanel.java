@@ -191,4 +191,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 		this.alignDisplacementY = alignDisplacementY;
 	}
 	
+	public GuiWidget getWidget() {
+		return this.widget;
+	}
 }

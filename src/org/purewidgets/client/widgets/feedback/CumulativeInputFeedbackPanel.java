@@ -11,6 +11,7 @@ import java.util.List;
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.shared.Log;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -108,6 +109,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	private List<InputFeedback<? extends GuiWidget>> accumulatedFeedback;
 	
+	private Timer timer;
 	
 	/**
 	 * Creates a new SequentialInputFeedbackPanel with default values for the
@@ -143,11 +145,9 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		this.accumulatedFeedback = new ArrayList<InputFeedback<? extends GuiWidget>>();
 		
 		this.mainPanel = new VerticalPanel();
-		this.add(mainPanel);
+		this.setWidget(mainPanel);
 		
-		title = new Label("");
-		title.addStyleName(TITLE_STYLENAME_SUFFIX);
-		mainPanel.add(title);
+		
 		// infoLabel = new Label();
 		vPanel = new VerticalPanel();
 		mainPanel.add(vPanel);
@@ -156,23 +156,35 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		super.setStyleName(DEFAULT_STYLENAME);
 		//this.getBackground().setClassName(BACKGROUND_DEFAULT_STYLENAME);
 		
-
+		timer = new Timer() {
+			@Override
+			public void run() {
+				CumulativeInputFeedbackPanel.this.hide(null, true);
+			}
+		};
 	}
 	
 
 	@Override
-	public void show(InputFeedback<? extends GuiWidget> feedback) {
+	public void show(InputFeedback<? extends GuiWidget> feedback, int duration) {
+		timer.schedule(duration);
+		
 		Log.debug(this, "Showing:" + feedback.toString());
 		
 		if ( this.newOnTop ) {
 			this.accumulatedFeedback.add(0, feedback);
+			if (this.accumulatedFeedback.size() > this.maxLines) {
+				this.accumulatedFeedback.remove(this.accumulatedFeedback.size()-1);
+			}
 		} else {
 			this.accumulatedFeedback.add(feedback);
+			
+			if (this.accumulatedFeedback.size() > this.maxLines) {
+				this.accumulatedFeedback.remove(0);
+			}
 		}
 		
-		if (this.accumulatedFeedback.size() > this.maxLines) {
-			this.accumulatedFeedback.remove(0);
-		}
+		
 		
 		vPanel.clear();
 		
@@ -209,7 +221,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 
 	@Override
 	public void hide(InputFeedback<? extends GuiWidget> feedback, boolean noMore) {
-		Log.debug("Stopped showing:" + feedback.toString() + " more feedback: "+noMore);
+		if ( null != feedback ) {
+			Log.debug("Stopped showing:" + feedback.toString() + ". More feedback: "+noMore);
+		} else {
+			Log.debug("Stopped showing feedback. More feedback: "+noMore);
+		}
 		
 		/*
 		 * In the case where the panel only displays one line at a time
