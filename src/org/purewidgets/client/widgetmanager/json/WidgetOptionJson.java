@@ -1,6 +1,7 @@
 package org.purewidgets.client.widgetmanager.json;
 
 import org.purewidgets.client.json.GenericJson;
+import org.purewidgets.shared.Log;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 
 
@@ -64,7 +65,8 @@ return this.shortDescription;
 		WidgetOptionJson optionJSON = GenericJson.getNew();
 		
 		optionJSON.setWidgetOptionId(widgetOption.getWidgetOptionId());
-		optionJSON.setSuggestedReferenceCode(widgetOption.getReferenceCode());
+		optionJSON.setSuggestedReferenceCode(widgetOption.getSuggestedReferenceCode());
+		
 		optionJSON.setReferenceCode(widgetOption.getReferenceCode());
 		optionJSON.setLongDescription(widgetOption.getLongDescription());
 		optionJSON.setShortDescription(widgetOption.getShortDescription());
