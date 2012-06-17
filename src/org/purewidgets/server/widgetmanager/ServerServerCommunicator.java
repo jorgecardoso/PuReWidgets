@@ -39,16 +39,21 @@ import org.purewidgets.shared.widgets.Widget;
  *
  */
 public class ServerServerCommunicator implements ServerCommunicator {	
+
+	
+	private static final String DEFAULT_INTERACTION_SERVER_URL = "http://pw-interactionmanager.appspot.com";
+	
+	
+	/**
+	 * The address of the InteractionManager server.
+	 */
+	private  String interactionServerUrl;
+	
 	
 	// TODO: We should verify that widgets were really added to the InteractionManager,
 	// just like in the clientServeCommunicator. 
 	// We should keep a (persistent) list of widgets to add and only remove  a widget
 	// from this list when we received a confirmation from the server.
-	
-	/**
-	 * The address of the InteractionManager server.
-	 */
-	private static final String INTERACTION_SERVER = "http://pw-interactionmanager.appspot.com";
 
 
 
@@ -89,12 +94,42 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	public ServerServerCommunicator(PersistenceManager pm, RemoteStorage remoteStorage, String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
-		this.applicationUrl = INTERACTION_SERVER +	"/place/" + placeId + "/application/"+ appId;
+		this.interactionServerUrl = DEFAULT_INTERACTION_SERVER_URL;
+		this.applicationUrl = this.interactionServerUrl +	"/place/" + placeId + "/application/"+ appId;
 		
 		interactionService = new InteractionServiceImpl();
 		this.remoteStorage = remoteStorage;// RemoteStorage.get();
 	}
 
+
+	public  String getServerUrl() {
+		return interactionServerUrl;
+	}
+	
+	public  String getApplicationsUrl(String placeId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
+	}
+
+	public  String getApplicationUrl(String placeId, String applicationId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId +"?appid="+callingApplicationId;
+	}
+	
+	public  String getApplicationUrl(String placeId, String applicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId;
+	}
+	
+	public  String getPlacesUrl(String callingApplicationId) {
+		return interactionServerUrl + "/place?appid=" + callingApplicationId ;
+	}
+
+	public  String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
+	}
+	public  String getWidgetInputUrl(String placeId, String applicationId, String widgetId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
+	}
+
+	
 	/* (non-Javadoc)
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
@@ -134,7 +169,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		String response = null;
 		try {
 			response = interactionService.post(json,
-					WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) );
+					this.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (InteractionManagerException e) {
 			Log.error(this, e.getMessage());
 			e.printStackTrace();
@@ -255,7 +290,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		 * 'widget' url parameter
 		 */
 		StringBuilder widgetsUrlParam = new StringBuilder();
-		widgetsUrlParam.append( WidgetManager.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
+		widgetsUrlParam.append( this.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
 		
 		
 		try {
@@ -361,7 +396,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		
-		String url = WidgetManager.getWidgetsUrl(placeId, applicationId, this.appId);
+		String url = this.getWidgetsUrl(placeId, applicationId, this.appId);
 		
 		Log.debug(this, "Asking application server for the widget list..." + url);
 		String response = null;
@@ -452,6 +487,22 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	public void getPlacesList(Callback<ArrayList<Place>> callback) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	/**
+	 * @return the interactionServerUrl
+	 */
+	public String getInteractionServerUrl() {
+		return interactionServerUrl;
+	}
+
+
+	/**
+	 * @param interactionServerUrl the interactionServerUrl to set
+	 */
+	public void setInteractionServerUrl(String interactionServerUrl) {
+		this.interactionServerUrl = interactionServerUrl;
 	}
 
 }

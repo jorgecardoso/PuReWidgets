@@ -69,7 +69,7 @@ import com.google.appengine.api.datastore.Key;
  * 
  */
 
-@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = Visibility.ANY)
+@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class Widget implements Comparable<Widget> {
 
 	public static String CONTROL_TYPE_IMPERATIVE_SELECTION = "imperative_selection";

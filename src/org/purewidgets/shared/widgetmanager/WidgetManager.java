@@ -15,9 +15,7 @@ import org.purewidgets.shared.widgets.Widget;
  * @author Jorge C. S. Cardoso
  */
 public class WidgetManager implements ServerListener {
-	//"http://localhost:8080";//
-	private static final String INTERACTION_SERVER = "http://pw-interactionmanager.appspot.com";
-	
+
 	/**
 	 * "There can be only one"! Singleton pattern.
 	 */
@@ -27,33 +25,6 @@ public class WidgetManager implements ServerListener {
 
 	public static WidgetManager get() {
 		return wm;
-	}
-
-	public static String getServerUrl() {
-		return INTERACTION_SERVER;
-	}
-	
-	public static String getApplicationsUrl(String placeId, String callingApplicationId) {
-		return INTERACTION_SERVER + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
-	}
-
-	public static String getApplicationUrl(String placeId, String applicationId, String callingApplicationId) {
-		return INTERACTION_SERVER + "/place/" + placeId + "/application/"+ applicationId +"?appid="+callingApplicationId;
-	}
-	
-	public static String getApplicationUrl(String placeId, String applicationId) {
-		return INTERACTION_SERVER + "/place/" + placeId + "/application/"+ applicationId;
-	}
-	
-	public static String getPlacesUrl(String callingApplicationId) {
-		return INTERACTION_SERVER + "/place?appid=" + callingApplicationId ;
-	}
-
-	public static String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
-		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
-	}
-	public static String getWidgetInputUrl(String placeId, String applicationId, String widgetId, String callingApplicationId) {
-		return INTERACTION_SERVER + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
 	}
 
 	

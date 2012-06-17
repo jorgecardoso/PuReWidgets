@@ -156,18 +156,22 @@ public class PublicDisplayApplication  {
 	 * precedence over URL parameters.
 	 */
 	public static String getParameterString(String name, String defaultValue) {
-		if (null == parameters || parameters.size() == 0)
-			return defaultValue;
-		
-		String remoteValue = null;
-		
-		remoteValue = parameters.get(name);
-		Log.debug("Remote value for " + name + " is " + remoteValue);
-		
 
-		if (null != remoteValue) {
-			return remoteValue;
-		}
+		/*
+		 * Check remote storage first
+		 */
+		if (null != parameters && parameters.size() > 0) {
+
+			String remoteValue = null;
+		
+			remoteValue = parameters.get(name);
+			Log.debug("Remote value for " + name + " is " + remoteValue);
+			
+	
+			if (null != remoteValue) {
+				return remoteValue;
+			}
+		} 
 
 		/*
 		 * Check the URL for the parameter
@@ -179,6 +183,7 @@ public class PublicDisplayApplication  {
 		}
 
 		return defaultValue;
+		
 	}		
 	
 	
@@ -204,7 +209,9 @@ public class PublicDisplayApplication  {
 
 	public static void load(PublicDisplayApplicationLoadedListener entryPoint,
 			String defaultAppName, boolean autoDeleteVolatile) {
-		listener = entryPoint;
+		
+		PublicDisplayApplication.listener = entryPoint;
+		PublicDisplayApplication.autoDeleteVolatile = autoDeleteVolatile;
 
 		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
 
@@ -230,15 +237,51 @@ public class PublicDisplayApplication  {
 
 		remoteStorage = new RemoteStorage(placeName, applicationName);
 		
+		
+		remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					PublicDisplayApplication.handleParametersFromServer(null);
+				}
+
+				@Override
+				public void onSuccess(Map<String, String> result) {
+					PublicDisplayApplication.handleParametersFromServer(result);
+				}
+			});
+		
+		org.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
+	}
+
+	protected static void handleParametersFromServer(Map<String, String> result) {
+		if (null != result) {
+			PublicDisplayApplication.parameters = result;
+			
+			for ( String key : result.keySet() ) {
+				
+				Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
+			}
+		} else {
+			
+			PublicDisplayApplication.parameters = new HashMap<String, String>();
+		
+		}
+		
 		PublicDisplayApplication.loaded = true;
 		
+		String interactionManagerUrl = PublicDisplayApplication.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
+		
+		Log.info(PublicDisplayApplication.class.getName(), "Using interaction manager: " + interactionManagerUrl);
+		
 		serverCommunicator = new ClientServerCommunicator(placeName, applicationName);
+		serverCommunicator.setInteractionServerUrl(interactionManagerUrl);
 		WidgetManager.get().setServerCommunication( serverCommunicator );
 
 		/*
 		 * Delete all volatile widgets that may have left on the server before
 		 */
-		PublicDisplayApplication.autoDeleteVolatile = autoDeleteVolatile;
+
 		if (autoDeleteVolatile) {
 			Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
 			WidgetManager.get().removeAllWidgets(true);
@@ -256,44 +299,8 @@ public class PublicDisplayApplication  {
 					WidgetManager.get().removeAllWidgets(true);
 				}
 			}
-		});
-
+		});		
 		
-		
-		remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					PublicDisplayApplication.handleParametersFromServer(null);
-					
-
-				}
-
-				@Override
-				public void onSuccess(Map<String, String> result) {
-					PublicDisplayApplication.handleParametersFromServer(result);
-
-				}
-
-			});
-		
-			org.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
-	}
-
-	protected static void handleParametersFromServer(Map<String, String> result) {
-		if (null != result) {
-			PublicDisplayApplication.parameters = result;
-			
-			
-			for ( String key : result.keySet() ) {
-				
-				Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
-			}
-		} else {
-			
-			PublicDisplayApplication.parameters = new HashMap<String, String>();
-		
-		}
 		
 		serverCommunicator.getApplication(placeName, applicationName, new Callback<Application>() {
 

@@ -103,7 +103,6 @@ public class PublicDisplayApplication {
 		this.appId = appId;
 		this.persistenceManager = pm;
 		this.applicationLifeCycle = acl;
-		
 	}
 	
 	
@@ -113,8 +112,10 @@ public class PublicDisplayApplication {
 		this.remoteStorage = RemoteStorage.get(placeId, appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
-		
+		String interactionManager = this.remoteStorage.getString("imurl", "http://pw-interactionmanager.appspot.com");
+		Log.info(this, "Using interaction manager: " + interactionManager);
 		serverCommunicator = new ServerServerCommunicator(persistenceManager, this.remoteStorage, this.placeId, this.appId);
+		serverCommunicator.setInteractionServerUrl(interactionManager);
 //		WidgetManager.get().setServerCommunication(serverCommunicator);
 //		
 //		Log.debug("Clearing widget manager");

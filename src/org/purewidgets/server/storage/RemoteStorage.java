@@ -64,6 +64,13 @@ public class RemoteStorage {
 		Dao.commitOrRollbackTransaction();
 	}
 	
+	public String getString(String name, String defaultValue) {
+		String r = getString(name);
+		if ( null != r ) {
+			return r;
+		}
+		return defaultValue;
+	}
 	public String getString(String name) {
 		Dao.beginTransaction();
 		this.storage = Dao.getStorage(storageId);
