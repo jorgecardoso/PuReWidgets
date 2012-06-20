@@ -26,7 +26,6 @@ import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetInputList;
 import org.purewidgets.shared.widgetmanager.WidgetList;
-import org.purewidgets.shared.widgetmanager.WidgetManager;
 import org.purewidgets.shared.widgets.Application;
 import org.purewidgets.shared.widgets.Place;
 import org.purewidgets.shared.widgets.Widget;

@@ -21,7 +21,6 @@ import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
-import org.purewidgets.shared.widgetmanager.WidgetManager;
 import org.purewidgets.shared.widgets.Application;
 import org.purewidgets.shared.widgets.Place;
 import org.purewidgets.shared.widgets.Widget;

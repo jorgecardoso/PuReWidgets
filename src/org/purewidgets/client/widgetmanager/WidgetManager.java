@@ -1,13 +1,18 @@
 /**
  * 
  */
-package org.purewidgets.shared.widgetmanager;
+package org.purewidgets.client.widgetmanager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.widgetmanager.Callback;
+import org.purewidgets.shared.widgetmanager.ServerCommunicator;
+import org.purewidgets.shared.widgetmanager.ServerListener;
+import org.purewidgets.shared.widgetmanager.WidgetInput;
+import org.purewidgets.shared.widgetmanager.WidgetOption;
 import org.purewidgets.shared.widgets.Widget;
 
 

@@ -18,7 +18,6 @@ import org.purewidgets.server.PMF;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.server.widgetmanager.ServerServerCommunicator;
 import org.purewidgets.shared.Log;
-import org.purewidgets.shared.widgetmanager.WidgetManager;
 import org.purewidgets.shared.widgets.Widget;
 
 import com.google.appengine.api.datastore.Key;
