@@ -3,6 +3,8 @@
  */
 package org.purewidgets.shared.widgets;
 
+import org.purewidgets.shared.interactionmanager.Widget;
+
 /**
  * @author "Jorge C. S. Cardoso"
  *

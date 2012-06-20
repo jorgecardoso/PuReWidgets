@@ -3,8 +3,8 @@
  */
 package org.purewidgets.shared.events;
 import org.purewidgets.client.widgets.GuiWidget;
-import org.purewidgets.shared.widgetmanager.WidgetOption;
-import org.purewidgets.shared.widgets.Widget;
+import org.purewidgets.shared.interactionmanager.Widget;
+import org.purewidgets.shared.interactionmanager.WidgetOption;
 
 
 

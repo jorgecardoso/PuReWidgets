@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.interactionmanager.Widget;
 
 public class Upload  extends Widget {
 	public Upload(String widgetId, String label) {

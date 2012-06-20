@@ -3,9 +3,9 @@ package org.purewidgets.client.widgetmanager.json;
 import java.util.ArrayList;
 
 import org.purewidgets.client.json.GenericJson;
+import org.purewidgets.shared.interactionmanager.Widget;
+import org.purewidgets.shared.interactionmanager.WidgetOption;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgetmanager.WidgetOption;
-import org.purewidgets.shared.widgets.Widget;
 
 import com.google.gwt.core.client.JsArray;
 

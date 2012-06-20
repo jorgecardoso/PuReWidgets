@@ -3,7 +3,7 @@ package org.purewidgets.client.widgetmanager.json;
 import java.util.ArrayList;
 
 import org.purewidgets.client.json.GenericJson;
-import org.purewidgets.shared.widgetmanager.WidgetInput;
+import org.purewidgets.shared.interactionmanager.WidgetInput;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;

@@ -1,10 +1,9 @@
-package org.purewidgets.shared.widgetmanager;
+package org.purewidgets.shared.interactionmanager;
 
 import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.shared.widgets.Widget;
 
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class WidgetList {

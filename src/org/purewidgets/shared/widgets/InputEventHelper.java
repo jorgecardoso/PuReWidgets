@@ -1,14 +1,16 @@
 /**
  * 
  */
-package org.purewidgets.shared.widgetmanager;
+package org.purewidgets.shared.widgets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.interactionmanager.Widget;
+import org.purewidgets.shared.interactionmanager.WidgetInput;
+import org.purewidgets.shared.interactionmanager.WidgetOption;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgets.Widget;
 
 /**
  * @author "Jorge C. S. Cardoso"

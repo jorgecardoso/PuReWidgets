@@ -1,14 +1,13 @@
 /**
  * package doc widget
  */
-package org.purewidgets.shared.widgets;
+package org.purewidgets.shared.interactionmanager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.client.widgetmanager.WidgetManager;
 import org.purewidgets.shared.events.ActionEvent;
@@ -17,7 +16,6 @@ import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.events.InputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgetmanager.WidgetOption;
 
 import com.google.appengine.api.datastore.Key;
 

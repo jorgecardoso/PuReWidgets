@@ -2,7 +2,7 @@ package org.purewidgets.shared.events;
 
 import java.util.ArrayList;
 
-import org.purewidgets.shared.widgetmanager.WidgetOption;
+import org.purewidgets.shared.interactionmanager.WidgetOption;
 
 
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.shared.widgetmanager;
+package org.purewidgets.shared.interactionmanager;
 
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;

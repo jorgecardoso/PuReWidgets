@@ -1,4 +1,4 @@
-package org.purewidgets.shared.widgetmanager;
+package org.purewidgets.shared.interactionmanager;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,6 @@ public class WidgetInput {
 
 	private String referenceCode;
 		
-
 	private String widgetId;
 	
 	private String widgetOptionId;
