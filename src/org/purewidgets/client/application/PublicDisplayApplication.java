@@ -11,7 +11,6 @@ import org.purewidgets.client.storage.RemoteStorage;
 import org.purewidgets.client.widgetmanager.ClientServerCommunicator;
 import org.purewidgets.client.widgetmanager.WidgetManager;
 import org.purewidgets.shared.Log;
-import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgets.Application;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -302,7 +301,7 @@ public class PublicDisplayApplication  {
 		});		
 		
 		
-		serverCommunicator.getApplication(placeName, applicationName, new Callback<Application>() {
+		serverCommunicator.getApplication(placeName, applicationName, new AsyncCallback<Application>() {
 
 			@Override
 			public void onSuccess(Application application) {

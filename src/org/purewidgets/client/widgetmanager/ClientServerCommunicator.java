@@ -19,7 +19,6 @@ import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.purewidgets.shared.Log;
-import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Application;
@@ -907,7 +906,7 @@ public class ClientServerCommunicator {
 
 
 	
-	public void getWidgetsList(String placeId, String applicationId, final Callback<ArrayList<Widget>> callback) {
+	public void getWidgetsList(String placeId, String applicationId, final AsyncCallback<ArrayList<Widget>> callback) {
 		Log.debug( this, "Getting widgets from server: " +  this.getWidgetsUrl(placeId,  applicationId, this.appId) );
 		try {
 			interactionService.get( this.getWidgetsUrl(placeId,  applicationId, this.appId), 
@@ -918,8 +917,7 @@ public class ClientServerCommunicator {
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(this, "Error getting list of widgets from server." + caught.getMessage());
-								caught.printStackTrace();
+								Log.warn(this, "Error getting list of widgets from server.", caught);
 							}
 
 						}
@@ -957,7 +955,7 @@ public class ClientServerCommunicator {
 	}
 	
 
-	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, final Callback<WidgetInput> callback) {
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, final AsyncCallback<WidgetInput> callback) {
 		WidgetInputJson widgetInputJson = WidgetInputJson.create(widgetInput);
 		
 		Log.debug(this, "Sending widget input: " + widgetInputJson.toJsonString());
@@ -969,7 +967,7 @@ public class ClientServerCommunicator {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Log.warn(this, "Error posting input. " + caught.getMessage());
+						Log.warn(this, "Error posting input. ", caught);
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						}
@@ -987,7 +985,7 @@ public class ClientServerCommunicator {
 		
 	}
 
-	public void setApplication(String placeId, String applicationId, Application application, final Callback<Application> callback) {
+	public void setApplication(String placeId, String applicationId, Application application, final AsyncCallback<Application> callback) {
 		ApplicationJson applicationJson = ApplicationJson.create(application);
 		
 		Log.debug(this, "Sending application: " + applicationJson.toJsonString());
@@ -999,7 +997,7 @@ public class ClientServerCommunicator {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Log.warn(this, "Error posting application. " + caught.getMessage());
+						Log.warn(this, "Error posting application. ", caught);
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						}
@@ -1017,7 +1015,7 @@ public class ClientServerCommunicator {
 		});
 	}
 
-	public void getApplication(String placeId, String applicationId, final Callback<Application> callback) {
+	public void getApplication(String placeId, String applicationId, final AsyncCallback<Application> callback) {
 		
 		
 		Log.debug(this, "Asking application: " + placeId +":"+applicationId);
@@ -1029,7 +1027,7 @@ public class ClientServerCommunicator {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Log.warn(this, "Error asking for  application. " + caught.getMessage());
+						Log.warn(this, "Error asking for  application. ",  caught);
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						}
@@ -1054,18 +1052,18 @@ public class ClientServerCommunicator {
 	}
 
 	
-	public void getApplicationsList(String placeId, final Callback<ArrayList<Application>> callback) {
+	public void getApplicationsList(String placeId, final AsyncCallback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, Application.STATE.All, callback);
 	}
 
 	public void getApplicationsList(String placeId, boolean active,
-			Callback<ArrayList<Application>> callback) {
+			AsyncCallback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, active?Application.STATE.Active : Application.STATE.Inactive, callback);
 		
 	}
 	
 	private void getApplicationsList(String placeId, Application.STATE state,
-			final Callback<ArrayList<Application>> callback) {
+			final AsyncCallback<ArrayList<Application>> callback) {
 		/*
 		 * Create the request url with the proper parameters based on the intended application state
 		 */
@@ -1090,8 +1088,7 @@ public class ClientServerCommunicator {
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(this, "Error getting list of applications from server."
-										+ caught.getMessage());
+								Log.warn(this, "Error getting list of applications from server.", caught);
 							}
 						}
 
@@ -1121,7 +1118,7 @@ public class ClientServerCommunicator {
 		}
 	}
 
-	public void getPlacesList(final Callback<ArrayList<Place>> callback) {
+	public void getPlacesList(final AsyncCallback<ArrayList<Place>> callback) {
 		Log.debug( this, "Getting places from server: " +  this.getPlacesUrl(this.appId) );
 		try {
 			interactionService.get( this.getPlacesUrl(this.appId), 
@@ -1132,7 +1129,7 @@ public class ClientServerCommunicator {
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(this, "Error getting list of places from server:"	+ caught.getMessage() );
+								Log.warn(this, "Error getting list of places from server.", caught );
 							}
 						}
 

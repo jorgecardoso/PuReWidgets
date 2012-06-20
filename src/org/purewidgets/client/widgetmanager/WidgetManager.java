@@ -8,12 +8,13 @@ import java.util.HashMap;
 
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.InputEventHelper;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 import org.purewidgets.shared.widgets.Widget;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 /**
@@ -257,7 +258,7 @@ public class WidgetManager implements ServerListener {
 	}
 	
 	//TODO: remove from widgetmanager
-	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, Callback<WidgetInput> callback) {
+	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, AsyncCallback<WidgetInput> callback) {
 		this.communicator.sendWidgetInput(placeName, applicationName, widgetInput, callback);
 	}
 }

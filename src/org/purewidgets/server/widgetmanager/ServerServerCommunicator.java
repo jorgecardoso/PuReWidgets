@@ -20,7 +20,6 @@ import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.exceptions.HttpServerException;
-import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetInputList;
@@ -385,7 +384,7 @@ public class ServerServerCommunicator  {
 		return 0;
 	}
 
-	public void getWidgetsList(String placeId, String applicationId, Callback<ArrayList<Widget>> callback) {
+	public ArrayList<Widget> getWidgetsList(String placeId, String applicationId) {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		
@@ -397,12 +396,9 @@ public class ServerServerCommunicator  {
 		try {
 			response = interactionService.get(url);
 		} catch (HttpServerException e) {
-			Log.error(this,  e.getMessage());
-			e.printStackTrace();
-			if ( null != callback ) {
-				callback.onFailure(e);	
-			}
-			return;
+			Log.error(this,  e.getMessage(), e);
+			
+			return new ArrayList<Widget>();
 		}
 		
 	
@@ -410,71 +406,20 @@ public class ServerServerCommunicator  {
 		try {
 			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
 			
-			/*
-			 * Notify the widgetManager
-			 */
-			if ( null != callback ) {
-				callback.onSuccess(widgetList.getWidgets());
-			}
-//			if (this.serverListener != null) {
-//				this.serverListener.onWidgetsList(placeId, applicationId, widgetList.getWidgets());
-//			}
+			return widgetList.getWidgets();
+			
 		} catch (JsonParseException e) {
-			Log.error(this, "Error parsing JSON: " + e.getMessage());
-			e.printStackTrace();
-			if ( null != callback ) {
-				callback.onFailure(e);	
-			}
+			Log.error(this, "Error parsing JSON: ", e);			
 		} catch (JsonMappingException e) {
-			Log.error(this, "Error mapping JSON: " + e.getMessage());
-			e.printStackTrace();
-			if ( null != callback ) {
-				callback.onFailure(e);	
-			}
+			Log.error(this, "Error mapping JSON: ", e);
 		} catch (IOException e) {
-			Log.error(this, "IO Error: " + e.getMessage());
-			e.printStackTrace();
-			if ( null != callback ) {
-				callback.onFailure(e);	
-			}
+			Log.error(this, "IO Error: ", e);
 		} 	
-		
+		return new ArrayList<Widget>();
 	}
 
 
 
-	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput,
-			Callback<WidgetInput> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void setApplication(String placeId, String applicationId, Application application, Callback<Application> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void getApplication(String placeId, String applicationId, Callback<Application> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void getApplicationsList(String placeId, Callback<ArrayList<Application>> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void getApplicationsList(String placeId, boolean active,
-			Callback<ArrayList<Application>> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void getPlacesList(Callback<ArrayList<Place>> callback) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	/**
