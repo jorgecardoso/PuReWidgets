@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgetmanager.json;
+package org.purewidgets.client.im.json;
 
 import java.util.ArrayList;
 

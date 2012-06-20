@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgetmanager;
+package org.purewidgets.client.im;
 
 import java.util.ArrayList;
 
@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import org.purewidgets.client.application.PublicDisplayApplication;
 import org.purewidgets.client.http.HttpService;
 import org.purewidgets.client.http.HttpServiceAsync;
+import org.purewidgets.client.im.json.ApplicationJson;
+import org.purewidgets.client.im.json.ApplicationListJson;
+import org.purewidgets.client.im.json.ChannelTokenJson;
+import org.purewidgets.client.im.json.PlaceListJson;
+import org.purewidgets.client.im.json.WidgetInputJson;
+import org.purewidgets.client.im.json.WidgetInputListJson;
+import org.purewidgets.client.im.json.WidgetJson;
+import org.purewidgets.client.im.json.WidgetListJson;
 import org.purewidgets.client.json.GenericJson;
-import org.purewidgets.client.widgetmanager.json.ApplicationJson;
-import org.purewidgets.client.widgetmanager.json.ApplicationListJson;
-import org.purewidgets.client.widgetmanager.json.ChannelTokenJson;
-import org.purewidgets.client.widgetmanager.json.PlaceListJson;
-import org.purewidgets.client.widgetmanager.json.WidgetInputJson;
-import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
-import org.purewidgets.client.widgetmanager.json.WidgetJson;
-import org.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.im.Place;
 import org.purewidgets.shared.im.Widget;
@@ -38,7 +38,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Jorge C. S. Cardoso
  *
  */
-public class ClientServerCommunicator {
+public class InteractionManager {
 
 		
 	//"http://localhost:8080";//
@@ -181,7 +181,7 @@ public class ClientServerCommunicator {
 
 	protected boolean channelOpen;
 	
-	public ClientServerCommunicator(String placeId, String appId) {
+	public InteractionManager(String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
 		
@@ -282,21 +282,21 @@ public class ClientServerCommunicator {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processAllWidgetDeleteResponse(
+							InteractionManager.this.processAllWidgetDeleteResponse(
 									false, null, caught);
 
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processAllWidgetDeleteResponse(
+							InteractionManager.this.processAllWidgetDeleteResponse(
 									true, result, null);
 
 						}
 
 					});
 		} catch (Exception e) {
-			ClientServerCommunicator.this.processAllWidgetDeleteResponse(false, null, e);
+			InteractionManager.this.processAllWidgetDeleteResponse(false, null, e);
 			e.printStackTrace();
 		}
 	}
@@ -429,18 +429,18 @@ public class ClientServerCommunicator {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processWidgetAddResponse(false, null, caught);
+							InteractionManager.this.processWidgetAddResponse(false, null, caught);
 							
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processWidgetAddResponse(true, result, null);
+							InteractionManager.this.processWidgetAddResponse(true, result, null);
 						}
 
 					});
 		} catch (Exception e) {
-			ClientServerCommunicator.this.processWidgetAddResponse(false, null, e);
+			InteractionManager.this.processWidgetAddResponse(false, null, e);
 			e.printStackTrace();
 		}
 	}
@@ -862,21 +862,21 @@ public class ClientServerCommunicator {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							ClientServerCommunicator.this.processWidgetDeleteResponse(
+							InteractionManager.this.processWidgetDeleteResponse(
 									false, null, caught);
 
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							ClientServerCommunicator.this.processWidgetDeleteResponse(
+							InteractionManager.this.processWidgetDeleteResponse(
 									true, result, null);
 
 						}
 
 					});
 		} catch (Exception e) {
-			ClientServerCommunicator.this.processWidgetDeleteResponse(false, null, e);
+			InteractionManager.this.processWidgetDeleteResponse(false, null, e);
 			e.printStackTrace();
 		}
 	}
@@ -898,9 +898,9 @@ public class ClientServerCommunicator {
 	 * Interpolates the time between requests.
 	 */
 	private void updateAskInputPeriod() {
-		this.askPeriod = map(0, ClientServerCommunicator.MAX_FAILURE_COUNT,
-				ClientServerCommunicator.MIN_ASK_PERIOD,
-				ClientServerCommunicator.MAX_ASK_PERIOD, this.failureCount);
+		this.askPeriod = map(0, InteractionManager.MAX_FAILURE_COUNT,
+				InteractionManager.MIN_ASK_PERIOD,
+				InteractionManager.MAX_ASK_PERIOD, this.failureCount);
 	}
 
 
@@ -1190,13 +1190,13 @@ public class ClientServerCommunicator {
 			      @Override
 			      public void onOpen() {
 			    	  Log.debug(this, "Channel open");
-			    	  ClientServerCommunicator.this.channelOpen = true;
+			    	  InteractionManager.this.channelOpen = true;
 			    	  timerChannelPeriod = DEFAULT_TIMER_CHANNEL_PERIOD;
 			      }
 			      @Override
 			      public void onMessage(String message) {
 			    	  
-			        ClientServerCommunicator.this.processInputSuccess(message);
+			        InteractionManager.this.processInputSuccess(message);
 			        
 			      }
 			      @Override
@@ -1204,10 +1204,10 @@ public class ClientServerCommunicator {
 			    	  Log.warn(this, "Error on channel. " + error.getDescription());
 			    	  
 			    	  
-			    	  ClientServerCommunicator.this.channelOpen = false;
-			    	  ClientServerCommunicator.this.startInputTimer();
+			    	  InteractionManager.this.channelOpen = false;
+			    	  InteractionManager.this.startInputTimer();
 			    	  
-			    	  ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+			    	  InteractionManager.this.timerChannel.schedule(timerChannelPeriod);
 			    	  timerChannelPeriod *= 2;
 			      }
 			      @Override
@@ -1215,10 +1215,10 @@ public class ClientServerCommunicator {
 			    	  Log.warn(this, "Channel closed");
 			    	  
 			 
-			    	  ClientServerCommunicator.this.channelOpen = false;
-			    	  ClientServerCommunicator.this.startInputTimer();
+			    	  InteractionManager.this.channelOpen = false;
+			    	  InteractionManager.this.startInputTimer();
 			    	  
-			    	  ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+			    	  InteractionManager.this.timerChannel.schedule(timerChannelPeriod);
 			    	  timerChannelPeriod *= 2;
 			      }
 			    });
@@ -1244,7 +1244,7 @@ public class ClientServerCommunicator {
 						public void onFailure(Throwable caught) {
 							
 							Log.warn(this, "Error getting channel token from server:", caught);
-							ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+							InteractionManager.this.timerChannel.schedule(timerChannelPeriod);
 					    	timerChannelPeriod *= 2;
 						}
 
@@ -1263,14 +1263,14 @@ public class ClientServerCommunicator {
 							PublicDisplayApplication.getLocalStorage().setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
-							ClientServerCommunicator.this.openChannel(channelTokenJson.getToken());
+							InteractionManager.this.openChannel(channelTokenJson.getToken());
 							
 						}
 					});
 		} catch (Exception e) {
 			
 			Log.warn(this, "Error getting channel token from server: ", e);
-			ClientServerCommunicator.this.timerChannel.schedule(timerChannelPeriod);
+			InteractionManager.this.timerChannel.schedule(timerChannelPeriod);
 	    	timerChannelPeriod *= 2;
 		}	
 	}

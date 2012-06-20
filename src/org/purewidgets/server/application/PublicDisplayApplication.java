@@ -15,8 +15,8 @@ import javax.jdo.annotations.PrimaryKey;
 import javax.servlet.http.HttpServletRequest;
 
 import org.purewidgets.server.PMF;
+import org.purewidgets.server.im.InteractionManager;
 import org.purewidgets.server.storage.RemoteStorage;
-import org.purewidgets.server.widgetmanager.ServerServerCommunicator;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.logging.Log;
@@ -88,7 +88,7 @@ public class PublicDisplayApplication {
 	 * The ServerCommunicator object used to communicate with the InteractionManager.
 	 */
 	@NotPersistent
-	private ServerServerCommunicator serverCommunicator;
+	private InteractionManager serverCommunicator;
 	
 	
 	/**
@@ -115,7 +115,7 @@ public class PublicDisplayApplication {
 		
 		String interactionManager = this.remoteStorage.getString("imurl", "http://pw-interactionmanager.appspot.com");
 		Log.info(this, "Using interaction manager: " + interactionManager);
-		serverCommunicator = new ServerServerCommunicator(persistenceManager, this.remoteStorage, this.placeId, this.appId);
+		serverCommunicator = new InteractionManager(persistenceManager, this.remoteStorage, this.placeId, this.appId);
 		serverCommunicator.setInteractionServerUrl(interactionManager);
 //		WidgetManager.get().setServerCommunication(serverCommunicator);
 //		
@@ -351,7 +351,7 @@ public class PublicDisplayApplication {
 	/**
 	 * @return the serverCommunicator
 	 */
-	public ServerServerCommunicator getServerCommunicator() {
+	public InteractionManager getServerCommunicator() {
 		return serverCommunicator;
 	}
 
@@ -359,7 +359,7 @@ public class PublicDisplayApplication {
 	/**
 	 * @param serverCommunicator the serverCommunicator to set
 	 */
-	public void setServerCommunicator(ServerServerCommunicator serverCommunicator) {
+	public void setServerCommunicator(InteractionManager serverCommunicator) {
 		this.serverCommunicator = serverCommunicator;
 	}
 

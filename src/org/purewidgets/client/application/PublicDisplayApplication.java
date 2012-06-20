@@ -6,10 +6,10 @@ package org.purewidgets.client.application;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.purewidgets.client.im.InteractionManager;
+import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.client.storage.RemoteStorage;
-import org.purewidgets.client.widgetmanager.ClientServerCommunicator;
-import org.purewidgets.client.widgetmanager.WidgetManager;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.logging.Log;
 
@@ -94,7 +94,7 @@ public class PublicDisplayApplication  {
 	/**
 	 * The ServerCommunicator used to communicate with the interaction manager
 	 */
-	private static ClientServerCommunicator serverCommunicator;
+	private static InteractionManager serverCommunicator;
 
 	private static Application application;
 
@@ -273,7 +273,7 @@ public class PublicDisplayApplication  {
 		
 		Log.info(PublicDisplayApplication.class.getName(), "Using interaction manager: " + interactionManagerUrl);
 		
-		serverCommunicator = new ClientServerCommunicator(placeName, applicationName);
+		serverCommunicator = new InteractionManager(placeName, applicationName);
 		serverCommunicator.setInteractionServerUrl(interactionManagerUrl);
 		WidgetManager.get().setServerCommunication( serverCommunicator );
 
@@ -360,14 +360,14 @@ public class PublicDisplayApplication  {
 	/**
 	 * @return the serverCommunicator
 	 */
-	public static ClientServerCommunicator getServerCommunicator() {
+	public static InteractionManager getServerCommunicator() {
 		return serverCommunicator;
 	}
 
 	/**
 	 * @param serverCommunicator the serverCommunicator to set
 	 */
-	public static void setServerCommunicator(ClientServerCommunicator serverCommunicator) {
+	public static void setServerCommunicator(InteractionManager serverCommunicator) {
 		PublicDisplayApplication.serverCommunicator = serverCommunicator;
 	}
 

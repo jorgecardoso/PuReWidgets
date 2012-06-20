@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.purewidgets.server.widgetmanager;
+package org.purewidgets.server.im;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +34,7 @@ import org.purewidgets.shared.logging.Log;
  * @author Jorge C. S. Cardoso
  *
  */
-public class ServerServerCommunicator  {	
+public class InteractionManager  {	
 
 	
 	private static final String DEFAULT_INTERACTION_SERVER_URL = "http://pw-interactionmanager.appspot.com";
@@ -83,7 +83,7 @@ public class ServerServerCommunicator  {
 
 
 
-	public ServerServerCommunicator(PersistenceManager pm, RemoteStorage remoteStorage, String placeId, String appId) {
+	public InteractionManager(PersistenceManager pm, RemoteStorage remoteStorage, String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
 		this.interactionServerUrl = DEFAULT_INTERACTION_SERVER_URL;

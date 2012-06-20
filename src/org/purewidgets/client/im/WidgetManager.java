@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgetmanager;
+package org.purewidgets.client.im;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class WidgetManager implements WidgetOperationListener {
 	 * ServerCommunicator.
 	 */
 
-	private ClientServerCommunicator communicator;
+	private InteractionManager communicator;
 
 	/**
 	 * The registered widgets.
@@ -107,7 +107,7 @@ public class WidgetManager implements WidgetOperationListener {
 //		this.communicator.getPlacesList();
 //	}
 	
-	public ClientServerCommunicator getServerCommunicator() {
+	public InteractionManager getServerCommunicator() {
 		return this.communicator;
 	}
 
@@ -238,7 +238,7 @@ public class WidgetManager implements WidgetOperationListener {
 		this.automaticWidgetRequests = automatic;
 	}	
 	
-	public void setServerCommunication(ClientServerCommunicator serverCommunication) {
+	public void setServerCommunication(InteractionManager serverCommunication) {
 		this.communicator = serverCommunication;
 		this.communicator.setServerListener(this);
 	}

@@ -3,7 +3,7 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.client.widgetmanager.WidgetManager;
+import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.widgets.events.InputFeedbackListener;
 import org.purewidgets.client.widgets.feedback.CumulativeInputFeedbackPanel;
 import org.purewidgets.client.widgets.feedback.FeedbackDisplay;

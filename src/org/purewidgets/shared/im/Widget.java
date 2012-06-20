@@ -9,7 +9,7 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.client.widgetmanager.WidgetManager;
+import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.InputEvent;
