@@ -1,5 +1,6 @@
 org.purewidgets.client
 org.purewidgets.client.application
+org.purewidgets.client.http
 org.purewidgets.client.json
 org.purewidgets.client.storage
 org.purewidgets.client.storage.json
@@ -13,7 +14,7 @@ org.purewidgets.server
 org.purewidgets.server.application
 org.purewidgets.server.cron
 org.purewidgets.server.dao
-org.purewidgets.server.interactionmanager
+org.purewidgets.server.http
 org.purewidgets.server.storage
 org.purewidgets.server.widgetmanager
 org.purewidgets.shared
