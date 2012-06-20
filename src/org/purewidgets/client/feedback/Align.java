@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets;
+package org.purewidgets.client.feedback;
 
 public enum Align {
 	TOP,

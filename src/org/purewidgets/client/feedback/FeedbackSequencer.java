@@ -6,7 +6,6 @@ package org.purewidgets.client.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.shared.logging.Log;
 

@@ -3,9 +3,7 @@
  */
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
-import org.purewidgets.client.widgets.TransparentPopupPanel;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;

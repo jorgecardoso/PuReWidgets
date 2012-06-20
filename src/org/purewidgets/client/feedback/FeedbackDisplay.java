@@ -1,6 +1,5 @@
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;
 
 import com.google.gwt.user.client.ui.Widget;
