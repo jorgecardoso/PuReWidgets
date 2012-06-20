@@ -59,7 +59,7 @@ public class GuiDownload extends GuiWidget {
 	@UiField
 	Label uiHTMLReferenceCode;
 	
-	private org.purewidgets.shared.widgets.DownloadButton widgetDownloadButton;
+	private org.purewidgets.shared.widgets.Download widgetDownloadButton;
 
 	public GuiDownload(String widgetId, String caption, String url) {
 		this(widgetId, caption, url, null);
@@ -68,7 +68,7 @@ public class GuiDownload extends GuiWidget {
 	public GuiDownload(String widgetId, String caption, String url, String suggestedRef) {
 		initWidget(uiBinder.createAndBindUi(this));
 		
-		widgetDownloadButton = new org.purewidgets.shared.widgets.DownloadButton(widgetId, caption, url);
+		widgetDownloadButton = new org.purewidgets.shared.widgets.Download(widgetId, caption, url);
 
 		this.setWidget(widgetDownloadButton);
 		

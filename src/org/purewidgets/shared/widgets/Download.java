@@ -9,10 +9,10 @@ import org.purewidgets.shared.interactionmanager.Widget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class DownloadButton extends Widget {
+public class Download extends Widget {
 
 	
-	public DownloadButton(String widgetId, String label, String url) {
+	public Download(String widgetId, String label, String url) {
 		/*
 		 * Use the label as the short description
 		 */
