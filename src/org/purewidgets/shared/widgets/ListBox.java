@@ -27,7 +27,7 @@ public class ListBox extends Widget {
 		/*
 		 * Use the label as the short description
 		 */
-		super(widgetId, listLabel, null, false);
+		super(widgetId, listLabel, null);
 		this.setControlType(Widget.CONTROL_TYPE_IMPERATIVE_SELECTION);
 		this.listOptions = options;
 		

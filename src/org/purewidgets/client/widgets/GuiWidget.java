@@ -14,6 +14,7 @@ import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.events.InputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
+import org.purewidgets.shared.widgetmanager.WidgetManager;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 import org.purewidgets.shared.widgets.Widget;
 
@@ -415,10 +416,18 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 
 	
 	
-	public void sendToServer() {
-		this.widget.sendToServer();
-	}
+
+	
+	public final void sendToServer() {
+		Log.debugFinest(this, "Adding widget to widgetmanager: " + this);
+		WidgetManager.get().addWidget(this.widget);
 		
+		for (Widget w : this.widget.getDependentWidget() ) {
+			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w);
+			WidgetManager.get().addWidget(w);
+		}
+		
+	}
 	
 	
 	//
@@ -548,14 +557,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		}
 		// this.hideInfoPanel();
 	}
-	
-	
 
-
-	
-	public void setVolatile(boolean isVolatile) {
-		this.widget.setVolatileWidget(isVolatile);
-	}
 
 	
 	/*

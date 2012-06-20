@@ -23,7 +23,6 @@ public class WidgetJson extends GenericJson {
 		widgetJson.setApplicationId(widget.getApplicationId());
 		widgetJson.setWidgetId(widget.getWidgetId());
 
-		widgetJson.setVolatileWidget(widget.isVolatileWidget());
 		widgetJson.setControlType(widget.getControlType());
 		widgetJson.setShortDescription(widget.getShortDescription());
 		widgetJson.setLongDescription(widget.getLongDescription());
@@ -85,7 +84,6 @@ public class WidgetJson extends GenericJson {
 				this.getWidgetOptions());
 		aw.setLongDescription(this.getLongDescription());
 		aw.setApplicationId(this.getApplicationId());
-		aw.setVolatileWidget(this.isVolatileWidget());
 		aw.setControlType(this.getControlType());
 		aw.setPlaceId(this.getPlaceId());
 		aw.setContentUrl(this.getContentUrl());
@@ -112,9 +110,6 @@ public class WidgetJson extends GenericJson {
 		return this.widgetOptions;
 	}-*/;
 
-	public final native boolean isVolatileWidget() /*-{
-		return this.volatileWidget;
-	}-*/;
 
 	public final native void setApplicationId(String appId) /*-{
 		this.applicationId = appId;
@@ -144,9 +139,6 @@ public class WidgetJson extends GenericJson {
 		this.userResponse = response;
 	}-*/;
 
-	public final native void setVolatileWidget(boolean volatileWidget) /*-{
-		this.volatileWidget = volatileWidget;
-	}-*/;
 
 	public final native void setWidgetId(String id) /*-{
 		this.widgetId = id;

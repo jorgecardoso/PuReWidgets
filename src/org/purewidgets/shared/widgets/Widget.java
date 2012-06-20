@@ -178,7 +178,7 @@ public class Widget implements Comparable<Widget> {
 	 * @param options The list of WidgetOptions.
 	 */
 	public Widget(String widgetId, String shortDescription, ArrayList<WidgetOption> options) {
-		this(widgetId, shortDescription, options, false);
+		this(widgetId, shortDescription, "", options);
 	}
 
 	
@@ -190,14 +190,13 @@ public class Widget implements Comparable<Widget> {
 	 * @param autoSendToServer
 	 * 
 	 */
-	public Widget(String widgetId, String shortDescription, ArrayList<WidgetOption> options,
-			boolean autoSendToServer) {
+	public Widget(String widgetId, String shortDescription, String longDescription, ArrayList<WidgetOption> options) {
 		
 		this.dependentWidgets = new ArrayList<Widget>();
 		
 		this.volatileWidget = false;
 		this.shortDescription = shortDescription;
-		this.autoSendToServer = autoSendToServer;
+		this.longDescription = longDescription;
 		
 		this.setWidgetId(widgetId);
 
@@ -208,9 +207,7 @@ public class Widget implements Comparable<Widget> {
 			this.setWidgetOptions(options);
 		}
 
-		if (this.autoSendToServer) {
-			this.sendToServer();
-		}
+		
 	}
 
 	protected Widget() {
@@ -367,16 +364,7 @@ public class Widget implements Comparable<Widget> {
 
 	}
 
-	public final void sendToServer() {
-		Log.debugFinest(this, "Adding widget to widgetmanager: " + this);
-		WidgetManager.get().addWidget(this);
-		
-		for (Widget w : this.dependentWidgets ) {
-			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w);
-			WidgetManager.get().addWidget(w);
-		}
-		
-	}
+	
 	
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
@@ -404,18 +392,6 @@ public class Widget implements Comparable<Widget> {
 
 	}
 
-	public void setVolatileWidget(boolean volatileWidget) {
-		/*
-		 * If the new volatile state is different we need to tell the interaction manager server.
-		 */
-		if ( volatileWidget != this.volatileWidget ) {
-			this.volatileWidget = volatileWidget;
-			if ( this.autoSendToServer ) {
-				this.sendToServer();
-			}
-		}
-		
-	}
 
 	/**
 	 * @param widgetID
