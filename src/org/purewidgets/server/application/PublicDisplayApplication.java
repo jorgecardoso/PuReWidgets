@@ -18,6 +18,8 @@ import org.purewidgets.server.PMF;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.server.widgetmanager.ServerServerCommunicator;
 import org.purewidgets.shared.Log;
+import org.purewidgets.shared.widgetmanager.InputEventHelper;
+import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Widget;
 
 import com.google.appengine.api.datastore.Key;
@@ -136,7 +138,9 @@ public class PublicDisplayApplication {
 		this.applicationLifeCycle.start();
 		
 		Log.debug(this, "Asking for input");
-		serverCommunicator.askForInputFromServer();
+		ArrayList<WidgetInput> inputList = serverCommunicator.askForInputFromServer();
+		Log.debug(this, "Triggering action events");
+		InputEventHelper.triggerActionEvents(inputList, this.widgets);
 		
 		Log.debug(this, "Triggering 'finish' event");
 		this.applicationLifeCycle.finish();

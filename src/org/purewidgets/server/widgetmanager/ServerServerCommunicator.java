@@ -37,7 +37,7 @@ import org.purewidgets.shared.widgets.Widget;
  * @author Jorge C. S. Cardoso
  *
  */
-public class ServerServerCommunicator implements ServerCommunicator {	
+public class ServerServerCommunicator  {	
 
 	
 	private static final String DEFAULT_INTERACTION_SERVER_URL = "http://pw-interactionmanager.appspot.com";
@@ -132,7 +132,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
-	@Override
+	
 	public void addWidget(Widget widget) {
 		//WidgetRepresentation widgetRepresentation = WidgetRepresentation.fromWidget(widget);
 		//widgetRepresentation.applicationId = APP;
@@ -202,7 +202,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	/**
 	 * Checks input from the InteractionManager service
 	 */
-	public void askForInputFromServer() {
+	public ArrayList<WidgetInput> askForInputFromServer() {
 		ObjectMapper mapper = new ObjectMapper();
 	
 			String lastTimeStamp = this.getLastTimeStampAsString();
@@ -219,7 +219,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 			} catch (InteractionManagerException e) {
 				Log.error(this, e.getMessage());
 				e.printStackTrace();
-				return;
+				return new ArrayList<WidgetInput>();
 			}
 			Log.debug(this, response);
 			
@@ -240,12 +240,8 @@ public class ServerServerCommunicator implements ServerCommunicator {
 					}
 				}
 				
-				/*
-				 * Notify the widgetManager
-				 */
-				if (this.serverListener != null) {
-					this.serverListener.onWidgetInput(inputList.getInputs());
-				}
+				return inputList.getInputs();
+				
 			} catch (JsonParseException e) {
 				Log.error(this, "Error parsing JSON " + e.getMessage());
 				e.printStackTrace();
@@ -256,10 +252,11 @@ public class ServerServerCommunicator implements ServerCommunicator {
 				Log.error(this, "IO Error: " + e.getMessage());
 				e.printStackTrace();
 			} 	
+			return new ArrayList<WidgetInput>();
 	}
 	
 	
-	@Override
+	
 	public void deleteAllWidgets(boolean volatileOnly) {
 		// TODO Auto-generated method stub
 		
@@ -280,7 +277,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
-	@Override
+
 	public void deleteWidget(Widget widget) {
 		Log.debug(this, "Removing widget:" + widget.getWidgetId() );
 		
@@ -347,7 +344,6 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	 * Enables or disables the automatic input requests
 	 * @param automatic
 	 */
-	@Override
 	public void setAutomaticInputRequests(boolean automatic) {
 		
 	}
@@ -355,7 +351,7 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
 	 */
-	@Override
+	
 	public void setServerListener(ServerListener listener) {
 		this.serverListener = listener;
 
@@ -390,7 +386,6 @@ public class ServerServerCommunicator implements ServerCommunicator {
 		return 0;
 	}
 
-	@Override
 	public void getWidgetsList(String placeId, String applicationId, Callback<ArrayList<Widget>> callback) {
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -449,7 +444,6 @@ public class ServerServerCommunicator implements ServerCommunicator {
 
 
 
-	@Override
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput,
 			Callback<WidgetInput> callback) {
 		// TODO Auto-generated method stub
@@ -457,32 +451,27 @@ public class ServerServerCommunicator implements ServerCommunicator {
 	}
 
 
-	@Override
 	public void setApplication(String placeId, String applicationId, Application application, Callback<Application> callback) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void getApplication(String placeId, String applicationId, Callback<Application> callback) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void getApplicationsList(String placeId, Callback<ArrayList<Application>> callback) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void getApplicationsList(String placeId, boolean active,
 			Callback<ArrayList<Application>> callback) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void getPlacesList(Callback<ArrayList<Place>> callback) {
 		// TODO Auto-generated method stub
 		
