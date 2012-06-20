@@ -16,7 +16,7 @@ import org.purewidgets.shared.logging.Log;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class InputEventHelper {
+public final class InputEventHelper {
 
 	public static void triggerActionEvents(ArrayList<WidgetInput> inputList, ArrayList<Widget>widgetList) {
 		/*
