@@ -9,7 +9,6 @@ import java.util.HashMap;
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.widgetmanager.InputEventHelper;
-import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 import org.purewidgets.shared.widgets.Widget;
@@ -20,7 +19,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * @author Jorge C. S. Cardoso
  */
-public class WidgetManager implements ServerListener {
+public class WidgetManager implements WidgetOperationListener {
 
 	/**
 	 * "There can be only one"! Singleton pattern.

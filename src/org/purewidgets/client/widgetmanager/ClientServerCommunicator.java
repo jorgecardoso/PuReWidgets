@@ -19,7 +19,6 @@ import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.purewidgets.shared.Log;
-import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Application;
 import org.purewidgets.shared.widgets.Place;
@@ -130,7 +129,7 @@ public class ClientServerCommunicator {
 	 * The ServerListener that will receive server events (i.e. the WidgetManager)
 	 * 
 	 */
-	private ServerListener serverListener;
+	private WidgetOperationListener serverListener;
 
 	
 	/**
@@ -395,7 +394,7 @@ public class ClientServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
 	 */
-	public void setServerListener(ServerListener listener) {
+	public void setServerListener(WidgetOperationListener listener) {
 		this.serverListener = listener;
 
 	}

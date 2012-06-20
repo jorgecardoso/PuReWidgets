@@ -20,7 +20,6 @@ import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.exceptions.HttpServerException;
-import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetInputList;
 import org.purewidgets.shared.widgetmanager.WidgetList;
@@ -82,11 +81,7 @@ public class ServerServerCommunicator  {
 
 	private RemoteStorage remoteStorage;
 
-	/**
-	 * The ServerListener that will receive server events (i.e. the WidgetManager)
-	 *
-	 */
-	private ServerListener serverListener;
+
 
 	public ServerServerCommunicator(PersistenceManager pm, RemoteStorage remoteStorage, String placeId, String appId) {
 		this.placeId = placeId;
@@ -131,10 +126,8 @@ public class ServerServerCommunicator  {
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 	
-	public void addWidget(Widget widget) {
-		//WidgetRepresentation widgetRepresentation = WidgetRepresentation.fromWidget(widget);
-		//widgetRepresentation.applicationId = APP;
-		//widgetRepresentation.placeId = PLACE;
+	public ArrayList<Widget> addWidget(Widget widget) {
+
 		widget.setApplicationId(appId);
 		widget.setPlaceId(placeId);
 
@@ -149,27 +142,22 @@ public class ServerServerCommunicator  {
 		try {
 			json = mapper.writeValueAsString(wl);//widgetRepresentation);
 		} catch (JsonGenerationException e1) {
-			Log.error(this, e1.getMessage());
-			e1.printStackTrace();
+			Log.error(this, "", e1);
 		} catch (JsonMappingException e1) {
-			Log.error(this, e1.getMessage());
-			e1.printStackTrace();
+			Log.error(this, "", e1);
 		} catch (IOException e1) {
-			Log.error(this, e1.getMessage());
-			e1.printStackTrace();
+			Log.error(this, "", e1);
 		}
 
-		/*WidgetJSON widgetJSON = WidgetJSON.create(widget);
-		widgetJSON.setApplicationId(APP);
-		widgetJSON.setPlaceId(PLACE);*/
+		
 		Log.debug("Adding " + json + " to server");
 		String response = null;
 		try {
 			response = interactionService.post(json,
 					this.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (HttpServerException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
+			return new ArrayList<Widget>();
 		}
 		Log.debug(response);
 
@@ -177,23 +165,17 @@ public class ServerServerCommunicator  {
 		try {
 			
 			 wl = mapper.readValue(response, WidgetList.class);
-			for ( Widget w : wl.getWidgets() ) {
-				if ( null != this.serverListener ) {
-					Log.debug(widget.toDebugString());
-					this.serverListener.onWidgetAdd(w);
-				}
-			}
+			
+			 return wl.getWidgets();
+			 
 		} catch (JsonParseException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		} catch (JsonMappingException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		} catch (IOException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		}
-		// read response and call serverlistener widget add
+		return new ArrayList<Widget>();
 	}
 	
 	
@@ -276,7 +258,7 @@ public class ServerServerCommunicator  {
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 
-	public void deleteWidget(Widget widget) {
+	public ArrayList<Widget> deleteWidget(Widget widget) {
 		Log.debug(this, "Removing widget:" + widget.getWidgetId() );
 		
 		/*
@@ -290,9 +272,9 @@ public class ServerServerCommunicator  {
 		try {
 			widgetsUrlParam.append(URLEncoder.encode(widget.getWidgetId(), "UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
-			Log.error(this, "Could not URLencode." + e1.getMessage());
-			e1.printStackTrace();
-			return;
+			Log.error(this, "Could not URLencode.",  e1);
+
+			return new ArrayList<Widget>();
 		}
 			
 		String response;
@@ -301,9 +283,9 @@ public class ServerServerCommunicator  {
 			response = interactionService.delete(widgetsUrlParam.toString());
 			
 		} catch (Exception e) {
-			Log.error(this, e.getMessage() );
-			e.printStackTrace();
-			return;
+			Log.error(this, "",  e );
+			
+			return new ArrayList<Widget>();
 		}
 		
 		
@@ -313,25 +295,16 @@ public class ServerServerCommunicator  {
 		try {
 			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
 			
-			for ( Widget w : widgetList.getWidgets() ) {
-				/*
-				 * Notify the widgetManager
-				 */
-				if (this.serverListener != null) {
-					this.serverListener.onWidgetDelete(w);
-				}
-			}
+			return widgetList.getWidgets();
+			
 		} catch (JsonParseException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		} catch (JsonMappingException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		} catch (IOException e) {
-			Log.error(this, e.getMessage());
-			e.printStackTrace();
+			Log.error(this, "", e);
 		} 	
-		
+		return new ArrayList<Widget>();
 		
 
 	}
@@ -346,14 +319,6 @@ public class ServerServerCommunicator  {
 		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
-	 */
-	
-	public void setServerListener(ServerListener listener) {
-		this.serverListener = listener;
-
-	}
 	
 	private long getLastTimeStampAsLong() {
 		try {
