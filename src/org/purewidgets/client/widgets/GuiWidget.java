@@ -3,12 +3,12 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.purewidgets.client.feedback.CumulativeInputFeedbackPanel;
+import org.purewidgets.client.feedback.FeedbackDisplay;
+import org.purewidgets.client.feedback.FeedbackSequencer;
+import org.purewidgets.client.feedback.InputFeedback;
+import org.purewidgets.client.feedback.InputFeedbackListener;
 import org.purewidgets.client.im.WidgetManager;
-import org.purewidgets.client.widgets.events.InputFeedbackListener;
-import org.purewidgets.client.widgets.feedback.CumulativeInputFeedbackPanel;
-import org.purewidgets.client.widgets.feedback.FeedbackDisplay;
-import org.purewidgets.client.widgets.feedback.FeedbackSequencer;
-import org.purewidgets.client.widgets.feedback.InputFeedback;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.InputEvent;

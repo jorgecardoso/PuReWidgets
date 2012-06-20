@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgets.feedback;
+package org.purewidgets.client.feedback;
 
 
 

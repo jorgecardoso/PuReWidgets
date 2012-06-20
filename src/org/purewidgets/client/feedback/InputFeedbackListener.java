@@ -1,10 +1,9 @@
 /**
  * 
  */
-package org.purewidgets.client.widgets.events;
+package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.GuiWidget;
-import org.purewidgets.client.widgets.feedback.InputFeedback;
 
 /**
  * @author Jorge C. S. Cardoso

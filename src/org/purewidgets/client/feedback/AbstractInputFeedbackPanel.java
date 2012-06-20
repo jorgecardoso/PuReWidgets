@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgets.feedback;
+package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.Align;
 import org.purewidgets.client.widgets.GuiWidget;

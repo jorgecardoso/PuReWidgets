@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets.feedback;
+package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.shared.events.ActionEvent;
