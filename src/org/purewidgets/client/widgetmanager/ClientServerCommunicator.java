@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 
 import org.purewidgets.client.application.PublicDisplayApplication;
+import org.purewidgets.client.http.HttpService;
+import org.purewidgets.client.http.HttpServiceAsync;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.client.widgetmanager.json.ApplicationJson;
 import org.purewidgets.client.widgetmanager.json.ApplicationListJson;
@@ -110,7 +112,7 @@ public class ClientServerCommunicator {
 	 * Create a remote service proxy to talk to the server-side Presences
 	 * service. 
 	 */
-	private final InteractionServiceAsync interactionService;
+	private final HttpServiceAsync interactionService;
 
 
 	/**
@@ -193,7 +195,7 @@ public class ClientServerCommunicator {
 		
 		failureCount = 0;
 		
-		interactionService = GWT.create(InteractionService.class);
+		interactionService = GWT.create(HttpService.class);
 		
 		timerInput = new Timer() {
 			@Override

@@ -16,10 +16,10 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import org.purewidgets.server.interactionmanager.InteractionServiceImpl;
+import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.Log;
-import org.purewidgets.shared.exceptions.InteractionManagerException;
+import org.purewidgets.shared.exceptions.HttpServerException;
 import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
@@ -73,7 +73,7 @@ public class ServerServerCommunicator  {
 	private  String applicationUrl;
 	
 	
-	private InteractionServiceImpl interactionService;
+	private HttpServiceImpl interactionService;
 	
 	
 	/**
@@ -95,7 +95,7 @@ public class ServerServerCommunicator  {
 		this.interactionServerUrl = DEFAULT_INTERACTION_SERVER_URL;
 		this.applicationUrl = this.interactionServerUrl +	"/place/" + placeId + "/application/"+ appId;
 		
-		interactionService = new InteractionServiceImpl();
+		interactionService = new HttpServiceImpl();
 		this.remoteStorage = remoteStorage;// RemoteStorage.get();
 	}
 
@@ -168,7 +168,7 @@ public class ServerServerCommunicator  {
 		try {
 			response = interactionService.post(json,
 					this.getWidgetsUrl(this.placeId, this.appId, this.appId) );
-		} catch (InteractionManagerException e) {
+		} catch (HttpServerException e) {
 			Log.error(this, e.getMessage());
 			e.printStackTrace();
 		}
@@ -215,7 +215,7 @@ public class ServerServerCommunicator  {
 			
 			try {
 				response = interactionService.get(url);
-			} catch (InteractionManagerException e) {
+			} catch (HttpServerException e) {
 				Log.error(this, e.getMessage());
 				e.printStackTrace();
 				return new ArrayList<WidgetInput>();
@@ -396,7 +396,7 @@ public class ServerServerCommunicator  {
 		
 		try {
 			response = interactionService.get(url);
-		} catch (InteractionManagerException e) {
+		} catch (HttpServerException e) {
 			Log.error(this,  e.getMessage());
 			e.printStackTrace();
 			if ( null != callback ) {

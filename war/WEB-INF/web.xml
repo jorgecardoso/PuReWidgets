@@ -18,13 +18,13 @@
   
   
   <servlet>
-    <servlet-name>interactionServlet</servlet-name>
-    <servlet-class>org.purewidgets.server.interactionmanager.InteractionServiceImpl</servlet-class>
+    <servlet-name>HttpServlet</servlet-name>
+    <servlet-class>org.purewidgets.server.http.HttpServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>interactionServlet</servlet-name>
-    <url-pattern>/interactionservice</url-pattern>
+    <servlet-name>HttpServlet</servlet-name>
+    <url-pattern>/httpservice</url-pattern>
   </servlet-mapping>
   
   
