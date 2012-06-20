@@ -170,11 +170,13 @@
 	        	noindex="false" 
 	        	nonavbar="false" 
 	        	notree="false" 
-	        	 
+
 	        	source="1.5" 
 	        	sourcepath="src" 
 	        	splitindex="true" use="true" version="true">
-	            
+	            <link href="http://download.oracle.com/javase/6/docs/api/" />
+    <link href="http://java.sun.com/j2se/1.5.0/docs/api" />
+    <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/latest"/>
 	        	<classpath>  
 	              	<path refid="project.class.path"/>
 	            </classpath>
