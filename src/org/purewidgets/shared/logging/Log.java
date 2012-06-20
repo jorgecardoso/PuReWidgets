@@ -1,10 +1,13 @@
-package org.purewidgets.shared;
+package org.purewidgets.shared.logging;
 
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * Helper class for logging messages
+ * 
+ */
 public class Log {
 	/*
 	 * SEVERE (highest value)
@@ -16,6 +19,10 @@ FINER
 FINEST (lowest value)
 	 */
 	
+	/**
+	 * Returns a "PuReWidgets" logger.
+	 * @return
+	 */
 	public static Logger get() {
 		return Logger.getLogger("PuReWidgets");
 	}

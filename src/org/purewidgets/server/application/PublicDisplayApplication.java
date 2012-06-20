@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.purewidgets.server.PMF;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.server.widgetmanager.ServerServerCommunicator;
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgetmanager.InputEventHelper;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Widget;

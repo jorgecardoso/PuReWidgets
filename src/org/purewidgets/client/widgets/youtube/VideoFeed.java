@@ -3,7 +3,7 @@ package org.purewidgets.client.widgets.youtube;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;

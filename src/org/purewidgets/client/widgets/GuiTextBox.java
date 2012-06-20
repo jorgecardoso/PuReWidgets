@@ -7,9 +7,9 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.widgets.feedback.InputFeedback;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.TextBox;
 
 import com.google.gwt.event.dom.client.FocusEvent;

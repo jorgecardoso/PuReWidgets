@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
 import org.purewidgets.client.http.HttpService;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.exceptions.HttpServerException;
+import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

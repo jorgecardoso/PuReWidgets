@@ -5,9 +5,9 @@ package org.purewidgets.shared.widgets;
 
 import java.util.ArrayList;
 
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 
 /**

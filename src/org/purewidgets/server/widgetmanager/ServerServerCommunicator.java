@@ -18,8 +18,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.storage.RemoteStorage;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.exceptions.HttpServerException;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetInputList;
 import org.purewidgets.shared.widgetmanager.WidgetList;

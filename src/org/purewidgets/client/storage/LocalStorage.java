@@ -6,7 +6,7 @@ package org.purewidgets.client.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 
 

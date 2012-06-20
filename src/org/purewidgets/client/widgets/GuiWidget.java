@@ -9,12 +9,12 @@ import org.purewidgets.client.widgets.feedback.CumulativeInputFeedbackPanel;
 import org.purewidgets.client.widgets.feedback.FeedbackDisplay;
 import org.purewidgets.client.widgets.feedback.FeedbackSequencer;
 import org.purewidgets.client.widgets.feedback.InputFeedback;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.events.InputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
 import org.purewidgets.shared.widgets.Widget;
 

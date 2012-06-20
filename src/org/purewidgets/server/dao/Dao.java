@@ -3,7 +3,7 @@
  */
 package org.purewidgets.server.dao;
 
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 
 import com.googlecode.objectify.Objectify;

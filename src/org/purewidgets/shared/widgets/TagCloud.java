@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
+import org.purewidgets.shared.logging.Log;
 
 
 

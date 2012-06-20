@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.purewidgets.client.widgets.GuiWidget;
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;

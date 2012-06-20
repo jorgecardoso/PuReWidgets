@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.purewidgets.server.PMF;
 import org.purewidgets.server.application.PublicDisplayApplication;
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;

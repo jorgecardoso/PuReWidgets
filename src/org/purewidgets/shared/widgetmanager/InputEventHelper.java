@@ -6,8 +6,8 @@ package org.purewidgets.shared.widgetmanager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.Widget;
 
 /**

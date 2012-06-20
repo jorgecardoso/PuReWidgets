@@ -18,7 +18,7 @@ import org.purewidgets.client.widgetmanager.json.WidgetInputJson;
 import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.purewidgets.client.widgetmanager.json.WidgetListJson;
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Application;
 import org.purewidgets.shared.widgets.Place;

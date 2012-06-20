@@ -6,8 +6,8 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.widgets.feedback.InputFeedback;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.logging.Log;
 
 
 import com.google.gwt.core.client.GWT;

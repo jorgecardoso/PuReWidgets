@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Id;
 
-import org.purewidgets.shared.Log;
+import org.purewidgets.shared.logging.Log;
 
 import com.googlecode.objectify.annotation.NotSaved;
 

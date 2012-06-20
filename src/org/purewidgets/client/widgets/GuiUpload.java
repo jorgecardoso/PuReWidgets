@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import org.purewidgets.client.widgets.GuiDownload.GuiDownloadUiBinder;
 import org.purewidgets.client.widgets.feedback.InputFeedback;
-import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.Upload;
 
 import com.google.gwt.core.client.GWT;
