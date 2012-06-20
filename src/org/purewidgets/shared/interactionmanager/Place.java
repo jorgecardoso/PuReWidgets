@@ -1,4 +1,4 @@
-package org.purewidgets.shared.widgets;
+package org.purewidgets.shared.interactionmanager;
 
 public class Place {
 

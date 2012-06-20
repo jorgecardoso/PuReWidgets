@@ -6,7 +6,7 @@ package org.purewidgets.client.widgetmanager.json;
 import java.util.ArrayList;
 
 import org.purewidgets.client.json.GenericJson;
-import org.purewidgets.shared.widgets.Application;
+import org.purewidgets.shared.interactionmanager.Application;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;

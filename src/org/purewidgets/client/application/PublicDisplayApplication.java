@@ -10,8 +10,8 @@ import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.client.storage.RemoteStorage;
 import org.purewidgets.client.widgetmanager.ClientServerCommunicator;
 import org.purewidgets.client.widgetmanager.WidgetManager;
+import org.purewidgets.shared.interactionmanager.Application;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgets.Application;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;

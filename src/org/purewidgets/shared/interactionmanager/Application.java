@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.shared.widgets;
+package org.purewidgets.shared.interactionmanager;
 
 /**
  * @author "Jorge C. S. Cardoso"
