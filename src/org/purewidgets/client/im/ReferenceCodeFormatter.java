@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgets;
+package org.purewidgets.client.im;
 
 /**
  * Helper class to format the reference codes on widgets.

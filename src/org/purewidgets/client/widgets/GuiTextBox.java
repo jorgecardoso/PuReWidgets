@@ -6,6 +6,7 @@ package org.purewidgets.client.widgets;
 
 import java.util.ArrayList;
 
+import org.purewidgets.client.im.ReferenceCodeFormatter;
 import org.purewidgets.client.widgets.feedback.InputFeedback;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
