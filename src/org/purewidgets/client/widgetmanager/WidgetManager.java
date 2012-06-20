@@ -10,7 +10,6 @@ import org.purewidgets.shared.Log;
 import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.widgetmanager.Callback;
 import org.purewidgets.shared.widgetmanager.InputEventHelper;
-import org.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetOption;
@@ -39,7 +38,7 @@ public class WidgetManager implements ServerListener {
 	 * ServerCommunicator.
 	 */
 
-	private ServerCommunicator communicator;
+	private ClientServerCommunicator communicator;
 
 	/**
 	 * The registered widgets.
@@ -108,7 +107,7 @@ public class WidgetManager implements ServerListener {
 //		this.communicator.getPlacesList();
 //	}
 	
-	public ServerCommunicator getServerCommunicator() {
+	public ClientServerCommunicator getServerCommunicator() {
 		return this.communicator;
 	}
 
@@ -239,7 +238,7 @@ public class WidgetManager implements ServerListener {
 		this.automaticWidgetRequests = automatic;
 	}	
 	
-	public void setServerCommunication(ServerCommunicator serverCommunication) {
+	public void setServerCommunication(ClientServerCommunicator serverCommunication) {
 		this.communicator = serverCommunication;
 		this.communicator.setServerListener(this);
 	}

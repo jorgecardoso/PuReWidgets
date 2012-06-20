@@ -18,7 +18,6 @@ import org.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.purewidgets.client.widgetmanager.json.WidgetListJson;
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.widgetmanager.Callback;
-import org.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgets.Application;
@@ -39,7 +38,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Jorge C. S. Cardoso
  *
  */
-public class ClientServerCommunicator implements ServerCommunicator {
+public class ClientServerCommunicator {
 
 		
 	//"http://localhost:8080";//
@@ -246,7 +245,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
-	@Override
 	public void addWidget(Widget widget) {
 		int index = indexOf(widget);
 		if (-1 == index) {
@@ -273,7 +271,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	
-	@Override
 	public void deleteAllWidgets(boolean volatileOnly) {
 			Log.debug(this, "Removing all volative widgets " );
 		
@@ -336,7 +333,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
-	@Override
 	public void deleteWidget(Widget widget) {
 		//this.removeWidget(widget);
 		this.toDeleteWidgetPool.add(widget);
@@ -378,7 +374,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	 * Enables or disables the automatic input requests
 	 * @param automatic
 	 */
-	@Override
 	public void setAutomaticInputRequests(boolean automatic) {
 		if ( automatic ) {
 			this.timerInput.schedule(askPeriod);
@@ -399,7 +394,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	/* (non-Javadoc)
 	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#setServerListener(org.instantplaces.purewidgets.shared.widgetmanager.ServerListener)
 	 */
-	@Override
 	public void setServerListener(ServerListener listener) {
 		this.serverListener = listener;
 
@@ -911,7 +905,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 
 
 	
-	@Override
 	public void getWidgetsList(String placeId, String applicationId, final Callback<ArrayList<Widget>> callback) {
 		Log.debug( this, "Getting widgets from server: " +  this.getWidgetsUrl(placeId,  applicationId, this.appId) );
 		try {
@@ -962,7 +955,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 	
 
-	@Override
 	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, final Callback<WidgetInput> callback) {
 		WidgetInputJson widgetInputJson = WidgetInputJson.create(widgetInput);
 		
@@ -993,7 +985,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		
 	}
 
-	@Override
 	public void setApplication(String placeId, String applicationId, Application application, final Callback<Application> callback) {
 		ApplicationJson applicationJson = ApplicationJson.create(application);
 		
@@ -1024,7 +1015,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		});
 	}
 
-	@Override
 	public void getApplication(String placeId, String applicationId, final Callback<Application> callback) {
 		
 		
@@ -1062,12 +1052,10 @@ public class ClientServerCommunicator implements ServerCommunicator {
 	}
 
 	
-	@Override
 	public void getApplicationsList(String placeId, final Callback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, Application.STATE.All, callback);
 	}
 
-	@Override
 	public void getApplicationsList(String placeId, boolean active,
 			Callback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, active?Application.STATE.Active : Application.STATE.Inactive, callback);
@@ -1131,7 +1119,6 @@ public class ClientServerCommunicator implements ServerCommunicator {
 		}
 	}
 
-	@Override
 	public void getPlacesList(final Callback<ArrayList<Place>> callback) {
 		Log.debug( this, "Getting places from server: " +  this.getPlacesUrl(this.appId) );
 		try {

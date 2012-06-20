@@ -21,7 +21,6 @@ import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.Log;
 import org.purewidgets.shared.exceptions.InteractionManagerException;
 import org.purewidgets.shared.widgetmanager.Callback;
-import org.purewidgets.shared.widgetmanager.ServerCommunicator;
 import org.purewidgets.shared.widgetmanager.ServerListener;
 import org.purewidgets.shared.widgetmanager.WidgetInput;
 import org.purewidgets.shared.widgetmanager.WidgetInputList;
