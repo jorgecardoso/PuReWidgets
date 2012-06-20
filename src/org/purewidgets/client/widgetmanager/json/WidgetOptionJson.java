@@ -1,7 +1,7 @@
 package org.purewidgets.client.widgetmanager.json;
 
 import org.purewidgets.client.json.GenericJson;
-import org.purewidgets.shared.interactionmanager.WidgetOption;
+import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 

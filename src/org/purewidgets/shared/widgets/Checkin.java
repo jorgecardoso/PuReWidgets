@@ -2,8 +2,8 @@ package org.purewidgets.shared.widgets;
 
 import java.util.ArrayList;
 
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetOption;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetOption;
 
 public class Checkin extends Widget {	
 	

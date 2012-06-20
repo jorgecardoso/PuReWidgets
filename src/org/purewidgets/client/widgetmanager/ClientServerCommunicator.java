@@ -18,10 +18,10 @@ import org.purewidgets.client.widgetmanager.json.WidgetInputJson;
 import org.purewidgets.client.widgetmanager.json.WidgetInputListJson;
 import org.purewidgets.client.widgetmanager.json.WidgetJson;
 import org.purewidgets.client.widgetmanager.json.WidgetListJson;
-import org.purewidgets.shared.interactionmanager.Application;
-import org.purewidgets.shared.interactionmanager.Place;
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetInput;
+import org.purewidgets.shared.im.Application;
+import org.purewidgets.shared.im.Place;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.appengine.channel.client.Channel;

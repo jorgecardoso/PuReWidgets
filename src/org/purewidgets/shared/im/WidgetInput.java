@@ -1,4 +1,4 @@
-package org.purewidgets.shared.interactionmanager;
+package org.purewidgets.shared.im;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.widgets.feedback.InputFeedback;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.interactionmanager.WidgetOption;
+import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.event.dom.client.ClickEvent;

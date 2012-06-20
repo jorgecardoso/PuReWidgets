@@ -3,7 +3,7 @@
  */
 package org.purewidgets.shared.widgets;
 
-import org.purewidgets.shared.interactionmanager.Widget;
+import org.purewidgets.shared.im.Widget;
 
 
 /**

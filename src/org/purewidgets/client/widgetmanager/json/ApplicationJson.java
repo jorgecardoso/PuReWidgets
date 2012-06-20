@@ -4,7 +4,7 @@
 package org.purewidgets.client.widgetmanager.json;
 
 import org.purewidgets.client.json.GenericJson;
-import org.purewidgets.shared.interactionmanager.Application;
+import org.purewidgets.shared.im.Application;
 
 
 /**

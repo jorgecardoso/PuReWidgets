@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetInput;
-import org.purewidgets.shared.interactionmanager.WidgetOption;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetInput;
+import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.InputEventHelper;
 

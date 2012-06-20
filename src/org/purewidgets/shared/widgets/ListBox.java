@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetOption;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 /**

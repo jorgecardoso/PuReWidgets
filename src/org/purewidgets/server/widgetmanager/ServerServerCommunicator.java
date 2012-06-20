@@ -19,12 +19,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.exceptions.HttpServerException;
-import org.purewidgets.shared.interactionmanager.Application;
-import org.purewidgets.shared.interactionmanager.Place;
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetInput;
-import org.purewidgets.shared.interactionmanager.WidgetInputList;
-import org.purewidgets.shared.interactionmanager.WidgetList;
+import org.purewidgets.shared.im.Application;
+import org.purewidgets.shared.im.Place;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetInput;
+import org.purewidgets.shared.im.WidgetInputList;
+import org.purewidgets.shared.im.WidgetList;
 import org.purewidgets.shared.logging.Log;
 
 

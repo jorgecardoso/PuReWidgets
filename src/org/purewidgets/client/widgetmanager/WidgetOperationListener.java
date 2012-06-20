@@ -2,8 +2,8 @@ package org.purewidgets.client.widgetmanager;
 
 import java.util.ArrayList;
 
-import org.purewidgets.shared.interactionmanager.Widget;
-import org.purewidgets.shared.interactionmanager.WidgetInput;
+import org.purewidgets.shared.im.Widget;
+import org.purewidgets.shared.im.WidgetInput;
 
 public interface WidgetOperationListener {
 
