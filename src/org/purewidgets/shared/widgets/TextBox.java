@@ -17,18 +17,11 @@ import org.purewidgets.shared.im.Widget;
 
 public class TextBox extends Widget {
 
-	private String caption;
-	
-	
 	public TextBox(String widgetId, String label) {
 		/*
 		 * Use the label as the short description
 		 */
-		super(widgetId, label, null);
-		this.setControlType(Widget.CONTROL_TYPE_ENTRY);
-		
-		this.caption = label;
-		//this.sendToServer();
+		super(widgetId, Widget.CONTROL_TYPE_ENTRY, label, "", null, null);
 	}
 	
 	@Override
@@ -51,18 +44,4 @@ public class TextBox extends Widget {
 		
 	}
 
-	/**
-	 * @return the label
-	 */
-	public String getCaption() {
-		return caption;
-	}
-
-	/**
-	 * @param label the label to set
-	 */
-	public void setCaption(String label) {
-		this.caption = label;
-	}
-	
 }

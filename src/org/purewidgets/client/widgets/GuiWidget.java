@@ -303,10 +303,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		return this.inputEnabled;
 	}
 	
-	
-	public boolean isVolatile() {
-		return this.widget.isVolatileWidget();
-	}
+
 	
 	
 	
@@ -401,17 +398,18 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	}
 	
 	public void removeFromServer() {
-		this.widget.removeFromServer();
+		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
+		WidgetManager.get().removeWidget(this.widget);
+		
+		
+		for (Widget w : this.widget.getDependentWidget() ) {
+			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
+			WidgetManager.get().removeWidget(w);
+		}
+	
 	}
 
-	/**
-	 * Removes an optionID from this widget.
-	 * @param optionID
-	 */
-	public void removeWidgetOption(WidgetOption option) {
-		
-		this.widget.removeWidgetOption(option);
-	}
+	
 	
 
 	
@@ -577,29 +575,6 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	}
 
 
-	
-	/**
-	 * Sets this widget's options to the specified ArrayList.
-	 * The existing options are discarded.
-	 * 
-	 * @param options
-	 */
-	public void setWidgetOptions(ArrayList<WidgetOption> options) {
-		this.widget.setWidgetOptions(options);
-	}
-	
-	/**
-	 * Creates a string representation of this widget for debug purposes.
-	 * 
-	 * @return a string representation of this object.
-	 */
-	public String toDebugString() {
-		if (this.widget != null) {
-			return "GuiWidget(" + this.widget.toDebugString() + ")";
-		} else {
-			return "GuiWidget()";
-		}
-	}
 	
 	/**
 	 * Fires an ActionEvent to all registered listeners of this Widget.

@@ -81,7 +81,7 @@ public final class InputEventHelper {
 		//ArrayList<InputEvent> inputEvents = new ArrayList<InputEvent>();
 		
 		for (Widget widget : widgetsToInputEventsMap.keySet()) {
-			Log.debug(InputEventHelper.class.getName(), "Firing input event on widget: " + widget.toDebugString());
+			Log.debug(InputEventHelper.class.getName(), "Firing input event on widget: " + widget.getWidgetId());
 			widget.onInput(widgetsToInputEventsMap.get(widget));
 		}
 		

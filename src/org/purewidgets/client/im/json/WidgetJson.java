@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
+import org.purewidgets.shared.im.WidgetParameter;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.JsArray;
@@ -26,11 +27,14 @@ public class WidgetJson extends GenericJson {
 		widgetJson.setControlType(widget.getControlType());
 		widgetJson.setShortDescription(widget.getShortDescription());
 		widgetJson.setLongDescription(widget.getLongDescription());
-		widgetJson.setContentUrl(widget.getContentUrl());
-		widgetJson.setUserResponse(widget.getUserResponse());
+
 
 		for (WidgetOption option : widget.getWidgetOptions()) {
 			widgetJson.addWidgetOption(WidgetOptionJson.create(option));
+		}
+		
+		for (WidgetParameter parameter : widget.getWidgetParameters() ) {
+			widgetJson.addWidgetParameter(WidgetParameterJson.create(parameter));
 		}
 		return widgetJson;
 	}
@@ -46,6 +50,13 @@ public class WidgetJson extends GenericJson {
 		}
 		this.widgetOptions.push(widgetOption);
 	}-*/;
+	
+	public final native void addWidgetParameter(WidgetParameterJson widgetParameter) /*-{
+	if (typeof (this.widgetParameters) == "undefined") {
+		this.widgetParameters = new Array();
+	}
+	this.widgetParameters.push(widgetParameter);
+}-*/;
 
 	public final native String getApplicationId() /*-{
 		return this.applicationId;
@@ -80,14 +91,14 @@ public class WidgetJson extends GenericJson {
 	}-*/;
 
 	public final Widget getWidget() {
-		Widget aw = new Widget(this.getWidgetId(), this.getShortDescription(),
-				this.getWidgetOptions());
-		aw.setLongDescription(this.getLongDescription());
+		Widget aw = new Widget(this.getWidgetId(), this.getControlType(), this.getShortDescription(),
+				this.getLongDescription(),
+				this.getWidgetOptions(),
+				this.getWidgetParameters());
+		
 		aw.setApplicationId(this.getApplicationId());
-		aw.setControlType(this.getControlType());
 		aw.setPlaceId(this.getPlaceId());
-		aw.setContentUrl(this.getContentUrl());
-		aw.setUserResponse(this.getUserResponse());
+
 		return aw;
 	}
 
@@ -105,10 +116,25 @@ public class WidgetJson extends GenericJson {
 
 		return options;
 	}
+	
+	public final ArrayList<WidgetParameter> getWidgetParameters() {
+		JsArray<WidgetParameterJson> parametersJs = getWidgetParametersAsJsArray();
+		ArrayList<WidgetParameter> parameters = new ArrayList<WidgetParameter>();// [optionsJs.length()];
+
+		for (int i = 0; i < parametersJs.length(); i++) {
+			parameters.add(parametersJs.get(i).getWidgetParameter());
+		}
+
+		return parameters;
+	}
 
 	public final native JsArray<WidgetOptionJson> getWidgetOptionsAsJsArray() /*-{
 		return this.widgetOptions;
 	}-*/;
+	
+	public final native JsArray<WidgetParameterJson> getWidgetParametersAsJsArray() /*-{
+	return this.widgetParameters;
+}-*/;
 
 
 	public final native void setApplicationId(String appId) /*-{

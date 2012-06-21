@@ -120,19 +120,4 @@ public class ActionEvent<T> {
 		return persona;
 	}
 	
-	/**
-	 * Creates a string representation of this ActionEvent for debug purposes.
-	 * 
-	 * @return a string representation of this object.
-	 */
-	public String toDebugString() {
-		String m = "";
-		if (this.source instanceof Widget) {
-			m = ((Widget)this.source).toDebugString();
-		}else if (this.source instanceof GuiWidget) {
-			m = ((GuiWidget)this.source).toDebugString();
-		}
-		
-		return "ActionEvent("  + m + ")";
-	}
 }

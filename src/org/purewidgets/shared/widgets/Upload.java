@@ -7,14 +7,12 @@ import org.purewidgets.shared.events.InputEvent;
 import org.purewidgets.shared.im.Widget;
 
 public class Upload  extends Widget {
+	
 	public Upload(String widgetId, String label) {
 		/*
 		 * Use the label as the short description
 		 */
-		super(widgetId, label, null);
-		this.setControlType(Widget.CONTROL_TYPE_UPLOAD);
-		this.setShortDescription(label);
-		//this.label = label;
+		super(widgetId, Widget.CONTROL_TYPE_UPLOAD, label, "", null, null);
 	}
 	
 	

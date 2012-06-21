@@ -13,30 +13,10 @@ import org.purewidgets.shared.im.Widget;
 public class Button extends Widget {	
 	
 	
-	String label;
-	
-	/*
-	protected Button() {
-		
-	}*/
-	
 	public Button(String widgetId, String label) {
 		/*
 		 * Use the label as the short description
 		 */
-		super(widgetId, label, null);
-		this.setControlType(Widget.CONTROL_TYPE_IMPERATIVE_SELECTION);
-		this.label = label;
+		super(widgetId, Widget.CONTROL_TYPE_IMPERATIVE_SELECTION, label,"", null, null);
 	}
-	
-	/*
-	@Override
-	public void handleInput(InputEvent ie) {
-		ActionEvent<Button> ae = new ActionEvent<Button>(this, ie.getWidgetOption());
-		
-		this.triggerActionEvent(ae);
-	}*/
-
-	
-	
 }

@@ -8,12 +8,15 @@ import org.purewidgets.shared.im.WidgetOption;
 public class Checkin extends Widget {	
 	
 	
-	public Checkin() {
-		super("purewidgets-check-in", "Check-in", null);
+	private static ArrayList<WidgetOption> createCheckinOptions() {
 		ArrayList<WidgetOption> options = new ArrayList<WidgetOption>();
 		options.add(new WidgetOption("purewidgets-check-in", "checkin"));
-		this.setWidgetOptions(options);
-		this.setControlType(CONTROL_TYPE_PRESENCE);
+		return options;
+	}
+	
+	public Checkin() {
+		super("purewidgets-check-in", CONTROL_TYPE_PRESENCE, "Check-in", "", createCheckinOptions(), null);
+		
 	}
 
 }

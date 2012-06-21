@@ -182,7 +182,7 @@ public class TagCloud extends Widget implements ActionListener {
 	
 	
 	public TagCloud(String widgetId, String tags[], int frequency[], boolean allowUserInput) {
-		super(widgetId, null, null);
+		super(widgetId, "", "", null);
 		
 		this.allowUserInput = allowUserInput;
 		

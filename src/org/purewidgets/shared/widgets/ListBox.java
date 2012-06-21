@@ -24,31 +24,29 @@ public class ListBox extends Widget {
 	 */
 	private java.util.List<String> listOptions;
 	
-	public ListBox(String widgetId, String listLabel, java.util.List<String> options) {
-		/*
-		 * Use the label as the short description
-		 */
-		super(widgetId, listLabel, null);
-		this.setControlType(Widget.CONTROL_TYPE_IMPERATIVE_SELECTION);
-		this.listOptions = options;
-		
-		updateListOptions(options);
-		
-	}
-
+	
 	/**
 	 * @param options
 	 */
-	private void updateListOptions(java.util.List<String> options) {
+	private static ArrayList<WidgetOption> createListOptions(java.util.List<String> options) {
 		ArrayList<WidgetOption> widgetOptions = new ArrayList<WidgetOption>();
 		for ( String option : options ) {
 			WidgetOption wo = new WidgetOption(option);
 			wo.setShortDescription(option);
 			widgetOptions.add(wo);
 		}
-		this.setWidgetOptions(widgetOptions);
-		//this.sendToServer();
+		return widgetOptions;
 	}
+	
+	public ListBox(String widgetId, String listLabel, java.util.List<String> options) {
+		/*
+		 * Use the label as the short description
+		 */
+		super(widgetId, Widget.CONTROL_TYPE_IMPERATIVE_SELECTION, listLabel, "", createListOptions(options), null);
+		this.listOptions = options;
+	}
+
+	
 	
 	@Override
 	public void handleInput(ArrayList<InputEvent> inputEventList) {
@@ -82,13 +80,4 @@ public class ListBox extends Widget {
 	public java.util.List<String> getListOptions() {
 		return listOptions;
 	}
-
-	/**
-	 * @param listOptions the listOptions to set
-	 */
-	public void setListOptions(java.util.List<String> listOptions) {
-		this.listOptions = listOptions;
-		this.updateListOptions(listOptions);
-	}
-
 }

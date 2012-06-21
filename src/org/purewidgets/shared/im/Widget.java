@@ -9,7 +9,6 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.InputEvent;
@@ -17,7 +16,6 @@ import org.purewidgets.shared.events.InputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
 import org.purewidgets.shared.logging.Log;
 
-import com.google.appengine.api.datastore.Key;
 
 /**
  * 
@@ -29,13 +27,12 @@ import com.google.appengine.api.datastore.Key;
  * A widget has a <code>widgetId</code> that identifies the widget in the application (so it
  * must be a unique id within the application) and one or more <code>WidgetOptions</code>
  * that correspond to items of the widget that can be separately selected by the
- * user. A <code>WidgetOption</code> can be changed in
- * run time by adding or removing them from the widget. 
+ * user. 
  * Each <code>WidgetOption</code> will be assigned a reference code by the interaction
  * manager service. Reference codes are the human-readable references used by users to
  * select an option or a widget for input. When the set of reference codes
- * assigned to a widget changes (because the widget added or removed optionIDs)
- * the InteractionManager will notify the widget by calling
+ * assigned to a widget changes (because the application created a new widget with the 
+ * same widgetid, for example) the InteractionManager will notify the widget by calling
  * onReferenceCodesUpdated().
  * 
  * Widgets can have (and usually will) ActionListeners attached. An application
@@ -77,8 +74,6 @@ public class Widget implements Comparable<Widget> {
 	public static String CONTROL_TYPE_PRESENCE = "presence";
 	//TODO: composite
 
-	@JsonIgnore
-	private Key key;
 
 	/**
 	 * The placeId where the application that has this widget is running.
@@ -98,15 +93,12 @@ public class Widget implements Comparable<Widget> {
 
 	protected String widgetId;
 	
+	
 	/**
 	 * The type of control that this widget implements
 	 */
 	private String controlType;
 	
-	/**
-	 * The volatile property of this widget
-	 */
-	private boolean volatileWidget;
 
 	/**
 	 * A short description (label) for the widget. The descriptions
@@ -122,17 +114,17 @@ public class Widget implements Comparable<Widget> {
 
 	private String longDescription;
 	
-
-	private String contentUrl;
-	
-
-	private String userResponse;
 	
 	/**
 	 * The list of options of this widget
 	 */
 	protected ArrayList<WidgetOption> widgetOptions = new ArrayList<WidgetOption>();
 
+	/**
+	 * The list of parameters for this widget.
+	 */
+	private ArrayList<WidgetParameter> widgetParameters;
+	
 	/**
 	 * The ActionListeners registered to receive high-level events from this
 	 * widget.
@@ -163,7 +155,13 @@ public class Widget implements Comparable<Widget> {
 	@JsonIgnore
 	protected ArrayList<Widget> dependentWidgets;
 
-	private boolean autoSendToServer;
+
+	protected Widget() {
+		actionListeners = new ArrayList<ActionListener>();
+		widgetOptions = new ArrayList<WidgetOption>();
+		this.dependentWidgets = new ArrayList<Widget>();
+		this.widgetParameters = new ArrayList<WidgetParameter>();
+	}
 	
 	/**
 	 * Creates a new Widget with the specified widgetId and WidgetOptions. The widgetId should generally not be null. If it is, 
@@ -175,8 +173,8 @@ public class Widget implements Comparable<Widget> {
 	 * @param widgetId The id for the widget.
 	 * @param options The list of WidgetOptions.
 	 */
-	public Widget(String widgetId, String shortDescription, ArrayList<WidgetOption> options) {
-		this(widgetId, shortDescription, "", options);
+	public Widget(String widgetId, String shortDescription, String longDescription, ArrayList<WidgetOption> options) {
+		this(widgetId, CONTROL_TYPE_IMPERATIVE_SELECTION, shortDescription, longDescription, options, null);
 	}
 
 	
@@ -188,11 +186,10 @@ public class Widget implements Comparable<Widget> {
 	 * @param autoSendToServer
 	 * 
 	 */
-	public Widget(String widgetId, String shortDescription, String longDescription, ArrayList<WidgetOption> options) {
+	public Widget(String widgetId, String controlType, String shortDescription, String longDescription, ArrayList<WidgetOption> options, ArrayList<WidgetParameter> parameters) {
+		this();
 		
-		this.dependentWidgets = new ArrayList<Widget>();
-		
-		this.volatileWidget = false;
+		this.controlType = controlType;
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;
 		
@@ -204,20 +201,20 @@ public class Widget implements Comparable<Widget> {
 		} else {
 			this.setWidgetOptions(options);
 		}
-
 		
+		/*
+		 * Make sure widgetparameters is never null
+		 */
+		if ( null != parameters ) {
+			this.widgetParameters = parameters;
+		}
+
 	}
 
-	protected Widget() {
-		actionListeners = new ArrayList<ActionListener>();
-		widgetOptions = new ArrayList<WidgetOption>();
-		this.dependentWidgets = new ArrayList<Widget>();
-		this.volatileWidget = false;
-	}
+	
 	
 	public void addActionListener(ActionListener handler) {
 		actionListeners.add(handler);
-
 	}
 	
 	public void addDependentWidget( Widget widget ) {
@@ -247,9 +244,6 @@ public class Widget implements Comparable<Widget> {
 	}
 	
 
-	public Key getKey() {
-		return key;
-	}
 
 	public String getPlaceId() {
 		return placeId;
@@ -273,9 +267,6 @@ public class Widget implements Comparable<Widget> {
 		return this.widgetOptions;
 	}
 
-	public boolean isVolatileWidget() {
-		return volatileWidget;
-	}
 
 	/**
 	 * 
@@ -339,30 +330,6 @@ public class Widget implements Comparable<Widget> {
 		this.dependentWidgets.remove( widget );
 	}
 
-	public final void removeFromServer() {
-		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
-		WidgetManager.get().removeWidget(this);
-		
-		
-		for (Widget w : this.dependentWidgets ) {
-			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
-			WidgetManager.get().removeWidget(w);
-		}
-	}
-
-	/**
-	 * Removes an option from this widget. This change is propagated immediately
-	 * to the WidgetManager.
-	 * 
-	 */
-	public void removeWidgetOption( WidgetOption option ) {
-		
-		Log.debugFinest(this, "Removing widget option: " + option);
-		this.widgetOptions.remove(option);
-
-	}
-
-	
 	
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
@@ -374,9 +341,7 @@ public class Widget implements Comparable<Widget> {
 
 	}
 
-	public void setKey(Key key) {
-		this.key = key;
-	}
+
 
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
@@ -394,7 +359,7 @@ public class Widget implements Comparable<Widget> {
 	/**
 	 * @param widgetID
 	 */
-	public void setWidgetId(String id) {
+	private void setWidgetId(String id) {
 		/**
 		 * A widget has always an unique ID within the application. If the user
 		 * didn't pass one, one is generated automatically.
@@ -415,25 +380,10 @@ public class Widget implements Comparable<Widget> {
 	 * 
 	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#setWidgetOptions(java.util.ArrayList)
 	 */
-	public void setWidgetOptions(ArrayList<WidgetOption> options) {
+	protected void setWidgetOptions(ArrayList<WidgetOption> options) {
 		this.widgetOptions = options;
 	}
 
-	/**
-	 * Creates a string representation of this widget for debug purposes.
-	 * 
-	 * @return a string representation of this object.
-	 * 
-	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#toDebugString()
-	 */
-	public String toDebugString() {
-		String s = "Widget(" + this.widgetId + ") ";
-
-		for (WidgetOption option : this.widgetOptions) {
-			s += option.toDebugString();
-		}
-		return s;
-	}
 	
 
 	/**
@@ -510,20 +460,7 @@ public class Widget implements Comparable<Widget> {
 	}
 
 
-	/**
-	 * @return the autoSendToServer
-	 */
-	public boolean isAutoSendToServer() {
-		return autoSendToServer;
-	}
-
-
-	/**
-	 * @param autoSendToServer the autoSendToServer to set
-	 */
-	public void setAutoSendToServer(boolean autoSendToServer) {
-		this.autoSendToServer = autoSendToServer;
-	}
+	
 
 
 	/**
@@ -534,49 +471,20 @@ public class Widget implements Comparable<Widget> {
 	}
 
 
-	/**
-	 * @param controlType the controlType to set
-	 */
-	public void setControlType(String controlType) {
-		this.controlType = controlType;
-	}
-
-
-	/**
-	 * @return the contentUrl
-	 */
-	public String getContentUrl() {
-		return contentUrl;
-	}
-
-
-	/**
-	 * @param contentUrl the contentUrl to set
-	 */
-	public void setContentUrl(String contentUrl) {
-		this.contentUrl = contentUrl;
-	}
-
-
-	/**
-	 * @return the userResponse
-	 */
-	public String getUserResponse() {
-		return userResponse;
-	}
-
-
-	/**
-	 * @param userResponse the userResponse to set
-	 */
-	public void setUserResponse(String userResponse) {
-		this.userResponse = userResponse;
-	}
 
 
 	@Override
 	public int compareTo(Widget other) {
 		return this.widgetId.compareTo(other.getWidgetId());
 	}
+
+	/**
+	 * @return the widgetParameters
+	 */
+	public ArrayList<WidgetParameter> getWidgetParameters() {
+		return widgetParameters;
+	}
+
+
 
 }

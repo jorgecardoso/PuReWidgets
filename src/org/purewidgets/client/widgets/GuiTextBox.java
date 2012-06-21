@@ -143,7 +143,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		textBox.addFocusHandler(this);
 		//textBox.setText(caption);
 		
-		setLblCaption( new Label( this.widgetTextBox.getCaption() ) );
+		setLblCaption( new Label( this.widgetTextBox.getShortDescription() ) );
 		
 		
 		
