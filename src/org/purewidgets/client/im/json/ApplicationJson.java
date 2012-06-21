@@ -37,13 +37,13 @@ public class ApplicationJson extends GenericJson {
 	}-*/;
 
 
-	public final native String getIconBaseUrl() /*-{ 
-		return this.iconBaseUrl; 
+	public final native String getApplicationBaseUrl() /*-{ 
+		return this.applicationBaseUrl; 
 	}-*/;
 	
 
-	public final native void setIconBaseUrl(String iconBaseUrl)  /*-{ 
-		this.iconBaseUrl = iconBaseUrl; 
+	public final native void setApplicationBaseUrl(String baseUrl)  /*-{ 
+		this.applicationBaseUrl = baseUrl; 
 	}-*/;
 
 
@@ -61,14 +61,14 @@ public class ApplicationJson extends GenericJson {
 		
 		aJSON.setPlaceId( application.getPlaceId() );
 		aJSON.setApplicationId( application.getApplicationId() );
-		aJSON.setIconBaseUrl(application.getIconBaseUrl());
+		aJSON.setApplicationBaseUrl(application.getApplicationBaseUrl());
 		
 		return aJSON;
 	}
 
 	public final Application getApplication() {
 		Application a = new Application( this.getPlaceId(), this.getApplicationId() );
-		a.setIconBaseUrl(this.getIconBaseUrl());
+		a.setApplicationBaseUrl(this.getApplicationBaseUrl());
 		return a;
 	}
 
