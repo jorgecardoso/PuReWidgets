@@ -6,7 +6,7 @@ package org.purewidgets.shared.widgets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.im.WidgetOption;
@@ -32,7 +32,7 @@ public final class InputEventHelper {
 		 */
 		//ArrayList<Widget> widgets = new ArrayList<Widget>();
 		//ArrayList<InputEvent> events = new ArrayList<InputEvent>();
-		HashMap<Widget, ArrayList<InputEvent>> widgetsToInputEventsMap = new HashMap<Widget, ArrayList<InputEvent>>();
+		HashMap<Widget, ArrayList<WidgetInputEvent>> widgetsToInputEventsMap = new HashMap<Widget, ArrayList<WidgetInputEvent>>();
 		
 		
 		/*
@@ -54,7 +54,7 @@ public final class InputEventHelper {
 							/*
 							 * Found option, save widget and inputevent
 							 */
-							InputEvent ie = new InputEvent(input.getPersona(),
+							WidgetInputEvent ie = new WidgetInputEvent(input.getPersona(),
 									option, input.getParameters());
 							ie.setAge(input.getAge());
 							
@@ -64,7 +64,7 @@ public final class InputEventHelper {
 							if (widgetsToInputEventsMap.containsKey(widget)) {
 								widgetsToInputEventsMap.get(widget).add(ie);
 							} else {
-								ArrayList<InputEvent> events = new ArrayList<InputEvent>();
+								ArrayList<WidgetInputEvent> events = new ArrayList<WidgetInputEvent>();
 								events.add(ie);
 								widgetsToInputEventsMap.put(widget, events);
 							}

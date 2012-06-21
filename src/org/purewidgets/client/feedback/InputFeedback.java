@@ -2,7 +2,7 @@ package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.GuiWidget;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 
 
 
@@ -19,7 +19,7 @@ public class InputFeedback<T extends GuiWidget> {
 	/**
 	 * The InputEvent that originated this feedback.
 	 */
-	private InputEvent inputEvent;
+	private WidgetInputEvent inputEvent;
 	
 	/**
 	 * The information that is going to be displayed
@@ -51,7 +51,7 @@ public class InputFeedback<T extends GuiWidget> {
 	 * @param info The text to show.
 	 * @param type The type of feedback.
 	 */
-	public InputFeedback(T widget, InputEvent event) {
+	public InputFeedback(T widget, WidgetInputEvent event) {
 		this(widget, event, Type.ACCEPTED, null);
 	}
 
@@ -64,7 +64,7 @@ public class InputFeedback<T extends GuiWidget> {
 	 * @param info The text to show.
 	 * @param type The type of feedback.
 	 */
-	public InputFeedback(T widget, InputEvent event,  Type type, ActionEvent<T> ae) {
+	public InputFeedback(T widget, WidgetInputEvent event,  Type type, ActionEvent<T> ae) {
 		this.widget = widget;
 		this.inputEvent =  event;
 		this.actionEvent = ae;
@@ -144,14 +144,14 @@ public class InputFeedback<T extends GuiWidget> {
 	/**
 	 * @param inputEvent the inputEvent to set
 	 */
-	public void setInputEvent(InputEvent inputEvent) {
+	public void setInputEvent(WidgetInputEvent inputEvent) {
 		this.inputEvent = inputEvent;
 	}
 
 	/**
 	 * @return the inputEvent
 	 */
-	public InputEvent getInputEvent() {
+	public WidgetInputEvent getInputEvent() {
 		return inputEvent;
 	}
 

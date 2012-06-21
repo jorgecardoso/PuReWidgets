@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Jorge C. S. Cardoso
  *
  */
-public interface InputListener {
+public interface WidgetInputListener {
 	
 	/**
 	 * Event triggered by the InteractionManager to signal
@@ -21,5 +21,5 @@ public interface InputListener {
 	 * 
 	 * @param ie An InputEvent object.
 	 */
-	public void onInput(ArrayList<InputEvent> ie);
+	public void onInput(ArrayList<WidgetInputEvent> ie);
 }

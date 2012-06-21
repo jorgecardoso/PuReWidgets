@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.im.ReferenceCodeFormatter;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
@@ -162,7 +162,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 	}
 	
 	@Override
-	public InputFeedback<GuiListBox> handleInput(InputEvent ie) {
+	public InputFeedback<GuiListBox> handleInput(WidgetInputEvent ie) {
 		InputFeedback<GuiListBox> feedback = new InputFeedback<GuiListBox>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 

@@ -10,7 +10,7 @@ import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.im.ReferenceCodeFormatter;
 import org.purewidgets.client.widgets.GuiDownload.GuiDownloadUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.Upload;
 
@@ -116,7 +116,7 @@ public class GuiUpload extends GuiWidget  {
 	}
 	
 	@Override
-	public InputFeedback<GuiUpload> handleInput(InputEvent ie) {
+	public InputFeedback<GuiUpload> handleInput(WidgetInputEvent ie) {
 		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 && ie.getParameters().get(0).length() > "http".length() ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);

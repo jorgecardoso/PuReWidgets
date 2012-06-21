@@ -11,8 +11,8 @@ import org.purewidgets.client.feedback.InputFeedbackListener;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
-import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.events.InputListener;
+import org.purewidgets.shared.events.WidgetInputEvent;
+import org.purewidgets.shared.events.WidgetInputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Composite;
 * @author Jorge C. S. Cardoso
 *
  */
-public class GuiWidget extends Composite implements  InputListener, ReferenceCodeListener, InputFeedbackListener {
+public class GuiWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
 	
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
@@ -247,7 +247,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		return this.getOffsetWidth();
 	}
 	
-	protected InputFeedback<? extends GuiWidget> handleInput(InputEvent ie) {
+	protected InputFeedback<? extends GuiWidget> handleInput(WidgetInputEvent ie) {
 		InputFeedback<GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
@@ -315,10 +315,10 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 	 * @param ie An InputEvent object.
 	 */
 	@Override
-	public final void onInput(ArrayList<InputEvent> inputList) {
+	public final void onInput(ArrayList<WidgetInputEvent> inputList) {
 		Log.debugFinest(this, "Received input event list ");
 		
-		for ( InputEvent ie : inputList ) {
+		for ( WidgetInputEvent ie : inputList ) {
 			Log.debugFinest(this, "  Processing: " + (ie != null ? ie.toDebugString() : "null input event"));
 			
 			/*
@@ -643,7 +643,7 @@ public class GuiWidget extends Composite implements  InputListener, ReferenceCod
 		this.userInputFeedbackPattern = userInputFeedbackPattern;
 	}
 	
-	protected String generateUserInputFeedbackMessage(InputEvent inputEvent) {
+	protected String generateUserInputFeedbackMessage(WidgetInputEvent inputEvent) {
 		String msg = new String(this.userInputFeedbackPattern);
 		
 		

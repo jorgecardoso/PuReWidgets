@@ -11,8 +11,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
-import org.purewidgets.shared.events.InputEvent;
-import org.purewidgets.shared.events.InputListener;
+import org.purewidgets.shared.events.WidgetInputEvent;
+import org.purewidgets.shared.events.WidgetInputListener;
 import org.purewidgets.shared.events.ReferenceCodeListener;
 import org.purewidgets.shared.logging.Log;
 
@@ -138,7 +138,7 @@ public class Widget implements Comparable<Widget> {
 	 */
 
 	@JsonIgnore
-	protected InputListener inputListener;
+	protected WidgetInputListener inputListener;
 
 	/**
 	 * The ReferenceCodeListener for this widget. Widgets are themselves
@@ -270,9 +270,9 @@ public class Widget implements Comparable<Widget> {
 
 	/**
 	 * 
-	 * @see org.purewidgets.shared.events.InputListener#onInput(org.purewidgets.shared.events.InputEvent)
+	 * @see org.purewidgets.shared.events.WidgetInputListener#onInput(org.purewidgets.shared.events.WidgetInputEvent)
 	 */
-	public final void onInput(ArrayList<InputEvent> ie) {
+	public final void onInput(ArrayList<WidgetInputEvent> ie) {
 		Log.debugFinest(this, "Received event: " + ie);
 		
 		// You want null? You can't handle null...
@@ -336,7 +336,7 @@ public class Widget implements Comparable<Widget> {
 	}
 
 	@JsonIgnore
-	public void setInputListener(InputListener inputListener) {
+	public void setInputListener(WidgetInputListener inputListener) {
 		this.inputListener = inputListener;
 
 	}
@@ -404,11 +404,11 @@ public class Widget implements Comparable<Widget> {
 	 * 
 	 * @param ie
 	 */
-	protected void handleInput(ArrayList <InputEvent> ie) {
+	protected void handleInput(ArrayList <WidgetInputEvent> ie) {
 
 		ActionEvent<Widget> ae;
 		
-		for (InputEvent inputEvent : ie) {
+		for (WidgetInputEvent inputEvent : ie) {
 			ae = new ActionEvent<Widget>(this, inputEvent, null);
 			
 			this.fireActionEvent(ae);

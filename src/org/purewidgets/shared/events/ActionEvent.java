@@ -38,7 +38,7 @@ public class ActionEvent<T> {
 	 * @param optionId The option id of the widget that this event refers to.
 	 * @param param Optional widget specific object.
 	 */
-	public ActionEvent(T source, InputEvent ie, Object param) {
+	public ActionEvent(T source, WidgetInputEvent ie, Object param) {
 		this(
 				null != ie? ie.getPersona() : null, 
 				source, 

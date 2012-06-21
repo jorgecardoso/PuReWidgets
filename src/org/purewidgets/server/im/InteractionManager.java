@@ -23,8 +23,6 @@ import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.im.Place;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
-import org.purewidgets.shared.im.WidgetInputList;
-import org.purewidgets.shared.im.WidgetList;
 import org.purewidgets.shared.logging.Log;
 
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.im.ReferenceCodeFormatter;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 
@@ -91,15 +91,15 @@ public class GuiDownload extends GuiWidget {
 	
 	void handleClick(ClickEvent event) {
 		// Simulate an input event
-		InputEvent e = new InputEvent(GuiDownload.this.getWidgetOptions().get(0), null);
-		ArrayList<InputEvent> inputList = new ArrayList<InputEvent>();
+		WidgetInputEvent e = new WidgetInputEvent(GuiDownload.this.getWidgetOptions().get(0), null);
+		ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
 		inputList.add(e);
 
 		GuiDownload.this.widget.onInput(inputList);
 	}
 	
 	@Override
-	public InputFeedback<GuiDownload> handleInput(InputEvent ie) {
+	public InputFeedback<GuiDownload> handleInput(WidgetInputEvent ie) {
 		return null;
 	}
 

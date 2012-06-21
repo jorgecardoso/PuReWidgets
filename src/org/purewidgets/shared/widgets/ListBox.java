@@ -6,7 +6,7 @@ package org.purewidgets.shared.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
@@ -49,12 +49,12 @@ public class ListBox extends Widget {
 	
 	
 	@Override
-	public void handleInput(ArrayList<InputEvent> inputEventList) {
+	public void handleInput(ArrayList<WidgetInputEvent> inputEventList) {
 		Log.debug(this, "Handling input");
 		/*
 		 * If the textbox received text, trigger an application event
 		 */
-		for (InputEvent ie : inputEventList) {
+		for (WidgetInputEvent ie : inputEventList) {
 			Log.debug(this, ie.toDebugString() );
 			//if ( null != ie.getParameters() ) {
 				Log.debug(this, "Firing event to app");

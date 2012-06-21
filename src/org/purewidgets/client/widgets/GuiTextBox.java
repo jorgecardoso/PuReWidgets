@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.im.ReferenceCodeFormatter;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.TextBox;
 
@@ -208,13 +208,13 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 			ArrayList<String> params = new ArrayList<String>();
 			params.add(this.textBox.getText());
 			
-			InputEvent e = new InputEvent(this.getWidgetOptions().get(0), params);
+			WidgetInputEvent e = new WidgetInputEvent(this.getWidgetOptions().get(0), params);
 			textBox.setText("");
 			
 			// remove the focus so that the internal caret disappears.
 			textBox.setFocus(false);
 			
-			ArrayList<InputEvent> inputList = new ArrayList<InputEvent>();
+			ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
 			inputList.add(e);
 			this.widget.onInput(inputList);
 			//this.onInput(inputList);	
@@ -230,7 +230,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 	}
 	
 	@Override
-	public InputFeedback<GuiTextBox> handleInput(InputEvent ie) {
+	public InputFeedback<GuiTextBox> handleInput(WidgetInputEvent ie) {
 		InputFeedback<GuiTextBox> feedback = new InputFeedback<GuiTextBox>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);

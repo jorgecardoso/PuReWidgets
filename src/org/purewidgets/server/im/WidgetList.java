@@ -1,9 +1,10 @@
-package org.purewidgets.shared.im;
+package org.purewidgets.server.im;
 
 import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.purewidgets.shared.im.Widget;
 
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class WidgetList {

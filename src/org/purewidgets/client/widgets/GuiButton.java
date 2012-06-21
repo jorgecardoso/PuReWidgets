@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.im.ReferenceCodeFormatter;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -84,8 +84,8 @@ public class GuiButton extends GuiWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				// Simulate an input event
-				InputEvent e = new InputEvent(GuiButton.this.getWidgetOptions().get(0), null);
-				ArrayList<InputEvent> inputList = new ArrayList<InputEvent>();
+				WidgetInputEvent e = new WidgetInputEvent(GuiButton.this.getWidgetOptions().get(0), null);
+				ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
 				inputList.add(e);
 
 				GuiButton.this.widget.onInput(inputList);
@@ -110,7 +110,7 @@ public class GuiButton extends GuiWidget {
 	}
 
 	@Override
-	public InputFeedback<GuiButton> handleInput(InputEvent ie) {
+	public InputFeedback<GuiButton> handleInput(WidgetInputEvent ie) {
 		InputFeedback<GuiButton> feedback = new InputFeedback<GuiButton>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 

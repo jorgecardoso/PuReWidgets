@@ -12,13 +12,18 @@ import org.purewidgets.shared.im.WidgetOption;
  * @author Jorge C. S. Cardoso
  *
  */
-public class InputEvent {
+public class WidgetInputEvent {
 
 	
 	/**
 	 * The identity which generated the input.
 	 */
-	private String persona;
+	private String userId;
+	
+	/**
+	 * The user name that can be displayed on the PD
+	 */
+	private String nickname;
 	
 	
 	/**
@@ -43,11 +48,11 @@ public class InputEvent {
 	 * This constructor is used when there is no persona associated (i.e., the input was
 	 * generated locally at the Gui).
 	 * 
-	 * @param persona The identity that was responsible for generating the input.
+	 * @param userId The identity that was responsible for generating the input.
 	 * @param widgetOption The WidgetOption that was selected by the user.
 	 * @param parameters The parameters the user sent in the input.
 	 */	
-	public InputEvent( WidgetOption widgetOption, ArrayList<String> parameters) {
+	public WidgetInputEvent( WidgetOption widgetOption, ArrayList<String> parameters) {
 		this("GuiEvent", widgetOption, parameters);
 	}	
 	
@@ -59,8 +64,8 @@ public class InputEvent {
 	 * @param widgetOption The WidgetOption that was selected by the user.
 	 * @param parameters The parameters the user sent in the input.
 	 */	
-	public InputEvent(String persona, WidgetOption widgetOption, ArrayList<String> parameters) {
-		this.persona = persona;
+	public WidgetInputEvent(String persona, WidgetOption widgetOption, ArrayList<String> parameters) {
+		this.userId = persona;
 		this.widgetOption = widgetOption;
 		this.parameters =  parameters;
 	}	
@@ -72,12 +77,12 @@ public class InputEvent {
 	 * @return The persona associated with this InputEvent.
 	 */
 	public String getPersona() {
-		return this.persona;
+		return this.userId;
 	}
 	
 	
 	public void setPersona(String persona) {
-		this.persona = persona;
+		this.userId = persona;
 	}
 
 	
@@ -143,6 +148,22 @@ public class InputEvent {
 	 */
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+
+	/**
+	 * @return the nickname
+	 */
+	public String getNickname() {
+		return nickname;
+	}
+
+
+	/**
+	 * @param nickname the nickname to set
+	 */
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	
 	

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.InputEvent;
+import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.Widget;
 
 /**
@@ -25,12 +25,12 @@ public class TextBox extends Widget {
 	}
 	
 	@Override
-	public void handleInput(ArrayList<InputEvent> inputEventList) {
+	public void handleInput(ArrayList<WidgetInputEvent> inputEventList) {
 		
 		/*
 		 * If the textbox received text, trigger an application event
 		 */
-		for (InputEvent ie : inputEventList) {
+		for (WidgetInputEvent ie : inputEventList) {
 			if ( null != ie.getParameters() && ie.getParameters().size() > 0) {
 				ActionEvent<TextBox> ae = new ActionEvent<TextBox>(this, ie, ie.getParameters().get(0) );
 				this.fireActionEvent(ae);
