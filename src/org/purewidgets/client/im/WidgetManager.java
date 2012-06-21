@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.purewidgets.shared.events.WidgetInputEvent;
+import org.purewidgets.shared.im.InputEventHelper;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgets.InputEventHelper;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

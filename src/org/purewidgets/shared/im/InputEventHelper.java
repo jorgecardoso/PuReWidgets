@@ -1,15 +1,12 @@
 /**
  * 
  */
-package org.purewidgets.shared.widgets;
+package org.purewidgets.shared.im;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.purewidgets.shared.events.WidgetInputEvent;
-import org.purewidgets.shared.im.Widget;
-import org.purewidgets.shared.im.WidgetInput;
-import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 /**
