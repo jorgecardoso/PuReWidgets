@@ -1,5 +1,6 @@
 org.purewidgets.client
 org.purewidgets.client.application
+org.purewidgets.client.feedback
 org.purewidgets.client.http
 org.purewidgets.client.im
 org.purewidgets.client.im.json
@@ -7,8 +8,6 @@ org.purewidgets.client.json
 org.purewidgets.client.storage
 org.purewidgets.client.storage.json
 org.purewidgets.client.widgets
-org.purewidgets.client.widgets.events
-org.purewidgets.client.widgets.feedback
 org.purewidgets.client.widgets.youtube
 org.purewidgets.server
 org.purewidgets.server.application
