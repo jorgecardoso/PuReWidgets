@@ -32,7 +32,7 @@ public class TextBox extends Widget {
 		 */
 		for (WidgetInputEvent ie : inputEventList) {
 			if ( null != ie.getParameters() && ie.getParameters().size() > 0) {
-				ActionEvent<TextBox> ae = new ActionEvent<TextBox>(this, ie, ie.getParameters().get(0) );
+				ActionEvent<TextBox> ae = new ActionEvent<TextBox>(ie, this, ie.getParameters().get(0) );
 				this.fireActionEvent(ae);
 			} 
 		}

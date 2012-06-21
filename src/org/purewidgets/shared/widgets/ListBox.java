@@ -55,14 +55,14 @@ public class ListBox extends Widget {
 		 * If the textbox received text, trigger an application event
 		 */
 		for (WidgetInputEvent ie : inputEventList) {
-			Log.debug(this, ie.toDebugString() );
+			
 			//if ( null != ie.getParameters() ) {
 				Log.debug(this, "Firing event to app");
 				String selectedOption;
 				WidgetOption wo = ie.getWidgetOption();
 				int index = this.getWidgetOptions().indexOf(wo);
 				selectedOption = this.listOptions.get(index);
-				ActionEvent<ListBox> ae = new ActionEvent<ListBox>(this, ie, selectedOption );
+				ActionEvent<ListBox> ae = new ActionEvent<ListBox>(ie, this, selectedOption );
 				this.fireActionEvent(ae);
 		//	} 
 		}

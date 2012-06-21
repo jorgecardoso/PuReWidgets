@@ -54,7 +54,7 @@ public final class InputEventHelper {
 							/*
 							 * Found option, save widget and inputevent
 							 */
-							WidgetInputEvent ie = new WidgetInputEvent(input.getPersona(),
+							WidgetInputEvent ie = new WidgetInputEvent(input,
 									option, input.getParameters());
 							ie.setAge(input.getAge());
 							

@@ -251,10 +251,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 		InputFeedback<GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
-		ActionEvent<GuiWidget> ae = new ActionEvent<GuiWidget>(
-				this, // source widget 
-				ie, // input event
-				null);
+		ActionEvent<GuiWidget> ae = new ActionEvent<GuiWidget>(ie, this, null);
 		feedback.setActionEvent(ae);
 		return feedback;
 	}
@@ -319,7 +316,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 		Log.debugFinest(this, "Received input event list ");
 		
 		for ( WidgetInputEvent ie : inputList ) {
-			Log.debugFinest(this, "  Processing: " + (ie != null ? ie.toDebugString() : "null input event"));
+			
 			
 			/*
 			 * If the input is old, just trigger the application event
@@ -656,8 +653,8 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 		 * %WOR% - widget option reference code
 		 */
 		
-		Log.debugFinest(this, "Replacing Username: " + msg + " : " + noNull(inputEvent.getPersona()));
-		msg = msg.replaceAll("%U%", noNull(inputEvent.getPersona()) );
+		Log.debugFinest(this, "Replacing Username: " + msg + " : " + noNull(inputEvent.getNickname()));
+		msg = msg.replaceAll("%U%", noNull(inputEvent.getNickname()) );
 		
 		Log.debugFinest(this, "Replacing widget short description: " + msg + " : " + noNull(this.getShortDescription()));
 		msg = msg.replaceAll("%WS%", noNull(this.getShortDescription()) );

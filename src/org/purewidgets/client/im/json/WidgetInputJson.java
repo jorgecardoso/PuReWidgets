@@ -18,8 +18,8 @@ public class WidgetInputJson extends GenericJson {
 	public static WidgetInputJson create(WidgetInput widgetInput) {
 		WidgetInputJson widgetInputJson = GenericJson.getNew();
 		
-		widgetInputJson.setUserIdentifier(widgetInput.getUserIdentifier());
-		widgetInputJson.setPersona(widgetInput.getPersona());
+		widgetInputJson.setUserId(widgetInput.getUserId());
+		widgetInputJson.setNickname(widgetInput.getNickname());
 		widgetInputJson.setParametersFromJavaArray(widgetInput.getParameters().toArray(new String[widgetInput.getParameters().size()]));
 		widgetInputJson.setTimeStamp(widgetInput.getTimeStamp());
 		widgetInputJson.setWidgetId(widgetInput.getWidgetId());
@@ -57,12 +57,12 @@ public class WidgetInputJson extends GenericJson {
 		return this.parameters;
 	}-*/;
 
-	public final native String getUserIdentifier() /*-{
-	return this.userIdentifier;
+	public final native String getUserId() /*-{
+	return this.userId;
 }-*/;
 	
-	public final native String getPersona() /*-{
-		return this.persona;
+	public final native String getNickname() /*-{
+		return this.nickname;
 	}-*/;
 
 	public final native String getTimeStamp() /*-{
@@ -79,8 +79,8 @@ public class WidgetInputJson extends GenericJson {
 
 	public final WidgetInput getWidgetInput() {
 		WidgetInput wi = new WidgetInput();
-		wi.setUserIdentifier(this.getUserIdentifier());
-		wi.setPersona(this.getPersona());
+		wi.setUserId(this.getUserId());
+		wi.setNickname(this.getNickname());
 		wi.setTimeStamp(this.getTimeStamp());
 		wi.setWidgetId(this.getWidgetId());
 		wi.setWidgetOptionId(this.getWidgetOptionId());
@@ -117,12 +117,12 @@ public class WidgetInputJson extends GenericJson {
 		this.setParameters(jsArray);
 	}
 
-	public final native void setPersona(String persona) /*-{
-		this.persona = persona;
+	public final native void setNickname(String persona) /*-{
+		this.nickname = persona;
 	}-*/;
 	
-	public final native void setUserIdentifier(String userIdentifier) /*-{
-	this.userIdentifier = userIdentifier;
+	public final native void setUserId(String userIdentifier) /*-{
+	this.userId = userIdentifier;
 }-*/;	
 
 	public final native void setTimeStamp(String timeStamp) /*-{

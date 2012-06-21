@@ -2,6 +2,7 @@ package org.purewidgets.shared.events;
 
 import java.util.ArrayList;
 
+import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.im.WidgetOption;
 
 
@@ -41,7 +42,12 @@ public class WidgetInputEvent {
 	/**
 	 * The age of the input, in milliseconds.
 	 */
-	private int age;
+	private long age;
+	
+	
+	public WidgetInputEvent(WidgetOption widgetOption, ArrayList<String> parameters) {
+		this("Anonymous", "Anonymous", widgetOption, parameters);
+	}	
 	
 	/**
 	 * Creates a new InputEvent with the given WidgetOption and parameters.
@@ -52,38 +58,26 @@ public class WidgetInputEvent {
 	 * @param widgetOption The WidgetOption that was selected by the user.
 	 * @param parameters The parameters the user sent in the input.
 	 */	
-	public WidgetInputEvent( WidgetOption widgetOption, ArrayList<String> parameters) {
-		this("GuiEvent", widgetOption, parameters);
+	public WidgetInputEvent(WidgetInput widgetInput, WidgetOption widgetOption, ArrayList<String> parameters) {
+		this(widgetInput.getUserId(), widgetInput.getNickname(), widgetOption, parameters);
 	}	
 	
 	
 	/**
-	 * Creates a new InputEvent with the given Persona, WidgetOption and parameters.
+	 * Creates a new InputEvent with the given UserId, nickname, WidgetOption and parameters.
 	 * 
 	 * @param persona The identity that was responsible for generating the input.
 	 * @param widgetOption The WidgetOption that was selected by the user.
 	 * @param parameters The parameters the user sent in the input.
 	 */	
-	public WidgetInputEvent(String persona, WidgetOption widgetOption, ArrayList<String> parameters) {
-		this.userId = persona;
+	public WidgetInputEvent(String userId, String nickname, WidgetOption widgetOption, ArrayList<String> parameters) {
+		this.userId = userId;
+		this.nickname = nickname;
 		this.widgetOption = widgetOption;
 		this.parameters =  parameters;
+		this.age = 0;
 	}	
 	
-	
-	
-	/**
-	 * 
-	 * @return The persona associated with this InputEvent.
-	 */
-	public String getPersona() {
-		return this.userId;
-	}
-	
-	
-	public void setPersona(String persona) {
-		this.userId = persona;
-	}
 
 	
 	/**
@@ -93,25 +87,6 @@ public class WidgetInputEvent {
 	public ArrayList<String> getParameters() {
 		return this.parameters;
 	}
-
-	
-	/**
-	 * Sets the parameters for this input event.
-	 * 
-	 * @param parameters the parameters to set
-	 */
-	public void setParameters(ArrayList<String> parameters) {
-		this.parameters = parameters;
-	}
-	
-	
-	/**
-	 * @param widgetOption the WidgetOption to set
-	 */
-	public void setWidgetOption(WidgetOption widgetOption) {
-		this.widgetOption = widgetOption;
-	}
-
 	
 	/**
 	 * @return the optionID
@@ -122,23 +97,9 @@ public class WidgetInputEvent {
 
 
 	/**
-	 * 
-	 * @return A string representation of this object for debuggin purposes.
-	 */
-	public String toDebugString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("InputEvent:").append("\n");
-		sb.append("\t Parameters: ").append(this.parameters != null ? this.parameters.toString() : "null").append("\n");
-		sb.append("\t WidgetOption: ").append(this.widgetOption != null ? this.widgetOption.toDebugString() : "null").append("\n");
-		
-		return sb.toString();
-	}
-
-
-	/**
 	 * @return the age
 	 */
-	public int getAge() {
+	public long getAge() {
 		return age;
 	}
 
@@ -146,7 +107,7 @@ public class WidgetInputEvent {
 	/**
 	 * @param age the age to set
 	 */
-	public void setAge(int age) {
+	public void setAge(long age) {
 		this.age = age;
 	}
 
@@ -160,12 +121,10 @@ public class WidgetInputEvent {
 
 
 	/**
-	 * @param nickname the nickname to set
+	 * @return the userId
 	 */
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public String getUserId() {
+		return userId;
 	}
-	
-	
 	
 }

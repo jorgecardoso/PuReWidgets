@@ -378,7 +378,7 @@ public class GuiTagCloud extends GuiWidget implements ActionListener {
 
 	@Override
 	public void onAction(ActionEvent<?> e) {
-		ActionEvent<GuiTagCloud> ae = new ActionEvent<GuiTagCloud>(e.getPersona(), this, null, e.getParam());
+		ActionEvent<GuiTagCloud> ae = new ActionEvent<GuiTagCloud>(e.getUserId(), e.getNickname(), this, null, e.getParam());
 		this.updateGui();
 		this.fireActionEvent(ae);
 	}

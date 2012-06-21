@@ -166,10 +166,7 @@ public class GuiListBox extends GuiWidget implements ClickHandler {
 		InputFeedback<GuiListBox> feedback = new InputFeedback<GuiListBox>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 
-		ActionEvent<GuiListBox> ae = new ActionEvent<GuiListBox>(this, // source
-																		// widget
-				ie, // input event
-				null);
+		ActionEvent<GuiListBox> ae = new ActionEvent<GuiListBox>(ie, this, null);
 		feedback.setActionEvent(ae);
 		
 		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));

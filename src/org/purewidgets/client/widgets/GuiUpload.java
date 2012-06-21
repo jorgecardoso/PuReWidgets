@@ -120,10 +120,7 @@ public class GuiUpload extends GuiWidget  {
 		InputFeedback<GuiUpload> feedback = new InputFeedback<GuiUpload>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 && ie.getParameters().get(0).length() > "http".length() ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
-			ActionEvent<GuiUpload> ae = new ActionEvent<GuiUpload>(
-					this, // source widget 
-					ie, // input event
-					ie.getParameters().get(0));
+			ActionEvent<GuiUpload> ae = new ActionEvent<GuiUpload>(ie, this, ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
 			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		} else {

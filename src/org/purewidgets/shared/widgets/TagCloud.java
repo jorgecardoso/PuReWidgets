@@ -371,7 +371,7 @@ public class TagCloud extends Widget implements ActionListener {
 		/*
 		 * Fire app event
 		 */
-		ActionEvent<TagCloud> ae = new ActionEvent<TagCloud>(e.getPersona(), this, e.getSelection(), text); 
+		ActionEvent<TagCloud> ae = new ActionEvent<TagCloud>(e.getUserId(), e.getNickname(), this, e.getSelection(), text); 
 		
 		this.fireActionEvent(ae);
 	}

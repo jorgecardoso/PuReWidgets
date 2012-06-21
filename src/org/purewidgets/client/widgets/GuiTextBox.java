@@ -234,10 +234,7 @@ public class GuiTextBox extends GuiWidget implements KeyPressHandler, FocusHandl
 		InputFeedback<GuiTextBox> feedback = new InputFeedback<GuiTextBox>(this, ie);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
-			ActionEvent<GuiTextBox> ae = new ActionEvent<GuiTextBox>(
-					this, // source widget 
-					ie, // input event
-					ie.getParameters().get(0));
+			ActionEvent<GuiTextBox> ae = new ActionEvent<GuiTextBox>(ie, this, ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
 			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		} else {

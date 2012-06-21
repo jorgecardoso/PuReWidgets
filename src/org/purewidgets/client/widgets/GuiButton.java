@@ -77,7 +77,6 @@ public class GuiButton extends GuiWidget {
 
 		this.setWidget(widgetButton);
 		
-
 		this.button = new com.google.gwt.user.client.ui.Button();
 
 		this.button.addClickHandler(new ClickHandler() {
@@ -114,10 +113,7 @@ public class GuiButton extends GuiWidget {
 		InputFeedback<GuiButton> feedback = new InputFeedback<GuiButton>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 
-		ActionEvent<GuiButton> ae = new ActionEvent<GuiButton>(this, // source
-																		// widget
-				ie, // input event
-				null);
+		ActionEvent<GuiButton> ae = new ActionEvent<GuiButton>(ie, this, null);
 		feedback.setActionEvent(ae);
 		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		return feedback;

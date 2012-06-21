@@ -24,7 +24,7 @@ public class Upload  extends Widget {
 		 */
 		for (WidgetInputEvent ie : inputEventList) {
 			if ( null != ie.getParameters() && ie.getParameters().size() > 0) {
-				ActionEvent<Upload> ae = new ActionEvent<Upload>(this, ie, ie.getParameters().get(0) );
+				ActionEvent<Upload> ae = new ActionEvent<Upload>(ie, this, ie.getParameters().get(0) );
 				this.fireActionEvent(ae);
 			} 
 		}

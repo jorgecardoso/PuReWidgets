@@ -409,7 +409,7 @@ public class Widget implements Comparable<Widget> {
 		ActionEvent<Widget> ae;
 		
 		for (WidgetInputEvent inputEvent : ie) {
-			ae = new ActionEvent<Widget>(this, inputEvent, null);
+			ae = new ActionEvent<Widget>(inputEvent, this, null);
 			
 			this.fireActionEvent(ae);
 		}

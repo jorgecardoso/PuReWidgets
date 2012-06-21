@@ -14,63 +14,31 @@ import org.purewidgets.shared.im.WidgetOption;
  * @author Jorge C. S. Cardoso
  */
 public class ActionEvent<T> {
-	private String persona;
+	private String userId;
+	private String nickname;
 	private T source;
 	private WidgetOption optionId;
 	private Object param;
 	
-	/**
-	 * Creates an ActionEvent object without an widget specific object parameter.
-	 * @see ActionEvent#ActionEvent(GuiWidgetInterface, String, Object)
-	 * 
-	 * @param source The object (Widget object) that fired the action event.
-	 * @param optionId The option id of the widget that this event refers to.
-	 */
-	public ActionEvent(T source, WidgetOption optionId) {
-		this(source, optionId, null);
-		
+	
+	
+	public ActionEvent(WidgetInputEvent widgetInputEvent, T source, Object param) {
+		this(widgetInputEvent.getUserId(), widgetInputEvent.getNickname(), source, widgetInputEvent.getWidgetOption(), param);
 	}
 	
 	/**
 	 * Creates an ActionEvent object.
-	 * 
+	 * @param 
 	 * @param source The object (Widget object) that fired the action event.
 	 * @param optionId The option id of the widget that this event refers to.
 	 * @param param Optional widget specific object.
 	 */
-	public ActionEvent(T source, WidgetInputEvent ie, Object param) {
-		this(
-				null != ie? ie.getPersona() : null, 
-				source, 
-				null != ie ? ie.getWidgetOption() : null, 
-						param
-						);
-		
-	}
-	
-	/**
-	 * Creates an ActionEvent object.
-	 * 
-	 * @param source The object (Widget object) that fired the action event.
-	 * @param optionId The option id of the widget that this event refers to.
-	 * @param param Optional widget specific object.
-	 */
-	public ActionEvent(T source, WidgetOption optionId, Object param) {
-		this(null, source, optionId, param);
-	}
-	
-	/**
-	 * Creates an ActionEvent object.
-	 * @param who The persona that generated the event (indirectly via the input)
-	 * @param source The object (Widget object) that fired the action event.
-	 * @param optionId The option id of the widget that this event refers to.
-	 * @param param Optional widget specific object.
-	 */
-	public ActionEvent(String who, T source, WidgetOption optionId, Object param) {
-		this.setPersona(who);
+	public ActionEvent(String userId, String nickname, T source, WidgetOption optionId, Object param) {
+		this.userId = userId;
+		this.nickname = nickname;
 		this.source = source;
 		this.optionId = optionId;
-		this.setParam(param);
+		this.param = param;
 	}
 	
 	
@@ -93,13 +61,6 @@ public class ActionEvent<T> {
 	}
 
 	/**
-	 * @param param the param to set
-	 */
-	public void setParam(Object param) {
-		this.param = param;
-	}
-
-	/**
 	 * @return the param
 	 */
 	public Object getParam() {
@@ -107,17 +68,21 @@ public class ActionEvent<T> {
 	}
 
 	/**
-	 * @param persona the persona that was responsible for the event
+	 * @return the nickname
 	 */
-	public void setPersona(String persona) {
-		this.persona = persona;
+	public String getNickname() {
+		return nickname;
 	}
 
+
+
 	/**
-	 * @return the identity
+	 * @return the userId
 	 */
-	public String getPersona() {
-		return persona;
+	public String getUserId() {
+		return userId;
 	}
+
+
 	
 }

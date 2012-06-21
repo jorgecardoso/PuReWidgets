@@ -30,9 +30,9 @@ public class WidgetInput {
 	
 	private ArrayList<String> parameters;
 	
-	private String userIdentifier;
+	private String userId;
 	
-	private String persona;	
+	private String nickname;	
 	
 	private String inputMechanism;
 	
@@ -80,18 +80,15 @@ public class WidgetInput {
 	}
 
 
-	public void setPersona(String persona) {
-		this.persona = persona;
+	public void setNickname(String persona) {
+		this.nickname = persona;
 	}
 
 
-	public String getPersona() {
-		return this.persona;
+	public String getNickname() {
+		return this.nickname;
 	}
 	
-	public final String toDebugString() {
-		return "WidgetInput(" + "persona: " + this.persona + "; parameters " + this.parameters.toString() + ")";
-	}
 
 
 	/**
@@ -193,16 +190,16 @@ public class WidgetInput {
 	/**
 	 * @return the userIdentifier
 	 */
-	public String getUserIdentifier() {
-		return userIdentifier;
+	public String getUserId() {
+		return userId;
 	}
 
 
 	/**
 	 * @param userIdentifier the userIdentifier to set
 	 */
-	public void setUserIdentifier(String userIdentifier) {
-		this.userIdentifier = userIdentifier;
+	public void setUserId(String userIdentifier) {
+		this.userId = userIdentifier;
 	}
 
 	@Override
@@ -214,7 +211,7 @@ public class WidgetInput {
 		WidgetInput otherWI = (WidgetInput)other;
 		
 		if ( !this.timeStamp.equals(otherWI.getTimeStamp()) || !this.placeId.equals(otherWI.getPlaceId()) 
-				|| !this.applicationId.equals(otherWI.getApplicationId()) || !this.userIdentifier.equals(otherWI.getUserIdentifier())) {
+				|| !this.applicationId.equals(otherWI.getApplicationId()) || !this.userId.equals(otherWI.getUserId())) {
 			return false;
 		}
 		return true;
