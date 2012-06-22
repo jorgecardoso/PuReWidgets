@@ -8,7 +8,9 @@ public class UrlHelper {
 		this.interactionServerUrl = interactionServerUrl;
 	}
 
-
+	public String getChannelUrl(String placeId, String applicationId, String callingApplicationId) {
+		return this.interactionServerUrl + "/place/"+ placeId + "/application/"+ applicationId + "/channel?appid="+ callingApplicationId;
+	}
 	
 	public  String getApplicationsUrl(String placeId, String callingApplicationId) {
 		return interactionServerUrl + "/place/" + placeId + "/application?appid=" +callingApplicationId ;

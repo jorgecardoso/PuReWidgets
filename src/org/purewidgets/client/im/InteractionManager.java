@@ -20,6 +20,7 @@ import org.purewidgets.client.im.json.WidgetListJson;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.im.Place;
+import org.purewidgets.shared.im.UrlHelper;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.logging.Log;
@@ -39,12 +40,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  */
 public class InteractionManager {
-
-		
+	
 	//"http://localhost:8080";//
 	private static final String DEFAULT_INTERACTION_SERVER_URL = "http://pw-interactionmanager.appspot.com";
 	
-	private  String interactionServerUrl;
 	
 	
 	/**
@@ -91,10 +90,6 @@ public class InteractionManager {
 	 */
 	private  String appId = "jorge";
 	
-	/**
-	 * The application URL constructed with the INTERACTION_SERVER, placeId and appId
-	 */
-	private  String applicationUrl;
 	
 	/**
 	 * The current interval between connection attempts to the server.
@@ -181,14 +176,16 @@ public class InteractionManager {
 
 	protected boolean channelOpen;
 	
+	private UrlHelper urlHelper;
+	
 	public InteractionManager(String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
 		
-		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
-		this.interactionServerUrl = DEFAULT_INTERACTION_SERVER_URL;
-		this.applicationUrl = this.getApplicationUrl(placeId, appId);
+		this.urlHelper = new UrlHelper(DEFAULT_INTERACTION_SERVER_URL);
 		
+		this.currentWidgetRequestInterval = WIDGET_REQUEST_PERIOD;
+			
 		askPeriod = MIN_ASK_PERIOD;
 		
 		failureCount = 0;
@@ -216,35 +213,11 @@ public class InteractionManager {
 	
 
 	public  String getServerUrl() {
-		return interactionServerUrl;
+		return urlHelper.getInteractionServerUrl();
 	}
 	
-	public  String getApplicationsUrl(String placeId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
-	}
 
-	public  String getApplicationUrl(String placeId, String applicationId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId +"?appid="+callingApplicationId;
-	}
-	
-	public  String getApplicationUrl(String placeId, String applicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId;
-	}
-	
-	public  String getPlacesUrl(String callingApplicationId) {
-		return interactionServerUrl + "/place?appid=" + callingApplicationId ;
-	}
 
-	public  String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
-	}
-	public  String getWidgetInputUrl(String placeId, String applicationId, String widgetId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
-	 */
 	public void addWidget(Widget widget) {
 		int index = indexOf(widget);
 		if (-1 == index) {
@@ -277,21 +250,19 @@ public class InteractionManager {
 		
 		try {
 			interactionService.delete(
-					this.getWidgetsUrl(this.placeId, this.appId, this.appId) + (volatileOnly ? "&volatileonly=true" : ""),
+					this.urlHelper.getWidgetsUrl(this.placeId, this.appId, this.appId) + (volatileOnly ? "&volatileonly=true" : ""),
 					new AsyncCallback<String>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
 							InteractionManager.this.processAllWidgetDeleteResponse(
 									false, null, caught);
-
 						}
 
 						@Override
 						public void onSuccess(String result) {
 							InteractionManager.this.processAllWidgetDeleteResponse(
 									true, result, null);
-
 						}
 
 					});
@@ -424,13 +395,12 @@ public class InteractionManager {
 
 		try {
 			this.interactionService.post(widgetListJson.toJsonString(),
-					this.getWidgetsUrl(this.placeId, this.appId, this.appId),
+					this.urlHelper.getWidgetsUrl(this.placeId, this.appId, this.appId),
 					new AsyncCallback<String>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
 							InteractionManager.this.processWidgetAddResponse(false, null, caught);
-							
 						}
 
 						@Override
@@ -518,7 +488,7 @@ public class InteractionManager {
 			
 			receivedLastRequest = false;
 			
-			String url = applicationUrl + "/input?from="+this.getLastTimeStampAsString()+"&appid="+appId;
+			String url = urlHelper.getApplicationInputUrl(this.placeId, this.appId, this.appId, this.getLastTimeStampAsString());
 			
 			Log.debugFinest(this, "Contacting application server for input..." + url);
 			
@@ -836,7 +806,7 @@ public class InteractionManager {
 		 * 'widget' url parameter
 		 */
 		StringBuilder widgetsUrlParam = new StringBuilder();
-		widgetsUrlParam.append( this.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
+		widgetsUrlParam.append( this.urlHelper.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
 		
 		for ( int i = 0; i < widgets.size(); i++) {
 			Widget w = widgets.get(i); 
@@ -906,9 +876,9 @@ public class InteractionManager {
 
 	
 	public void getWidgetsList(String placeId, String applicationId, final AsyncCallback<ArrayList<Widget>> callback) {
-		Log.debug( this, "Getting widgets from server: " +  this.getWidgetsUrl(placeId,  applicationId, this.appId) );
+		Log.debug( this, "Getting widgets from server: " +  this.urlHelper.getWidgetsUrl(placeId,  applicationId, this.appId) );
 		try {
-			interactionService.get( this.getWidgetsUrl(placeId,  applicationId, this.appId), 
+			interactionService.get( this.urlHelper.getWidgetsUrl(placeId,  applicationId, this.appId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -958,10 +928,10 @@ public class InteractionManager {
 		WidgetInputJson widgetInputJson = WidgetInputJson.create(widgetInput);
 		
 		Log.debug(this, "Sending widget input: " + widgetInputJson.toJsonString());
-		Log.debug(this, "to: "+ this.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId));
+		Log.debug(this, "to: "+ this.urlHelper.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId));
 		
 		this.interactionService.post(widgetInputJson.toJsonString(), 
-				this.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId), 
+				this.urlHelper.getWidgetInputUrl(placeName, applicationName, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), this.appId), 
 				new AsyncCallback<String>() {
 
 					@Override
@@ -988,10 +958,10 @@ public class InteractionManager {
 		ApplicationJson applicationJson = ApplicationJson.create(application);
 		
 		Log.debug(this, "Sending application: " + applicationJson.toJsonString());
-		Log.debug(this, "to: "+ this.getApplicationUrl(placeId, applicationId, this.appId));
+		Log.debug(this, "to: "+ this.urlHelper.getApplicationUrl(placeId, applicationId, this.appId));
 		
 		this.interactionService.post(applicationJson.toJsonString(), 
-				this.getApplicationUrl(placeId, applicationId, this.appId), 
+				this.urlHelper.getApplicationUrl(placeId, applicationId, this.appId), 
 				new AsyncCallback<String>() {
 
 					@Override
@@ -1021,7 +991,7 @@ public class InteractionManager {
 		
 		
 		this.interactionService.get(
-				this.getApplicationUrl(placeId, applicationId, this.appId), 
+				this.urlHelper.getApplicationUrl(placeId, applicationId, this.appId), 
 				new AsyncCallback<String>() {
 
 					@Override
@@ -1066,7 +1036,7 @@ public class InteractionManager {
 		/*
 		 * Create the request url with the proper parameters based on the intended application state
 		 */
-		String url = this.getApplicationsUrl(placeId, this.placeId);
+		String url = this.urlHelper.getApplicationsUrl(placeId, this.placeId);
 		switch (state) {
 		case All: 
 			break;
@@ -1118,9 +1088,9 @@ public class InteractionManager {
 	}
 
 	public void getPlacesList(final AsyncCallback<ArrayList<Place>> callback) {
-		Log.debug( this, "Getting places from server: " +  this.getPlacesUrl(this.appId) );
+		Log.debug( this, "Getting places from server: " +  this.urlHelper.getPlacesUrl(this.appId) );
 		try {
-			interactionService.get( this.getPlacesUrl(this.appId), 
+			interactionService.get( this.urlHelper.getPlacesUrl(this.appId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -1226,9 +1196,7 @@ public class InteractionManager {
 			});
 	}
 
-	private String getChannelUrl() {
-		return this.getServerUrl()+"/place/"+this.placeId+"/application/"+this.appId + "/channel?appid="+this.appId;
-	}
+	
 	
 	/**
 	 * Asks the server for a channel token. 
@@ -1237,7 +1205,7 @@ public class InteractionManager {
 	 */
 	private void getChannelToken() {
 		try {
-			interactionService.get( getChannelUrl(), 
+			interactionService.get( urlHelper.getChannelUrl(this.placeId, this.appId, this.appId), 
 					new AsyncCallback<String>() {
 
 						@Override
@@ -1296,7 +1264,7 @@ public class InteractionManager {
 	 * @return the interactionServerUrl
 	 */
 	public String getInteractionServerUrl() {
-		return interactionServerUrl;
+		return urlHelper.getInteractionServerUrl();
 	}
 
 
@@ -1304,7 +1272,6 @@ public class InteractionManager {
 	 * @param interactionServerUrl the interactionServerUrl to set
 	 */
 	public void setInteractionServerUrl(String interactionServerUrl) {
-		this.interactionServerUrl = interactionServerUrl;
-		this.applicationUrl = this.getApplicationUrl(placeId, appId);
+		this.urlHelper.setInteractionServerUrl(interactionServerUrl);
 	}
 }
