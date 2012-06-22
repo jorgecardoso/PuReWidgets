@@ -102,10 +102,6 @@ public class WidgetManager implements WidgetOperationListener {
 		
 	}
 	
-//	public void getPlacesList() {
-//		Log.debug(this, "Asking for place list");
-//		this.communicator.getPlacesList();
-//	}
 	
 	public InteractionManager getServerCommunicator() {
 		return this.communicator;
@@ -116,12 +112,6 @@ public class WidgetManager implements WidgetOperationListener {
 	}
 
 
-//	@Override
-//	public void onPlacesList(ArrayList<Place> placeList) {
-//		if ( null != this.applicationListListener ) {
-//			this.applicationListListener.onPlaceList( placeList );
-//		}
-//	}
 	
 	@Override
 	public  void onWidgetAdd(Widget widgetFromServer) {
@@ -255,9 +245,5 @@ public class WidgetManager implements WidgetOperationListener {
 		}
 		return -1;
 	}
-	
-	//TODO: remove from widgetmanager
-	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, AsyncCallback<WidgetInput> callback) {
-		this.communicator.sendWidgetInput(placeName, applicationName, widgetInput, callback);
-	}
+
 }

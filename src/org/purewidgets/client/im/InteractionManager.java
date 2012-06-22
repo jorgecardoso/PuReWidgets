@@ -1276,4 +1276,10 @@ public class InteractionManager {
 	public void setInteractionServerUrl(String interactionServerUrl) {
 		this.urlHelper.setInteractionServerUrl(interactionServerUrl);
 	}
+	
+	
+	
+//	public void sendWidgetInput(String placeName, String applicationName, WidgetInput widgetInput, AsyncCallback<WidgetInput> callback) {
+//		this.communicator.sendWidgetInput(placeName, applicationName, widgetInput, callback);
+//	}
 }
