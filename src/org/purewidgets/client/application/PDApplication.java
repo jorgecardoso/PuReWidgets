@@ -30,89 +30,76 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class PDApplication  {
 	/**
+	 * The URL query string parameter name that holds the place id
+	 */
+	private static final String PLACE_ID_PARAMETER = "placeid";
+	
+	/**
 	 * The URL query string parameter name that holds the application id
 	 */
-	private static final String APP_NAME_PARAMETER = "appname";
+	private static final String APPLICATION_ID_PARAMETER = "applicationid";
 
+	/**
+	 * If the URL does not contain the application id, this application id will
+	 * be used as default
+	 */
+	private static final String DEFAULT_APPLICATION_ID = "DefaultApplication";
+
+	/**
+	 * If the URL does not contain the application id, this application id will
+	 * be used as default
+	 */
+	private static final String DEFAULT_PLACE_ID = "DefaultPlace";
+
+	/**
+	 * The place name
+	 */
+	private String placeId;
+	
 	/**
 	 * The application name
 	 */
-	private static String applicationName;
+	private String applicationId;
+	
+	
+	private PDApplicationLifeCycle listener;
 
-	/**
-	 * Indicates if this application should automatically delete volatile
-	 * widgets on startup and finish
-	 */
-	private static boolean autoDeleteVolatile;
-
-	/**
-	 * If the URL does not contain the application id, this application id will
-	 * be used as default
-	 */
-	private static final String DEFAULT_APP_NAME = "DefaultApplication";
-
-	/**
-	 * If the URL does not contain the application id, this application id will
-	 * be used as default
-	 */
-	private static final String DEFAULT_PLACE_NAME = "DefaultPlace";
-
-	private static PDApplicationLifeCycle listener;
-
-	/**
-	 * Indicates if the application has been loaded
-	 */
-	private static boolean loaded = false;
 
 	/**
 	 * The LocalStorage for this application
 	 */
-	private static LocalStorage localStorage;
+	private LocalStorage localStorage;
 
 	/**
 	 * The parameter/values  for the application-defined options that are stored in the 
 	 * remote storage/passed in the URL
 	 */
-	private static Map<String, String> parameters;
-	
-	
+	private Map<String, String> parameters;
 
-	/**
-	 * The URL query string parameter name that holds the place id
-	 */
-	private static final String PLACE_NAME_PARAMETER = "placename";
-	/**
-	 * The place name
-	 */
-	private static String placeName;
 
 	/**
 	 * The RemoteStorage for this application
 	 */
-	private static RemoteStorage remoteStorage;
+	private RemoteStorage remoteStorage;
 
 	/**
 	 * The ServerCommunicator used to communicate with the interaction manager
 	 */
-	private static InteractionManager serverCommunicator;
+	private InteractionManager interactionManager;
 
-	private static Application application;
+	private Application application;
 
 	/**
 	 * @return the applicationName
 	 */
-	public static String getApplicationName() {
-		return applicationName;
+	public  String getApplicationName() {
+		return applicationId;
 	}
 
-	public static LocalStorage getLocalStorage() {
-		if (!loaded) {
-			Log.error("org.purewidgets.client.aplication.PublicDisplayApplication",
-					"Error getting Local Storage: application not loaded yet. Call load() first");
-			return null;
-		} else {
-			return localStorage;
-		}
+	public  LocalStorage getLocalStorage() {
+	
+		return localStorage;
+		
 	}
 
 	/** 
@@ -120,7 +107,7 @@ public class PDApplication  {
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static boolean getParameterBoolean(String name, boolean defaultValue) {
+	public  boolean getParameterBoolean(String name, boolean defaultValue) {
 		String valueString = getParameterString(name, defaultValue+"");
 		boolean toReturn = defaultValue;
 		try {
@@ -137,7 +124,7 @@ public class PDApplication  {
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static int getParameterInt(String name, int defaultValue) {
+	public  int getParameterInt(String name, int defaultValue) {
 		String valueString = getParameterString(name, defaultValue+"");
 		int toReturn = defaultValue;
 		try {
@@ -154,7 +141,7 @@ public class PDApplication  {
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
 	 */
-	public static String getParameterString(String name, String defaultValue) {
+	public  String getParameterString(String name, String defaultValue) {
 
 		/*
 		 * Check remote storage first
@@ -189,134 +176,124 @@ public class PDApplication  {
 	/**
 	 * @return the placeName
 	 */
-	public static String getPlaceName() {
-		return placeName;
+	public  String getPlaceName() {
+		return placeId;
 	}
 	
 
-	public static RemoteStorage getRemoteStorage() {
-		if (!loaded) {
-			Log.error("org.purewidgets.client.aplication.PublicDisplayApplication",
-					"Error getting Remote Storage: application not loaded yet. Call load() first");
-			return null;
-		} else {
-			return remoteStorage;
-		}
+	public  RemoteStorage getRemoteStorage() {
+		
+		return remoteStorage;
+		
 	}
 
-	
+	private PDApplication(String placeId, String applicationId, PDApplicationLifeCycle entryPoint) {
 
-	public static void load(PDApplicationLifeCycle entryPoint,
-			String defaultAppName, boolean autoDeleteVolatile) {
+		this.listener = entryPoint;
+		this.applicationId = applicationId;
+		this.placeId = placeId;
 		
-		PDApplication.listener = entryPoint;
-		PDApplication.autoDeleteVolatile = autoDeleteVolatile;
+		this.localStorage = new LocalStorage(applicationId);
 
-		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
-
-		if (null == placeName) {
-			placeName = DEFAULT_PLACE_NAME;
-		}
-		Log.debug(PDApplication.class.getName(), "Using place name: " + placeName);
-
-		applicationName = com.google.gwt.user.client.Window.Location
-				.getParameter(APP_NAME_PARAMETER);
-
-		if (null == applicationName) {
-			if (null == defaultAppName) {
-				applicationName = DEFAULT_APP_NAME;
-			} else {
-				applicationName = defaultAppName;
-			}
-		}
-		Log.debug(PDApplication.class.getName(), "Using application name: "
-				+ applicationName);
-
-		localStorage = new LocalStorage(applicationName);
-
-		remoteStorage = new RemoteStorage(placeName, applicationName);
+		this.remoteStorage = new RemoteStorage(placeId, applicationId);
 		
 		
-		remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
+		this.remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					PDApplication.handleParametersFromServer(null);
+					PDApplication.this.handleParametersFromServer(null);
 				}
 
 				@Override
 				public void onSuccess(Map<String, String> result) {
-					PDApplication.handleParametersFromServer(result);
+					PDApplication.this.handleParametersFromServer(result);
 				}
 			});
 		
 		org.purewidgets.client.Resources.INSTANCE.css().ensureInjected();
 	}
+	
 
-	protected static void handleParametersFromServer(Map<String, String> result) {
+	public static void load(PDApplicationLifeCycle entryPoint,
+			String defaultAppName) {
+		
+				
+		String placeId = com.google.gwt.user.client.Window.Location.getParameter(PLACE_ID_PARAMETER);
+
+		if (null == placeId) {
+			placeId = DEFAULT_PLACE_ID;
+		}
+		Log.debug(PDApplication.class.getName(), "Using place name: " + placeId);
+		
+		String applicationId = com.google.gwt.user.client.Window.Location
+				.getParameter(APPLICATION_ID_PARAMETER);
+
+		if (null == applicationId) {
+			if (null == defaultAppName) {
+				applicationId = DEFAULT_APPLICATION_ID;
+			} else {
+				applicationId = defaultAppName;
+			}
+		}
+		Log.debug(PDApplication.class.getName(), "Using application name: "
+				+ applicationId);
+
+		
+		PDApplication pdApplication = new PDApplication(placeId, applicationId, entryPoint);
+	
+	}
+	
+
+
+	protected void handleParametersFromServer( Map<String, String> result) {
 		if (null != result) {
-			PDApplication.parameters = result;
+			this.parameters = result;
 			
 			for ( String key : result.keySet() ) {
 				
-				Log.debug(PDApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
+				Log.debug(this, "Loaded from remote datastore: " + key + ": " +result.get(key) );
 			}
 		} else {
 			
-			PDApplication.parameters = new HashMap<String, String>();
+			this.parameters = new HashMap<String, String>();
 		
 		}
+	
 		
-		PDApplication.loaded = true;
+		String interactionManagerUrl = this.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
 		
-		String interactionManagerUrl = PDApplication.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
+		Log.info(this, "Using interaction manager: " + interactionManagerUrl);
 		
-		Log.info(PDApplication.class.getName(), "Using interaction manager: " + interactionManagerUrl);
-		
-		serverCommunicator = new InteractionManager(placeName, applicationName);
+		InteractionManager serverCommunicator = new InteractionManager(this.placeId, this.applicationId, this.localStorage);
+		this.interactionManager = serverCommunicator;
 		serverCommunicator.setInteractionServerUrl(interactionManagerUrl);
+		
 		WidgetManager.get().setServerCommunication( serverCommunicator );
-
-		/*
-		 * Delete all volatile widgets that may have left on the server before
-		 */
-
-		if (autoDeleteVolatile) {
-			Log.debug(PDApplication.class.getName(), "Removing volatile widgets");
-			WidgetManager.get().removeAllWidgets(true);
-		}
-
-		
-
-		
 
 		Window.addCloseHandler(new CloseHandler<Window>() {
 			@Override
 			public void onClose(CloseEvent<Window> event) {
-				if (PDApplication.autoDeleteVolatile) {
-					Log.debug(PDApplication.class.getName(), "Removing volatile widgets");
-					WidgetManager.get().removeAllWidgets(true);
-				}
+				
 			}
 		});		
 		
 		
-		serverCommunicator.getApplication(placeName, applicationName, new AsyncCallback<Application>() {
+		serverCommunicator.getApplication(this.placeId, this.applicationId, new AsyncCallback<Application>() {
 
 			@Override
 			public void onSuccess(Application application) {
 				Log.debug(PDApplication.class.getName(), "Received application: " + application);
-				PDApplication.application = application;
-				listener.onPDApplicationLoaded();
+				PDApplication.this.application = application;
+				PDApplication.this.listener.onPDApplicationLoaded(PDApplication.this);
 				
 			}
 
 			@Override
 			public void onFailure(Throwable exception) {
 				Log.debug(PDApplication.class.getName(), "Could not get Application");
-				PDApplication.application = new Application(placeName, applicationName);
-				listener.onPDApplicationLoaded();
-				
+				PDApplication.this.application = new Application(placeId, applicationId);
+				PDApplication.this.listener.onPDApplicationLoaded(PDApplication.this);	
 			}
 			
 		});
@@ -328,22 +305,22 @@ public class PDApplication  {
 	 * @param applicationName
 	 *            the applicationName to set
 	 */
-	public static void setApplicationName(String applicationName) {
-		PDApplication.applicationName = applicationName;
+	public void setApplicationName(String applicationName) {
+		this.applicationId = applicationName;
 	}
 
-	public static void setParameterString(String name, String value) {
+	public void setParameterString(String name, String value) {
 		parameters.put(name, value);
 		remoteStorage.setString(name, value, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Log.warn(PDApplication.class.getName(), "Could not save to remote datastore" );
+				Log.warn(PDApplication.this, "Could not save to remote datastore" );
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				Log.debug(PDApplication.class.getName(), "Saved to remote datastore" );
+				Log.debug(PDApplication.this, "Saved to remote datastore" );
 			}
 			
 		});
@@ -353,36 +330,92 @@ public class PDApplication  {
 	 * @param placeName
 	 *            the placeName to set
 	 */
-	public static void setPlaceName(String placeName) {
-		PDApplication.placeName = placeName;
+	public void setPlaceName(String placeName) {
+		this.placeId = placeName;
 	}
 
 	/**
 	 * @return the serverCommunicator
 	 */
-	public static InteractionManager getServerCommunicator() {
-		return serverCommunicator;
+	public InteractionManager getServerCommunicator() {
+		return interactionManager;
 	}
 
 	/**
 	 * @param serverCommunicator the serverCommunicator to set
 	 */
-	public static void setServerCommunicator(InteractionManager serverCommunicator) {
-		PDApplication.serverCommunicator = serverCommunicator;
+	public void setServerCommunicator(InteractionManager serverCommunicator) {
+		this.interactionManager = serverCommunicator;
 	}
 
 	/**
 	 * @return the application
 	 */
-	public static Application getApplication() {
+	public Application getApplication() {
 		return application;
 	}
 
 	/**
 	 * @param application the application to set
 	 */
-	public static void setApplication(Application application) {
-		PDApplication.application = application;
+	private void setApplication(Application application) {
+		this.application = application;
+	}
+
+	/**
+	 * @return the placeId
+	 */
+	public String getPlaceId() {
+		return placeId;
+	}
+
+	/**
+	 * @param placeId the placeId to set
+	 */
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
+
+	/**
+	 * @return the applicationId
+	 */
+	public String getApplicationId() {
+		return applicationId;
+	}
+
+	/**
+	 * @param applicationId the applicationId to set
+	 */
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
+	}
+
+	/**
+	 * @param localStorage the localStorage to set
+	 */
+	public void setLocalStorage(LocalStorage localStorage) {
+		this.localStorage = localStorage;
+	}
+
+	/**
+	 * @param remoteStorage the remoteStorage to set
+	 */
+	public void setRemoteStorage(RemoteStorage remoteStorage) {
+		this.remoteStorage = remoteStorage;
+	}
+
+	/**
+	 * @return the interactionManager
+	 */
+	public InteractionManager getInteractionManager() {
+		return interactionManager;
+	}
+
+	/**
+	 * @param interactionManager the interactionManager to set
+	 */
+	public void setInteractionManager(InteractionManager interactionManager) {
+		this.interactionManager = interactionManager;
 	}
 
 

@@ -8,5 +8,5 @@ package org.purewidgets.client.application;
  *
  */
 public interface PDApplicationLifeCycle {
-	public void onPDApplicationLoaded();
+	public void onPDApplicationLoaded(PDApplication pdApplication);
 }

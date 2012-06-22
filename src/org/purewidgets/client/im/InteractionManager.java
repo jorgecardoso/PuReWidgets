@@ -5,8 +5,6 @@ package org.purewidgets.client.im;
 
 import java.util.ArrayList;
 
-
-import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.http.HttpService;
 import org.purewidgets.client.http.HttpServiceAsync;
 import org.purewidgets.client.im.json.ApplicationJson;
@@ -18,6 +16,7 @@ import org.purewidgets.client.im.json.WidgetInputListJson;
 import org.purewidgets.client.im.json.WidgetJson;
 import org.purewidgets.client.im.json.WidgetListJson;
 import org.purewidgets.client.json.GenericJson;
+import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.im.Place;
 import org.purewidgets.shared.im.UrlHelper;
@@ -177,10 +176,13 @@ public class InteractionManager {
 	protected boolean channelOpen;
 	
 	private UrlHelper urlHelper;
+	private LocalStorage localStorage;
 	
-	public InteractionManager(String placeId, String appId) {
+	public InteractionManager(String placeId, String appId, LocalStorage localStorage) {
 		this.placeId = placeId;
 		this.appId = appId;
+		
+		this.localStorage = localStorage;
 		
 		this.urlHelper = new UrlHelper(DEFAULT_INTERACTION_SERVER_URL);
 		
@@ -429,7 +431,7 @@ public class InteractionManager {
 	}
 
 	private String getLastTimeStampAsString() {
-		String ts = PDApplication.getLocalStorage().getString(TIMESTAMP);
+		String ts = this.localStorage.getString(TIMESTAMP);
 		
 		if (ts == null || ts.length() < 1) {
 			return "0";
@@ -852,7 +854,7 @@ public class InteractionManager {
 	}
 	
 	private void setTimeStamp(long timeStamp) {
-		PDApplication.getLocalStorage().setString(TIMESTAMP, ""+timeStamp);
+		this.localStorage.setString(TIMESTAMP, ""+timeStamp);
 	}
 	
 	private long toLong(String value) {
@@ -1129,8 +1131,8 @@ public class InteractionManager {
 	}
 	
 	private void createChannel() {
-		String token = PDApplication.getLocalStorage().getString("ChannelToken");
-		Long tokenTimestamp = PDApplication.getLocalStorage().getLong("ChannelTokenTimestamp");
+		String token = this.localStorage.getString("ChannelToken");
+		Long tokenTimestamp = this.localStorage.getLong("ChannelTokenTimestamp");
 		
 		/*
 		 * If the token expire is due in more than one our we take the token and open the channel
@@ -1227,8 +1229,8 @@ public class InteractionManager {
 							 * Store the token on local storage so that the next time, we try to reuse the 
 							 * channel
 							 */
-							PDApplication.getLocalStorage().setString("ChannelToken", channelTokenJson.getToken());
-							PDApplication.getLocalStorage().setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
+							InteractionManager.this.localStorage.setString("ChannelToken", channelTokenJson.getToken());
+							InteractionManager.this.localStorage.setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
 							InteractionManager.this.openChannel(channelTokenJson.getToken());
