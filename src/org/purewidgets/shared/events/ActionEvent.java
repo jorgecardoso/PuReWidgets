@@ -2,10 +2,9 @@
  * 
  */
 package org.purewidgets.shared.events;
-import org.purewidgets.client.widgets.GuiWidget;
-import org.purewidgets.shared.im.Widget;
-import org.purewidgets.shared.im.WidgetOption;
 
+
+import org.purewidgets.shared.im.WidgetOption;
 
 
 /**
