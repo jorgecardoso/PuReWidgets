@@ -3,20 +3,14 @@ package org.purewidgets.server.im.json;
 
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.shared.im.Place;
-import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
-
-import com.google.appengine.api.datastore.Key;
-
 
 /**
  * 
- *   
+ * The JSON data transfer object for WidgetOption objects.
+ * 
  * @author Jorge C. S. Cardoso
  *
  */
@@ -34,9 +28,7 @@ public class WidgetOptionJson extends GenericJson {
 	
 	private String shortDescription;
 	
-	
 	private WidgetOptionJson() {
-		
 	}
 
 
@@ -50,7 +42,6 @@ public class WidgetOptionJson extends GenericJson {
 		widgetOptionJson.setShortDescription(widgetOption.getShortDescription());
 		
 		return widgetOptionJson;
-		
 	}
 	
 	public WidgetOption getWidgetOption() {
@@ -62,17 +53,8 @@ public class WidgetOptionJson extends GenericJson {
 		widgetOption.setLongDescription(this.longDescription);
 		widgetOption.setShortDescription(this.shortDescription);
 		
-		
 		return widgetOption;
 	}
-	
-	/**
-	 * @return the widgetOptionId
-	 */
-	private String getWidgetOptionId() {
-		return widgetOptionId;
-	}
-
 
 	/**
 	 * @param widgetOptionId the widgetOptionId to set
@@ -81,30 +63,12 @@ public class WidgetOptionJson extends GenericJson {
 		this.widgetOptionId = widgetOptionId;
 	}
 
-
-	/**
-	 * @return the suggestedReferenceCode
-	 */
-	private String getSuggestedReferenceCode() {
-		return suggestedReferenceCode;
-	}
-
-
 	/**
 	 * @param suggestedReferenceCode the suggestedReferenceCode to set
 	 */
 	private void setSuggestedReferenceCode(String suggestedReferenceCode) {
 		this.suggestedReferenceCode = suggestedReferenceCode;
 	}
-
-
-	/**
-	 * @return the referenceCode
-	 */
-	private String getReferenceCode() {
-		return referenceCode;
-	}
-
 
 	/**
 	 * @param referenceCode the referenceCode to set
@@ -113,30 +77,12 @@ public class WidgetOptionJson extends GenericJson {
 		this.referenceCode = referenceCode;
 	}
 
-
-	/**
-	 * @return the longDescription
-	 */
-	private String getLongDescription() {
-		return longDescription;
-	}
-
-
 	/**
 	 * @param longDescription the longDescription to set
 	 */
 	private void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
 	}
-
-
-	/**
-	 * @return the shortDescription
-	 */
-	private String getShortDescription() {
-		return shortDescription;
-	}
-
 
 	/**
 	 * @param shortDescription the shortDescription to set

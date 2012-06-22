@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 
-
+/**
+ * 
+ * The JSON data transfer object for an ArrayList of WidgetInput objects.
+ * 
+ * @author "Jorge C. S. Cardoso"
+ *
+ */
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WidgetInputListJson extends GenericJson {
@@ -42,12 +46,6 @@ public class WidgetInputListJson extends GenericJson {
 		return widgetInputs;
 	}
 
-	/**
-	 * @return the inputs
-	 */
-	private ArrayList<WidgetInputJson> getInputs() {
-		return inputs;
-	}
 
 	/**
 	 * @param inputs the inputs to set

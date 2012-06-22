@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 
-
 /**
+ * 
+ * The JSON data transfer object for WidgetInput objects.
  * 
  * @author Jorge C. S. Cardoso
  *
@@ -54,6 +53,7 @@ public class WidgetInputJson extends GenericJson {
 		widgetInputJson.setPlaceId(widgetInput.getPlaceId());
 		widgetInputJson.setApplicationId(widgetInput.getApplicationId());
 		widgetInputJson.setWidgetId(widgetInput.getWidgetId());
+		widgetInputJson.setWidgetOptionId(widgetInput.getWidgetOptionId());
 		widgetInputJson.setReferenceCode(widgetInput.getReferenceCode());
 		widgetInputJson.setParameters(widgetInput.getParameters());
 		widgetInputJson.setUserId(widgetInput.getUserId());
@@ -71,6 +71,7 @@ public class WidgetInputJson extends GenericJson {
 		widgetInput.setPlaceId(this.placeId);
 		widgetInput.setApplicationId(this.applicationId);
 		widgetInput.setWidgetId(this.widgetId);
+		widgetInput.setWidgetOptionId(this.widgetOptionId);
 		widgetInput.setReferenceCode(this.referenceCode);
 		widgetInput.setParameters(this.parameters);
 		widgetInput.setUserId(this.userId);
@@ -82,12 +83,6 @@ public class WidgetInputJson extends GenericJson {
 		return widgetInput;
 	}
 
-	/**
-	 * @return the placeId
-	 */
-	private String getPlaceId() {
-		return placeId;
-	}
 
 	/**
 	 * @param placeId the placeId to set
@@ -96,12 +91,6 @@ public class WidgetInputJson extends GenericJson {
 		this.placeId = placeId;
 	}
 
-	/**
-	 * @return the applicationId
-	 */
-	private String getApplicationId() {
-		return applicationId;
-	}
 
 	/**
 	 * @param applicationId the applicationId to set
@@ -111,25 +100,12 @@ public class WidgetInputJson extends GenericJson {
 	}
 
 	/**
-	 * @return the referenceCode
-	 */
-	private String getReferenceCode() {
-		return referenceCode;
-	}
-
-	/**
 	 * @param referenceCode the referenceCode to set
 	 */
 	private void setReferenceCode(String referenceCode) {
 		this.referenceCode = referenceCode;
 	}
 
-	/**
-	 * @return the widgetId
-	 */
-	private String getWidgetId() {
-		return widgetId;
-	}
 
 	/**
 	 * @param widgetId the widgetId to set
@@ -138,12 +114,6 @@ public class WidgetInputJson extends GenericJson {
 		this.widgetId = widgetId;
 	}
 
-	/**
-	 * @return the widgetOptionId
-	 */
-	private String getWidgetOptionId() {
-		return widgetOptionId;
-	}
 
 	/**
 	 * @param widgetOptionId the widgetOptionId to set
@@ -152,12 +122,7 @@ public class WidgetInputJson extends GenericJson {
 		this.widgetOptionId = widgetOptionId;
 	}
 
-	/**
-	 * @return the timeStamp
-	 */
-	private String getTimeStamp() {
-		return timeStamp;
-	}
+
 
 	/**
 	 * @param timeStamp the timeStamp to set
@@ -166,12 +131,6 @@ public class WidgetInputJson extends GenericJson {
 		this.timeStamp = timeStamp;
 	}
 
-	/**
-	 * @return the parameters
-	 */
-	private ArrayList<String> getParameters() {
-		return parameters;
-	}
 
 	/**
 	 * @param parameters the parameters to set
@@ -180,12 +139,7 @@ public class WidgetInputJson extends GenericJson {
 		this.parameters = parameters;
 	}
 
-	/**
-	 * @return the userId
-	 */
-	private String getUserId() {
-		return userId;
-	}
+
 
 	/**
 	 * @param userId the userId to set
@@ -194,12 +148,7 @@ public class WidgetInputJson extends GenericJson {
 		this.userId = userId;
 	}
 
-	/**
-	 * @return the nickname
-	 */
-	private String getNickname() {
-		return nickname;
-	}
+
 
 	/**
 	 * @param nickname the nickname to set
@@ -208,12 +157,6 @@ public class WidgetInputJson extends GenericJson {
 		this.nickname = nickname;
 	}
 
-	/**
-	 * @return the inputMechanism
-	 */
-	private String getInputMechanism() {
-		return inputMechanism;
-	}
 
 	/**
 	 * @param inputMechanism the inputMechanism to set
@@ -222,12 +165,6 @@ public class WidgetInputJson extends GenericJson {
 		this.inputMechanism = inputMechanism;
 	}
 
-	/**
-	 * @return the age
-	 */
-	private int getAge() {
-		return age;
-	}
 
 	/**
 	 * @param age the age to set

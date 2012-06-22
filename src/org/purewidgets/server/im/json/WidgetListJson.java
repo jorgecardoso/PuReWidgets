@@ -7,12 +7,22 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.im.Widget;
 
+/**
+ * 
+ * The JSON data transfer object for ArrayList of Widget objects.
+ * 
+ * 
+ * @author "Jorge C. S. Cardoso"
+ *
+ */
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WidgetListJson extends GenericJson {
 	
+	@SuppressWarnings("unused")
 	private String applicationId;
 	
+	@SuppressWarnings("unused")
 	private String placeId;
 	
 	private ArrayList<WidgetJson> widgets;
@@ -53,16 +63,7 @@ public class WidgetListJson extends GenericJson {
 		this.widgets = widgets;
 	}
 
-	private ArrayList<WidgetJson> getWidgets() {
-		return this.widgets;
-	}
-
-	/**
-	 * @return the applicationId
-	 */
-	private String getApplicationId() {
-		return applicationId;
-	}
+	
 
 	/**
 	 * @param applicationId the applicationId to set
@@ -71,12 +72,6 @@ public class WidgetListJson extends GenericJson {
 		this.applicationId = applicationId;
 	}
 
-	/**
-	 * @return the placeId
-	 */
-	private String getPlaceId() {
-		return placeId;
-	}
 
 	/**
 	 * @param placeId the placeId to set

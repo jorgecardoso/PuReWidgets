@@ -6,7 +6,8 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.im.WidgetParameter;
 
 /**
- 
+ *
+ * The JSON data transfer object for WidgetParameter objects.
  * 
  * @author "Jorge C. S. Cardoso"
  *
@@ -18,9 +19,7 @@ public class WidgetParameterJson extends GenericJson {
 	
 	private String value;
 	
-	
-	private WidgetParameterJson() {
-		
+	private WidgetParameterJson() {		
 	}
 
 	public static WidgetParameterJson create(WidgetParameter widgetParameter) {
@@ -39,22 +38,17 @@ public class WidgetParameterJson extends GenericJson {
 		return widgetParameter;
 	}
 	
-	
 	/**
 	 * @param name the name to set
 	 */
 	private void setName(String name) {
 		this.name = name;
 	}
-
-
 	
-
 	/**
 	 * @param value the value to set
 	 */
 	private void setValue(String value) {
 		this.value = value;
-	}
-	
+	}	
 }

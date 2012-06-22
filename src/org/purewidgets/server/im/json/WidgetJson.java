@@ -1,31 +1,21 @@
 package org.purewidgets.server.im.json;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.ActionListener;
-import org.purewidgets.shared.events.WidgetInputEvent;
-import org.purewidgets.shared.events.WidgetInputListener;
-import org.purewidgets.shared.events.ReferenceCodeListener;
-import org.purewidgets.shared.im.Place;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.im.WidgetParameter;
-import org.purewidgets.shared.logging.Log;
 
 
 /**
  * 
+ * The JSON data transfer object for Widget objects.
  * 
  * @author Jorge C. S. Cardoso
  * 
  */
-
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WidgetJson extends GenericJson {
@@ -90,16 +80,12 @@ public class WidgetJson extends GenericJson {
 		
 		Widget widget = new Widget(this.widgetId, this.controlType, this.shortDescription, 
 				this.longDescription, widgetOptions, widgetParameters);
-			
+		widget.setPlaceId(this.placeId);
+		widget.setApplicationId(this.applicationId);
+		
 		return widget;
 	}
 
-	/**
-	 * @return the placeId
-	 */
-	private String getPlaceId() {
-		return placeId;
-	}
 
 	/**
 	 * @param placeId the placeId to set
@@ -108,12 +94,6 @@ public class WidgetJson extends GenericJson {
 		this.placeId = placeId;
 	}
 
-	/**
-	 * @return the applicationId
-	 */
-	private String getApplicationId() {
-		return applicationId;
-	}
 
 	/**
 	 * @param applicationId the applicationId to set
@@ -122,12 +102,7 @@ public class WidgetJson extends GenericJson {
 		this.applicationId = applicationId;
 	}
 
-	/**
-	 * @return the widgetId
-	 */
-	private String getWidgetId() {
-		return widgetId;
-	}
+	
 
 	/**
 	 * @param widgetId the widgetId to set
@@ -136,12 +111,7 @@ public class WidgetJson extends GenericJson {
 		this.widgetId = widgetId;
 	}
 
-	/**
-	 * @return the controlType
-	 */
-	private String getControlType() {
-		return controlType;
-	}
+	
 
 	/**
 	 * @param controlType the controlType to set
@@ -150,12 +120,7 @@ public class WidgetJson extends GenericJson {
 		this.controlType = controlType;
 	}
 
-	/**
-	 * @return the shortDescription
-	 */
-	private String getShortDescription() {
-		return shortDescription;
-	}
+
 
 	/**
 	 * @param shortDescription the shortDescription to set
@@ -164,12 +129,7 @@ public class WidgetJson extends GenericJson {
 		this.shortDescription = shortDescription;
 	}
 
-	/**
-	 * @return the longDescription
-	 */
-	private String getLongDescription() {
-		return longDescription;
-	}
+	
 
 	/**
 	 * @param longDescription the longDescription to set

@@ -1,8 +1,5 @@
 package org.purewidgets.server.im.json;
 
-import java.io.IOException;
-
-
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
@@ -21,12 +18,12 @@ public class PlaceJson extends GenericJson {
 	private String placeId;
 	
 
-	protected PlaceJson(String placeId) {
-		this.placeId = placeId;
+	protected PlaceJson() {
 	}
 	
 	public static PlaceJson create(Place place) {
-		PlaceJson placeJson = new PlaceJson(place.getPlaceId());
+		PlaceJson placeJson = new PlaceJson();
+		placeJson.setPlaceId(place.getPlaceId());
 		return placeJson;
 	}
 	
