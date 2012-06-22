@@ -29,7 +29,7 @@ import com.google.appengine.api.datastore.Key;
  *
  */
 @PersistenceCapable
-public class PublicDisplayApplication {
+public class PDApplication {
 
 	/**
 	 * The URL query string parameter name that holds the application id
@@ -82,7 +82,7 @@ public class PublicDisplayApplication {
 	 * The ApplicationLifeCycle object.
 	 */
 	@NotPersistent
-	private ApplicationLifeCycle applicationLifeCycle;
+	private PDApplicationLifeCycle applicationLifeCycle;
 	
 	/**
 	 * The ServerCommunicator object used to communicate with the InteractionManager.
@@ -99,7 +99,7 @@ public class PublicDisplayApplication {
 	
 	private boolean firstTime;
 	
-	protected PublicDisplayApplication (String placeId, String appId, PersistenceManager pm, ApplicationLifeCycle acl) {
+	protected PDApplication (String placeId, String appId, PersistenceManager pm, PDApplicationLifeCycle acl) {
 		this.placeId = placeId;
 		this.appId = appId;
 		this.persistenceManager = pm;
@@ -117,86 +117,74 @@ public class PublicDisplayApplication {
 		Log.info(this, "Using interaction manager: " + interactionManager);
 		serverCommunicator = new InteractionManager(this.remoteStorage, this.placeId, this.appId);
 		serverCommunicator.setInteractionServerUrl(interactionManager);
-//		WidgetManager.get().setServerCommunication(serverCommunicator);
-//		
-//		Log.debug("Clearing widget manager");
-//		WidgetManager.get().getWidgetList().clear();
+
 	}
 	
 	public void run() {
 		Log.info(this, "Running application " + this.appId);
-	
-    	/*
-    	 * Setup is called once for each application only.
-    	 */
-		if (this.firstTime) {
-			Log.debug(this, "Running application for the first time");
-			this.applicationLifeCycle.setup();
-		}
-    	
-		Log.debug(this, "Triggering 'start' event");
-		this.applicationLifeCycle.start();
-		
+	    	
+//		Log.debug(this, "Triggering 'start' event");
+//		this.applicationLifeCycle.start();
+//		
 		Log.debug(this, "Asking for input");
 		ArrayList<WidgetInput> inputList = serverCommunicator.askForInputFromServer();
 		Log.debug(this, "Triggering action events");
 		InputEventHelper.triggerActionEvents(inputList, this.widgets);
 		
 		Log.debug(this, "Triggering 'finish' event");
-		this.applicationLifeCycle.finish();
+		this.applicationLifeCycle.onPDApplicationEnded();
 		//remoteStorage.saveWidgets(WidgetManager.get().getWidgetList(), persistenceManager);
 		persistenceManager.makePersistent(this);
-		
 		persistenceManager.close();
 	}
 
-	public static void load(HttpServletRequest req, ApplicationLifeCycle acl, String defaultAppName) {
+	public static void load(HttpServletRequest req, PDApplicationLifeCycle acl, String defaultAppName) {
 		String appId = req.getParameter(APP_NAME_PARAMETER);
 		
 		if (null == appId) {
 			appId = defaultAppName;
 			if (null == appId) {
 				appId = DEFAULT_APP_NAME;
-				Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Could not read '"+APP_NAME_PARAMETER+"' parameter from query string. Using default appname.");
+				Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+APP_NAME_PARAMETER+"' parameter from query string. Using default appname.");
 			}
 		}
-		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Using application name: " + appId);
+		Log.debug(PDApplication.class.getCanonicalName(), "Using application name: " + appId);
 		
 		String placeId = req.getParameter(PLACE_NAME_PARAMETER);
 		if (null == placeId) {
 			placeId = DEFAULT_PLACE_NAME;
-			Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Could not read '"+PLACE_NAME_PARAMETER+"' parameter from query string. Using default placename.");
+			Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+PLACE_NAME_PARAMETER+"' parameter from query string. Using default placename.");
 		}
-		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Using place name: " + placeId);
+		Log.debug(PDApplication.class.getCanonicalName(), "Using place name: " + placeId);
 		
 		load(placeId, appId, acl);
 	}
 	
-	public static void load(String placeId, String appId, ApplicationLifeCycle acl) {
-		Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Launching application '" + appId + "'");
+	public static void load(String placeId, String appId, PDApplicationLifeCycle acl) {
+		Log.debug(PDApplication.class.getCanonicalName(), "Launching application '" + appId + "'");
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 				
 		
 		// Load application
-		Query query = pm.newQuery(PublicDisplayApplication.class);
+		Query query = pm.newQuery(PDApplication.class);
 		query.setFilter("appId == appIdParam && placeId == placeIdParam");
 		query.declareParameters("String appIdParam, String placeIdParam");
 		
-	    PublicDisplayApplication application = null;
+	    PDApplication application = null;
 	    try {
 	        
 			@SuppressWarnings("unchecked")
-			List<PublicDisplayApplication> results = (List<PublicDisplayApplication>) query.execute(appId, placeId);
+			List<PDApplication> results = (List<PDApplication>) query.execute(appId, placeId);
 	        
 	        if (!results.isEmpty()) {
 	        	application = results.get(0);
-	        	Log.info(PublicDisplayApplication.class.getCanonicalName(), "Retrieved application " + application.appId);
+	        	Log.info(PDApplication.class.getCanonicalName(), "Retrieved application " + application.appId);
 
 	        	if (results.size() > 1) {
-	        		Log.warn(PublicDisplayApplication.class.getCanonicalName(), "But found more matching applications in the DS");
-	        		for (PublicDisplayApplication app : results) {
-	        			Log.warn(PublicDisplayApplication.class.getCanonicalName(), "Application: " + app.appId + " was also in the DS");
+	        		Log.warn(PDApplication.class.getCanonicalName(), "But found more matching applications in the DS");
+	        		for (PDApplication app : results) {
+	        			Log.warn(PDApplication.class.getCanonicalName(), "Application: " + app.appId + " was also in the DS");
 	        		}
 	        	}
 	        	application.firstTime = false;
@@ -205,8 +193,8 @@ public class PublicDisplayApplication {
 	        	application.init();
 	        	
 	        } else {
-	        	Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Application not found. Creating new.");
-	        	application = new PublicDisplayApplication(placeId, appId, pm, acl);
+	        	Log.debug(PDApplication.class.getCanonicalName(), "Application not found. Creating new.");
+	        	application = new PDApplication(placeId, appId, pm, acl);
 	        	application.firstTime = true;
 	        	application.setPersistenceManager(pm);
 	        	application.setApplicationLifeCycle(acl);
@@ -215,15 +203,15 @@ public class PublicDisplayApplication {
 
 	        }
 	    } catch (Exception e) {
-	    	Log.error(PublicDisplayApplication.class.getCanonicalName(), "Could not access data store.");
+	    	Log.error(PDApplication.class.getCanonicalName(), "Could not access data store.");
 	    	e.printStackTrace();
 	    }  finally {
 	        query.closeAll();
 	    }	    
-	    Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Triggering 'loaded' event");
-	    acl.loaded(application);
+	    Log.debug(PDApplication.class.getCanonicalName(), "Triggering 'loaded' event");
+	    acl.onPDApplicationLoaded(application);
 	    
-	    Log.debug(PublicDisplayApplication.class.getCanonicalName(), "Running application");
+	    Log.debug(PDApplication.class.getCanonicalName(), "Running application");
 	    application.run();
 		//return application;
 	}
@@ -290,12 +278,12 @@ public class PublicDisplayApplication {
 		return persistenceManager;
 	}
 
-	private void setApplicationLifeCycle(ApplicationLifeCycle applicationLifeCycle) {
+	private void setApplicationLifeCycle(PDApplicationLifeCycle applicationLifeCycle) {
 		this.applicationLifeCycle = applicationLifeCycle;
 	}
 
 	@SuppressWarnings("unused")
-	private ApplicationLifeCycle getApplicationLifeCycle() {
+	private PDApplicationLifeCycle getApplicationLifeCycle() {
 		return applicationLifeCycle;
 	}
 

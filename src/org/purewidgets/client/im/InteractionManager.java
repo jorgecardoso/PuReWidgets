@@ -6,7 +6,7 @@ package org.purewidgets.client.im;
 import java.util.ArrayList;
 
 
-import org.purewidgets.client.application.PublicDisplayApplication;
+import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.http.HttpService;
 import org.purewidgets.client.http.HttpServiceAsync;
 import org.purewidgets.client.im.json.ApplicationJson;
@@ -429,7 +429,7 @@ public class InteractionManager {
 	}
 
 	private String getLastTimeStampAsString() {
-		String ts = PublicDisplayApplication.getLocalStorage().getString(TIMESTAMP);
+		String ts = PDApplication.getLocalStorage().getString(TIMESTAMP);
 		
 		if (ts == null || ts.length() < 1) {
 			return "0";
@@ -852,7 +852,7 @@ public class InteractionManager {
 	}
 	
 	private void setTimeStamp(long timeStamp) {
-		PublicDisplayApplication.getLocalStorage().setString(TIMESTAMP, ""+timeStamp);
+		PDApplication.getLocalStorage().setString(TIMESTAMP, ""+timeStamp);
 	}
 	
 	private long toLong(String value) {
@@ -1129,8 +1129,8 @@ public class InteractionManager {
 	}
 	
 	private void createChannel() {
-		String token = PublicDisplayApplication.getLocalStorage().getString("ChannelToken");
-		Long tokenTimestamp = PublicDisplayApplication.getLocalStorage().getLong("ChannelTokenTimestamp");
+		String token = PDApplication.getLocalStorage().getString("ChannelToken");
+		Long tokenTimestamp = PDApplication.getLocalStorage().getLong("ChannelTokenTimestamp");
 		
 		/*
 		 * If the token expire is due in more than one our we take the token and open the channel
@@ -1227,8 +1227,8 @@ public class InteractionManager {
 							 * Store the token on local storage so that the next time, we try to reuse the 
 							 * channel
 							 */
-							PublicDisplayApplication.getLocalStorage().setString("ChannelToken", channelTokenJson.getToken());
-							PublicDisplayApplication.getLocalStorage().setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
+							PDApplication.getLocalStorage().setString("ChannelToken", channelTokenJson.getToken());
+							PDApplication.getLocalStorage().setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
 							InteractionManager.this.openChannel(channelTokenJson.getToken());

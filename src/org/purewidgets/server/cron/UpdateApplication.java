@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.purewidgets.server.PMF;
-import org.purewidgets.server.application.PublicDisplayApplication;
+import org.purewidgets.server.application.PDApplication;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.appengine.api.taskqueue.Queue;
@@ -32,14 +32,14 @@ public class UpdateApplication  extends HttpServlet{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		// Load applications
-		Query query = pm.newQuery(PublicDisplayApplication.class);
+		Query query = pm.newQuery(PDApplication.class);
 		
-		List<PublicDisplayApplication> results = (List<PublicDisplayApplication>) query.execute();
+		List<PDApplication> results = (List<PDApplication>) query.execute();
 		
 		ArrayList<String> urlParameters = new ArrayList<String>();
-		for ( PublicDisplayApplication application : results ) {
-			String p ="?" + PublicDisplayApplication.PLACE_NAME_PARAMETER + "=" + application.getPlaceId() +
-							  "&" +	PublicDisplayApplication.APP_NAME_PARAMETER + "=" + application.getAppId();
+		for ( PDApplication application : results ) {
+			String p ="?" + PDApplication.PLACE_NAME_PARAMETER + "=" + application.getPlaceId() +
+							  "&" +	PDApplication.APP_NAME_PARAMETER + "=" + application.getAppId();
 			Log.debug(this, p);
 			urlParameters.add(p);
 		}

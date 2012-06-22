@@ -28,7 +28,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PublicDisplayApplication  {
+public class PDApplication  {
 	/**
 	 * The URL query string parameter name that holds the application id
 	 */
@@ -57,7 +57,7 @@ public class PublicDisplayApplication  {
 	 */
 	private static final String DEFAULT_PLACE_NAME = "DefaultPlace";
 
-	private static PublicDisplayApplicationLoadedListener listener;
+	private static PDApplicationLifeCycle listener;
 
 	/**
 	 * Indicates if the application has been loaded
@@ -126,7 +126,7 @@ public class PublicDisplayApplication  {
 		try {
 			toReturn = Boolean.parseBoolean(valueString);
 		} catch (NumberFormatException nfe) {
-			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into a boolean (true/false).");
+			Log.warn(PDApplication.class.getName(), "Could not parse '" + valueString + "' into a boolean (true/false).");
 		}
 
 		return toReturn;
@@ -143,7 +143,7 @@ public class PublicDisplayApplication  {
 		try {
 			toReturn = Integer.parseInt(valueString);
 		} catch (NumberFormatException nfe) {
-			Log.warn(PublicDisplayApplication.class.getName(), "Could not parse '" + valueString + "' into an integer.");
+			Log.warn(PDApplication.class.getName(), "Could not parse '" + valueString + "' into an integer.");
 		}
 
 		return toReturn;
@@ -206,18 +206,18 @@ public class PublicDisplayApplication  {
 
 	
 
-	public static void load(PublicDisplayApplicationLoadedListener entryPoint,
+	public static void load(PDApplicationLifeCycle entryPoint,
 			String defaultAppName, boolean autoDeleteVolatile) {
 		
-		PublicDisplayApplication.listener = entryPoint;
-		PublicDisplayApplication.autoDeleteVolatile = autoDeleteVolatile;
+		PDApplication.listener = entryPoint;
+		PDApplication.autoDeleteVolatile = autoDeleteVolatile;
 
 		placeName = com.google.gwt.user.client.Window.Location.getParameter(PLACE_NAME_PARAMETER);
 
 		if (null == placeName) {
 			placeName = DEFAULT_PLACE_NAME;
 		}
-		Log.debug(PublicDisplayApplication.class.getName(), "Using place name: " + placeName);
+		Log.debug(PDApplication.class.getName(), "Using place name: " + placeName);
 
 		applicationName = com.google.gwt.user.client.Window.Location
 				.getParameter(APP_NAME_PARAMETER);
@@ -229,7 +229,7 @@ public class PublicDisplayApplication  {
 				applicationName = defaultAppName;
 			}
 		}
-		Log.debug(PublicDisplayApplication.class.getName(), "Using application name: "
+		Log.debug(PDApplication.class.getName(), "Using application name: "
 				+ applicationName);
 
 		localStorage = new LocalStorage(applicationName);
@@ -241,12 +241,12 @@ public class PublicDisplayApplication  {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					PublicDisplayApplication.handleParametersFromServer(null);
+					PDApplication.handleParametersFromServer(null);
 				}
 
 				@Override
 				public void onSuccess(Map<String, String> result) {
-					PublicDisplayApplication.handleParametersFromServer(result);
+					PDApplication.handleParametersFromServer(result);
 				}
 			});
 		
@@ -255,23 +255,23 @@ public class PublicDisplayApplication  {
 
 	protected static void handleParametersFromServer(Map<String, String> result) {
 		if (null != result) {
-			PublicDisplayApplication.parameters = result;
+			PDApplication.parameters = result;
 			
 			for ( String key : result.keySet() ) {
 				
-				Log.debug(PublicDisplayApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
+				Log.debug(PDApplication.class.getName(), "Loaded from remote datastore: " + key + ": " +result.get(key) );
 			}
 		} else {
 			
-			PublicDisplayApplication.parameters = new HashMap<String, String>();
+			PDApplication.parameters = new HashMap<String, String>();
 		
 		}
 		
-		PublicDisplayApplication.loaded = true;
+		PDApplication.loaded = true;
 		
-		String interactionManagerUrl = PublicDisplayApplication.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
+		String interactionManagerUrl = PDApplication.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
 		
-		Log.info(PublicDisplayApplication.class.getName(), "Using interaction manager: " + interactionManagerUrl);
+		Log.info(PDApplication.class.getName(), "Using interaction manager: " + interactionManagerUrl);
 		
 		serverCommunicator = new InteractionManager(placeName, applicationName);
 		serverCommunicator.setInteractionServerUrl(interactionManagerUrl);
@@ -282,7 +282,7 @@ public class PublicDisplayApplication  {
 		 */
 
 		if (autoDeleteVolatile) {
-			Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
+			Log.debug(PDApplication.class.getName(), "Removing volatile widgets");
 			WidgetManager.get().removeAllWidgets(true);
 		}
 
@@ -293,8 +293,8 @@ public class PublicDisplayApplication  {
 		Window.addCloseHandler(new CloseHandler<Window>() {
 			@Override
 			public void onClose(CloseEvent<Window> event) {
-				if (PublicDisplayApplication.autoDeleteVolatile) {
-					Log.debug(PublicDisplayApplication.class.getName(), "Removing volatile widgets");
+				if (PDApplication.autoDeleteVolatile) {
+					Log.debug(PDApplication.class.getName(), "Removing volatile widgets");
 					WidgetManager.get().removeAllWidgets(true);
 				}
 			}
@@ -305,17 +305,17 @@ public class PublicDisplayApplication  {
 
 			@Override
 			public void onSuccess(Application application) {
-				Log.debug(PublicDisplayApplication.class.getName(), "Received application: " + application);
-				PublicDisplayApplication.application = application;
-				listener.onApplicationLoaded();
+				Log.debug(PDApplication.class.getName(), "Received application: " + application);
+				PDApplication.application = application;
+				listener.onPDApplicationLoaded();
 				
 			}
 
 			@Override
 			public void onFailure(Throwable exception) {
-				Log.debug(PublicDisplayApplication.class.getName(), "Could not get Application");
-				PublicDisplayApplication.application = new Application(placeName, applicationName);
-				listener.onApplicationLoaded();
+				Log.debug(PDApplication.class.getName(), "Could not get Application");
+				PDApplication.application = new Application(placeName, applicationName);
+				listener.onPDApplicationLoaded();
 				
 			}
 			
@@ -329,7 +329,7 @@ public class PublicDisplayApplication  {
 	 *            the applicationName to set
 	 */
 	public static void setApplicationName(String applicationName) {
-		PublicDisplayApplication.applicationName = applicationName;
+		PDApplication.applicationName = applicationName;
 	}
 
 	public static void setParameterString(String name, String value) {
@@ -338,12 +338,12 @@ public class PublicDisplayApplication  {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Log.warn(PublicDisplayApplication.class.getName(), "Could not save to remote datastore" );
+				Log.warn(PDApplication.class.getName(), "Could not save to remote datastore" );
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				Log.debug(PublicDisplayApplication.class.getName(), "Saved to remote datastore" );
+				Log.debug(PDApplication.class.getName(), "Saved to remote datastore" );
 			}
 			
 		});
@@ -354,7 +354,7 @@ public class PublicDisplayApplication  {
 	 *            the placeName to set
 	 */
 	public static void setPlaceName(String placeName) {
-		PublicDisplayApplication.placeName = placeName;
+		PDApplication.placeName = placeName;
 	}
 
 	/**
@@ -368,7 +368,7 @@ public class PublicDisplayApplication  {
 	 * @param serverCommunicator the serverCommunicator to set
 	 */
 	public static void setServerCommunicator(InteractionManager serverCommunicator) {
-		PublicDisplayApplication.serverCommunicator = serverCommunicator;
+		PDApplication.serverCommunicator = serverCommunicator;
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class PublicDisplayApplication  {
 	 * @param application the application to set
 	 */
 	public static void setApplication(Application application) {
-		PublicDisplayApplication.application = application;
+		PDApplication.application = application;
 	}
 
 
