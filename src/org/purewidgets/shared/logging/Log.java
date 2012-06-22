@@ -32,6 +32,7 @@ FINEST (lowest value)
 	 * SEVERE 
 	 */
    private static void logStackTrace(Throwable e) {
+	    error(e.getMessage()); 
 		StringBuilder sb = new StringBuilder();
 		if ( e.getStackTrace() == null || e.getStackTrace().length == 0 ) {
 			sb.append("No stack trace to print");

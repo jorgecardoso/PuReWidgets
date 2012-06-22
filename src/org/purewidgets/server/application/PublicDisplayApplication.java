@@ -115,7 +115,7 @@ public class PublicDisplayApplication {
 		
 		String interactionManager = this.remoteStorage.getString("imurl", "http://pw-interactionmanager.appspot.com");
 		Log.info(this, "Using interaction manager: " + interactionManager);
-		serverCommunicator = new InteractionManager(persistenceManager, this.remoteStorage, this.placeId, this.appId);
+		serverCommunicator = new InteractionManager(this.remoteStorage, this.placeId, this.appId);
 		serverCommunicator.setInteractionServerUrl(interactionManager);
 //		WidgetManager.get().setServerCommunication(serverCommunicator);
 //		

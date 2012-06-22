@@ -3,6 +3,7 @@ package org.purewidgets.server.im.json;
 import java.util.ArrayList;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.im.Widget;
@@ -10,6 +11,7 @@ import org.purewidgets.shared.im.WidgetInput;
 
 
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class WidgetInputListJson extends GenericJson {
 
 	private ArrayList<WidgetInputJson> inputs;

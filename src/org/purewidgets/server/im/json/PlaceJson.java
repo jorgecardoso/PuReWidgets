@@ -4,6 +4,7 @@ import java.io.IOException;
 
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.im.Place;
 
@@ -14,6 +15,7 @@ import org.purewidgets.shared.im.Place;
  *
  */
 @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class PlaceJson extends GenericJson {
 	
 	private String placeId;

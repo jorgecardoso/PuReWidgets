@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -16,6 +17,7 @@ import org.purewidgets.shared.logging.Log;
  * @author "Jorge C. S. Cardoso"
  *
  */
+
 public class GenericJson {
 	
 	public static <T> T fromJson(Class<T> clas, String json) {

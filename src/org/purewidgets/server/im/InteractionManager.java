@@ -3,26 +3,18 @@
  */
 package org.purewidgets.server.im;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
-import javax.jdo.PersistenceManager;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.im.json.WidgetInputListJson;
 import org.purewidgets.server.im.json.WidgetListJson;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.exceptions.HttpServerException;
-import org.purewidgets.shared.im.Application;
-import org.purewidgets.shared.im.Place;
+import org.purewidgets.shared.im.UrlHelper;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.logging.Log;
@@ -34,16 +26,8 @@ import org.purewidgets.shared.logging.Log;
  * @author Jorge C. S. Cardoso
  *
  */
-public class InteractionManager  {	
-
-	
+public class InteractionManager  {		
 	private static final String DEFAULT_INTERACTION_SERVER_URL = "http://pw-interactionmanager.appspot.com";
-	
-	
-	/**
-	 * The address of the InteractionManager server.
-	 */
-	private  String interactionServerUrl;
 	
 		
 	/**
@@ -57,11 +41,6 @@ public class InteractionManager  {
 	 */
 	private  String appId = "jorge";
 	
-	/**
-	 * The application URL constructed with the INTERACTION_SERVER, placeId and appId
-	 */
-	private  String applicationUrl;
-	
 	
 	private HttpServiceImpl interactionService;
 	
@@ -73,44 +52,17 @@ public class InteractionManager  {
 
 	private RemoteStorage remoteStorage;
 
+	private UrlHelper urlHelper;
 
-
-	public InteractionManager(PersistenceManager pm, RemoteStorage remoteStorage, String placeId, String appId) {
+	public InteractionManager(RemoteStorage remoteStorage, String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
-		this.interactionServerUrl = DEFAULT_INTERACTION_SERVER_URL;
-		this.applicationUrl = this.interactionServerUrl +	"/place/" + placeId + "/application/"+ appId;
+		
+		this.urlHelper = new UrlHelper(DEFAULT_INTERACTION_SERVER_URL);
+		
 		
 		interactionService = new HttpServiceImpl();
-		this.remoteStorage = remoteStorage;// RemoteStorage.get();
-	}
-
-
-	public  String getServerUrl() {
-		return interactionServerUrl;
-	}
-	
-	public  String getApplicationsUrl(String placeId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application?appid=" +callingApplicationId ;
-	}
-
-	public  String getApplicationUrl(String placeId, String applicationId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId +"?appid="+callingApplicationId;
-	}
-	
-	public  String getApplicationUrl(String placeId, String applicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId;
-	}
-	
-	public  String getPlacesUrl(String callingApplicationId) {
-		return interactionServerUrl + "/place?appid=" + callingApplicationId ;
-	}
-
-	public  String getWidgetsUrl(String placeId, String applicationId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget?appid=" +callingApplicationId ;
-	}
-	public  String getWidgetInputUrl(String placeId, String applicationId, String widgetId, String callingApplicationId) {
-		return interactionServerUrl + "/place/" + placeId + "/application/" + applicationId + "/widget/" + widgetId +  "/input?appid=" + callingApplicationId ;
+		this.remoteStorage = remoteStorage;
 	}
 
 	
@@ -130,7 +82,7 @@ public class InteractionManager  {
 		String response = null;
 		try {
 			response = interactionService.post(json,
-					this.getWidgetsUrl(this.placeId, this.appId, this.appId) );
+					this.urlHelper.getWidgetsUrl(this.placeId, this.appId, this.appId) );
 		} catch (HttpServerException e) {
 			Log.error(this, "", e);
 			return new ArrayList<Widget>();
@@ -157,7 +109,7 @@ public class InteractionManager  {
 			if ( null == lastTimeStamp ) {
 				lastTimeStamp = "0";
 			}
-			String url = applicationUrl + "/input?output=json&from=" + lastTimeStamp + "&appid="+appId;
+			String url = this.urlHelper.getApplicationInputUrl(this.placeId, this.appId, this.appId, lastTimeStamp);
 			
 			Log.debug(this, "Contacting application server for input..." + url);
 			String response = null;
@@ -213,14 +165,13 @@ public class InteractionManager  {
 		 * 'widget' url parameter
 		 */
 		StringBuilder widgetsUrlParam = new StringBuilder();
-		widgetsUrlParam.append( this.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
+		widgetsUrlParam.append( this.urlHelper.getWidgetsUrl(this.placeId, this.appId, this.appId) ).append("&widgets=");
 		
 		
 		try {
 			widgetsUrlParam.append(URLEncoder.encode(widget.getWidgetId(), "UTF-8"));
 		} catch (UnsupportedEncodingException e1) {
 			Log.error(this, "Could not URLencode.",  e1);
-
 			return new ArrayList<Widget>();
 		}
 			
@@ -234,7 +185,6 @@ public class InteractionManager  {
 			
 			return new ArrayList<Widget>();
 		}
-		
 		
 	
 		WidgetListJson widgetList = WidgetListJson.fromJson(WidgetListJson.class, response);
@@ -288,7 +238,7 @@ public class InteractionManager  {
 	}
 
 	public ArrayList<Widget> getWidgetsList(String placeId, String applicationId) {		
-		String url = this.getWidgetsUrl(placeId, applicationId, this.appId);
+		String url = this.urlHelper.getWidgetsUrl(placeId, applicationId, this.appId);
 		
 		Log.debug(this, "Asking application server for the widget list..." + url);
 		String response = null;
@@ -315,7 +265,7 @@ public class InteractionManager  {
 	 * @return the interactionServerUrl
 	 */
 	public String getInteractionServerUrl() {
-		return interactionServerUrl;
+		return this.urlHelper.getInteractionServerUrl();
 	}
 
 
@@ -323,7 +273,7 @@ public class InteractionManager  {
 	 * @param interactionServerUrl the interactionServerUrl to set
 	 */
 	public void setInteractionServerUrl(String interactionServerUrl) {
-		this.interactionServerUrl = interactionServerUrl;
+		this.urlHelper.setInteractionServerUrl(interactionServerUrl);
 	}
 
 }
