@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.shared.im;
+package org.purewidgets.server.im.json;
 
 import org.purewidgets.client.json.GenericJson;
 

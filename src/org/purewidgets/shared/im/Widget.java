@@ -6,9 +6,6 @@ package org.purewidgets.shared.im;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.WidgetInputEvent;
@@ -63,8 +60,6 @@ import org.purewidgets.shared.logging.Log;
  * @author Jorge C. S. Cardoso
  * 
  */
-
-@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class Widget implements Comparable<Widget> {
 
 	public static String CONTROL_TYPE_IMPERATIVE_SELECTION = "imperative_selection";
@@ -129,15 +124,11 @@ public class Widget implements Comparable<Widget> {
 	 * The ActionListeners registered to receive high-level events from this
 	 * widget.
 	 */
-
-	@JsonIgnore
 	protected List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
 	/**
 	 * The InputListener for this widget. 
 	 */
-
-	@JsonIgnore
 	protected WidgetInputListener inputListener;
 
 	/**
@@ -145,14 +136,12 @@ public class Widget implements Comparable<Widget> {
 	 * ReferenceCodeListeners but also propagate reference codes to other
 	 * listeners (e.g. GuiWidgets)
 	 */
-	@JsonIgnore
 	protected ReferenceCodeListener referenceCodeListener;
 
 	
 	/**
 	 * A Widget can be composed by other widgets.
 	 */
-	@JsonIgnore
 	protected ArrayList<Widget> dependentWidgets;
 
 
@@ -335,7 +324,6 @@ public class Widget implements Comparable<Widget> {
 		this.applicationId = applicationId;
 	}
 
-	@JsonIgnore
 	public void setInputListener(WidgetInputListener inputListener) {
 		this.inputListener = inputListener;
 
@@ -347,7 +335,6 @@ public class Widget implements Comparable<Widget> {
 		this.placeId = placeId;
 	}
 
-	@JsonIgnore
 	public void setReferenceCodeListener(
 			ReferenceCodeListener referenceCodeListener) {
 		this.referenceCodeListener = referenceCodeListener;

@@ -1,12 +1,7 @@
 package org.purewidgets.shared.im;
 
 public class Place {
-
-
-	
 	private String placeId;
-	
-	
 	
 	public Place(String placeId) {
 		this.placeId = placeId;

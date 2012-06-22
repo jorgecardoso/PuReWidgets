@@ -14,7 +14,6 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
  * @author Jorge C. S. Cardoso
  *
  */
-@JsonAutoDetect(value=JsonMethod.FIELD, fieldVisibility=Visibility.ANY)
 public class WidgetInput {
 	private String placeId;
 	

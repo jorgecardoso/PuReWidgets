@@ -3,8 +3,7 @@
  */
 package org.purewidgets.shared.im;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 
 /**
  * A general purpose name-value pair, used to store widget parameters. 
@@ -14,7 +13,6 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
  * @author "Jorge C. S. Cardoso"
  *
  */
-@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE)
 public class WidgetParameter {
 	private String name;
 	

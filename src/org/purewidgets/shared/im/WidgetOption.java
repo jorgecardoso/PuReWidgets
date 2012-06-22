@@ -4,11 +4,6 @@
 package org.purewidgets.shared.im;
 
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-
 import com.google.appengine.api.datastore.Key;
 
 
@@ -27,13 +22,9 @@ import com.google.appengine.api.datastore.Key;
  * @author Jorge C. S. Cardoso
  *
  */
-
-@JsonAutoDetect(value = JsonMethod.FIELD, fieldVisibility = Visibility.ANY)
 public class WidgetOption  {
-	
-	@SuppressWarnings("unused")
 
-    @JsonIgnore
+
     private Key key;
 	
 	/**

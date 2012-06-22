@@ -17,6 +17,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import org.purewidgets.server.http.HttpServiceImpl;
+import org.purewidgets.server.im.json.WidgetInputListJson;
+import org.purewidgets.server.im.json.WidgetListJson;
 import org.purewidgets.server.storage.RemoteStorage;
 import org.purewidgets.shared.exceptions.HttpServerException;
 import org.purewidgets.shared.im.Application;
@@ -43,15 +45,7 @@ public class InteractionManager  {
 	 */
 	private  String interactionServerUrl;
 	
-	
-	// TODO: We should verify that widgets were really added to the InteractionManager,
-	// just like in the clientServeCommunicator. 
-	// We should keep a (persistent) list of widgets to add and only remove  a widget
-	// from this list when we received a confirmation from the server.
-
-
-
-	
+		
 	/**
 	 * The name of the name/value pair that stores the last input time stamp
 	 * received from the server. 
@@ -120,32 +114,16 @@ public class InteractionManager  {
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
-	 */
 	
 	public ArrayList<Widget> addWidget(Widget widget) {
-
-		widget.setApplicationId(appId);
-		widget.setPlaceId(placeId);
-
-		WidgetList wl = new WidgetList();
 		ArrayList<Widget> widgets = new ArrayList<Widget>();
 		widgets.add(widget);
-		wl.setWidgets(widgets);
 		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-
-		try {
-			json = mapper.writeValueAsString(wl);//widgetRepresentation);
-		} catch (JsonGenerationException e1) {
-			Log.error(this, "", e1);
-		} catch (JsonMappingException e1) {
-			Log.error(this, "", e1);
-		} catch (IOException e1) {
-			Log.error(this, "", e1);
-		}
+		
+		WidgetListJson wl = WidgetListJson.create(this.appId, placeId, widgets);
+	
+		
+		String json = wl.toJsonString();
 
 		
 		Log.debug("Adding " + json + " to server");
@@ -159,21 +137,13 @@ public class InteractionManager  {
 		}
 		Log.debug(response);
 
-		wl = null;
-		try {
-			
-			 wl = mapper.readValue(response, WidgetList.class);
-			
-			 return wl.getWidgets();
-			 
-		} catch (JsonParseException e) {
-			Log.error(this, "", e);
-		} catch (JsonMappingException e) {
-			Log.error(this, "", e);
-		} catch (IOException e) {
-			Log.error(this, "", e);
+		wl = WidgetListJson.fromJson(WidgetListJson.class, response);
+		
+		if ( null != wl ) {
+			return wl.getWidgetList();
+		} else {
+			return new ArrayList<Widget>();
 		}
-		return new ArrayList<Widget>();
 	}
 	
 	
@@ -181,7 +151,7 @@ public class InteractionManager  {
 	 * Checks input from the InteractionManager service
 	 */
 	public ArrayList<WidgetInput> askForInputFromServer() {
-		ObjectMapper mapper = new ObjectMapper();
+		
 	
 			String lastTimeStamp = this.getLastTimeStampAsString();
 			if ( null == lastTimeStamp ) {
@@ -203,13 +173,14 @@ public class InteractionManager  {
 			
 			
 
-			try {
-				WidgetInputList inputList = mapper.readValue(response, WidgetInputList.class);
+			
+			WidgetInputListJson inputList = WidgetInputListJson.fromJson(WidgetInputListJson.class, response);
+			if ( null != inputList ) {
 				/*
 				 * Update our most recent input timeStamp so that in the next round we ask only
 				 * for newer input
 				 */
-				for (WidgetInput widgetInput : inputList.getInputs() ) {
+				for (WidgetInput widgetInput : inputList.getWidgetInputList() ) {
 					/*
 					 * Save the new timeStamp locally
 					 */
@@ -218,19 +189,12 @@ public class InteractionManager  {
 					}
 				}
 				
-				return inputList.getInputs();
-				
-			} catch (JsonParseException e) {
-				Log.error(this, "Error parsing JSON " + e.getMessage());
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				Log.error(this, "Error mapping JSON " + e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				Log.error(this, "IO Error: " + e.getMessage());
-				e.printStackTrace();
-			} 	
-			return new ArrayList<WidgetInput>();
+				return inputList.getWidgetInputList();
+			} else {
+		
+			
+				return new ArrayList<WidgetInput>();
+			}
 	}
 	
 	
@@ -239,23 +203,8 @@ public class InteractionManager  {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-	/*
-	 private String getBaseURL(Widget w) {
-		   return  "/place/" + w.getPlaceId() + "/application/" + w.getApplicationId() + 
-		   	"/widget";
-	   }*/
-	   
-	   /*private  String getURL(Widget w) {
-		   return  getBaseURL(w) + "/"+ w.getWidgetId() + "?output=json";
-	   }*/
 	   
 	   
-	/* (non-Javadoc)
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.ServerCommunicator#deleteWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
-	 */
-
 	public ArrayList<Widget> deleteWidget(Widget widget) {
 		Log.debug(this, "Removing widget:" + widget.getWidgetId() );
 		
@@ -288,22 +237,13 @@ public class InteractionManager  {
 		
 		
 	
-		ObjectMapper mapper = new ObjectMapper();
+		WidgetListJson widgetList = WidgetListJson.fromJson(WidgetListJson.class, response);
 		
-		try {
-			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
-			
-			return widgetList.getWidgets();
-			
-		} catch (JsonParseException e) {
-			Log.error(this, "", e);
-		} catch (JsonMappingException e) {
-			Log.error(this, "", e);
-		} catch (IOException e) {
-			Log.error(this, "", e);
-		} 	
-		return new ArrayList<Widget>();
-		
+		if ( null != widgetList ) {
+			return widgetList.getWidgetList();
+		} else {
+			return new ArrayList<Widget>();
+		}
 
 	}
 
@@ -347,10 +287,7 @@ public class InteractionManager  {
 		return 0;
 	}
 
-	public ArrayList<Widget> getWidgetsList(String placeId, String applicationId) {
-		ObjectMapper mapper = new ObjectMapper();
-		
-		
+	public ArrayList<Widget> getWidgetsList(String placeId, String applicationId) {		
 		String url = this.getWidgetsUrl(placeId, applicationId, this.appId);
 		
 		Log.debug(this, "Asking application server for the widget list..." + url);
@@ -364,25 +301,14 @@ public class InteractionManager  {
 			return new ArrayList<Widget>();
 		}
 		
-	
+		WidgetListJson widgetList = WidgetListJson.fromJson(WidgetListJson.class, response);
 
-		try {
-			WidgetList widgetList = mapper.readValue(response, WidgetList.class);
-			
-			return widgetList.getWidgets();
-			
-		} catch (JsonParseException e) {
-			Log.error(this, "Error parsing JSON: ", e);			
-		} catch (JsonMappingException e) {
-			Log.error(this, "Error mapping JSON: ", e);
-		} catch (IOException e) {
-			Log.error(this, "IO Error: ", e);
-		} 	
-		return new ArrayList<Widget>();
+		if ( null != widgetList ) {
+			return widgetList.getWidgetList();
+		} else {	
+			return new ArrayList<Widget>();
+		}
 	}
-
-
-
 
 
 	/**
