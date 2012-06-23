@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.purewidgets.server.PMF;
 import org.purewidgets.server.im.InteractionManager;
-import org.purewidgets.server.storage.RemoteStorage;
+import org.purewidgets.server.storage.ServerStorage;
 import org.purewidgets.shared.im.InputEventHelper;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetInput;
@@ -70,7 +70,7 @@ public class PDApplication {
 	private String placeId;
 	
 	@NotPersistent
-	private RemoteStorage remoteStorage;
+	private ServerStorage remoteStorage;
 	
 	/**
 	 * The PersistenceManager used to access the datastore.
@@ -110,7 +110,7 @@ public class PDApplication {
 	private void init() {
 		Log.info(this, "Initing application " + this.appId);
 		this.widgets = new ArrayList<Widget>();
-		this.remoteStorage = RemoteStorage.get(placeId, appId);
+		this.remoteStorage = ServerStorage.get(placeId, appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
 		String interactionManager = this.remoteStorage.getString("imurl", "http://pw-interactionmanager.appspot.com");

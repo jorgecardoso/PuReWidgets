@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.purewidgets.server.http.HttpServiceImpl;
 import org.purewidgets.server.im.json.WidgetInputListJson;
 import org.purewidgets.server.im.json.WidgetListJson;
-import org.purewidgets.server.storage.RemoteStorage;
+import org.purewidgets.server.storage.ServerStorage;
 import org.purewidgets.shared.exceptions.HttpServerException;
 import org.purewidgets.shared.im.UrlHelper;
 import org.purewidgets.shared.im.Widget;
@@ -50,11 +50,11 @@ public class InteractionManager  {
 	 */
 	private  String placeId = "dsi";
 
-	private RemoteStorage remoteStorage;
+	private ServerStorage remoteStorage;
 
 	private UrlHelper urlHelper;
 
-	public InteractionManager(RemoteStorage remoteStorage, String placeId, String appId) {
+	public InteractionManager(ServerStorage remoteStorage, String placeId, String appId) {
 		this.placeId = placeId;
 		this.appId = appId;
 		

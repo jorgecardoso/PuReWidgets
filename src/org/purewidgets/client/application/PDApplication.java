@@ -9,7 +9,7 @@ import java.util.Map;
 import org.purewidgets.client.im.InteractionManagerService;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
-import org.purewidgets.client.storage.RemoteStorage;
+import org.purewidgets.client.storage.ServerStorage;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.logging.Log;
 
@@ -80,7 +80,7 @@ public class PDApplication  {
 	/**
 	 * The RemoteStorage for this application
 	 */
-	private RemoteStorage remoteStorage;
+	private ServerStorage remoteStorage;
 
 	/**
 	 * The ServerCommunicator used to communicate with the interaction manager
@@ -181,7 +181,7 @@ public class PDApplication  {
 	}
 	
 
-	public  RemoteStorage getRemoteStorage() {
+	public  ServerStorage getRemoteStorage() {
 		
 		return remoteStorage;
 		
@@ -195,7 +195,7 @@ public class PDApplication  {
 		
 		this.localStorage = new LocalStorage(applicationId);
 
-		this.remoteStorage = new RemoteStorage(placeId, applicationId);
+		this.remoteStorage = new ServerStorage(placeId, applicationId);
 		
 		
 		this.remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
@@ -401,7 +401,7 @@ public class PDApplication  {
 	/**
 	 * @param remoteStorage the remoteStorage to set
 	 */
-	public void setRemoteStorage(RemoteStorage remoteStorage) {
+	public void setRemoteStorage(ServerStorage remoteStorage) {
 		this.remoteStorage = remoteStorage;
 	}
 

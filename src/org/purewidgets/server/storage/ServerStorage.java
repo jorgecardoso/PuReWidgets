@@ -15,7 +15,7 @@ import org.purewidgets.server.dao.StorageDao;
  * 
  * @author Jorge C. S. Cardoso
  */
-public class RemoteStorage {
+public class ServerStorage {
 	
 	private String storageId;
 	private StorageDao storage;
@@ -23,7 +23,7 @@ public class RemoteStorage {
 	/**
 	 * Creates and empty RemoteStorage object.
 	 */
-	private RemoteStorage(String placeName, String applicationName) {
+	private ServerStorage(String placeName, String applicationName) {
 		this.storageId = placeName+"-"+applicationName;
 		
 		/*
@@ -39,8 +39,8 @@ public class RemoteStorage {
 		Dao.commitOrRollbackTransaction();
 	}
 	
-	public static RemoteStorage get(String placeName, String applicationName) {
-		RemoteStorage rs = new RemoteStorage(placeName, applicationName);
+	public static ServerStorage get(String placeName, String applicationName) {
+		ServerStorage rs = new ServerStorage(placeName, applicationName);
 		
 		
 		return rs;

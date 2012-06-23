@@ -15,14 +15,14 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class RemoteStorage {
+public class ServerStorage {
 
 	private String storageId;
-	private RemoteStorageServiceAsync remoteStorageService;
+	private ServerStorageServiceAsync remoteStorageService;
 	
-	public RemoteStorage(String placeName, String appName) {
+	public ServerStorage(String placeName, String appName) {
 		this.storageId = placeName+"-"+appName;
-		remoteStorageService = GWT.create(RemoteStorageService.class);
+		remoteStorageService = GWT.create(ServerStorageService.class);
 		((ServiceDefTarget)remoteStorageService).setServiceEntryPoint("/storageservice"); 
 	}
 	

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.purewidgets.client.storage.RemoteStorageService;
+import org.purewidgets.client.storage.ServerStorageService;
 import org.purewidgets.server.dao.Dao;
 import org.purewidgets.server.dao.StorageDao;
 
@@ -17,7 +17,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author "Jorge C. S. Cardoso"
  *
  */
-public class RemoteStorageServiceImpl extends RemoteServiceServlet implements RemoteStorageService {
+public class ServerStorageServiceImpl extends RemoteServiceServlet implements ServerStorageService {
 
 	/**
 	 * 
