@@ -15,6 +15,7 @@ org.purewidgets.server.cron
 org.purewidgets.server.dao
 org.purewidgets.server.http
 org.purewidgets.server.im
+org.purewidgets.server.im.json
 org.purewidgets.server.storage
 org.purewidgets.shared.events
 org.purewidgets.shared.exceptions
