@@ -6,7 +6,7 @@ package org.purewidgets.client.application;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.purewidgets.client.im.InteractionManager;
+import org.purewidgets.client.im.InteractionManagerService;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.client.storage.RemoteStorage;
@@ -85,7 +85,7 @@ public class PDApplication  {
 	/**
 	 * The ServerCommunicator used to communicate with the interaction manager
 	 */
-	private InteractionManager interactionManager;
+	private InteractionManagerService interactionManager;
 
 	private Application application;
 
@@ -265,10 +265,10 @@ public class PDApplication  {
 		
 		Log.info(this, "Using interaction manager: " + interactionManagerUrl);
 		
-		InteractionManager serverCommunicator = new InteractionManager(interactionManagerUrl, this.localStorage);
+		InteractionManagerService serverCommunicator = new InteractionManagerService(interactionManagerUrl, this.localStorage);
 		this.interactionManager = serverCommunicator;
 		
-		new WidgetManager(this.placeId, this.applicationId, this.localStorage, serverCommunicator); 
+		WidgetManager.create(this.placeId, this.applicationId, this.localStorage, serverCommunicator); 
 		
 		//WidgetManager.get().setServerCommunication( serverCommunicator );
 
@@ -338,14 +338,14 @@ public class PDApplication  {
 	/**
 	 * @return the serverCommunicator
 	 */
-	public InteractionManager getServerCommunicator() {
+	public InteractionManagerService getServerCommunicator() {
 		return interactionManager;
 	}
 
 	/**
 	 * @param serverCommunicator the serverCommunicator to set
 	 */
-	public void setServerCommunicator(InteractionManager serverCommunicator) {
+	public void setServerCommunicator(InteractionManagerService serverCommunicator) {
 		this.interactionManager = serverCommunicator;
 	}
 
@@ -408,14 +408,14 @@ public class PDApplication  {
 	/**
 	 * @return the interactionManager
 	 */
-	public InteractionManager getInteractionManager() {
+	public InteractionManagerService getInteractionManager() {
 		return interactionManager;
 	}
 
 	/**
 	 * @param interactionManager the interactionManager to set
 	 */
-	public void setInteractionManager(InteractionManager interactionManager) {
+	public void setInteractionManager(InteractionManagerService interactionManager) {
 		this.interactionManager = interactionManager;
 	}
 

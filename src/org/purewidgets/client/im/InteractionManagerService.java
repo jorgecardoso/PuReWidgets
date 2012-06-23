@@ -36,7 +36,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author Jorge C. S. Cardoso
  *
  */
-public class InteractionManager {
+public class InteractionManagerService {
 
 
 	/**
@@ -53,7 +53,7 @@ public class InteractionManager {
 	 */
 	private LocalStorage localStorage;
 	
-	public InteractionManager(String interactionServerUrl, LocalStorage localStorage) {
+	public InteractionManagerService(String interactionServerUrl, LocalStorage localStorage) {
 		
 		this.localStorage = localStorage;
 		
@@ -75,34 +75,34 @@ public class InteractionManager {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Log.warn(InteractionManager.this, "Error deleting widgets from server.", caught);
+							Log.warn(InteractionManagerService.this, "Error deleting widgets from server.", caught);
 							
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							Log.debug(InteractionManager.this, "Got response to widget deletion: " + result);
+							Log.debug(InteractionManagerService.this, "Got response to widget deletion: " + result);
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(result);
 								ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 								callback.onSuccess(widgetList);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 					});
 		} catch (Exception e) {
-			Log.warn(InteractionManager.this, "Error deleting widgets from server.", e);
+			Log.warn(InteractionManagerService.this, "Error deleting widgets from server.", e);
 			if ( null != callback ) {
 				callback.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback to notify.");
+				Log.warn(InteractionManagerService.this, "No callback to notify.");
 			}
 			
 		}
@@ -138,35 +138,35 @@ public class InteractionManager {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Log.warn(InteractionManager.this, "Error adding widgets to server.", caught);
+							Log.warn(InteractionManagerService.this, "Error adding widgets to server.", caught);
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							Log.debug(InteractionManager.this, "Got response to widget adding: " + result);
+							Log.debug(InteractionManagerService.this, "Got response to widget adding: " + result);
 							
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(result);
 								ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 								callback.onSuccess(widgetList);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 					});
 		} catch (Exception e) {
-			Log.warn(InteractionManager.this, "Error adding widgets to server.", e);
+			Log.warn(InteractionManagerService.this, "Error adding widgets to server.", e);
 			
 			if ( null != callback ) {
 				callback.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback to notify.");
+				Log.warn(InteractionManagerService.this, "No callback to notify.");
 			}
 		}
 	}
@@ -185,34 +185,34 @@ public class InteractionManager {
 			interactionService.get(url, new AsyncCallback<String>() {
 				@Override
 				public void onFailure(Throwable caught) {
-					Log.warn(InteractionManager.this, "Error getting input from server.", caught);
+					Log.warn(InteractionManagerService.this, "Error getting input from server.", caught);
 					
 					if ( null != callback ) {
 						callback.onFailure(caught);
 					} else {
-						Log.warn(InteractionManager.this, "No callback to notify.");
+						Log.warn(InteractionManagerService.this, "No callback to notify.");
 					}
 				}
 
 				@Override
 				public void onSuccess(String result) {
-					Log.debug(InteractionManager.this, "Got response to widget input: " + result);
+					Log.debug(InteractionManagerService.this, "Got response to widget input: " + result);
 					if ( null != callback ) {
 						WidgetInputListJson widgetInputListJson = GenericJson.fromJson(result);
 						ArrayList<WidgetInput> widgetInputs = widgetInputListJson.getInputs();
 						callback.onSuccess(widgetInputs);
 					} else {
-						Log.warn(InteractionManager.this, "No callback to notify.");
+						Log.warn(InteractionManagerService.this, "No callback to notify.");
 					}
 				}
 			});
 		} catch (Exception e) {
-			Log.warn(InteractionManager.this, "Error getting input from server.", e);
+			Log.warn(InteractionManagerService.this, "Error getting input from server.", e);
 			
 			if ( null != callback ) {
 				callback.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback to notify.");
+				Log.warn(InteractionManagerService.this, "No callback to notify.");
 			}
 		}
 	}
@@ -259,36 +259,36 @@ public class InteractionManager {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Log.warn(InteractionManager.this, "Error deleting widgets from server.", caught);
+							Log.warn(InteractionManagerService.this, "Error deleting widgets from server.", caught);
 							
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 
 						}
 
 						@Override
 						public void onSuccess(String result) {
-							Log.debug(InteractionManager.this, "Got response: " + result);
+							Log.debug(InteractionManagerService.this, "Got response: " + result);
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(result);
 								ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 								callback.onSuccess(widgetList);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 					});
 		} catch (Exception e) {
-			Log.warn(InteractionManager.this, "Error deleting widgets from server.", e);
+			Log.warn(InteractionManagerService.this, "Error deleting widgets from server.", e);
 			
 			if ( null != callback ) {
 				callback.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback to notify.");
+				Log.warn(InteractionManagerService.this, "No callback to notify.");
 			}
 		}
 	}
@@ -312,20 +312,20 @@ public class InteractionManager {
 							if ( null != callback ) {
 								callback.onFailure(caught);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
 						@Override
 						public void onSuccess(String json) {
-							Log.debug(InteractionManager.this, "Got response: " + json);
+							Log.debug(InteractionManagerService.this, "Got response: " + json);
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(json);
 							
 								ArrayList<Widget> widgetList = widgetListJson.getWidgets();
 								callback.onSuccess(widgetList);
 							} else {
-								Log.warn(InteractionManager.this, "No callback to notify.");
+								Log.warn(InteractionManagerService.this, "No callback to notify.");
 							}
 						}
 
@@ -336,7 +336,7 @@ public class InteractionManager {
 			if ( null != callback ) {
 				callback.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback to notify.");
+				Log.warn(InteractionManagerService.this, "No callback to notify.");
 			}		
 		}
 		
@@ -363,17 +363,17 @@ public class InteractionManager {
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 
 					@Override
 					public void onSuccess(String result) {
-						Log.debug(InteractionManager.this, "Got response: " + result);
+						Log.debug(InteractionManagerService.this, "Got response: " + result);
 						if ( null != callback ) {
 							callback.onSuccess(null);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 		});
@@ -396,18 +396,18 @@ public class InteractionManager {
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 
 					@Override
 					public void onSuccess(String result) {
-						Log.debug(InteractionManager.this, "Got response to sending application: " + result);
+						Log.debug(InteractionManagerService.this, "Got response to sending application: " + result);
 						if ( null != callback ) {
 							Application application = (Application)(ApplicationJson.fromJson(result));
 							callback.onSuccess(application);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 
@@ -431,7 +431,7 @@ public class InteractionManager {
 						if ( null != callback ) {
 							callback.onFailure(caught);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 
@@ -447,7 +447,7 @@ public class InteractionManager {
 								callback.onFailure(new Exception("Received null application"));
 							}
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 					}
 
@@ -603,19 +603,19 @@ public class InteractionManager {
 
 					@Override
 					public void onOpen() {
-						Log.debug(InteractionManager.this, "Input channel opened");
+						Log.debug(InteractionManagerService.this, "Input channel opened");
 						
 					}
 
 					@Override
 					public void onMessage(String message) {
-						Log.debug(InteractionManager.this, "Got widget input: " + message);
+						Log.debug(InteractionManagerService.this, "Got widget input: " + message);
 						if ( null != listener ) {
 							WidgetInputListJson widgetInputListJson = GenericJson.fromJson(message);
 							ArrayList<WidgetInput> widgetInputs = widgetInputListJson.getInputs();
 							listener.onSuccess(widgetInputs);
 						} else {
-							Log.warn(InteractionManager.this, "No callback to notify.");
+							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
 						
 					}
@@ -625,7 +625,7 @@ public class InteractionManager {
 						if ( null != listener ) {
 							listener.onFailure(new Exception("Socket Error"));
 						} else {
-							Log.warn(InteractionManager.this, "No callback defined");
+							Log.warn(InteractionManagerService.this, "No callback defined");
 						}
 					}
 
@@ -634,7 +634,7 @@ public class InteractionManager {
 						if ( null != listener ) {
 							listener.onFailure(new Exception("Channel closed"));
 						} else {
-							Log.warn(InteractionManager.this, "No callback defined");
+							Log.warn(InteractionManagerService.this, "No callback defined");
 						}
 						
 					}
@@ -664,7 +664,7 @@ public class InteractionManager {
 							if ( null != listener ) {
 								listener.onFailure(caught);
 							} else {
-								Log.warn(InteractionManager.this, "No callback defined");
+								Log.warn(InteractionManagerService.this, "No callback defined");
 							}
 						}
 
@@ -678,11 +678,11 @@ public class InteractionManager {
 							 * Store the token on local storage so that the next time, we try to reuse the 
 							 * channel
 							 */
-							InteractionManager.this.localStorage.setString("ChannelToken", channelTokenJson.getToken());
-							InteractionManager.this.localStorage.setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
+							InteractionManagerService.this.localStorage.setString("ChannelToken", channelTokenJson.getToken());
+							InteractionManagerService.this.localStorage.setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
-							InteractionManager.this.openChannel(channelTokenJson.getToken(), listener);
+							InteractionManagerService.this.openChannel(channelTokenJson.getToken(), listener);
 							
 						}
 					});
@@ -692,7 +692,7 @@ public class InteractionManager {
 			if ( null != listener ) {
 				listener.onFailure(e);
 			} else {
-				Log.warn(InteractionManager.this, "No callback defined");
+				Log.warn(InteractionManagerService.this, "No callback defined");
 			}
 		}	
 	}
