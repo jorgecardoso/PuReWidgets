@@ -265,11 +265,12 @@ public class PDApplication  {
 		
 		Log.info(this, "Using interaction manager: " + interactionManagerUrl);
 		
-		InteractionManager serverCommunicator = new InteractionManager(this.placeId, this.applicationId, this.localStorage);
+		InteractionManager serverCommunicator = new InteractionManager(interactionManagerUrl, this.localStorage);
 		this.interactionManager = serverCommunicator;
-		serverCommunicator.setInteractionServerUrl(interactionManagerUrl);
 		
-		WidgetManager.get().setServerCommunication( serverCommunicator );
+		new WidgetManager(this.placeId, this.applicationId, this.localStorage, serverCommunicator); 
+		
+		//WidgetManager.get().setServerCommunication( serverCommunicator );
 
 		Window.addCloseHandler(new CloseHandler<Window>() {
 			@Override
@@ -279,7 +280,7 @@ public class PDApplication  {
 		});		
 		
 		
-		serverCommunicator.getApplication(this.placeId, this.applicationId, new AsyncCallback<Application>() {
+		serverCommunicator.getApplication(this.placeId, this.applicationId, this.applicationId, new AsyncCallback<Application>() {
 
 			@Override
 			public void onSuccess(Application application) {

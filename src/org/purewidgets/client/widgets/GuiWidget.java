@@ -414,11 +414,11 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 
 	
 	public final void sendToServer() {
-		Log.debugFinest(this, "Adding widget to widgetmanager: " + this);
+		Log.debugFinest(this, "Adding widget to widgetmanager: " + this.getWidgetId());
 		WidgetManager.get().addWidget(this.widget);
 		
 		for (Widget w : this.widget.getDependentWidget() ) {
-			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w);
+			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w.getWidgetId());
 			WidgetManager.get().addWidget(w);
 		}
 		

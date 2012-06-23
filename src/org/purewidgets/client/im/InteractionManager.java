@@ -30,8 +30,6 @@ import com.google.gwt.appengine.channel.client.ChannelFactory.ChannelCreatedCall
 import com.google.gwt.appengine.channel.client.SocketError;
 import com.google.gwt.appengine.channel.client.SocketListener;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -608,7 +606,7 @@ public class InteractionManager {
 	
 
 	public void createChannel(String placeId, String applicationId, String callingApplicationId,
-			final SocketListener socketListener) {
+			final AsyncCallback<ArrayList<WidgetInput>> listener) {
 		
 		String token = this.localStorage.getString("ChannelToken");
 		Long tokenTimestamp = this.localStorage.getLong("ChannelTokenTimestamp");
@@ -623,21 +621,61 @@ public class InteractionManager {
 		 * This assumes that the server sets the expiration time to the maximum: 24 hours!
 		 */
 		if ( null == tokenTimestamp ||  (System.currentTimeMillis() - tokenTimestamp.longValue()) > 23*60*60*1000 ) {
-			this.getChannelToken(placeId, applicationId, callingApplicationId, socketListener);
+			this.getChannelToken(placeId, applicationId, callingApplicationId, listener);
 		} else {
 			if ( null != token && token.length() > 0 ) { 
-				this.openChannel(token, socketListener);
+				this.openChannel(token, listener);
 			} else {
-				this.getChannelToken(placeId, applicationId, callingApplicationId, socketListener);
+				this.getChannelToken(placeId, applicationId, callingApplicationId, listener);
 			}
 		} 
 	}
 	
-	private void openChannel(String token, final SocketListener socketListener) {	
+	private void openChannel(String token, final AsyncCallback<ArrayList<WidgetInput>> listener) {	
 		ChannelFactory.createChannel(token, new ChannelCreatedCallback() {
 			  @Override
 			  public void onChannelCreated(Channel channel) {
-			    channel.open(socketListener);
+			    channel.open(new SocketListener() {
+
+					@Override
+					public void onOpen() {
+						Log.debug(InteractionManager.this, "Input channel opened");
+						
+					}
+
+					@Override
+					public void onMessage(String message) {
+						Log.debug(InteractionManager.this, "Got widget input: " + message);
+						if ( null != listener ) {
+							WidgetInputListJson widgetInputListJson = GenericJson.fromJson(message);
+							ArrayList<WidgetInput> widgetInputs = widgetInputListJson.getInputs();
+							listener.onSuccess(widgetInputs);
+						} else {
+							Log.warn(InteractionManager.this, "No callback to notify.");
+						}
+						
+					}
+
+					@Override
+					public void onError(SocketError error) {
+						if ( null != listener ) {
+							listener.onFailure(new Exception("Socket Error"));
+						} else {
+							Log.warn(InteractionManager.this, "No callback defined");
+						}
+					}
+
+					@Override
+					public void onClose() {
+						if ( null != listener ) {
+							listener.onFailure(new Exception("Channel closed"));
+						} else {
+							Log.warn(InteractionManager.this, "No callback defined");
+						}
+						
+					}
+			    	
+			    });
 			  }
 			});
 	}
@@ -650,7 +688,7 @@ public class InteractionManager {
 	 * see https://developers.google.com/appengine/docs/java/channel/
 	 */
 	private void getChannelToken(final String placeId, final String applicationId, final String callingApplicationId,
-			final SocketListener socketListener) {
+			final AsyncCallback<ArrayList<WidgetInput>> listener) {
 		try {
 			interactionService.get( urlHelper.getChannelUrl(placeId, applicationId, callingApplicationId), 
 					new AsyncCallback<String>() {
@@ -659,11 +697,11 @@ public class InteractionManager {
 						public void onFailure(Throwable caught) {
 							Log.warn(this, "Error getting channel token from server:", caught);
 							
-							/**
-							 * Hmm, it would be best if we were able to generate a socket error, but 
-							 * we cant instantiate a SocketError class
-							 */
-							socketListener.onClose();
+							if ( null != listener ) {
+								listener.onFailure(caught);
+							} else {
+								Log.warn(InteractionManager.this, "No callback defined");
+							}
 						}
 
 						@Override
@@ -680,18 +718,18 @@ public class InteractionManager {
 							InteractionManager.this.localStorage.setString("ChannelTokenTimestamp", System.currentTimeMillis()+"");
 							Log.debug(this, "Channel token: " + channelTokenJson.getToken());
 							
-							InteractionManager.this.openChannel(channelTokenJson.getToken(), socketListener);
+							InteractionManager.this.openChannel(channelTokenJson.getToken(), listener);
 							
 						}
 					});
 		} catch (Exception e) {
 			
 			Log.warn(this, "Error getting channel token from server: ", e);
-			/**
-			 * Hmm, it would be best if we were able to generate a socket error, but 
-			 * we cant instantiate a SocketError class
-			 */
-			socketListener.onClose();
+			if ( null != listener ) {
+				listener.onFailure(e);
+			} else {
+				Log.warn(InteractionManager.this, "No callback defined");
+			}
 		}	
 	}
 	
@@ -788,27 +826,7 @@ public class InteractionManager {
 
 
 
-//	
-//
-//	private long getLastTimeStampAsLong() {
-//		try {
-//			return Long.parseLong(getLastTimeStampAsString());
-//		} catch (Exception e) {
-//			Log.error(this, "Could no parse timestamp: " + e.getMessage());
-//		}
-//		return 0;
-//	}
-//
-//	private String getLastTimeStampAsString() {
-//		String ts = this.localStorage.getString(TIMESTAMP);
-//		
-//		if (ts == null || ts.length() < 1) {
-//			return "0";
-//		} else {
-//			return ts;
-//		}
-//	}	
-//	
+
 	
 	
 	/**
@@ -842,94 +860,7 @@ public class InteractionManager {
 //	}
 	
 	
-//	/**
-//	 * Asks for input for every widget in the application.
-//	 */
-//	private void periodicallyAskForInputFromServer() {
-//		try {
-//			Log.debugFinest(this, "Scheduling next application server connection in " + askPeriod + " ms.");
-//			timerInput.schedule( askPeriod );
-//			
-//			if ( !receivedLastRequest ) {
-//				Log.debug(this, "Haven't receive response to last request. Postponing new request.");
-//				
-//				// we just skip one, so mark as if we received the request so that in the next time we will ask again
-//				receivedLastRequest = true;
-//				return;
-//			}
-//			
-//			receivedLastRequest = false;
-//			
-//			String url = urlHelper.getApplicationInputUrl(this.placeId, this.appId, this.appId, this.getLastTimeStampAsString());
-//			
-//			Log.debugFinest(this, "Contacting application server for input..." + url);
-//			
-//			interactionService.get(url, new AsyncCallback<String>() {
-//				@Override
-//				public void onFailure(Throwable caught) {
-//					processInputResponse(false, null, caught);
-//				}
-//
-//				@Override
-//				public void onSuccess(String result) {
-//					processInputResponse(true, result, null);
-//				}
-//			});
-//		} catch (Exception e) {
-//			processInputResponse(false, null, e);
-//			e.printStackTrace();
-//		}
-//	}
 //	
-	
-//	private void periodicallySendWidgetsToServer() {
-//		//TODO: Send a list of widgets instead of one by one.
-//		
-//		
-//		if ( this.toAddWidgetPool.size() == 0 ) {
-//			this.nextWidgetAction = NextWidgetAction.DELETE;
-//		} 
-//		if ( this.toDeleteWidgetPool.size() == 0 ) {
-//			this.nextWidgetAction = NextWidgetAction.ADD;
-//		}
-//		
-//		
-//		if ( NextWidgetAction.ADD == this.nextWidgetAction ) {
-//		
-//			if (this.toAddWidgetPool.size() > 0) {
-//				
-//				/*
-//				 * Send the current set of widgets to the server.
-//				 */
-//				this.addWidgetToServer(this.toAddWidgetPool);
-//				
-//			} 
-//		}
-//		
-//		if ( NextWidgetAction.DELETE == this.nextWidgetAction ) {
-//			if (this.toDeleteWidgetPool.size() > 0) {
-//				
-//				this.removeWidget(this.toDeleteWidgetPool);
-//				
-//			}
-//		}
-//		
-//		/*
-//		 * Invert the next action
-//		 */
-//		if ( NextWidgetAction.ADD == this.nextWidgetAction ) {
-//			this.nextWidgetAction = NextWidgetAction.DELETE;
-//		} else if ( NextWidgetAction.DELETE == this.nextWidgetAction ) {
-//			this.nextWidgetAction = NextWidgetAction.ADD;
-//		}
-//		
-//		if ( this.toAddWidgetPool.size() > 0 || this.toDeleteWidgetPool.size() > 0 ) {
-//			timerWidget.schedule(this.currentWidgetRequestInterval);
-//			Log.debugFinest(this, "Scheduling next widget request in " + (this.currentWidgetRequestInterval/1000) +" seconds");
-//		} else {
-//			this.timerWidget = null;
-//		}
-//	}
 	
 //	
 //	
@@ -1166,18 +1097,7 @@ public class InteractionManager {
 	
 
 	
-//	private void setTimeStamp(long timeStamp) {
-//		this.localStorage.setString(TIMESTAMP, ""+timeStamp);
-//	}
-//	
-//	private long toLong(String value) {
-//		try {
-//			return Long.parseLong(value);
-//		} catch (Exception e) {
-//			Log.error(this, "Error parsing " + value + " to long." +  e.getMessage());
-//		}
-//		return 0;
-//	}
+
 
 //	/**
 //	 * Interpolates the time between requests.
