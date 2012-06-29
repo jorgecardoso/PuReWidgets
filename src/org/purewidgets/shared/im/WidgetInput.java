@@ -2,10 +2,6 @@ package org.purewidgets.shared.im;
 
 import java.util.ArrayList;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-
 
 /**
  * The WidgetInput class represents an input from a user to an option of a widget.
