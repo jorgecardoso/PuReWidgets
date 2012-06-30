@@ -110,7 +110,7 @@ public class PDApplication {
 	private void init() {
 		Log.info(this, "Initing application " + this.appId);
 		this.widgets = new ArrayList<Widget>();
-		this.remoteStorage = ServerStorage.get(placeId, appId);
+		this.remoteStorage = ServerStorage.get(placeId+"-"+appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
 		
 		String interactionManager = this.remoteStorage.getString("imurl", "http://pw-interactionmanager.appspot.com");

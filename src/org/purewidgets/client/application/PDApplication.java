@@ -189,7 +189,7 @@ public class PDApplication  {
 		
 		this.localStorage = new LocalStorage(applicationId);
 
-		this.remoteStorage = new ServerStorage(placeId, applicationId);
+		this.remoteStorage = new ServerStorage(placeId+"-"+applicationId);
 		
 		
 		this.remoteStorage.getAll(new AsyncCallback<Map<String, String>>() {
