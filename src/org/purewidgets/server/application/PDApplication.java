@@ -34,12 +34,12 @@ public class PDApplication {
 	/**
 	 * The URL query string parameter name that holds the application id
 	 */
-	public static final String APP_NAME_PARAMETER = "appname";
+	public static final String APP_ID_PARAMETER = "appid";
 	
 	/**
 	 * The URL query string parameter name that holds the place id
 	 */
-	public static final String PLACE_NAME_PARAMETER = "placename";	
+	public static final String PLACE_ID_PARAMETER = "placeid";	
 	
 	/**
 	 * If the URL does not contain the application id, this application id will be used as default
@@ -139,21 +139,21 @@ public class PDApplication {
 	}
 
 	public static void load(HttpServletRequest req, PDApplicationLifeCycle acl, String defaultAppName) {
-		String appId = req.getParameter(APP_NAME_PARAMETER);
+		String appId = req.getParameter(APP_ID_PARAMETER);
 		
 		if (null == appId) {
 			appId = defaultAppName;
 			if (null == appId) {
 				appId = DEFAULT_APP_NAME;
-				Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+APP_NAME_PARAMETER+"' parameter from query string. Using default appname.");
+				Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+APP_ID_PARAMETER+"' parameter from query string. Using default application id.");
 			}
 		}
 		Log.debug(PDApplication.class.getCanonicalName(), "Using application name: " + appId);
 		
-		String placeId = req.getParameter(PLACE_NAME_PARAMETER);
+		String placeId = req.getParameter(PLACE_ID_PARAMETER);
 		if (null == placeId) {
 			placeId = DEFAULT_PLACE_NAME;
-			Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+PLACE_NAME_PARAMETER+"' parameter from query string. Using default placename.");
+			Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+PLACE_ID_PARAMETER+"' parameter from query string. Using default place id.");
 		}
 		Log.debug(PDApplication.class.getCanonicalName(), "Using place name: " + placeId);
 		
@@ -291,7 +291,7 @@ public class PDApplication {
 	/**
 	 * @return the appId
 	 */
-	public String getAppId() {
+	public String getApplicationId() {
 		return appId;
 	}
 
@@ -299,7 +299,7 @@ public class PDApplication {
 	/**
 	 * @param appId the appId to set
 	 */
-	public void setAppId(String appId) {
+	public void setApplicationId(String appId) {
 		this.appId = appId;
 	}
 

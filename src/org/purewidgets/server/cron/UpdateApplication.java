@@ -38,8 +38,8 @@ public class UpdateApplication  extends HttpServlet{
 		
 		ArrayList<String> urlParameters = new ArrayList<String>();
 		for ( PDApplication application : results ) {
-			String p ="?" + PDApplication.PLACE_NAME_PARAMETER + "=" + application.getPlaceId() +
-							  "&" +	PDApplication.APP_NAME_PARAMETER + "=" + application.getAppId();
+			String p ="?" + PDApplication.PLACE_ID_PARAMETER + "=" + application.getPlaceId() +
+							  "&" +	PDApplication.APP_ID_PARAMETER + "=" + application.getApplicationId();
 			Log.debug(this, p);
 			urlParameters.add(p);
 		}

@@ -21,10 +21,10 @@ public class LocalStorage {
 	 */
 	private static String MAGIC_NUMBER = "123ListSerializer";
 
-	private String appName;
+	private String applicationId;
 	
-	public LocalStorage(String appName) {
-		this.appName = appName;
+	public LocalStorage(String appId) {
+		this.applicationId = appId;
 	}
 	
 	public Integer getInteger(String item) {
@@ -45,14 +45,14 @@ public class LocalStorage {
 	}
 	
 	public  String getString(String item) {
-		String name = this.appName+"-"+item;
+		String name = this.applicationId+"-"+item;
 		String value = org.purewidgets.client.storage.json.LocalStorage.getString(name);
 		return value;
 	}
 
 
 public void setString(String item, String value) {
-	org.purewidgets.client.storage.json.LocalStorage.setString(this.appName+"-"+item, value);
+	org.purewidgets.client.storage.json.LocalStorage.setString(this.applicationId+"-"+item, value);
 }
 	
 	/**
@@ -127,7 +127,7 @@ public void setString(String item, String value) {
 
 	
 	public int [] loadIntList(String name) {
-		name = this.appName+"-"+name;
+		name = this.applicationId+"-"+name;
 		
 		String codedList = org.purewidgets.client.storage.json.LocalStorage.getString(name);
 		
@@ -152,13 +152,13 @@ public void setString(String item, String value) {
 	}
 	
 	public  ArrayList<String> loadList(String name) {
-		name = this.appName+"-"+name;
+		name = this.applicationId+"-"+name;
 		String value = org.purewidgets.client.storage.json.LocalStorage.getString(name);
 		return decode(value);
 	}
 
 	public void saveIntList(String name, int [] list) {
-		name = this.appName+"-"+name;
+		name = this.applicationId+"-"+name;
 		if ( null == list || list.length == 0 ) {
 			return;
 		}
@@ -182,7 +182,7 @@ public void setString(String item, String value) {
 	 * @param values
 	 */
 	public void saveList(String name, ArrayList<String> values) {
-		name = this.appName+"-"+name;
+		name = this.applicationId+"-"+name;
 		org.purewidgets.client.storage.json.LocalStorage.setString(name, encode(values));
 	}
 

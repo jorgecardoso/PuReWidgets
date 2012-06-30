@@ -23,8 +23,8 @@ public class ServerStorage {
 	/**
 	 * Creates and empty RemoteStorage object.
 	 */
-	private ServerStorage(String placeName, String applicationName) {
-		this.storageId = placeName+"-"+applicationName;
+	private ServerStorage(String placeId, String applicationName) {
+		this.storageId = placeId+"-"+applicationName;
 		
 		/*
 		 * Check if exists, if not create
@@ -39,8 +39,8 @@ public class ServerStorage {
 		Dao.commitOrRollbackTransaction();
 	}
 	
-	public static ServerStorage get(String placeName, String applicationName) {
-		ServerStorage rs = new ServerStorage(placeName, applicationName);
+	public static ServerStorage get(String placeId, String applicationName) {
+		ServerStorage rs = new ServerStorage(placeId, applicationName);
 		
 		
 		return rs;

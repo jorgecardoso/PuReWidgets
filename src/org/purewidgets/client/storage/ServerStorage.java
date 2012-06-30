@@ -20,8 +20,8 @@ public class ServerStorage {
 	private String storageId;
 	private ServerStorageServiceAsync remoteStorageService;
 	
-	public ServerStorage(String placeName, String appName) {
-		this.storageId = placeName+"-"+appName;
+	public ServerStorage(String placeId, String applicationId) {
+		this.storageId = placeId+"-"+applicationId;
 		remoteStorageService = GWT.create(ServerStorageService.class);
 		((ServiceDefTarget)remoteStorageService).setServiceEntryPoint("/storageservice"); 
 	}

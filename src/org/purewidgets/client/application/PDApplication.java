@@ -25,6 +25,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * A PublicDisplayApplication provides a standard way to read and store application parameters that
  * can be set on the URL query, but which are also stored at the server.
  * 
+ * It also provides direct access to a LocalStorage and a ServerStorage.
+ * 
  * @author Jorge C. S. Cardoso
  * 
  */
@@ -173,14 +175,6 @@ public class PDApplication  {
 	}		
 	
 	
-	/**
-	 * @return the placeName
-	 */
-	public  String getPlaceName() {
-		return placeId;
-	}
-	
-
 	public  ServerStorage getRemoteStorage() {
 		
 		return remoteStorage;
@@ -216,7 +210,7 @@ public class PDApplication  {
 	
 
 	public static void load(PDApplicationLifeCycle entryPoint,
-			String defaultAppName) {
+			String defaultApplicationId) {
 		
 				
 		String placeId = com.google.gwt.user.client.Window.Location.getParameter(PLACE_ID_PARAMETER);
@@ -230,10 +224,10 @@ public class PDApplication  {
 				.getParameter(APPLICATION_ID_PARAMETER);
 
 		if (null == applicationId) {
-			if (null == defaultAppName) {
+			if (null == defaultApplicationId) {
 				applicationId = DEFAULT_APPLICATION_ID;
 			} else {
-				applicationId = defaultAppName;
+				applicationId = defaultApplicationId;
 			}
 		}
 		Log.debug(PDApplication.class.getName(), "Using application name: "
@@ -327,13 +321,6 @@ public class PDApplication  {
 		});
 	}
 
-	/**
-	 * @param placeName
-	 *            the placeName to set
-	 */
-	public void setPlaceName(String placeName) {
-		this.placeId = placeName;
-	}
 
 	/**
 	 * @return the serverCommunicator
