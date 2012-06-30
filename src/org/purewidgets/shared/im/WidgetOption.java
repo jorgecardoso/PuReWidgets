@@ -3,10 +3,6 @@
  */
 package org.purewidgets.shared.im;
 
-
-import com.google.appengine.api.datastore.Key;
-
-
 /**
  * 
  * A WidgetOptionID represents an item or option, within a widget, that can be 
@@ -23,9 +19,6 @@ import com.google.appengine.api.datastore.Key;
  *
  */
 public class WidgetOption  {
-
-
-    private Key key;
 	
 	/**
 	 * The application defined identifier for the option.
