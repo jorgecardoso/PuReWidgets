@@ -138,11 +138,11 @@ public class PDApplication {
 		persistenceManager.close();
 	}
 
-	public static void load(HttpServletRequest req, PDApplicationLifeCycle acl, String defaultAppName) {
+	public static void load(HttpServletRequest req, PDApplicationLifeCycle acl, String defaultAppId) {
 		String appId = req.getParameter(APP_ID_PARAMETER);
 		
 		if (null == appId) {
-			appId = defaultAppName;
+			appId = defaultAppId;
 			if (null == appId) {
 				appId = DEFAULT_APP_NAME;
 				Log.warn(PDApplication.class.getCanonicalName(), "Could not read '"+APP_ID_PARAMETER+"' parameter from query string. Using default application id.");
