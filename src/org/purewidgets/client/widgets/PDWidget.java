@@ -3,12 +3,14 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.feedback.CumulativeInputFeedbackPanel;
 import org.purewidgets.client.feedback.FeedbackDisplay;
 import org.purewidgets.client.feedback.FeedbackSequencer;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.feedback.InputFeedbackListener;
 import org.purewidgets.client.im.WidgetManager;
+import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.WidgetInputEvent;
@@ -28,6 +30,7 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public class PDWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
 	
+	private static final String REFERENCE_CODES_STORAGE_ID = "referenceCodes";
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
@@ -52,16 +55,7 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 	protected Widget widget;
 	
 	protected List<ActionListener> actionListeners = new ArrayList<ActionListener>();
-	
-/*
-	private Align inputFeedbackPanelAlignment = Align.CENTER;
-	private Align inputFeedbackPanelReferencePoint = Align.CENTER;
-*/
-	
 
-
-	
-	
 	/**
 	 * The panel used to display user input info feedback.
 	 */
@@ -88,28 +82,9 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	protected boolean inputEnabled = true;
 	
-	/**
-	 * Does nothing. Allows subclasses to take care of registering the widget in
-	 * the Interaction Manager.
-	 */
-	/*protected AbstractGuiWidget() {
-		this(null, null);
-		//this.setFeedbackSequencer(new FeedbackSequencer(this));
-	}*/
-
-	/**
-	 * Subclasses that implement widgets with several options should not call
-	 * this constructor. Although subclasses can call super(widgetID), this
-	 * should be avoided because it would mean calling the addWidget twice on
-	 * the InteractionManager.
-	 * 
-	 * @param widgetID
-	 *            The id of this widget (must be unique within the application).
-	 */
-	/*public AbstractGuiWidget(String widgetID) {
-		this(widgetID, null);
-	}*/
-
+	
+	private LocalStorage localStorage;
+	
 	/**
 	 * Subclasses that implement widgets with several options should not call
 	 * this constructor. Although subclasses can call super(widgetID), this
@@ -123,7 +98,8 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	public PDWidget() {
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
-		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);		
+		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
+		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.getClass().getName());
 	}
 
 	public boolean isDisplaying() {
@@ -381,7 +357,12 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	@Override
 	public void onReferenceCodesUpdated() {
-		Log.debugFinest("AbstractGuiWidget Updating ReferenceCodes");
+		
+		ArrayList<String> refCodes = new ArrayList<String>();
+		for ( WidgetOption widgetOption : this.widget.getWidgetOptions() ) {
+			refCodes.add(widgetOption.getReferenceCode());
+		}
+		this.getLocalStorage().saveList(REFERENCE_CODES_STORAGE_ID, refCodes);
 	}
 	
 	
@@ -569,6 +550,18 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 		this.widget = widget; 
 		this.widget.setInputListener(this);
 		this.widget.setReferenceCodeListener(this);
+		
+		Log.debug(this, "Loading reference codes from local storage.");
+		ArrayList<String> refCodes = this.getLocalStorage().loadList(REFERENCE_CODES_STORAGE_ID);
+		Log.debug(this, "Reference codes: " + refCodes.toString());
+		if ( null != refCodes ) {
+			int i = 0;
+			for (WidgetOption widgetOption : this.widget.getWidgetOptions()) {
+				if ( refCodes.size() > i ) {
+					widgetOption.setReferenceCode(refCodes.get(i++));
+				}
+			}
+		}
 	}
 
 
@@ -640,6 +633,8 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 		this.userInputFeedbackPattern = userInputFeedbackPattern;
 	}
 	
+	
+	
 	protected String generateUserInputFeedbackMessage(WidgetInputEvent inputEvent) {
 		String msg = new String(this.userInputFeedbackPattern);
 		
@@ -686,6 +681,20 @@ public class PDWidget extends Composite implements  WidgetInputListener, Referen
 			return "";
 		}
 		return s;
+	}
+
+	/**
+	 * @return the localStorage
+	 */
+	public LocalStorage getLocalStorage() {
+		return localStorage;
+	}
+
+	/**
+	 * @param localStorage the localStorage to set
+	 */
+	public void setLocalStorage(LocalStorage localStorage) {
+		this.localStorage = localStorage;
 	}
 
 

@@ -105,6 +105,7 @@ public class GuiButton extends PDWidget {
 		this.lblCaption.addStyleName(GuiButton.CAPTION_STYLENAME_SUFFIX);
 		this.lblReferenceCode.addStyleName(GuiButton.REFERENCECODE_STYLENAME_SUFFIX);
 		this.sendToServer();
+		this.onReferenceCodesUpdated();
 	}
 
 	@Override
@@ -123,6 +124,7 @@ public class GuiButton extends PDWidget {
 		// Log.debug(this + " Updating reference code");
 		this.lblReferenceCode.setText(ReferenceCodeFormatter.format(this.getWidgetOptions().get(0)
 				.getReferenceCode()));
+		super.onReferenceCodesUpdated();
 	}
 
 	@Override

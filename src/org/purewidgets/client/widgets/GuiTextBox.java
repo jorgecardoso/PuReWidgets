@@ -184,6 +184,7 @@ public class GuiTextBox extends PDWidget implements KeyPressHandler, FocusHandle
 		};
 		caretTimer.scheduleRepeating(1000);
 		this.sendToServer();
+		this.onReferenceCodesUpdated();
 	}
 	
 	private void flashCaret() {
@@ -226,6 +227,7 @@ public class GuiTextBox extends PDWidget implements KeyPressHandler, FocusHandle
 		if (!(this.lblReferenceCode == null)) {
 			this.lblReferenceCode.setText( ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
 		}
+		super.onReferenceCodesUpdated();
 	}
 	
 	@Override

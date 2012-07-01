@@ -144,11 +144,12 @@ public class GuiListBox extends PDWidget implements ClickHandler {
 		
 		this.initWidget(this.mainVerticalPanel);
 		this.sendToServer();
+		this.onReferenceCodesUpdated();
 	}
 
 	@Override
 	public void onReferenceCodesUpdated() {
-		Log.debug(this, "Updating " + this.getWidgetOptions().size() + " reference codes");
+		Log.error(this, "Updating " + this.getWidgetOptions().size() + " reference codes");
 		ArrayList<WidgetOption> widgetOptions = this.getWidgetOptions();
 		for (int i = 0; i < widgetOptions.size(); i++ ) {
 			HorizontalPanel hPanel = this.optionsHorizontalPanel.get(i);
@@ -157,7 +158,7 @@ public class GuiListBox extends PDWidget implements ClickHandler {
 			
 			refCode.setText( ReferenceCodeFormatter.format(widgetOptions.get(i).getReferenceCode()) );
 		}
-		
+		//super.onReferenceCodesUpdated();
 	}
 	
 	@Override

@@ -103,6 +103,7 @@ public class GuiUpload extends PDWidget  {
 	
 		
 		this.sendToServer();
+		this.onReferenceCodesUpdated();
 	}
 	
 		
@@ -112,6 +113,7 @@ public class GuiUpload extends PDWidget  {
 		// Log.debug(this + " Updating reference code");
 		this.uiHTMLReferenceCode.setText(ReferenceCodeFormatter.format(this.getWidgetOptions().get(0)
 				.getReferenceCode()));
+		super.onReferenceCodesUpdated();
 	}
 	
 	@Override
@@ -132,15 +134,6 @@ public class GuiUpload extends PDWidget  {
 	}		
 
 	
-
-	
-	@Override
-	public void setEnabled(boolean enabled) {
-		Log.debug("" + inputEnabled);
-		
-		//setCaret(enabled);
-		super.setEnabled(enabled);
-	}
 	
 	@Override
 	public void setInputEnabled(boolean inputEnabled) {
