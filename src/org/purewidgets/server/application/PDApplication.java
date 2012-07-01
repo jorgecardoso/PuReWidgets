@@ -97,7 +97,8 @@ public class PDApplication {
 	@NotPersistent
 	private ArrayList<Widget> widgets;
 	
-	private boolean firstTime;
+	
+	private static PDApplication current;
 	
 	protected PDApplication (String placeId, String appId, PersistenceManager pm, PDApplicationLifeCycle acl) {
 		this.placeId = placeId;
@@ -109,6 +110,7 @@ public class PDApplication {
 	
 	private void init() {
 		Log.info(this, "Initing application " + this.appId);
+		PDApplication.setCurrent(this);
 		this.widgets = new ArrayList<Widget>();
 		this.remoteStorage = ServerStorage.get(placeId+"-"+appId);
 		//WidgetManager.get().setWidgetList(remoteStorage.loadWidgets(this.applicationLifeCycle, persistenceManager));
@@ -133,6 +135,8 @@ public class PDApplication {
 		
 		Log.debug(this, "Triggering 'finish' event");
 		this.applicationLifeCycle.onPDApplicationEnded();
+		
+		PDApplication.setCurrent(null);
 		//remoteStorage.saveWidgets(WidgetManager.get().getWidgetList(), persistenceManager);
 		persistenceManager.makePersistent(this);
 		persistenceManager.close();
@@ -187,7 +191,7 @@ public class PDApplication {
 	        			Log.warn(PDApplication.class.getCanonicalName(), "Application: " + app.appId + " was also in the DS");
 	        		}
 	        	}
-	        	application.firstTime = false;
+	        	
 	        	application.setPersistenceManager(pm);
 	        	application.setApplicationLifeCycle(acl);
 	        	application.init();
@@ -195,7 +199,7 @@ public class PDApplication {
 	        } else {
 	        	Log.debug(PDApplication.class.getCanonicalName(), "Application not found. Creating new.");
 	        	application = new PDApplication(placeId, appId, pm, acl);
-	        	application.firstTime = true;
+	        	
 	        	application.setPersistenceManager(pm);
 	        	application.setApplicationLifeCycle(acl);
 	        	application.init();
@@ -349,6 +353,22 @@ public class PDApplication {
 	 */
 	public void setServerCommunicator(InteractionManager serverCommunicator) {
 		this.serverCommunicator = serverCommunicator;
+	}
+
+
+	/**
+	 * @return the current
+	 */
+	public static PDApplication getCurrent() {
+		return current;
+	}
+
+
+	/**
+	 * @param current the current to set
+	 */
+	public static void setCurrent(PDApplication current) {
+		PDApplication.current = current;
 	}
 
 }

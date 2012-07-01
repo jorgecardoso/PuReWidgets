@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Composite;
 * @author Jorge C. S. Cardoso
 *
  */
-public class GuiWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
+public class PDWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
 	
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
@@ -121,7 +121,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param suggestedReferenceCode
 	 *            The suggested reference code
 	 */
-	public GuiWidget() {
+	public PDWidget() {
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);		
 	}
@@ -247,11 +247,11 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 		return this.getOffsetWidth();
 	}
 	
-	protected InputFeedback<? extends GuiWidget> handleInput(WidgetInputEvent ie) {
-		InputFeedback<GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
+	protected InputFeedback<? extends PDWidget> handleInput(WidgetInputEvent ie) {
+		InputFeedback<PDWidget> feedback = new InputFeedback<PDWidget>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
-		ActionEvent<GuiWidget> ae = new ActionEvent<GuiWidget>(ie, this, null);
+		ActionEvent<PDWidget> ae = new ActionEvent<PDWidget>(ie, this, null);
 		feedback.setActionEvent(ae);
 		return feedback;
 	}
@@ -265,7 +265,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param feedback The feedback to stop showing. 
 	 */
 	@Override
-	public final void inputFeedbackEnded(InputFeedback<? extends GuiWidget> feedback, boolean noMore) {
+	public final void inputFeedbackEnded(InputFeedback<? extends PDWidget> feedback, boolean noMore) {
 		
 	}
 	
@@ -275,7 +275,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param feedback The feedback to process.
 	 */
 	@Override
-	public final void inputFeedbackStarted(InputFeedback<? extends GuiWidget> feedback) {
+	public final void inputFeedbackStarted(InputFeedback<? extends PDWidget> feedback) {
 		Log.debugFinest(this, "Input feedback started: " + feedback.toString());
 		
 		/*
@@ -325,7 +325,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 				/*
 				 * Ask the widget to validate the input and generate an appropriate feedback
 				 */
-				InputFeedback<? extends GuiWidget> feedback = handleInput(ie);
+				InputFeedback<? extends PDWidget> feedback = handleInput(ie);
 				this.fireActionEvent( feedback.getActionEvent() );
 				
 				
@@ -334,7 +334,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 			 */
 			} else {
 				
-				InputFeedback<? extends GuiWidget> feedback = new InputFeedback<GuiWidget>(this, ie);
+				InputFeedback<? extends PDWidget> feedback = new InputFeedback<PDWidget>(this, ie);
 				if( this.isInputEnabled() ) {
 					
 					/*
@@ -520,9 +520,9 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		if (enabled) {
-			this.removeStyleDependentName(GuiWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET);// .setStyleName(this.getStyleName());
+			this.removeStyleDependentName(PDWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET);// .setStyleName(this.getStyleName());
 		} else {
-			this.getWidget().addStyleDependentName(GuiWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); //.setStyleName(					this.getStyleName() + this.DISABLED_STYLENAME_SUFFIX);
+			this.getWidget().addStyleDependentName(PDWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); //.setStyleName(					this.getStyleName() + this.DISABLED_STYLENAME_SUFFIX);
 		}
 	}
 	
@@ -581,7 +581,7 @@ public class GuiWidget extends Composite implements  WidgetInputListener, Refere
 	 *            The ActionEvent to fire. If null, a default ActionEvent will
 	 *            be created and sent.
 	 */
-	protected void fireActionEvent(ActionEvent<? extends GuiWidget> ae) {
+	protected void fireActionEvent(ActionEvent<? extends PDWidget> ae) {
 		if ( null == ae ) {
 			return;
 		}

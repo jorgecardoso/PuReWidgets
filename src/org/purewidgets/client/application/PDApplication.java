@@ -90,6 +90,9 @@ public class PDApplication  {
 	private InteractionManagerService interactionManager;
 
 	private Application application;
+	
+	
+	private static PDApplication current;
 
 	/**
 	 * @return the applicationName
@@ -182,7 +185,7 @@ public class PDApplication  {
 	}
 
 	private PDApplication(String placeId, String applicationId, PDApplicationLifeCycle entryPoint) {
-
+		PDApplication.setCurrent(this);
 		this.listener = entryPoint;
 		this.applicationId = applicationId;
 		this.placeId = placeId;
@@ -404,6 +407,20 @@ public class PDApplication  {
 	 */
 	public void setInteractionManager(InteractionManagerService interactionManager) {
 		this.interactionManager = interactionManager;
+	}
+
+	/**
+	 * @return the current
+	 */
+	public static PDApplication getCurrent() {
+		return current;
+	}
+
+	/**
+	 * @param current the current to set
+	 */
+	public static void setCurrent(PDApplication current) {
+		PDApplication.current = current;
 	}
 
 

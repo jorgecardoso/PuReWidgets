@@ -3,7 +3,7 @@ package org.purewidgets.client.widgets;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.Checkin;
 
-public class GuiCheckin extends GuiWidget{
+public class GuiCheckin extends PDWidget{
 
 	private Checkin checkin;
 	

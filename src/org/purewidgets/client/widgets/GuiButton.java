@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.*;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class GuiButton extends GuiWidget {
+public class GuiButton extends PDWidget {
 
 	/**
 	 * The suffix for the caption of the textbox.

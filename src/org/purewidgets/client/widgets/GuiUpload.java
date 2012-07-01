@@ -55,7 +55,7 @@ import com.google.gwt.user.client.Timer;
  * 
  * @author Jorge C. S. Cardoso
  */
-public class GuiUpload extends GuiWidget  {
+public class GuiUpload extends PDWidget  {
 	@UiTemplate("GuiUpload.ui.xml")
 	interface GuiUploadUiBinder extends UiBinder<Widget, GuiUpload> {	}
 	private static GuiUploadUiBinder uiBinder = GWT.create(GuiUploadUiBinder.class);

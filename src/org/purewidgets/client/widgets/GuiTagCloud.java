@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class GuiTagCloud extends GuiWidget implements ActionListener {
+public class GuiTagCloud extends PDWidget implements ActionListener {
 	
 	
 	
