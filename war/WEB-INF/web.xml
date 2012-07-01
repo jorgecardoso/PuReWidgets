@@ -13,7 +13,7 @@
   
   <servlet-mapping>
     <servlet-name>updateapplication</servlet-name>
-    <url-pattern>/updateapplication</url-pattern>
+    <url-pattern>/app/update</url-pattern>
   </servlet-mapping>
   
   

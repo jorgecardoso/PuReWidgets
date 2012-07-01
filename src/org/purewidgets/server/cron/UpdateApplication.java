@@ -46,7 +46,8 @@ public class UpdateApplication  extends HttpServlet{
 		pm.close();
 		
 		
-		String servlet = req.getParameter("servlet");
+		String servlet = req.getServletPath().replace("update", "application");
+		
 		
 		try {
 			Queue queue = QueueFactory.getDefaultQueue();
