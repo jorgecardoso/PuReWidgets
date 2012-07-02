@@ -7,7 +7,7 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
-import org.purewidgets.client.widgets.PdDownload.GuiDownloadUiBinder;
+import org.purewidgets.client.widgets.PdDownload.PdDownloadUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
@@ -56,9 +56,9 @@ import com.google.gwt.user.client.Timer;
  * @author Jorge C. S. Cardoso
  */
 public class PdUpload extends PdWidget  {
-	@UiTemplate("GuiUpload.ui.xml")
-	interface GuiUploadUiBinder extends UiBinder<Widget, PdUpload> {	}
-	private static GuiUploadUiBinder uiBinder = GWT.create(GuiUploadUiBinder.class);
+	@UiTemplate("PdUpload.ui.xml")
+	interface PdUploadUiBinder extends UiBinder<Widget, PdUpload> {	}
+	private static PdUploadUiBinder uiBinder = GWT.create(PdUploadUiBinder.class);
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %P[0]%";
 	
 	

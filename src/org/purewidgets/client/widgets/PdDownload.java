@@ -45,9 +45,9 @@ import com.google.gwt.user.client.ui.*;
  * 
  */
 public class PdDownload extends PdWidget {
-	@UiTemplate("GuiDownload.ui.xml")
-	interface GuiDownloadUiBinder extends UiBinder<Widget, PdDownload> {	}
-	private static GuiDownloadUiBinder uiBinder = GWT.create(GuiDownloadUiBinder.class);
+	@UiTemplate("PdDownload.ui.xml")
+	interface PdDownloadUiBinder extends UiBinder<Widget, PdDownload> {	}
+	private static PdDownloadUiBinder uiBinder = GWT.create(PdDownloadUiBinder.class);
 
 
 	@UiField
