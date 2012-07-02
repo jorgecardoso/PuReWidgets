@@ -8,7 +8,7 @@ package org.purewidgets.client.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.client.widgets.PDAWidget;
+import org.purewidgets.client.widgets.PdWidget;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.user.client.Timer;
@@ -107,7 +107,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 * This panel saves the previous feedback (during a pre-defined period of time)
 	 * and saves it so that it is displayed with the new feedback.
 	 */
-	private List<InputFeedback<? extends PDAWidget>> accumulatedFeedback;
+	private List<InputFeedback<? extends PdWidget>> accumulatedFeedback;
 	
 	private Timer timer;
 	
@@ -116,7 +116,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 * maximum number of display lines and delay.
 	 * 
 	 */
-	public CumulativeInputFeedbackPanel(PDAWidget widget) {
+	public CumulativeInputFeedbackPanel(PdWidget widget) {
 		this(widget, DEFAULT_MAX_LINES);
 	}
 
@@ -128,7 +128,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 * @param maxLines
 	 *            The maximum number of simultaneous feedback lines.
 	 */
-	public CumulativeInputFeedbackPanel(PDAWidget widget, int maxLines) {
+	public CumulativeInputFeedbackPanel(PdWidget widget, int maxLines) {
 		
 		// no automatic hiding. This input info panel has its own logic
 		super(widget);
@@ -142,7 +142,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		//this.setDelay(delay);
 		this.maxLines = maxLines;
 		
-		this.accumulatedFeedback = new ArrayList<InputFeedback<? extends PDAWidget>>();
+		this.accumulatedFeedback = new ArrayList<InputFeedback<? extends PdWidget>>();
 		
 		this.mainPanel = new VerticalPanel();
 		this.setWidget(mainPanel);
@@ -166,7 +166,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	
 
 	@Override
-	public void show(InputFeedback<? extends PDAWidget> feedback, int duration) {
+	public void show(InputFeedback<? extends PdWidget> feedback, int duration) {
 		timer.schedule(duration);
 		
 		Log.debug(this, "Showing:" + feedback.toString());
@@ -220,7 +220,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	}
 
 	@Override
-	public void hide(InputFeedback<? extends PDAWidget> feedback, boolean noMore) {
+	public void hide(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
 		if ( null != feedback ) {
 			Log.debug("Stopped showing:" + feedback.toString() + ". More feedback: "+noMore);
 		} else {

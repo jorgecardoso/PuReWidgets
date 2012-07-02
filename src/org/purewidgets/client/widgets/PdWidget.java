@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Composite;
 * @author Jorge C. S. Cardoso
 *
  */
-public class PDAWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
+public class PdWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
 	
 	private static final String REFERENCE_CODES_STORAGE_ID = "referenceCodes";
 	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
@@ -96,7 +96,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param suggestedReferenceCode
 	 *            The suggested reference code
 	 */
-	public PDAWidget() {
+	public PdWidget() {
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
 		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.getClass().getName());
@@ -223,11 +223,11 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 		return this.getOffsetWidth();
 	}
 	
-	protected InputFeedback<? extends PDAWidget> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PDAWidget> feedback = new InputFeedback<PDAWidget>(this, ie);
+	protected InputFeedback<? extends PdWidget> handleInput(WidgetInputEvent ie) {
+		InputFeedback<PdWidget> feedback = new InputFeedback<PdWidget>(this, ie);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
-		ActionEvent<PDAWidget> ae = new ActionEvent<PDAWidget>(ie, this, null);
+		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
 		feedback.setActionEvent(ae);
 		return feedback;
 	}
@@ -241,7 +241,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param feedback The feedback to stop showing. 
 	 */
 	@Override
-	public final void inputFeedbackEnded(InputFeedback<? extends PDAWidget> feedback, boolean noMore) {
+	public final void inputFeedbackEnded(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
 		
 	}
 	
@@ -251,7 +251,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 	 * @param feedback The feedback to process.
 	 */
 	@Override
-	public final void inputFeedbackStarted(InputFeedback<? extends PDAWidget> feedback) {
+	public final void inputFeedbackStarted(InputFeedback<? extends PdWidget> feedback) {
 		Log.debugFinest(this, "Input feedback started: " + feedback.toString());
 		
 		/*
@@ -301,7 +301,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 				/*
 				 * Ask the widget to validate the input and generate an appropriate feedback
 				 */
-				InputFeedback<? extends PDAWidget> feedback = handleInput(ie);
+				InputFeedback<? extends PdWidget> feedback = handleInput(ie);
 				this.fireActionEvent( feedback.getActionEvent() );
 				
 				
@@ -310,7 +310,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 			 */
 			} else {
 				
-				InputFeedback<? extends PDAWidget> feedback = new InputFeedback<PDAWidget>(this, ie);
+				InputFeedback<? extends PdWidget> feedback = new InputFeedback<PdWidget>(this, ie);
 				if( this.isInputEnabled() ) {
 					
 					/*
@@ -501,9 +501,9 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		if (enabled) {
-			this.removeStyleDependentName(PDAWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET);// .setStyleName(this.getStyleName());
+			this.removeStyleDependentName(PdWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET);// .setStyleName(this.getStyleName());
 		} else {
-			this.getWidget().addStyleDependentName(PDAWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); //.setStyleName(					this.getStyleName() + this.DISABLED_STYLENAME_SUFFIX);
+			this.getWidget().addStyleDependentName(PdWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); //.setStyleName(					this.getStyleName() + this.DISABLED_STYLENAME_SUFFIX);
 		}
 	}
 	
@@ -574,7 +574,7 @@ public class PDAWidget extends Composite implements  WidgetInputListener, Refere
 	 *            The ActionEvent to fire. If null, a default ActionEvent will
 	 *            be created and sent.
 	 */
-	protected void fireActionEvent(ActionEvent<? extends PDAWidget> ae) {
+	protected void fireActionEvent(ActionEvent<? extends PdWidget> ae) {
 		if ( null == ae ) {
 			return;
 		}

@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PdTagCloud extends PDAWidget implements ActionListener {
+public class PdTagCloud extends PdWidget implements ActionListener {
 	
 	
 	

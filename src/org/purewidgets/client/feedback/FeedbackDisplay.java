@@ -1,6 +1,6 @@
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.PDAWidget;
+import org.purewidgets.client.widgets.PdWidget;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -17,7 +17,7 @@ public interface FeedbackDisplay  {
 
 	public Widget getFeedbackDisplayWidget();
 	
-	public PDAWidget getWidget();
+	public PdWidget getWidget();
 	
 	public void hide();
 	
@@ -27,7 +27,7 @@ public interface FeedbackDisplay  {
 	 * @param feedback
 	 * @param noMore Indicates if there is more feedback waiting to be displayed.
 	 */
-	public void hide(InputFeedback<? extends PDAWidget> feedback, boolean noMore);
+	public void hide(InputFeedback<? extends PdWidget> feedback, boolean noMore);
 	public void setAlignDisplacementX(int alignDisplacementX);
 	
 	public void setAlignDisplacementY(int alignDisplacementY);
@@ -65,6 +65,6 @@ public interface FeedbackDisplay  {
 	 * 
 	 * @param feedback
 	 */
-	public void show(InputFeedback<? extends PDAWidget> feedback, int duration);
+	public void show(InputFeedback<? extends PdWidget> feedback, int duration);
 
 }

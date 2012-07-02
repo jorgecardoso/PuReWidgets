@@ -6,7 +6,7 @@ package org.purewidgets.client.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.purewidgets.client.widgets.PDAWidget;
+import org.purewidgets.client.widgets.PdWidget;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.animation.client.Animation;
@@ -143,7 +143,7 @@ public class FeedbackSequencer {
 	/**
 	 * The current input feedback being processed
 	 */
-	private InputFeedback<? extends PDAWidget> current = null;
+	private InputFeedback<? extends PdWidget> current = null;
 	
 	/**
 	 * The display panel for the input feedback.
@@ -169,7 +169,7 @@ public class FeedbackSequencer {
 	/**
 	 * The list of input feedback to display.
 	 */
-	private List<InputFeedback<? extends PDAWidget>> input;
+	private List<InputFeedback<? extends PdWidget>> input;
 	
 	
 	/**
@@ -195,7 +195,7 @@ public class FeedbackSequencer {
 		this.feedbackFinalDelay = feedbackFinalDelay;
 		this.state = STATE.STOPPED;
 		
-		input = new ArrayList<InputFeedback<? extends PDAWidget>>();
+		input = new ArrayList<InputFeedback<? extends PdWidget>>();
 		timer = new Timer() {
 			@Override
 			public void run() {
@@ -239,7 +239,7 @@ public class FeedbackSequencer {
 	 * 
 	 * @param feedback The InputFeedback to sequence.
 	 */
-	public void add(InputFeedback<? extends PDAWidget> feedback) {
+	public void add(InputFeedback<? extends PdWidget> feedback) {
 		
 		Log.debug(this,  "Added input feedback to list: " + feedback.toString());
 		

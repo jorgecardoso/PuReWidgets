@@ -1,6 +1,6 @@
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.PDAWidget;
+import org.purewidgets.client.widgets.PdWidget;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 
@@ -13,7 +13,7 @@ import org.purewidgets.shared.events.WidgetInputEvent;
  * @author Jorge C. S. Cardoso
  *
  */
-public class InputFeedback<T extends PDAWidget> {
+public class InputFeedback<T extends PdWidget> {
 	public enum Type {ACCEPTED, NOT_ACCEPTED};
 	
 	/**
