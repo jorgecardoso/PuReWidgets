@@ -49,7 +49,7 @@ import com.google.gwt.user.client.Timer;
  * 
  * @author Jorge C. S. Cardoso
  */
-public class PdTextBox extends PDWidget implements KeyPressHandler, FocusHandler {
+public class PdTextBox extends PDAWidget implements KeyPressHandler, FocusHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %P[0]%";
 	
 	/**

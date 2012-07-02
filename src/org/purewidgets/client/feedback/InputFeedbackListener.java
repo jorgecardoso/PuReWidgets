@@ -3,7 +3,7 @@
  */
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.PDWidget;
+import org.purewidgets.client.widgets.PDAWidget;
 
 /**
  * @author Jorge C. S. Cardoso
@@ -16,7 +16,7 @@ public interface InputFeedbackListener {
 	 * 
 	 * @param feedback The feedback to process.
 	 */
-	public void inputFeedbackStarted(InputFeedback<? extends PDWidget> feedback);
+	public void inputFeedbackStarted(InputFeedback<? extends PDAWidget> feedback);
 	
 	
 	/**
@@ -26,7 +26,7 @@ public interface InputFeedbackListener {
 	 * 
 	 * @param feedback The feedback to stop showing. 
 	 */
-	public void inputFeedbackEnded(InputFeedback<? extends PDWidget> feedback, boolean noMore);
+	public void inputFeedbackEnded(InputFeedback<? extends PDAWidget> feedback, boolean noMore);
 
 
 	/**

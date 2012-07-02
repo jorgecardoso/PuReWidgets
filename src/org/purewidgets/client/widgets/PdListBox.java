@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PdListBox extends PDWidget implements ClickHandler {
+public class PdListBox extends PDAWidget implements ClickHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %WOS%";
 	
 	/**

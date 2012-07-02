@@ -3,7 +3,7 @@
  */
 package org.purewidgets.client.feedback;
 
-import org.purewidgets.client.widgets.PDWidget;
+import org.purewidgets.client.widgets.PDAWidget;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -21,7 +21,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	/**
 	 * The widget that wishes to provide input feedback;
 	 */
-	protected PDWidget widget;
+	protected PDAWidget widget;
 	
 
 	/**
@@ -40,7 +40,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	protected int alignDisplacementX;
 	protected int alignDisplacementY;
 	
-	public AbstractInputFeedbackPanel(PDWidget widget) {
+	public AbstractInputFeedbackPanel(PDAWidget widget) {
 		this.panelReferencePoint = Align.BOTTOM;
 		this.widgetReferencePoint = Align.TOP;
 
@@ -190,7 +190,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 		this.alignDisplacementY = alignDisplacementY;
 	}
 	
-	public PDWidget getWidget() {
+	public PDAWidget getWidget() {
 		return this.widget;
 	}
 	

@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.*;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PdButton extends PDWidget {
+public class PdButton extends PDAWidget {
 
 	/**
 	 * The suffix for the caption of the textbox.
