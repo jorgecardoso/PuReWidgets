@@ -69,7 +69,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	/**
 	 * The pattern to apply to generate the input feedback message.
 	 */
-	protected String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
+	private String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 
 	/**
 	 * The visual state of the widget.
@@ -229,6 +229,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		
 		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
 		feedback.setActionEvent(ae);
+		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		return feedback;
 	}
 	

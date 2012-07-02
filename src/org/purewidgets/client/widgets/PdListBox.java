@@ -104,7 +104,7 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
+		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
 		
 		this.widgetList = new org.purewidgets.shared.widgets.ListBox(widgetId, title, options);
 		this.setWidget(this.widgetList);

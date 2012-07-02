@@ -125,7 +125,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
+		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
 		
 		
 		this.widgetTextBox = widgetTextBox;

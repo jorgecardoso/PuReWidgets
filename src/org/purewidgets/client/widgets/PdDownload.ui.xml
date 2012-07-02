@@ -12,10 +12,12 @@
 		width: 300px;
 
 		padding: 2px 5px 5px 2px;
+
+		/*
 		border-left: 5px solid black;
 		border-right: 5px solid black;
-		border-bottom: 5px solid black;
-
+		border-bottom: 5px solid black; 
+		*/
 	}
 
 	.pw-download-disabled {
@@ -40,8 +42,8 @@
 	
 	<g:HTMLPanel ui:field="uiVerticalPanelMain" styleName="{style.pw-download}" > 
 	       <g:Image styleName="{style.pw-download-icon}" url="purewidgetsicons/download-icon.jpg"></g:Image>
-	        	<g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-download-caption}"/> 
-				<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-download-referencecode}"/>
+	        <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-download-caption}"/> 
+			<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-download-referencecode}"/>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 
