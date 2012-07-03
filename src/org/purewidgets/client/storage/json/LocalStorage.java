@@ -30,4 +30,8 @@ public class LocalStorage extends JavaScriptObject {
 		localStorage.setItem(item, value);
 	}-*/;
 	
+	public static native void removeItem(String item) /*-{
+	localStorage.removeItem(item, value);
+}-*/;
+	
 }

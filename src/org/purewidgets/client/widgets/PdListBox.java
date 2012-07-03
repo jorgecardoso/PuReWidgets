@@ -99,7 +99,7 @@ public class PdListBox extends PdWidget implements ClickHandler {
 	 * @param internalOptionIDs
 	 */
 	public PdListBox(String widgetId, String title, ArrayList<String> options) {
-		super();
+		super(widgetId);
 		
 		/*
 		 * Set the default user feedback pattern

@@ -84,6 +84,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	
 	
 	private LocalStorage localStorage;
+	private String widgetId;
 	
 	/**
 	 * Subclasses that implement widgets with several options should not call
@@ -96,10 +97,11 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 * @param suggestedReferenceCode
 	 *            The suggested reference code
 	 */
-	public PdWidget() {
+	public PdWidget(String widgetId) {
+		this.widgetId = widgetId;
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
-		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.getClass().getName());
+		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.widgetId);
 	}
 
 	public boolean isDisplaying() {
@@ -380,6 +382,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
 		WidgetManager.get().removeWidget(this.widget);
 		
+		this.localStorage.removeItem(REFERENCE_CODES_STORAGE_ID);
 		
 		for (Widget w : this.widget.getDependentWidget() ) {
 			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);

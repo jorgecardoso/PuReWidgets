@@ -9,6 +9,7 @@ public class PdCheckin extends PdWidget{
 	private Checkin checkin;
 	
 	public PdCheckin() {
+		super("checkin");
 		checkin = new Checkin();
 		this.setWidget(checkin);
 		

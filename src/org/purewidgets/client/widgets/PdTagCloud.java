@@ -102,6 +102,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	 * @param allowUserInput
 	 */
 	public PdTagCloud( String widgetId, String tags[], int frequency[], boolean allowUserInput ) {
+		super(widgetId);
 		this.order = ORDER.ALPHA;
 		this.allowUserInput = allowUserInput;
 		
@@ -119,7 +120,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 			/*
 			 * The GuiTextBox that allows users to input tags
 			 */
-			guiTextBox = new PdTextBox( this.tagCloud.getTextBox(), null );
+			guiTextBox = new PdTextBox(widgetId+"textbox", this.tagCloud.getTextBox().getShortDescription(), null );
 			guiTextBox.setLongDescription("Enter a word to contribute to the video tag cloud");
 			textBoxPanel = new SimplePanel();
 			textBoxPanel.add(guiTextBox);

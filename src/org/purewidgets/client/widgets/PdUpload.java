@@ -74,16 +74,14 @@ public class PdUpload extends PdWidget  {
 	
 	private org.purewidgets.shared.widgets.Upload widgetUpload;
 	
-	public PdUpload(String caption) {
-		this((String)null, caption);
-	}
+
 	
 	public PdUpload(String widgetID, String caption) {
 		this(widgetID, caption, null);
 	}
 		
 	public PdUpload(String widgetId, String caption, String suggestedReference) {
-		super();
+		super(widgetId);
 		
 		this.widgetUpload = new org.purewidgets.shared.widgets.Upload(widgetId, caption);
 		

@@ -107,28 +107,19 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	 */
 	private String text = "";
 	
-	public PdTextBox(String caption) {
-		this((String)null, caption);
-	}
-	
-	public PdTextBox(String widgetID, String caption) {
-		this(widgetID, caption, null);
-	}
+
 		
 	public PdTextBox(String widgetId, String caption, String suggestedReference) {
-		this(new org.purewidgets.shared.widgets.TextBox(widgetId, caption), suggestedReference);
 		
-	}
-	public PdTextBox(TextBox widgetTextBox, String suggestedReference) {
-		super();
+		super(widgetId);
 		
 		/*
 		 * Set the default user feedback pattern
 		 */
 		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
 		
+		this.widgetTextBox = new org.purewidgets.shared.widgets.TextBox(widgetId, caption);
 		
-		this.widgetTextBox = widgetTextBox;
 		this.setWidget(widgetTextBox);
 		//this.sendToServer();
 		

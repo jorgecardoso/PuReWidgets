@@ -66,6 +66,7 @@ public class PdDownload extends PdWidget {
 	}
 
 	public PdDownload(String widgetId, String caption, String url, String suggestedRef) {
+		super(widgetId);
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		widgetDownloadButton = new org.purewidgets.shared.widgets.Download(widgetId, caption, url);

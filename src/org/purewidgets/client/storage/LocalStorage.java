@@ -55,6 +55,10 @@ public void setString(String item, String value) {
 	org.purewidgets.client.storage.json.LocalStorage.setString(this.storageId+"-"+item, value);
 }
 	
+	public void removeItem(String item) {
+		org.purewidgets.client.storage.json.LocalStorage.removeItem(this.storageId+"-"+item);
+	}
+	
 	/**
 	 * Decodes a string encoded in a list of length:string format.
 	 *

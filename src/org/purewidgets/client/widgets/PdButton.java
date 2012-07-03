@@ -70,7 +70,7 @@ public class PdButton extends PdWidget {
 	}
 
 	public PdButton(String widgetId, String caption, String suggestedRef) {
-		super();
+		super(widgetId);
 
 		widgetButton = new org.purewidgets.shared.widgets.Button(widgetId, caption);
 
