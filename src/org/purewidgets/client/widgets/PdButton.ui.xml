@@ -1,0 +1,44 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
+	
+	<ui:style>
+	@external pw-button, pw-button-caption, pw-button-referencecode;
+
+	.pw-button{
+		padding: 5px;
+		font-family: Verdana, Geneva, sans-serif;
+		font-size: 2em;
+		width: 300px;
+		height: 50px;
+
+		border: 1px solid white;
+		border-radius: 15px;
+		
+		display: table-cell;
+		vertical-align: middle;
+
+
+		background:url(purewidgetsicons/button-background.gif);
+		background-size:100% 100%;
+		background-repeat:no-repeat;
+	}
+
+	.pw-button-caption {
+		
+	}
+
+	.pw-button-referencecode {
+
+		margin-left: 5px;
+	}	
+	
+	</ui:style>
+	
+	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pw-button}" > 
+	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-button-caption}"/> 
+		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-button-referencecode}"/>
+	</p:ClickableHTMLPanel>
+	
+</ui:UiBinder> 

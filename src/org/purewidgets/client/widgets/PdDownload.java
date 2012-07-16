@@ -12,8 +12,6 @@ import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,22 +22,20 @@ import com.google.gwt.user.client.ui.*;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-GuiButton</dt>
- * <dd>the &lt;button&gt; element</dd>
- * <dt>.instantplaces-GuiButton-disabled</dt>
- * <dd>the disabled &lt;button&gt; element</dd>
- * <dt>.instantplaces-GuiButton .caption</dt>
- * <dd>the caption of the button</dd>
- * <dt>.instantplaces-GuiButton .referencecode</dt>
- * <dd>the reference code element</dd>
- * <dt>.instantplaces-GuiButton-disabled .caption</dt>
- * <dd>the disabled caption element</dd>
- * <dt>.instantplaces-GuiButton-disabled .referencecode</dt>
- * <dd>the disabled reference code element</dd>
- * </dl>
+ * <dt>.pw-upload</dt>
+ * <dd>the outer element. </dd>
  * 
- * The component elements (.caption and .referencecode) also keep the GWT style
- * name (gwt-Html).
+ * <dt>.pw-upload-icon</dt>
+ * <dd>the icon</dd>
+ *
+ * <dt>.pw-upload-caption</dt>
+ * <dd>the label with application defined caption</dd>
+ * 
+ * <dt>.pw-upload-referencecode</dt>
+ * <dd>the label with the reference code</dd>
+ *
+ * </dl> 
+ * 
  * 
  * @author Jorge C. S. Cardoso
  * 
@@ -89,7 +85,7 @@ public class PdDownload extends PdWidget {
 		this.onReferenceCodesUpdated();
 	}
 
-	
+	@UiHandler("uiVerticalPanelMain")
 	void handleClick(ClickEvent event) {
 		// Simulate an input event
 		WidgetInputEvent e = new WidgetInputEvent(PdDownload.this.getWidgetOptions().get(0), null);

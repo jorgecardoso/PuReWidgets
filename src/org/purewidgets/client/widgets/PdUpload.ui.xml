@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style>
-	@external pw-upload, pw-upload-disabled, pw-upload-caption, pw-upload-referencecode, pw-upload-icon;
+	@external pw-upload, pw-upload-caption, pw-upload-referencecode, pw-upload-icon;
 
 	.pw-upload{
 		font-family: Verdana, Geneva, sans-serif;
@@ -18,11 +18,6 @@
 		*/
 	}
 
-	.pw-upload-disabled {
-		/*background: url("purewidgetsicons/hborder.png") repeat-x 0px -27px;*/
-		color: graytext;
-	}
-
 	.pw-upload-caption {
 
 	}
@@ -35,13 +30,12 @@
 		width: 50px;
 		height: 90%;
 	}
-
 	</ui:style>
 	
 	<g:HTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pw-upload}" > 
-	       <g:Image styleName="{style.pw-upload-icon}" url="purewidgetsicons/upload-icon.jpg"></g:Image>
-	        	<g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-upload-caption}"/> 
-				<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-upload-referencecode}"/>
+		<g:Image url="purewidgetsicons/upload-icon.jpg" styleName="{style.pw-upload-icon}"/>
+	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-upload-caption}"/> 
+		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-upload-referencecode}"/>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 

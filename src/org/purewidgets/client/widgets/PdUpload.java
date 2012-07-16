@@ -4,28 +4,17 @@
 package org.purewidgets.client.widgets;
 
 
-import java.util.ArrayList;
-
 import org.purewidgets.client.feedback.InputFeedback;
-import org.purewidgets.client.widgets.PdDownload.PdDownloadUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
-import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgets.Upload;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.Timer;
 
 
 /**
@@ -34,28 +23,24 @@ import com.google.gwt.user.client.Timer;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-GuiTextBox[-disabled]</dt>
- * <dd>the outer element. [-disabled] is applied when the textbox is disabled</dd>
+ * <dt>.pw-upload</dt>
+ * <dd>the outer element. </dd>
  * 
- * <dt>.instantplaces-GuiTextBox[-disabled] .textbox</dt>
- * <dd>the textbox</dd>
+ * <dt>.pw-upload-icon</dt>
+ * <dd>the icon</dd>
  *
- * <dt>.instantplaces-GuiTextBox[-disabled] .captioncontainer</dt>
- * <dd>the container for the caption and reference code</dd>
+ * <dt>.pw-upload-caption</dt>
+ * <dd>the label with application defined caption</dd>
  * 
- * <dt>.instantplaces-guiTextBox[-disabled] .captioncontainer .caption</dt>
- * <dd>the label with the caption</dd>
- *
- * <dt>.instantplaces-guiTextBox[-disabled] .captioncontainer .referencecode</dt>
+ * <dt>.pw-upload-referencecode</dt>
  * <dd>the label with the reference code</dd>
- * 
- * <dt>.instantplaces-GuiTextBox[-disabled] caret</dt>
- * <dd>the label with the blinking caret</dd>
+ *
  * </dl> 
  * 
  * @author Jorge C. S. Cardoso
  */
 public class PdUpload extends PdWidget  {
+	
 	@UiTemplate("PdUpload.ui.xml")
 	interface PdUploadUiBinder extends UiBinder<Widget, PdUpload> {	}
 	private static PdUploadUiBinder uiBinder = GWT.create(PdUploadUiBinder.class);
@@ -73,8 +58,6 @@ public class PdUpload extends PdWidget  {
 	Label uiHTMLReferenceCode;
 	
 	private org.purewidgets.shared.widgets.Upload widgetUpload;
-	
-
 	
 	public PdUpload(String widgetID, String caption) {
 		this(widgetID, caption, null);
@@ -97,8 +80,6 @@ public class PdUpload extends PdWidget  {
 		this.uiHTMLCaption.setText(caption);
 		this.setWidget(widgetUpload);
 		//this.sendToServer();
-		
-	
 		
 		this.sendToServer();
 		this.onReferenceCodesUpdated();
@@ -126,7 +107,6 @@ public class PdUpload extends PdWidget  {
 			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 			feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 		}
-		
 		
 		return feedback;
 	}		
