@@ -26,14 +26,14 @@ import com.google.gwt.user.client.ui.*;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.pw-button</dt>
+ * <dt>.pwButton</dt>
  * <dd>the outer element. </dd>
  * 
  *
- * <dt>.pw-button-caption</dt>
+ * <dt>.pwButtonCaption</dt>
  * <dd>the label with application defined caption</dd>
  * 
- * <dt>.pw-button-referencecode</dt>
+ * <dt>.pwButtonReferencecode</dt>
  * <dd>the label with the reference code</dd>
  *
  * </dl> 

@@ -4,9 +4,9 @@
 	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
 	
 	<ui:style>
-	@external pw-button, pw-button-caption, pw-button-referencecode;
+	@external pwButton, pwButtonCaption, pwButtonReferencecode;
 
-	.pw-button{
+	.pwButton{
 		padding: 5px;
 		font-family: Verdana, Geneva, sans-serif;
 		font-size: 2em;
@@ -25,20 +25,20 @@
 		background-repeat:no-repeat;
 	}
 
-	.pw-button-caption {
+	.pwButtonCaption {
 		
 	}
 
-	.pw-button-referencecode {
+	.pwButtonReferencecode {
 
 		margin-left: 5px;
 	}	
 	
 	</ui:style>
 	
-	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pw-button}" > 
-	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-button-caption}"/> 
-		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-button-referencecode}"/>
+	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwButton}" > 
+	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pwButtonCaption}"/> 
+		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pwButtonReferencecode}"/>
 	</p:ClickableHTMLPanel>
 	
 </ui:UiBinder> 
