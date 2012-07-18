@@ -1,0 +1,49 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
+	
+	<ui:style type='org.purewidgets.client.widgets.PdListBox.Style'>
+
+	@external pwListbox, pwListboxItem, pwListboxItemLabel, pwListboxItemReferencecode, pwListboxTitle;
+
+.pwListbox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	margin: 0;
+	
+	border: 1px outset #ccc;
+}
+
+.pwListboxItem {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.pwListboxTitle {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+.pwListboxItemLabel {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	float:left;
+}
+
+.pwListboxItemReferencecode {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: x-large;
+	float: right;
+}
+	
+	</ui:style>
+	
+	<g:VerticalPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwListbox}" > 
+	    
+	</g:VerticalPanel>
+	
+</ui:UiBinder> 

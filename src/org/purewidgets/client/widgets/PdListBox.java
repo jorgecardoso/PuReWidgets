@@ -11,11 +11,17 @@ import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that presents a list of choices to the user. The ListBox may allow
@@ -23,19 +29,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-GuiListBox</dt>
- * <dd>the outer element</dd>
- * <dt>.instantplaces-GuiListBox-disabled</dt>
- * <dd>the outer element, when disabled</dd> 
- * <dt>.instantplaces-GuiListBox .item</dt>
- * <dd>the item outer element</dd>
- * <dt>.instantplaces-ListBox .item .title</dt>
- * <dd>the title element</dd>
- * <dt>.instantplaces-ListBox .item .label</dt>
- * <dd>the label of the option</dd>
- * <dt>.instantplaces-ListBox .item .referencecode</dt>
- * <dd>the reference code of the option</dd>
- * </dl>
+ * <dt>.pwListbox</dt>
+ * <dd>the outer element. </dd>
+ * 
+ * <dt>.pwListboxTitle</dt>
+ * <dd>the title of the listbox</dd>
+ * 
+ * <dt>.pwListboxItem</dt>
+ * <dd>An item of the listbox</dd>
+ *
+ * <dt>.pwListboxItemLabel</dt>
+ * <dd>The label of the item of the listbox</dd>
+ * 
+ * <dt>.pwListboxItemReferencecode</dt>
+ * <dd>The reference of the item of the listbox</dd> 
+ * </dl> 
  * 
  * @author Jorge C. S. Cardoso
  * 
@@ -43,38 +51,32 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class PdListBox extends PdWidget implements ClickHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %WOS%";
 	
-	/**
-	 * The default style name for the ListBox.
-	 */
-	public final String DEFAULT_STYLENAME = "instantplaces-GuiListBox";
-
-	/**
-	 * The suffix for the item of the listbox.
-	 */
-	public static final String ITEM_STYLENAME_SUFFIX = "item";
-
-	/**
-	 * The suffix for the item of the listbox.
-	 */
-	public static final String TITLE_STYLENAME_SUFFIX = "title";
-
-
-	/**
-	 * The suffix for the label associated with the listbox item.
-	 */
-	public static final String ITEMLABEL_STYLENAME_SUFFIX = "label";
-
-	/**
-	 * The suffix for the reference code associated with the listbox item.
-	 */
-	public static final String ITEMREFERENCECODE_STYLENAME_SUFFIX = "referencecode";
-
+	interface Style extends CssResource {
+		
+	    String pwListbox();
 	
+	    String pwListboxItem();
+		
+        String pwListboxItemLabel();
+
+	    String pwListboxItemReferencecode();
+		
+	    String pwListboxTitle();		
+	  }
+	
+	
+	@UiTemplate("PdListbox.ui.xml")
+	interface PdListboxUiBinder extends UiBinder<Widget, PdListBox> {	}
+	private static PdListboxUiBinder uiBinder = GWT.create(PdListboxUiBinder.class);
+
+
+	@UiField Style style;
 
 	/**
 	 * The main panel for the widget.
 	 */
-	private VerticalPanel mainVerticalPanel;
+	@UiField
+	VerticalPanel uiVerticalPanelMain;
 	
 	/**
 	 * The Label with the list title
@@ -100,6 +102,7 @@ public class PdListBox extends PdWidget implements ClickHandler {
 	 */
 	public PdListBox(String widgetId, String title, ArrayList<String> options) {
 		super(widgetId);
+		initWidget(uiBinder.createAndBindUi(this));
 		
 		/*
 		 * Set the default user feedback pattern
@@ -115,34 +118,31 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		 * 
 		 */
 		
-		this.mainVerticalPanel = new VerticalPanel();
-		this.mainVerticalPanel.setStyleName(DEFAULT_STYLENAME);
-		
 		this.titleLabel = new Label(title);
-		this.titleLabel.addStyleName(ITEM_STYLENAME_SUFFIX);
-		this.titleLabel.addStyleName(TITLE_STYLENAME_SUFFIX);
-		this.mainVerticalPanel.add(titleLabel);
+		this.titleLabel.addStyleName(style.pwListboxItem());
+		this.titleLabel.addStyleName(style.pwListboxTitle());
+		this.uiVerticalPanelMain.add(titleLabel);
 		
 		
 		this.optionsHorizontalPanel = new ArrayList<HorizontalPanel>();
 		for ( String option : this.widgetList.getListOptions() ) {
 			HorizontalPanel hPanel = new HorizontalPanel();
-			hPanel.addStyleName(ITEM_STYLENAME_SUFFIX);
+			hPanel.addStyleName(style.pwListboxItem());
 			
 			this.optionsHorizontalPanel.add(hPanel);
 			
 			Label optionText = new Label(option);
-			optionText.addStyleName(ITEMLABEL_STYLENAME_SUFFIX);
+			optionText.addStyleName(style.pwListboxItemLabel());
 			hPanel.add(optionText);
 			
 			Label optionReferenceCode = new Label();
-			optionReferenceCode.addStyleName(ITEMREFERENCECODE_STYLENAME_SUFFIX);
+			optionReferenceCode.addStyleName(style.pwListboxItemReferencecode());
 			hPanel.add(optionReferenceCode);
 			
-			this.mainVerticalPanel.add(hPanel);
+			this.uiVerticalPanelMain.add(hPanel);
 		}
 		
-		this.initWidget(this.mainVerticalPanel);
+	
 		this.sendToServer();
 		this.onReferenceCodesUpdated();
 	}
