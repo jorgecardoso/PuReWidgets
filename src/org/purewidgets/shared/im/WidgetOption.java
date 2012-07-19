@@ -44,6 +44,7 @@ public class WidgetOption  {
 
 	private String shortDescription;
 	
+	private String iconUrl;
 	
 	public WidgetOption() {
 		
@@ -164,6 +165,20 @@ public class WidgetOption  {
 	 */
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
+	}
+
+	/**
+	 * @return the iconUrl
+	 */
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	/**
+	 * @param iconUrl the iconUrl to set
+	 */
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
 	}
 
 }

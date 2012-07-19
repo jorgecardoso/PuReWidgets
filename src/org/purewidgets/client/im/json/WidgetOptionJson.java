@@ -57,9 +57,19 @@ this.shortDescription = description;
 }-*/;
 
 
+public final native String getIconUrl() /*-{
+return this.iconUrl;
+}-*/;
+
+public final native void setIconUrl(String url) /*-{
+this.iconUrl = url;
+}-*/;
+
+
 public final native String getShortDescription() /*-{
 return this.shortDescription;
 }-*/;
+
 
 	public static WidgetOptionJson create(WidgetOption widgetOption) {
 		WidgetOptionJson optionJSON = GenericJson.getNew();
@@ -70,7 +80,7 @@ return this.shortDescription;
 		optionJSON.setReferenceCode(widgetOption.getReferenceCode());
 		optionJSON.setLongDescription(widgetOption.getLongDescription());
 		optionJSON.setShortDescription(widgetOption.getShortDescription());
-		
+		optionJSON.setIconUrl(widgetOption.getIconUrl());
 		return optionJSON;
 	}
 	
@@ -80,7 +90,7 @@ return this.shortDescription;
 		option.setReferenceCode(this.getReferenceCode());
 		option.setLongDescription(this.getLongDescription());
 		option.setShortDescription(this.getShortDescription());
-		
+		option.setIconUrl(this.getIconUrl());
 		return option;
 	}
 

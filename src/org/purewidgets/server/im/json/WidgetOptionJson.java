@@ -28,6 +28,8 @@ public class WidgetOptionJson extends GenericJson {
 	
 	private String shortDescription;
 	
+	private String iconUrl;
+	
 	private WidgetOptionJson() {
 	}
 
@@ -40,6 +42,7 @@ public class WidgetOptionJson extends GenericJson {
 		widgetOptionJson.setReferenceCode(widgetOption.getReferenceCode());
 		widgetOptionJson.setLongDescription(widgetOption.getLongDescription());
 		widgetOptionJson.setShortDescription(widgetOption.getShortDescription());
+		widgetOptionJson.setIconUrl(widgetOption.getIconUrl());
 		
 		return widgetOptionJson;
 	}
@@ -52,7 +55,7 @@ public class WidgetOptionJson extends GenericJson {
 		widgetOption.setReferenceCode(this.referenceCode);
 		widgetOption.setLongDescription(this.longDescription);
 		widgetOption.setShortDescription(this.shortDescription);
-		
+		widgetOption.setIconUrl(this.iconUrl);
 		return widgetOption;
 	}
 
@@ -89,6 +92,22 @@ public class WidgetOptionJson extends GenericJson {
 	 */
 	private void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
+	}
+
+
+	/**
+	 * @return the iconUrl
+	 */
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+
+	/**
+	 * @param iconUrl the iconUrl to set
+	 */
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
 	}
 	
 }
