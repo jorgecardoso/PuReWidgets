@@ -3,7 +3,7 @@
 
 /************************ CumulativeInputFeedbackPanel */
 
-.purewidgets-CumulativeInputFeedbackPanel {
+.pwCumulativeInputFeedbackPanel {
 	position:absolute;
 	background: rgb(255, 255, 255);
 	background: rgba(255, 255, 255, 0.6);
@@ -13,14 +13,14 @@
 	border-radius: 5px;
 }
 
-.purewidgets-CumulativeInputFeedbackPanel .title {
+.pwCumulativeInputFeedbackPanel .title {
 	font-size: 2.1em;
 	text-align: center;
 	background: rgb(200, 200, 200);
 }
 
 
-.purewidgets-CumulativeInputFeedbackPanel .accepted {
+.pwCumulativeInputFeedbackPanel .accepted {
 	background-image:url('purewidgetsicons/16px-Crystal_Clear_action_apply.png');
 	background-size:32px 32px;
 	background-repeat:no-repeat;
@@ -34,7 +34,7 @@
 	white-space:nowrap;
 }
 
-.purewidgets-CumulativeInputFeedbackPanel .notaccepted {
+.pwCumulativeInputFeedbackPanel .notaccepted {
 	background-image:url('purewidgetsicons/16px-Crystal_Clear_action_editdelete.png');
 	background-size:32px 32px;
 	background-repeat:no-repeat;
@@ -48,15 +48,6 @@
 }
  
 
-
-
-
-/************************ GuiButton */
-
-
-
-
-/************************ GuiListBox */
 
 
 
@@ -87,7 +78,3 @@
 	padding:0px;
 	text-align:center;
 }
-
-
-/************************ GuiTextBox */
-

@@ -26,13 +26,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.purewidgets-CumulativeInputFeedbackPanel</dt>
+ * <dt>.pwCumulativeInputFeedbackPanel</dt>
  * <dd>the outer element</dd>
- * <dt>.purewidgets-SequentialInputFeedbackPanel .title</dt>
+ * <dt>.pwCumulativeInputFeedbackPanel .title</dt>
  * <dd> The Title of the panel (displayed for feedback for not visible widgets)</dd>
- * <dt>.purewidgets-CumulativeInputFeedbackPanel .accepted</dt>
+ * <dt>.pwCumulativeInputFeedbackPanel .accepted</dt>
  * <dd>the accepted input feedback element</dd>
- * <dt>.purewidgets-SequentialInputFeedbackPanel .notaccepted</dt>
+ * <dt>.pwCumulativeInputFeedbackPanel .notaccepted</dt>
  * <dd>the not accepted input feedback element</dd>
  * 
  * @author Jorge C. S. Cardoso
@@ -42,7 +42,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	/**
 	 * The default style name of the outer element of this input feedback panel.
 	 */
-	public final String DEFAULT_STYLENAME = "purewidgets-CumulativeInputFeedbackPanel";
+	public final String DEFAULT_STYLENAME = "pwCumulativeInputFeedbackPanel";
 	
 	
 
