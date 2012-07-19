@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
+	
+	<ui:style>
+	@external pwCheckin;
+
+	.pwCheckin{
+		padding: 5px;
+		font-family: Verdana, Geneva, sans-serif;
+		font-size: 2em;
+		width: 100px;
+		height: 100px;
+
+		background:url(purewidgetsicons/checkin.jpg);
+		background-size:100% 100%;
+		background-repeat:no-repeat;
+	}
+
+	</ui:style>
+	
+	
+	<g:Image   styleName="{style.pwCheckin}"/> 
+
+	
+</ui:UiBinder> 

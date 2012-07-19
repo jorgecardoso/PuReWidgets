@@ -23,16 +23,16 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.pw-upload</dt>
+ * <dt>.pwUpload</dt>
  * <dd>the outer element. </dd>
  * 
- * <dt>.pw-upload-icon</dt>
+ * <dt>.pwUploadIcon</dt>
  * <dd>the icon</dd>
  *
- * <dt>.pw-upload-caption</dt>
+ * <dt>.pwUploadCaption</dt>
  * <dd>the label with application defined caption</dd>
  * 
- * <dt>.pw-upload-referencecode</dt>
+ * <dt>.pwUploadReferencecode</dt>
  * <dd>the label with the reference code</dd>
  *
  * </dl> 

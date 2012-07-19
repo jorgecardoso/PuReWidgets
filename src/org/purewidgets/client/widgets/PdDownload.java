@@ -22,16 +22,16 @@ import com.google.gwt.user.client.ui.*;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.pw-upload</dt>
+ * <dt>.pwDownload</dt>
  * <dd>the outer element. </dd>
  * 
- * <dt>.pw-upload-icon</dt>
+ * <dt>.pwDownloadIcon</dt>
  * <dd>the icon</dd>
  *
- * <dt>.pw-upload-caption</dt>
+ * <dt>.pwDownloadCaption</dt>
  * <dd>the label with application defined caption</dd>
  * 
- * <dt>.pw-upload-referencecode</dt>
+ * <dt>.pwDownloadReferencecode</dt>
  * <dd>the label with the reference code</dd>
  *
  * </dl> 

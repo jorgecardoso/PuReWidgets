@@ -1,0 +1,73 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
+	
+	<ui:style>
+	@external pwTextBox, pwTextBoxTextbox, pwTextBoxCaret, pwTextBoxCaptioncontainer, pwTextBoxCaptioncontainerCaption, pwTextBoxCaptioncontainerReferencecode;
+
+	.pwTextBox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: xx-large;
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 50px;
+}
+
+.pwTextBoxTextbox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+	position: absolute; 
+	right: 0px; 
+	left: 0px; 
+	top: 0px; 
+	bottom: 0px; 
+	margin:0px 0px 0px 0px; 
+	width: inherit;
+	height:inherit;
+}
+
+.pwTextBoxCaret {
+	position:absolute; 
+	left:5px;
+	background-color:transparent;
+	line-height:50px; /* this should be equal to .instantplaces-GuiTextBox height*/
+}
+
+.pwTextBoxCaptioncontainer {
+	position:absolute; 
+	right:5px;
+	text-align:right;
+	background-color:transparent;
+	line-height:50px; /* this should be equal to .instantplaces-GuiTextBox height*/
+}
+	
+.pwTextBoxCaptioncontainerCaption {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+}
+
+.pwTextBoxCaptioncontainerReferencecode {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:xx-large;
+	padding-left: 5px;
+}
+
+	</ui:style>
+	
+	<p:ClickableHTMLPanel ui:field="uiPanelMain"  styleName="{style.pwTextBox}" > 
+	    <g:TextBox ui:field="uiTextbox" styleName="{style.pwTextBoxTextbox}"/>
+	     <g:Label ui:field="uiLabelCaret" styleName="{style.pwTextBoxCaret}"/>
+	     
+	    <g:HorizontalPanel ui:field="uiHorizontalPanelCaptionContainer" styleName="{style.pwTextBoxCaptioncontainer}">
+	        <g:cell>
+	            <g:Label ui:field="uiLabelCaption" styleName="{style.pwTextBoxCaptioncontainerCaption}"/>
+	        </g:cell>
+	        <g:cell>
+	            <g:Label ui:field="uiLabelReferencecode" styleName="{style.pwTextBoxCaptioncontainerReferencecode}"/>
+	        </g:cell>
+	    </g:HorizontalPanel>
+	</p:ClickableHTMLPanel>
+	
+</ui:UiBinder> 

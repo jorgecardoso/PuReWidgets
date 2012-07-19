@@ -3,9 +3,9 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style>
-	@external pw-upload, pw-upload-caption, pw-upload-referencecode, pw-upload-icon;
+	@external pwUpload, pwUploadCaption, pwUploadReferencecode, pwUploadIcon;
 
-	.pw-upload{
+	.pwUpload{
 		font-family: Verdana, Geneva, sans-serif;
 		font-size: 2em;
 		height: 50px;
@@ -18,24 +18,24 @@
 		*/
 	}
 
-	.pw-upload-caption {
+	.pwUploadCaption {
 
 	}
 
-	.pw-upload-referencecode {
+	.pwUploadReferencecode {
 		margin-left: 5px;
 	}	
 	
-	.pw-upload-icon {
+	.pwUploadIcon {
 		width: 50px;
 		height: 90%;
 	}
 	</ui:style>
 	
-	<g:HTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pw-upload}" > 
-		<g:Image url="purewidgetsicons/upload-icon.jpg" styleName="{style.pw-upload-icon}"/>
-	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-upload-caption}"/> 
-		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-upload-referencecode}"/>
+	<g:HTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwUpload}" > 
+		<g:Image url="purewidgetsicons/upload-icon.jpg" styleName="{style.pwUploadIcon}"/>
+	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pwUploadCaption}"/> 
+		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pwUploadReferencecode}"/>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 

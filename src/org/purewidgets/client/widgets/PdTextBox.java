@@ -7,18 +7,25 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
+import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
+import org.purewidgets.client.widgets.PdButton.PdButtonUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.TextBox;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.Timer;
 
 
@@ -28,22 +35,22 @@ import com.google.gwt.user.client.Timer;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-GuiTextBox[-disabled]</dt>
- * <dd>the outer element. [-disabled] is applied when the textbox is disabled</dd>
+ * <dt>.pwTextBox</dt>
+ * <dd>the outer element. </dd>
  * 
- * <dt>.instantplaces-GuiTextBox[-disabled] .textbox</dt>
- * <dd>the textbox</dd>
+ * <dt>.pwTextBoxTextbox</dt>
+ * <dd>the textbox element </dd>
  *
- * <dt>.instantplaces-GuiTextBox[-disabled] .captioncontainer</dt>
+ * <dt>.pwTextBoxCaptioncontainer</dt>
  * <dd>the container for the caption and reference code</dd>
  * 
- * <dt>.instantplaces-guiTextBox[-disabled] .captioncontainer .caption</dt>
+ * <dt>.pwTextBoxCaptioncontainerCaption</dt>
  * <dd>the label with the caption</dd>
  *
- * <dt>.instantplaces-guiTextBox[-disabled] .captioncontainer .referencecode</dt>
+ * <dt>.pwTextBoxCaptioncontainerReferencecode</dt>
  * <dd>the label with the reference code</dd>
  * 
- * <dt>.instantplaces-GuiTextBox[-disabled] caret</dt>
+ * <dt>.pwTextBoxCaret</dt>
  * <dd>the label with the blinking caret</dd>
  * </dl> 
  * 
@@ -52,47 +59,31 @@ import com.google.gwt.user.client.Timer;
 public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %P[0]%";
 	
-	/**
-	 * The default style name for the TextBox widget.
-	 */
-	public static final String DEFAULT_STYLENAME = "instantplaces-GuiTextBox";
-
-	/**
-	 * The suffix for the textbox control.
-	 */
-	public static final String TEXTBOX_STYLENAME_SUFFIX = "textbox";
-
-	/**
-	 * The suffix for the caption of the textbox.
-	 */
-	public static final String CAPTIONCONTAINER_STYLENAME_SUFFIX = "captioncontainer";
 	
-	/**
-	 * The suffix for the caption of the textbox.
-	 */
-	public static final String CAPTIONCONTAINERCAPTION_STYLENAME_SUFFIX = "caption";
+	@UiTemplate("PdTextBox.ui.xml")
+	interface PdTextBoxUiBinder extends UiBinder<Widget, PdTextBox> {	}
+	private static PdTextBoxUiBinder uiBinder = GWT.create(PdTextBoxUiBinder.class);
 	
-	/**
-	 * The suffix for the caption of the textbox.
-	 */
-	public static final String CAPTIONCONTAINERREFERENCECODE_STYLENAME_SUFFIX = "referencecode";
-
-	/**
-	 * The suffix for the caret.
-	 */
-	public static final String CARET_STYLENAME_SUFFIX = "caret";
-	
+	@UiField
+	ClickableHTMLPanel uiPanelMain;
 	
 	/**
 	 * The graphical textbox.
 	 */
-	com.google.gwt.user.client.ui.TextBox textBox;
+	@UiField
+	com.google.gwt.user.client.ui.TextBox uiTextbox;
 	
-	HTMLPanel htmlPanel;
-	Label lblFlashingCaret;
-	private HorizontalPanel captionContainer;
-	private Label lblCaption;
-	private Label lblReferenceCode;
+	@UiField
+	Label uiLabelCaret;
+	
+	@UiField
+	HorizontalPanel uiHorizontalPanelCaptionContainer;
+	
+	@UiField
+	Label uiLabelCaption;
+	
+	@UiField
+	Label uiLabelReferencecode;
 	
 	
 	Timer caretTimer;
@@ -112,6 +103,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	public PdTextBox(String widgetId, String caption, String suggestedReference) {
 		
 		super(widgetId);
+		initWidget(uiBinder.createAndBindUi(this));
 		
 		/*
 		 * Set the default user feedback pattern
@@ -127,42 +119,18 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	    /*
 	     * Gui stuff
 	     */
-		textBox = new com.google.gwt.user.client.ui.TextBox();
 		
-		textBox.addKeyPressHandler(this);
-		textBox.addFocusHandler(this);
+		uiTextbox.addKeyPressHandler(this);
+		uiTextbox.addFocusHandler(this);
 		//textBox.setText(caption);
 		
-		setLblCaption( new Label( this.widgetTextBox.getShortDescription() ) );
+		uiLabelCaption.setText( this.widgetTextBox.getShortDescription() );
 		
 		
 		
-		lblReferenceCode = new Label( ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
+		uiLabelReferencecode.setText( ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
 		
-		lblFlashingCaret = new Label("I");
-		
-		captionContainer = new HorizontalPanel();
-		captionContainer.add(this.getLblCaption());
-		captionContainer.add(this.lblReferenceCode);
-		
-		htmlPanel = new HTMLPanel("<div id='textbox'></div><div id='caret'></div><div id='caption'></div>");
-		
-		
-		htmlPanel.addAndReplaceElement(textBox, "textbox");
-		htmlPanel.addAndReplaceElement(captionContainer, "caption");
-		//htmlPanel.addAndReplaceElement(lblReferenceCode, "referencecode");
-		htmlPanel.addAndReplaceElement(lblFlashingCaret, "caret");
-		
-		//setInputFeedbackDisplay(new InputFeedbackPanel());
-		initWidget(htmlPanel);
-		
-	    // Give the overall composite a style name.
-	    setStyleName(DEFAULT_STYLENAME);
-		this.textBox.addStyleName(PdTextBox.TEXTBOX_STYLENAME_SUFFIX);
-		this.captionContainer.addStyleName(PdTextBox.CAPTIONCONTAINER_STYLENAME_SUFFIX);
-		this.lblFlashingCaret.addStyleName(PdTextBox.CARET_STYLENAME_SUFFIX);
-		this.lblReferenceCode.addStyleName(PdTextBox.CAPTIONCONTAINERREFERENCECODE_STYLENAME_SUFFIX);
-		this.getLblCaption().addStyleName(PdTextBox.CAPTIONCONTAINERCAPTION_STYLENAME_SUFFIX);
+		uiLabelCaret.setText("I");
 		
 		caretTimer = new Timer() {
 
@@ -180,10 +148,10 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	
 	private void flashCaret() {
 		if (isCaretOn) {
-			PdTextBox.this.lblFlashingCaret.setText(caretOff);
+			PdTextBox.this.uiLabelCaret.setText(caretOff);
 			
 		} else {
-			PdTextBox.this.lblFlashingCaret.setText(caretOn);
+			PdTextBox.this.uiLabelCaret.setText(caretOn);
 		}
 		
 	}
@@ -197,13 +165,13 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 			Log.debug(this, "Enter detected");
 			
 			ArrayList<String> params = new ArrayList<String>();
-			params.add(this.textBox.getText());
+			params.add(this.uiTextbox.getText());
 			
 			WidgetInputEvent e = new WidgetInputEvent(this.getWidgetOptions().get(0), params);
-			textBox.setText("");
+			uiTextbox.setText("");
 			
 			// remove the focus so that the internal caret disappears.
-			textBox.setFocus(false);
+			uiTextbox.setFocus(false);
 			
 			ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
 			inputList.add(e);
@@ -215,8 +183,8 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	
 	@Override
 	public void onReferenceCodesUpdated() {
-		if (!(this.lblReferenceCode == null)) {
-			this.lblReferenceCode.setText( ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
+		if (!(this.uiLabelReferencecode  == null)) {
+			this.uiLabelReferencecode.setText( ReferenceCodeFormatter.format( this.getWidgetOptions().get(0).getReferenceCode() ) );
 		}
 		super.onReferenceCodesUpdated();
 	}
@@ -246,7 +214,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	
 	
 	public void setText(String text) {
-		this.textBox.setText(text);
+		this.uiTextbox.setText(text);
 		this.text = text;
 	}
 	
@@ -262,7 +230,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	@Override
 	public void setEnabled(boolean enabled) {
 		Log.debug("" + inputEnabled);
-		textBox.setEnabled(enabled);
+		uiTextbox.setEnabled(enabled);
 		//setCaret(enabled);
 		super.setEnabled(enabled);
 	}
@@ -338,22 +306,6 @@ public void stop(InputFeedback feedback, boolean noMore) {
 	 */
 	public String getText() {
 		return text;
-	}
-
-
-	/**
-	 * @param lblCaption the lblCaption to set
-	 */
-	public void setLblCaption(Label lblCaption) {
-		this.lblCaption = lblCaption;
-	}
-
-
-	/**
-	 * @return the lblCaption
-	 */
-	public Label getLblCaption() {
-		return lblCaption;
 	}
 
 

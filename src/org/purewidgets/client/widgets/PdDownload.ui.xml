@@ -4,9 +4,9 @@
 	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
 	
 	<ui:style>
-	@external pw-download,  pw-download-caption, pw-download-referencecode, pw-download-icon;
+	@external pwDownload,  pwDownloadCaption, pwDownloadReferencecode, pwDownloadIcon;
 
-	.pw-download {
+	.pwDownload {
 		font-family: Verdana, Geneva, sans-serif;
 		font-size: 2em;
 		height: 50px;
@@ -21,25 +21,25 @@
 		*/
 	}
 
-	.pw-download-caption {
+	.pwDownloadCaption {
 
 	}
 
-	.pw-download-referencecode {
+	.pwDownloadReferencecode {
 		margin-left: 5px;
 	}	
 	
-	.pw-download-icon {
+	.pwDownloadIcon {
 		width: 50px;
 		height: 90%;
 	}
 
 	</ui:style>
 	
-	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain" styleName="{style.pw-download}" > 
-		<g:Image  url="purewidgetsicons/download-icon.jpg" styleName="{style.pw-download-icon}"/>
-	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pw-download-caption}"/> 
-		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pw-download-referencecode}"/>
+	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain" styleName="{style.pwDownload}" > 
+		<g:Image  url="purewidgetsicons/download-icon.jpg" styleName="{style.pwDownloadIcon}"/>
+	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pwDownloadCaption}"/> 
+		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pwDownloadReferencecode}"/>
 	</p:ClickableHTMLPanel>
 	
 </ui:UiBinder> 

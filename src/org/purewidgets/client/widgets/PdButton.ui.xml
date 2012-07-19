@@ -19,21 +19,17 @@
 		display: table-cell;
 		vertical-align: middle;
 
-
 		background:url(purewidgetsicons/button-background.gif);
 		background-size:100% 100%;
 		background-repeat:no-repeat;
 	}
 
 	.pwButtonCaption {
-		
 	}
 
 	.pwButtonReferencecode {
-
 		margin-left: 5px;
 	}	
-	
 	</ui:style>
 	
 	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwButton}" > 

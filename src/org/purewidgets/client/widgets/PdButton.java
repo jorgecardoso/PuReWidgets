@@ -7,14 +7,12 @@ import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
-import org.purewidgets.client.widgets.PdDownload.PdDownloadUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
