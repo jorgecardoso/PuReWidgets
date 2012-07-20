@@ -169,7 +169,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	public void show(InputFeedback<? extends PdWidget> feedback, int duration) {
 		timer.schedule(duration);
 		
-		Log.debug(this, "Showing:" + feedback.toString());
+		if ( null != feedback ) {
+			Log.debug(this, "Showing:" + feedback.toString());
+		} else {
+			Log.warn(this, "Null feedback!");
+		}
 		
 		if ( this.newOnTop ) {
 			this.accumulatedFeedback.add(0, feedback);
