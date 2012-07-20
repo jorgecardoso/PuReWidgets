@@ -12,11 +12,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class VideoFeed {
 	
 	private String url;
-	private RequestCompleteHandler handler;
+	private AsyncCallback<VideoFeed> handler;
 	
 	private List <Video>videos;
 	
-	public VideoFeed(String url, RequestCompleteHandler handler) {
+	public VideoFeed(String url, AsyncCallback<VideoFeed> handler) {
 		videos = new ArrayList<Video>();
 		this.url = url;
 		this.handler = handler;
@@ -34,8 +34,12 @@ public class VideoFeed {
 	    		 builder.requestObject(this.url, new AsyncCallback<JsonVideoList>() {
 	        @Override
 			public void onFailure( Throwable exception) {
-	          Log.error(this, "Couldn't retrieve JSON");
-	          Log.error(this, exception.getMessage());
+	        	Log.error(this,"Couldn't retrieve JSON", exception);
+	        	if ( null != handler ) {
+	        		handler.onFailure(exception);
+	        	} else {
+	        		Log.warn(VideoFeed.this, "No callback defined!");
+	        	}
 	        }
 
 	        @Override
@@ -54,7 +58,11 @@ public class VideoFeed {
 						//Image img = new Image(list.getEntry(i).getThumbnailURL());
 						//RootPanel.get().add(img);
 					}
-					handler.onRequestComplete(VideoFeed.this);
+					if ( null != handler ) {
+						handler.onSuccess(VideoFeed.this);
+					} else {
+						Log.warn(VideoFeed.this, "No callback defined!");
+					}
 	       /*   } else {
 	            Log.error (this, "Couldn't retrieve JSON (" + response.getStatusText() + ")" );
 	          }*/

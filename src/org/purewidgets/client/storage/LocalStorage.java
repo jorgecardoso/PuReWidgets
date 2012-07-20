@@ -56,6 +56,7 @@ public void setString(String item, String value) {
 }
 	
 	public void removeItem(String item) {
+		Log.debug(this, "Removing item: " + this.storageId+"-"+item);
 		org.purewidgets.client.storage.json.LocalStorage.removeItem(this.storageId+"-"+item);
 	}
 	
