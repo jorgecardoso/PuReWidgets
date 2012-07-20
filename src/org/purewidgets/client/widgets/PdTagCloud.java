@@ -14,6 +14,7 @@ import org.purewidgets.shared.widgets.TagCloud;
 import org.purewidgets.shared.widgets.TagCloud.Tag;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -82,8 +83,9 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	
 	private int currentFontSize;
 	
+	@UiConstructor
 	public PdTagCloud( String widgetId ) {
-		this(widgetId, null, null, true);
+		this(widgetId, null, null, false);
 	}
 	
 	public PdTagCloud( String widgetId, boolean allowUserInput ) {

@@ -18,16 +18,22 @@ FINE
 FINER
 FINEST (lowest value)
 	 */
+	static Logger logger;
 	
+	static {
+		logger = Logger.getLogger("PuReWidgets");
+	}
 	/**
 	 * Returns a "PuReWidgets" logger.
 	 * @return
 	 */
 	public static Logger get() {
-		return Logger.getLogger("PuReWidgets");
+		return logger;
 	}
 	
-	
+	public static void setLevel(Level level) {
+		Log.get().setLevel(level);
+	}
 	/* 
 	 * SEVERE 
 	 */

@@ -16,7 +16,17 @@
   <inherits name="com.google.gwt.resources.Resources" />
   <inherits name='com.google.gwt.appengine.channel.Channel'/>
 
- 
+ <set-property name="gwt.logging.enabled" value="TRUE" />
+	<set-property name="gwt.logging.logLevel" value="WARNING" />
+	
+	<set-property name="gwt.logging.consoleHandler" value="ENABLED" />
+	<set-property name="gwt.logging.developmentModeHandler"
+		value="DISABLED" />
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
+	<set-property name="gwt.logging.systemHandler" value="DISABLED" />
+	<set-property name="gwt.logging.firebugHandler" value="DISABLED" />
+	<set-property name="gwt.logging.simpleRemoteHandler"
+		value="DISABLED" />
    
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/> 
