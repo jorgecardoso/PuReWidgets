@@ -106,23 +106,29 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 
 	public boolean isDisplaying() {
 		com.google.gwt.user.client.ui.Widget current = this;
-		/*
-		 * If the widget is not on the DOM than it is not visible.
-		 */
-		if ( !current.isAttached() ) {
-			return false;
-		}
-		
-		/*
-		 * If any ancestor is not visible than this widget is not visible either
-		 */
-		while ( current != null ) {
-			if ( !current.isVisible() ) {
+		try { // we were getting javascript exceptions (Cannot read property 'display' of undefined) 
+			//in development mode, hence the try-catch:
+			  
+			/*
+			 * If the widget is not on the DOM than it is not visible.
+			 */
+			if ( !current.isAttached() ) {
 				return false;
 			}
-			current = current.getParent();
+			
+			/*
+			 * If any ancestor is not visible than this widget is not visible either
+			 */
+			while ( current != null ) {
+				if ( !current.isVisible() ) {
+					return false;
+				}
+				current = current.getParent();
+			}
+		} catch (Exception e) { 
+			Log.warn(this, "Could not determine visibility status", e);
+			return false;
 		}
-		
 		return true;
 	}
 	
