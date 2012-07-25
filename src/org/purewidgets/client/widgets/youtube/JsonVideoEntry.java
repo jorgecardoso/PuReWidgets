@@ -2,89 +2,61 @@ package org.purewidgets.client.widgets.youtube;
 
 import org.purewidgets.client.json.GenericJson;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
+import com.google.gwt.core.client.JsArrayString;
+
 
 public class JsonVideoEntry  extends GenericJson {
+	
     protected JsonVideoEntry() {
     }
 
     public native final String getId() /*-{
-            var id=this.id['$t'];
-            return id.substring(id.lastIndexOf('/') + 1);
+        return this.id;
     }-*/;
     
     public native final void setId(String id) /*-{
-    	if ( typeof(this.id) == 'undefined' ) {
-    		this.id = {};
-    	}
-    	this.id['$t'] = "/" + id;
-    
+    	this.id = id;
 	}-*/;
     
-    
-    
     public native final String getTitle() /*-{
-     	return this.title['$t'];
+     	return this.title;
     }-*/;
     
     public native final void setTitle(String title) /*-{
-    	if ( typeof(this.title) == 'undefined' ) {
-    		this.title = {};
-    	}
-    	this.title['$t'] = title;;
+    	this.title = title;;
    	}-*/;
     
     
     public native final String getChannel() /*-{
-     return this.author[0].name['$t'];
+     return this.uploader;
     }-*/;
     
     public native final void setChannel(String channel) /*-{
-    	if ( typeof(this.author) == 'undefined' ) {
-    		this.author = {};
-    	}
-    	if ( typeof(this.author[0]) == 'undefined') {
-    		this.author[0]={};
-    		this.author[0].name= {};
-    	}
-    	this.author[0].name['$t'] = channel;
+    	this.uploader = channel;
    	}-*/;
     
     
     public native final String getThumbnailURL() /*-{
-    	return this.media$group.media$thumbnail[0].url;
+    	return this.thumbnail.sqDefault;
     }-*/;
     
     public native final void setThumbnailURL(String thumbnailUrl) /*-{
-    	if ( typeof(this.media$group) == 'undefined' ) {
-    		this.media$group={};
-    	}
-    	
-    	if ( typeof(this.media$group.media$thumbnail) == 'undefined' ) {
-    		this.media$group.media$thumbnail={};
-    	}
-    	if ( typeof(this.media$group.media$thumbnail[0]) == 'undefined' ) {
-    		this.media$group.media$thumbnail[0]={};
-    	}
-    	    	
- 		
-		this.media$group.media$thumbnail[0].url = thumbnailUrl;
+    	if ( typeof(this.thumbnail) == 'undefined' ) {
+                this.thumbnail = {};
+        }
+		this.thumbnail.sqDefault = thumbnailUrl;
 	}-*/;    
     
     
     public native final String getDescription() /*-{
-    	return this.media$group.media$description.$t;
+    	return this.description;
     }-*/;
     
     public native final void setDescription(String description) /*-{
-    	if ( typeof(this.media$group) == 'undefined' ) {
-    		this.media$group={};
-    	}
-    	
-    	if ( typeof(this.media$group.media$description) == 'undefined' ) {
-    		this.media$group.media$description={};
-    	}
-    	
-		this.media$group.media$description.$t = description;
+
+		this.description = description;
 	}-*/;
     
     
@@ -92,139 +64,101 @@ public class JsonVideoEntry  extends GenericJson {
      * 
      * @return
      */
-    public native final String getKeywords() /*-{
-		return this.media$group.media$keywords.$t;
+    private native final JsArrayString getKeywordsAsJsArray() /*-{
+		return this.tags;
 	}-*/;
     
-    public native final void setKeywords(String keywords) /*-{
-    	if ( typeof(this.media$group) == 'undefined' ) {
-    		this.media$group={};
+    public final String[] getKeywords() {
+    	JsArrayString jsArrayString = this.getKeywordsAsJsArray();
+    	String []keywords = new String[jsArrayString.length()];
+    	for (int i = 0; i < jsArrayString.length(); i++ ) {
+    		keywords[i] = jsArrayString.get(i);
     	}
+    	return keywords;
+    }
+    
+    private native final void setKeywordsAsJsArray(JsArrayString keywords) /*-{
     	
-    	if ( typeof(this.media$group.media$keywords) == 'undefined' ) {
-    		this.media$group.media$keywords={};
-    	}
-		this.media$group.media$keywords.$t = keywords;
+		this.tags = keywords;
 	}-*/;
     
-    
+    public final void setKeywords(String []keywords) {
+    	JsArrayString keywordsJsArray = JavaScriptObject.createArray().cast();
+    	for (int i = 0; i < keywords.length; i++ ) {
+    		keywordsJsArray.set(i, keywords[i]);
+    	}
+    	this.setKeywordsAsJsArray(keywordsJsArray);
+    }
     
     public native final String getCategory() /*-{
-		return this.media$group.media$category[0].label;
+		return this.category;
 	}-*/;
+    
     public native final void setCategory(String category) /*-{
-    	if ( typeof(this.media$group) == 'undefined' ) {
-    		this.media$group={};
-    	}
-    	
-    	if ( typeof(this.media$group.media$category) == 'undefined' ) {
-    		this.media$group.media$category={};
-    	}
-    	if ( typeof(this.media$group.media$category[0]) == 'undefined' ) {
-    		this.media$group.media$category[0]={};
-    	}
-		this.media$group.media$category[0].label = category;
+		this.category = category;
 	}-*/;
     
     
     public native final String getDuration() /*-{
-		return this.media$group.yt$duration.seconds;
+		return this.duration.toString();
 	}-*/;
     
     public native final void setDuration(String duration) /*-{
-		if ( typeof(this.media$group) == 'undefined' ) {
-    		this.media$group={};
-    	}
-    	
-    	if ( typeof(this.media$group.yt$duration) == 'undefined' ) {
-    		this.media$group.yt$duration={};
-    	}
-
-		this.media$group.yt$duration.seconds = duration;
+		this.duration = parseInt(duration);
 	}-*/;
     
     
     public native final boolean existsRating() /*-{
-		return this.gd$rating != null; 
+		return this.rating != null; 
 	}-*/;
     
-    
-    public native final int getRatingMin() /*-{
-			return this.gd$rating.min; 
-	}-*/;
-    
-    public native final void setRatingMin(int ratingMin) /*-{
-    	if ( typeof(this.gd$rating) == 'undefined' ) {
-    		this.gd$rating={};
-    	}
-		this.gd$rating.min = ratingMin; 
-	}-*/;
-    
-    
- 
-    public native final int getRatingMax() /*-{
-    	
-		return this.gd$rating.max; 
-	}-*/;
-    
-    public native final void setRatingMax(int ratingMax) /*-{
-    	if ( typeof(this.gd$rating) == 'undefined' ) {
-    		this.gd$rating={};
-    	}
-		this.gd$rating.max = ratingMax; 
-	}-*/;
-    
-    
-    public native final float getRatingAverage() /*-{
-    	
-		return this.gd$rating.average; 
+  
+    public native final double getRatingAverage() /*-{
+    	if ( typeof(this.rating) == 'undefined' ) {
+    		return 0.0;
+    	}  	else {
+			return this.rating;
+    	} 
 	}-*/;   
-    public native final void setRatingAverage(float ratingAverage) /*-{
-    	if ( typeof(this.gd$rating) == 'undefined' ) {
-    		this.gd$rating={};
-    	}    	
-		this.gd$rating.average = ratingAverage; 
+    
+    public native final void setRatingAverage(double ratingAverage) /*-{
+    	
+		this.rating = ratingAverage; 
 	}-*/;  
     
     
     public native final int getRatingNumRaters() /*-{
-		return this.gd$rating.numRaters; 
+    	if ( typeof(this.ratingCount) == 'undefined' ) {
+    		return 0.0;
+    	}  	else {
+			return this.ratingCount;
+    	} 
 	}-*/;
+    
     public native final void setRatingNumRaters(int numRaters) /*-{
-    	if ( typeof(this.gd$rating) == 'undefined' ) {
-    		this.gd$rating={};
-    	}    	
-		this.gd$rating.numRaters = numRaters; 
+    	
+		this.ratingCount = numRaters; 
 	}-*/;
     
     public native final String getFavoriteCount() /*-{
-    	if ( typeof(this.yt$statistics) != 'undefined' && this.yt$statistics.length > 0) {
-			return this.yt$statistics.favoriteCount;
-    	} else {
+   		if ( typeof(this.favoriteCount) == 'undefined' ) {
     		return "0";
+    	}  	else {
+			return  this.favoriteCount.toString();
     	}
 	}-*/;  
     
     public native final void setFavoriteCount(String favouriteCount) /*-{
-    	if ( typeof(this.yt$statistics) == 'undefined' ) {
-    		this.yt$statistics={};
-    	}
-	
-		this.yt$statistics.favoriteCount = favouriteCount;
+    	this.favoriteCount = parseInt(favouriteCount);
 	}-*/; 
     
     public native final String getViewCount() /*-{
-    	if ( null != this.yt$statistics ) {
-			return this.yt$statistics.viewCount;
-    	}  else {
-    		return "0";
-    	}
+    	return this.viewCount.toString();
+    	
 	}-*/;
+    
     public native final void setViewCount(String viewCount) /*-{
-	   	if ( typeof(this.yt$statistics) == 'undefined' ) {
-    		this.yt$statistics={};
-    	}
-		this.yt$statistics.viewCount = viewCount;
+	   	this.viewCount = parseInt(viewCount);
 	}-*/;    
    
 }

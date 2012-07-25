@@ -10,11 +10,10 @@ public class VideoAdapter {
 		jsonVideoEntry.setId(video.getId());
 		jsonVideoEntry.setTitle(video.getTitle());
 		jsonVideoEntry.setDescription(video.getDescription());
-		jsonVideoEntry.setKeywords(join(video.getKeywords(), ","));
-		jsonVideoEntry.setRatingMin(video.getRating().getMin());
-		jsonVideoEntry.setRatingMax(video.getRating().getMax());
-		jsonVideoEntry.setRatingNumRaters(video.getRating().getNumRaters());
-		jsonVideoEntry.setRatingAverage(video.getRating().getAverage());
+		jsonVideoEntry.setKeywords(video.getKeywords());
+		
+		jsonVideoEntry.setRatingAverage(video.getRating());
+		
 		jsonVideoEntry.setThumbnailURL(video.getThumbnail());
 		jsonVideoEntry.setViewCount(video.getViewCount()+"");
 		jsonVideoEntry.setChannel(video.getAuthor());
@@ -42,16 +41,12 @@ public class VideoAdapter {
 		
 		v.setDescription(jsonVideo.getDescription());
 		
-		if (jsonVideo.existsRating()) {
-			v.setRating(new Rating(jsonVideo.getRatingMin(),
-					jsonVideo.getRatingMax(),
-					jsonVideo.getRatingAverage(),
-					jsonVideo.getRatingNumRaters()));
-		}
-		v.setViewCount(Long.parseLong(jsonVideo.getViewCount()));
+		v.setRating(jsonVideo.getRatingAverage());
+			
+		v.setViewCount(Long.parseLong(jsonVideo.getViewCount()) );
 		v.setFavoriteCount(Long.parseLong(jsonVideo.getFavoriteCount()));
-		v.setKeywords(parseKeywords(jsonVideo.getKeywords()));
-		v.setDuration( Long.parseLong( jsonVideo.getDuration() ) );
+		v.setKeywords(jsonVideo.getKeywords());
+		v.setDuration(Long.parseLong(jsonVideo.getDuration() ) );
 		return v;
 	}
 	

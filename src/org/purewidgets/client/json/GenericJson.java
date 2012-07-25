@@ -7,11 +7,11 @@ public abstract class GenericJson extends JavaScriptObject {
 	// Overlay types always have protected, zero-arg ctors
 	  protected GenericJson() { }
 	  
-	  public static native <T> T getNew() /*-{
+	  public final static native <T> T getNew() /*-{
 	  	return new Object();
 	  }-*/; 
 	  
-	  public static native <T> T fromJson(String json) /*-{
+	  public final static native <T> T fromJson(String json) /*-{
 	  	return eval('('+json+')');
 	  }-*/;
 	  

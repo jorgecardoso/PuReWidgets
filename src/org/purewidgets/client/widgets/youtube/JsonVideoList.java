@@ -2,6 +2,9 @@ package org.purewidgets.client.widgets.youtube;
 
 import org.purewidgets.client.json.GenericJson;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+
 
 /**
  * Adapted from http://code.google.com/p/hotforcode/
@@ -11,23 +14,16 @@ import org.purewidgets.client.json.GenericJson;
  */
 public class JsonVideoList extends GenericJson {
 
-    
-    
     protected JsonVideoList() {
     }
     
     
     public native final String getVersion() /*-{
-            return this.version;
+            return this.apiVersion;
     }-*/;
     
-    public native final int getEntryLength() /*-{
-            return this.feed.entry.length;
+    public native final JsArray<JsonVideoEntry> getEntries() /*-{
+            return this.data.items;
     }-*/;
     
-    public native final JsonVideoEntry getEntry(int i) /*-{
-            return this.feed.entry[i];
-    }-*/;
-    
-
 }

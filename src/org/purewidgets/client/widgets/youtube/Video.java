@@ -14,7 +14,7 @@ public class Video {
 	private String title;
 	private String author;
 	private String description;
-	private Rating rating;
+	private double rating;
 	private long favoriteCount;
 	private long viewCount;
 	private long duration;
@@ -96,7 +96,7 @@ public class Video {
 	/**
 	 * @param rating the rating to set
 	 */
-	public void setRating(Rating rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 
@@ -104,7 +104,7 @@ public class Video {
 	/**
 	 * @return the rating
 	 */
-	public Rating getRating() {
+	public double getRating() {
 		return rating;
 	}
 

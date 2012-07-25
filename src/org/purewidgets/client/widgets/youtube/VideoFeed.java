@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.purewidgets.shared.logging.Log;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -31,41 +32,37 @@ public class VideoFeed {
 		
 	    
 	      //Request request = 
-	    		 builder.requestObject(this.url, new AsyncCallback<JsonVideoList>() {
+	    builder.requestObject(this.url, new AsyncCallback<JsonVideoList>() {
 	        @Override
 			public void onFailure( Throwable exception) {
 	        	Log.error(this,"Couldn't retrieve JSON", exception);
 	        	if ( null != handler ) {
 	        		handler.onFailure(exception);
 	        	} else {
-	        		Log.warn(VideoFeed.this, "No callback defined!");
+	        		Log.warn(VideoFeed.this, "No callback defined!"); 
 	        	}
 	        }
 
 	        @Override
 			public void onSuccess(JsonVideoList list) {
-	          //if (200 == response.getStatusCode()) {
-	        	  //Log.debug(this, "JSON Request finished. " + response.getText());
-	            //updateTable(asArrayOfStockData(response.getText()));
-	        	  //JsonVideoList list = GenericJson.fromJson(response.getText());
-				  //Log.debug(this, "test");
-					Log.debug(this, list.getEntryLength() + " videos found.");
-					for (int i = 0; i < list.getEntryLength(); i++) {
-						//Log.debug(list.getEntry(i).getId());
-						//Log.debug(""+list.getEntry(i).toJsonString());
-						videos.add(VideoAdapter.fromJSONVideoEntry(list.getEntry(i)));
+	        	//  Log.debug(this, "JSON Request finished. " + list.toJsonString());
+	        	  Log.debug(this, "Response version: " + list.getVersion());
+	        	  JsArray<JsonVideoEntry> entries = list.getEntries();
+	        	  Log.debug(this, "Items: " + entries.length());
+//					Log.debug(this, list.getEntries().length() + " videos found.");
+					for (int i = 0; i < entries.length(); i++) {
 						
-						//Image img = new Image(list.getEntry(i).getThumbnailURL());
-						//RootPanel.get().add(img);
+					//	Log.debug(this,""+entries.get(i).toJsonString());
+						//Log.debug(this, "Thumbnail: " + entries.get(i).getThumbnailURL());
+						videos.add(VideoAdapter.fromJSONVideoEntry( entries.get(i) ));
+					
 					}
 					if ( null != handler ) {
 						handler.onSuccess(VideoFeed.this);
 					} else {
 						Log.warn(VideoFeed.this, "No callback defined!");
 					}
-	       /*   } else {
-	            Log.error (this, "Couldn't retrieve JSON (" + response.getStatusText() + ")" );
-	          }*/
+
 	        }
 	      });
 	    
