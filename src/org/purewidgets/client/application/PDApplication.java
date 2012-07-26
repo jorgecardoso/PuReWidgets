@@ -142,6 +142,24 @@ public class PDApplication  {
 	}	
 	
 	/** 
+	 * This function returns an int application parameter value by first checking if
+	 * it is set in the remote storage, then on the URL. Remote storage parameters have
+	 * precedence over URL parameters.
+	 */
+	public  float getParameterFloat(String name, float defaultValue) {
+		String valueString = getParameterString(name, defaultValue+"");
+		float toReturn = defaultValue;
+		try {
+			toReturn = Float.parseFloat(valueString);
+		} catch (NumberFormatException nfe) {
+			Log.warn(PDApplication.class.getName(), "Could not parse '" + valueString + "' into a float.");
+		}
+
+		return toReturn;
+	}	
+	
+	
+	/** 
 	 * This function returns a string application parameter value by first checking if
 	 * it is set in the remote storage, then on the URL. Remote storage parameters have
 	 * precedence over URL parameters.
