@@ -1,6 +1,7 @@
 org.purewidgets.client
 org.purewidgets.client.application
 org.purewidgets.client.feedback
+org.purewidgets.client.htmlwidgets
 org.purewidgets.client.http
 org.purewidgets.client.im
 org.purewidgets.client.im.json
