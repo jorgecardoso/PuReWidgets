@@ -119,7 +119,7 @@ public class WidgetJson extends GenericJson {
 	
 	public final ArrayList<WidgetParameter> getWidgetParameters() {
 		JsArray<WidgetParameterJson> parametersJs = getWidgetParametersAsJsArray();
-		Log.debug(this, parametersJs.toString());
+		
 		ArrayList<WidgetParameter> parameters = new ArrayList<WidgetParameter>();// [optionsJs.length()];
 		
 		if ( parametersJs != null ) {
