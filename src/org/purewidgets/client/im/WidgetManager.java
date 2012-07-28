@@ -4,6 +4,8 @@
 package org.purewidgets.client.im;
 
 import java.util.ArrayList;
+
+import org.purewidgets.client.im.json.WidgetJson;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.im.InputEventHelper;
 import org.purewidgets.shared.im.Widget;
@@ -106,6 +108,7 @@ public class WidgetManager {
 		this.widgetList = new ArrayList<Widget>();
 		this.toAddWidgetPool = new ArrayList<Widget>();
 		this.toDeleteWidgetPool = new ArrayList<Widget>();
+		this.loadToDeleteWidgetPoolFromLocalStorage();
 		this.processedInput = new ArrayList<WidgetInput>();
 
 		this.communicator = interactionManager;
@@ -229,6 +232,7 @@ public class WidgetManager {
 		index = indexOf(this.toDeleteWidgetPool, widget);
 		if (-1 == index) {
 			this.toDeleteWidgetPool.add(widget);
+			this.saveToDeleteWidgetPoolToLocalStorage();
 		} else {
 			Log.warn(this, "Widget '" + widget.getWidgetId()
 					+ "' already exists in to delete widget list, replacing entry " + index + ".");
@@ -240,6 +244,23 @@ public class WidgetManager {
 
 		startTimerWidget();
 	}
+
+	private void saveToDeleteWidgetPoolToLocalStorage() {
+		ArrayList<String> widgetsSerialized = new ArrayList<String>();
+		for ( Widget widget : this.toDeleteWidgetPool ) {
+			widgetsSerialized.add( WidgetJson.create(widget).toJsonString() );
+		}
+		this.localStorage.saveList("WidgetManager-deletePool", widgetsSerialized);
+	}
+	
+	private void loadToDeleteWidgetPoolFromLocalStorage() {
+		ArrayList<String> widgetsSerialized = this.localStorage.loadList("WidgetManager-deletePool");
+		for ( String widgetSerialized : widgetsSerialized ) {
+			WidgetJson widgetJson = WidgetJson.fromJson(widgetSerialized);
+			this.toDeleteWidgetPool.add( widgetJson.getWidget() );
+		}
+	}
+	
 
 	private void addToProcessedInput(WidgetInput wi) {
 		this.processedInput.add(wi);
@@ -371,6 +392,7 @@ public class WidgetManager {
 		for (Widget widgetFromPool : this.toDeleteWidgetPool) {
 			if (widgetFromPool.getWidgetId().equals(widgetFromServer.getWidgetId())) {
 				this.toDeleteWidgetPool.remove(widgetFromPool);
+				this.saveToDeleteWidgetPoolToLocalStorage();
 				break;
 			}
 		}

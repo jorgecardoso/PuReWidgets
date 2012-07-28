@@ -119,10 +119,13 @@ public class WidgetJson extends GenericJson {
 	
 	public final ArrayList<WidgetParameter> getWidgetParameters() {
 		JsArray<WidgetParameterJson> parametersJs = getWidgetParametersAsJsArray();
+		Log.debug(this, parametersJs.toString());
 		ArrayList<WidgetParameter> parameters = new ArrayList<WidgetParameter>();// [optionsJs.length()];
-
-		for (int i = 0; i < parametersJs.length(); i++) {
-			parameters.add(parametersJs.get(i).getWidgetParameter());
+		
+		if ( parametersJs != null ) {
+			for (int i = 0; i < parametersJs.length(); i++) {
+				parameters.add(parametersJs.get(i).getWidgetParameter());
+			}
 		}
 
 		return parameters;
@@ -133,7 +136,10 @@ public class WidgetJson extends GenericJson {
 	}-*/;
 	
 	public final native JsArray<WidgetParameterJson> getWidgetParametersAsJsArray() /*-{
-	return this.widgetParameters;
+		if ( 'undefined' == typeof(this.widgetParameters) ) {
+			return new Array();
+		}
+		return this.widgetParameters;
 }-*/;
 
 
