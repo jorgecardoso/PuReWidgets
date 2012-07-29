@@ -112,7 +112,7 @@ public class WidgetManager {
 		this.processedInput = new ArrayList<WidgetInput>();
 
 		this.communicator = interactionManager;
-		timerInput = new Timer() {
+		this.timerInput = new Timer() {
 			@Override
 			public void run() {
 				periodicallyAskForInputFromServer();
@@ -138,7 +138,13 @@ public class WidgetManager {
 					}
 
 				});
-		this.firstInputFromServer();
+		new Timer() {
+			@Override
+			public void run() {
+				WidgetManager.this.firstInputFromServer();
+			}
+		}.schedule(10000);
+		
 	}
 
 	public static void create(String placeId, String applicationId, LocalStorage localStorage,

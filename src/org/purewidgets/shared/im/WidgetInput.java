@@ -35,6 +35,21 @@ public class WidgetInput {
 
 	private int age;
 	
+	public WidgetInput() {
+		this.placeId = "";
+		this.applicationId = "";
+		this.referenceCode = "";
+		this.widgetId = "";
+		this.widgetOptionId = "";
+		this.timeStamp = "";
+		this.parameters = new ArrayList<String>();
+		this.userId = "";
+		this.nickname = "";
+		this.inputMechanism = "";
+		this.delivered = false;
+		this.age = 0;
+	}
+	
 	public void setWidgetId(String widgetId) {
 		this.widgetId = widgetId;
 	}
