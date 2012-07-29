@@ -50,6 +50,22 @@ public class JsonVideoEntry  extends GenericJson {
 	}-*/;    
     
     
+    public native final String getDefaultPlayerUrl() /*-{
+    	if ( typeof(this.player) != 'undefined' ) {
+			return this.player['default']; // apparently gwt has problems with 'this.player.default'
+    	} else {
+    		return "";
+    	}
+	}-*/;
+
+public native final void setDefaultPlayerUrl(String playerUrl) /*-{
+	if ( typeof(this.player) == 'undefined' ) {
+            this.player = {};
+    }
+	this.player['default'] = playerUrl;
+}-*/;   
+
+    
     public native final String getDescription() /*-{
     	return this.description;
     }-*/;

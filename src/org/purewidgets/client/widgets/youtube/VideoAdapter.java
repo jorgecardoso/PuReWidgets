@@ -15,6 +15,7 @@ public class VideoAdapter {
 		jsonVideoEntry.setRatingAverage(video.getRating());
 		
 		jsonVideoEntry.setThumbnailURL(video.getThumbnail());
+		jsonVideoEntry.setDefaultPlayerUrl(video.getDefaultPlayer());
 		jsonVideoEntry.setViewCount(video.getViewCount()+"");
 		jsonVideoEntry.setChannel(video.getAuthor());
 		jsonVideoEntry.setDuration(video.getDuration()+"");
@@ -40,7 +41,7 @@ public class VideoAdapter {
 				jsonVideo.getThumbnailURL());
 		
 		v.setDescription(jsonVideo.getDescription());
-		
+		v.setDefaultPlayer(jsonVideo.getDefaultPlayerUrl());
 		v.setRating(jsonVideo.getRatingAverage());
 			
 		v.setViewCount(Long.parseLong(jsonVideo.getViewCount()) );

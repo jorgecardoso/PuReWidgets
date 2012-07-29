@@ -10,6 +10,7 @@ package org.purewidgets.client.widgets.youtube;
 public class Video {
 
 	private String thumbnail;
+	private String defaultPlayer;
 	private String id;
 	private String title;
 	private String author;
@@ -186,6 +187,28 @@ public class Video {
 	 */
 	public void setDuration(long duration) {
 		this.duration = duration;
+	}
+
+
+
+
+
+	/**
+	 * @return the defaultPlayer
+	 */
+	public String getDefaultPlayer() {
+		return defaultPlayer;
+	}
+
+
+
+
+
+	/**
+	 * @param defaultPlayer the defaultPlayer to set
+	 */
+	public void setDefaultPlayer(String defaultPlayer) {
+		this.defaultPlayer = defaultPlayer;
 	}
 	
 	
