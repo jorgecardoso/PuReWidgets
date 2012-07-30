@@ -18,4 +18,8 @@ public abstract class GenericJson extends JavaScriptObject {
 	public final native String toJsonString() /*-{
 	  return JSON.stringify(this);
 	}-*/;
+	
+	public final static native String toJsonString(JavaScriptObject jso) /*-{
+		return JSON.stringify(jso);
+	}-*/;
 }
