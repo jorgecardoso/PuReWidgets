@@ -32,6 +32,6 @@ public class ReferenceCodeFormatter {
 	
 	
 	public static String format(String referenceCode) {
-		return leftBracket + referenceCode + rightBracket;
+		return leftBracket + (referenceCode != null ? referenceCode : "") + rightBracket;
 	}
 }
