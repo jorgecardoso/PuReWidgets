@@ -115,7 +115,10 @@ FINEST (lowest value)
 		debug(s + ": " + msg);	
 	}	
 	
-	
+	public static void debug(Object s, String msg, Throwable e) {
+		debug(s.getClass().getName() + ": " + msg);
+		logStackTrace(e);
+	}
 	
 	/*
 	 * FINEST

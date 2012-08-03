@@ -574,7 +574,7 @@ public class InteractionManagerService {
 		
 		String token = this.localStorage.getString("ChannelToken");
 		Long tokenTimestamp = this.localStorage.getLong("ChannelTokenTimestamp");
-		
+		Log.debug(this, "Channel Token asked " + (System.currentTimeMillis() - tokenTimestamp.longValue() ) + " milliseconds ago.");
 		/*
 		 * If the token expire is due in more than one our we take the token and open the channel
 		 * Otherwise, we ask a new token. 
@@ -585,6 +585,7 @@ public class InteractionManagerService {
 		 * This assumes that the server sets the expiration time to the maximum: 24 hours!
 		 */
 		if ( null == tokenTimestamp ||  (System.currentTimeMillis() - tokenTimestamp.longValue()) > 23*60*60*1000 ) {
+			
 			this.getChannelToken(placeId, applicationId, callingApplicationId, listener);
 		} else {
 			if ( null != token && token.length() > 0 ) { 

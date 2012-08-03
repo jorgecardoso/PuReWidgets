@@ -126,7 +126,7 @@ public class WidgetManager {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.debug(WidgetManager.this,
-								"Could not create input channel. Going to use polling insted");
+								"Could not create input channel. Going to use polling instead", caught);
 						WidgetManager.this.timerInput
 								.schedule(WidgetManager.this.currentInputRequestInterval);
 					}
