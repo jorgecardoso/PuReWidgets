@@ -148,7 +148,8 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String result) {
-							Log.debug(InteractionManagerService.this, "Got response to widget adding: " + result);
+							Log.debug(InteractionManagerService.this, "Got response to addition of widgets.");
+							Log.debugFinest(InteractionManagerService.this, result);
 							
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(result);
@@ -196,7 +197,8 @@ public class InteractionManagerService {
 
 				@Override
 				public void onSuccess(String result) {
-					Log.debug(InteractionManagerService.this, "Got response to widget input: " + result);
+					Log.debug(InteractionManagerService.this, "Got response to widget input. ");
+					Log.debugFinest(InteractionManagerService.this, result);
 					if ( null != callback ) {
 						WidgetInputListJson widgetInputListJson = GenericJson.fromJson(result);
 						ArrayList<WidgetInput> widgetInputs = widgetInputListJson.getInputs();
@@ -271,7 +273,8 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String result) {
-							Log.debug(InteractionManagerService.this, "Got response: " + result);
+							Log.debug(InteractionManagerService.this, "Got response to widget deletion.");
+							Log.debugFinest(InteractionManagerService.this, result);
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(result);
 								ArrayList<Widget> widgetList = widgetListJson.getWidgets();
@@ -318,7 +321,8 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String json) {
-							Log.debug(InteractionManagerService.this, "Got response: " + json);
+							Log.debug(InteractionManagerService.this, "Got response to widget list.");
+							Log.debugFinest(InteractionManagerService.this, json);
 							if ( null != callback ) {
 								WidgetListJson widgetListJson = GenericJson.fromJson(json);
 							
@@ -350,7 +354,7 @@ public class InteractionManagerService {
 		
 		WidgetInputJson widgetInputJson = WidgetInputJson.create(widgetInput);
 		
-		Log.debug(this, "Sending to server:" + widgetInputJson.toJsonString());
+		Log.debugFinest(this, "Sending to server:" + widgetInputJson.toJsonString());
 		
 		this.interactionService.post(widgetInputJson.toJsonString(), 
 				this.urlHelper.getWidgetInputUrl(placeId, applicationId, getWidgetIdUrlEscaped(widgetInput.getWidgetId()), callingApplicationId), 
@@ -369,7 +373,8 @@ public class InteractionManagerService {
 
 					@Override
 					public void onSuccess(String result) {
-						Log.debug(InteractionManagerService.this, "Got response: " + result);
+						Log.debug(InteractionManagerService.this, "Got response to input sending.");
+						Log.debugFinest(InteractionManagerService.this, result);
 						if ( null != callback ) {
 							callback.onSuccess(null);
 						} else {
@@ -383,7 +388,7 @@ public class InteractionManagerService {
 	public void setApplication(String placeId, String applicationId, String callingApplicationId, Application application, final AsyncCallback<Application> callback) {
 		ApplicationJson applicationJson = ApplicationJson.create(application);
 		Log.debug(this, "Sending application " + placeId + " : " + applicationId);
-		Log.debug(this, "Sending to server: " + applicationJson.toJsonString());
+		Log.debugFinest(this, "Sending to server: " + applicationJson.toJsonString());
 		
 		this.interactionService.post(applicationJson.toJsonString(), 
 				this.urlHelper.getApplicationUrl(placeId, applicationId, callingApplicationId), 
@@ -402,7 +407,8 @@ public class InteractionManagerService {
 
 					@Override
 					public void onSuccess(String result) {
-						Log.debug(InteractionManagerService.this, "Got response to sending application: " + result);
+						Log.debug(InteractionManagerService.this, "Got response to sending application.");
+						Log.debugFinest(InteractionManagerService.this,  result);
 						if ( null != callback ) {
 							Application application = (Application)(ApplicationJson.fromJson(result));
 							callback.onSuccess(application);
@@ -437,10 +443,11 @@ public class InteractionManagerService {
 
 					@Override
 					public void onSuccess(String result) {
-						Log.debug(this, "Received data " + result + ".");
+						Log.debug(InteractionManagerService.this, "Received response to application request.");
+						Log.debugFinest(InteractionManagerService.this,  result);
 						if ( null != callback ) {
 							if ( null != result && result.length() > 0) {
-								Log.debug(this, "Received application " + result + ".");
+								
 								Application application = ((ApplicationJson)GenericJson.fromJson(result)).getApplication();
 								callback.onSuccess(application);
 							} else {
@@ -500,7 +507,8 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String json) {
-							Log.debug(this, "Received applications list: " + json );
+							Log.debug(InteractionManagerService.this, "Received applications list." );
+							Log.debugFinest(InteractionManagerService.this, json );
 							if ( null != callback ) {
 								ApplicationListJson applicationListJson = GenericJson.fromJson(json);
 					
@@ -542,6 +550,8 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String json) {
+							Log.debug(InteractionManagerService.this, "Got response to places request.");
+							Log.debugFinest(InteractionManagerService.this, json);
 							/*
 							 * Notify the callback 
 							 */
@@ -578,7 +588,7 @@ public class InteractionManagerService {
 			tokenTimestamp = new Long(0);
 		}
 			
-		Log.debug(this, "Channel Token asked " + (System.currentTimeMillis() - tokenTimestamp.longValue() ) + " milliseconds ago.");
+		Log.debug(this, "Channel Token asked " + (System.currentTimeMillis() - tokenTimestamp.longValue() )/(1000*60*60) + "hours ago.");
 		/*
 		 * If the token expire is due in more than one our we take the token and open the channel
 		 * Otherwise, we ask a new token. 
@@ -616,7 +626,8 @@ public class InteractionManagerService {
 
 					@Override
 					public void onMessage(String message) {
-						Log.debug(InteractionManagerService.this, "Got widget input: " + message);
+						Log.debug(InteractionManagerService.this, "Got widget input.");
+						Log.debugFinest(InteractionManagerService.this, message);
 						if ( null != listener ) {
 							WidgetInputListJson widgetInputListJson = GenericJson.fromJson(message);
 							ArrayList<WidgetInput> widgetInputs = widgetInputListJson.getInputs();
@@ -677,8 +688,9 @@ public class InteractionManagerService {
 
 						@Override
 						public void onSuccess(String json) {
-							Log.debug(this, "Received channel token data: " + json);
+							Log.debug(InteractionManagerService.this, "Received channel token data." );
 							
+							Log.debugFinest(InteractionManagerService.this,  json);
 							ChannelTokenJson channelTokenJson = GenericJson.fromJson(json);
 							
 							/*
