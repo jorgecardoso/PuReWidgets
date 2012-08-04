@@ -583,8 +583,10 @@ public class InteractionManagerService {
 		 * https://groups.google.com/forum/?fromgroups#!searchin/google-appengine-java/channel/google-appengine-java/kD3H6BWNYuA/NivXiDrqW7QJ
 		 * 
 		 * This assumes that the server sets the expiration time to the maximum: 24 hours!
+		 * 
+		 * Somehow, the token is expiring after 12 or so hours....
 		 */
-		if ( null == tokenTimestamp ||  (System.currentTimeMillis() - tokenTimestamp.longValue()) > 23*60*60*1000 ) {
+		if ( null == tokenTimestamp ||  (System.currentTimeMillis() - tokenTimestamp.longValue()) >= 12*60*60*1000 ) {
 			
 			this.getChannelToken(placeId, applicationId, callingApplicationId, listener);
 		} else {
