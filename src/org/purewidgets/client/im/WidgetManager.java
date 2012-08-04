@@ -138,6 +138,7 @@ public class WidgetManager {
 					}
 
 				});
+		
 		new Timer() {
 			@Override
 			public void run() {
@@ -288,7 +289,7 @@ public class WidgetManager {
 
 					@Override
 					public void onSuccess(ArrayList<WidgetInput> result) {
-						Log.debug(WidgetManager.this, "Reveived first input from server.");
+						Log.debug(WidgetManager.this, "Received first input from server.");
 						WidgetManager.this.onWidgetInput(result);
 					}
 				});
