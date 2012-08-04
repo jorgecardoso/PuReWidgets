@@ -10,6 +10,7 @@ import org.purewidgets.client.im.InteractionManagerService;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.client.storage.ServerStorage;
+import org.purewidgets.shared.application.Constants;
 import org.purewidgets.shared.im.Application;
 import org.purewidgets.shared.logging.Log;
 
@@ -31,6 +32,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * 
  */
 public class PDApplication  {
+
+
 	/**
 	 * The URL query string parameter name that holds the place id
 	 */
@@ -276,7 +279,7 @@ public class PDApplication  {
 		}
 	
 		
-		String interactionManagerUrl = this.getParameterString("imurl", "http://pw-interactionmanager.appspot.com");
+		String interactionManagerUrl = this.getParameterString(Constants.INTERACTION_MANAGER_URL_PARAMETER_NAME, Constants.INTERACTIONMANAGER_ADDRESS);
 		
 		Log.info(this, "Using interaction manager: " + interactionManagerUrl);
 		
