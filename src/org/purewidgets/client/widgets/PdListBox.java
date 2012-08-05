@@ -158,7 +158,7 @@ public class PdListBox extends PdWidget implements ClickHandler {
 			
 			refCode.setText( ReferenceCodeFormatter.format(widgetOptions.get(i).getReferenceCode()) );
 		}
-		//super.onReferenceCodesUpdated();
+		super.onReferenceCodesUpdated();
 	}
 	
 	@Override
