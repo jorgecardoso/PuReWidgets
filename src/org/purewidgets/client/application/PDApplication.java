@@ -211,7 +211,7 @@ public class PDApplication  {
 		this.applicationId = applicationId;
 		this.placeId = placeId;
 		
-		this.localStorage = new LocalStorage(applicationId);
+		this.localStorage = new LocalStorage(placeId+"-"+applicationId);
 
 		this.remoteStorage = new ServerStorage(placeId+"-"+applicationId);
 		
