@@ -18,6 +18,7 @@ org.purewidgets.server.http
 org.purewidgets.server.im
 org.purewidgets.server.im.json
 org.purewidgets.server.storage
+org.purewidgets.shared.application
 org.purewidgets.shared.events
 org.purewidgets.shared.exceptions
 org.purewidgets.shared.im
