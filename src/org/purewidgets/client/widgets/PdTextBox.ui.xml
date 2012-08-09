@@ -7,7 +7,7 @@
 	@external pwTextBox, pwTextBoxTextbox, pwTextBoxCaret, pwTextBoxCaptioncontainer, pwTextBoxCaptioncontainerCaption, pwTextBoxCaptioncontainerReferencecode;
 
 	.pwTextBox {
-	font-family: Verdana, Geneva, sans-serif;
+	
 	font-size: xx-large;
 	display: inline-block;
 	position: relative;
@@ -16,7 +16,7 @@
 }
 
 .pwTextBoxTextbox {
-	font-family: Verdana, Geneva, sans-serif;
+	
 	font-size:xx-large;
 	position: absolute; 
 	right: 0px; 
@@ -40,7 +40,8 @@
 	right:5px;
 	text-align:right;
 	background-color:transparent;
-	line-height:50px; /* this should be equal to .instantplaces-GuiTextBox height*/
+	line-height:50px; 
+	height: 100%;
 }
 	
 .pwTextBoxCaptioncontainerCaption {
@@ -58,13 +59,16 @@
 	
 	<p:ClickableHTMLPanel ui:field="uiPanelMain"  styleName="{style.pwTextBox}" > 
 	    <g:TextBox ui:field="uiTextbox" styleName="{style.pwTextBoxTextbox}"/>
-	     <g:Label ui:field="uiLabelCaret" styleName="{style.pwTextBoxCaret}"/>
 	     
-	    <g:HorizontalPanel ui:field="uiHorizontalPanelCaptionContainer" styleName="{style.pwTextBoxCaptioncontainer}">
-	        <g:cell>
+	     
+	    <g:HorizontalPanel styleName="{style.pwTextBoxCaptioncontainer}">
+	        <g:cell verticalAlignment="middle">
+	            <g:Label ui:field="uiLabelCaret" styleName="{style.pwTextBoxCaret}"/>
+	        </g:cell>
+	        <g:cell verticalAlignment="middle">
 	            <g:Label ui:field="uiLabelCaption" styleName="{style.pwTextBoxCaptioncontainerCaption}"/>
 	        </g:cell>
-	        <g:cell>
+	        <g:cell verticalAlignment="middle">
 	            <g:Label ui:field="uiLabelReferencecode" styleName="{style.pwTextBoxCaptioncontainerReferencecode}"/>
 	        </g:cell>
 	    </g:HorizontalPanel>

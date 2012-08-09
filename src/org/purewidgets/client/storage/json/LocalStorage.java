@@ -15,7 +15,26 @@ public class LocalStorage extends JavaScriptObject {
 		protected LocalStorage() {
 		}
 
-		
+	/**
+	 * Clears all keys that start with storeid, effectively clearing the
+	 * apps localstore.
+	 * 
+	 * @param storeid
+	 */
+	public static native void clear(String storeid) /*-{
+		var toDelete = Array();
+		for (var i=0, l=localStorage.length; i<l; i++){
+        	var key = localStorage.key(i);
+        	if ( key.indexOf(storeid) == 0 ) {
+        		toDelete.push(key);
+        	}
+		}       
+		for ( var i = 0; i < toDelete.length; i++) {
+			
+			localStorage.removeItem(toDelete[i]);
+		}
+	}-*/;
+	
 	public static native String getString(String item) /*-{
 		var time = localStorage.getItem(item);
 

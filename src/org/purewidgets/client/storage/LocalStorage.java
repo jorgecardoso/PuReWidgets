@@ -65,7 +65,7 @@ public void setString(String item, String value) {
 	 *
 	 * @return An ArrayList with the decoded Strings.
 	 */
-	public static ArrayList<String> decode(String value) {
+	private static ArrayList<String> decode(String value) {
 		if (null == value || !value.startsWith(MAGIC_NUMBER)) {
 			return new ArrayList<String>();
 		}
@@ -98,10 +98,13 @@ public void setString(String item, String value) {
 	 * Encodes a list of strings in a single string, using a length:string
 	 * encoding
 	 * 
+	 * Shame on me. This was done before I realized I could just jsonify the data... 
+	 * TODO: encode List as JsArray...
+	 * 
 	 * @param values
 	 * @return
 	 */
-	public static String encode(List<String> values) {
+	private static String encode(List<String> values) {
 		/*
 		 * And encoded null value or empty list is just an empty string. (on decoding empty strings
 		 * are return as empty lists)
@@ -202,5 +205,9 @@ public void setString(String item, String value) {
 			Log.warn(this, "Could not parse value from localStorage as long.");
 			return null;
 		}
+	}
+	
+	public void clear() {
+		org.purewidgets.client.storage.json.LocalStorage.clear(this.storageId);
 	}
 }

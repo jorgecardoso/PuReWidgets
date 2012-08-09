@@ -76,8 +76,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	@UiField
 	Label uiLabelCaret;
 	
-	@UiField
-	HorizontalPanel uiHorizontalPanelCaptionContainer;
+
 	
 	@UiField
 	Label uiLabelCaption;
