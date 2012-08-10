@@ -10,6 +10,7 @@ import org.purewidgets.client.http.HttpServiceAsync;
 import org.purewidgets.client.im.json.ApplicationJson;
 import org.purewidgets.client.im.json.ApplicationListJson;
 import org.purewidgets.client.im.json.ChannelTokenJson;
+import org.purewidgets.client.im.json.PlaceJson;
 import org.purewidgets.client.im.json.PlaceListJson;
 import org.purewidgets.client.im.json.WidgetInputJson;
 import org.purewidgets.client.im.json.WidgetInputListJson;
@@ -531,6 +532,51 @@ public class InteractionManagerService {
 		}
 	}
 
+
+	public void getPlace(String placeId, String callingApplicationId, final AsyncCallback<Place> callback) {
+		Log.debug( this, "Getting place from server: " +  this.urlHelper.getPlaceUrl(placeId, callingApplicationId) );
+		try {
+			interactionService.get( this.urlHelper.getPlaceUrl(placeId, callingApplicationId), 
+					new AsyncCallback<String>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.warn(this, "Error getting place from server.", caught );
+							if ( null != callback ) {
+								callback.onFailure(caught);
+							} else {
+								Log.warn(this, "No callback to notify.");
+							}
+						}
+
+						@Override
+						public void onSuccess(String json) {
+							Log.debug(InteractionManagerService.this, "Got response to place request.");
+							Log.debugFinest(InteractionManagerService.this, json);
+							/*
+							 * Notify the callback 
+							 */
+							if ( null != callback ) {
+								PlaceJson placeJson = GenericJson.fromJson(json);
+							
+								
+							
+								callback.onSuccess(placeJson.getPlace());
+							} else {
+								Log.warn(this, "No callback to notify about place");
+							}
+						}
+					});
+		} catch (Exception e) {
+			Log.warn(this, "Error getting place from server: ", e);
+			if ( null != callback ) {
+				callback.onFailure(e);
+			} else {
+				Log.warn(this, "No callback to notify.");
+			}
+		}				
+	}
+	
 	
 	public void getPlacesList(String callingApplicationId, final AsyncCallback<ArrayList<Place>> callback) {
 		Log.debug( this, "Getting places from server: " +  this.urlHelper.getPlacesUrl(callingApplicationId) );

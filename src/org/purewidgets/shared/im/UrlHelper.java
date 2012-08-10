@@ -24,6 +24,10 @@ public class UrlHelper {
 		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId;
 	}
 	
+	public  String getPlaceUrl(String placeId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "?appid=" + callingApplicationId ;
+	}
+	
 	public  String getPlacesUrl(String callingApplicationId) {
 		return interactionServerUrl + "/place?appid=" + callingApplicationId ;
 	}
