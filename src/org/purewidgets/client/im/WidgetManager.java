@@ -71,6 +71,11 @@ public class WidgetManager {
 	private ArrayList<WidgetInput> processedInput;
 
 	/**
+	 * List of input which could not be matched to a widget. The WM will try to match it later when
+	 * the app adds a widget.
+	 */
+	private ArrayList<WidgetInput> unprocessedInput;
+	/**
 	 * Timer for scheduling input requests to the server.
 	 */
 	private Timer timerInput;
@@ -110,7 +115,7 @@ public class WidgetManager {
 		this.toDeleteWidgetPool = new ArrayList<Widget>();
 		this.loadToDeleteWidgetPoolFromLocalStorage();
 		this.processedInput = new ArrayList<WidgetInput>();
-
+		this.unprocessedInput = new ArrayList<WidgetInput>();
 		this.communicator = interactionManager;
 		this.timerInput = new Timer() {
 			@Override
@@ -139,12 +144,9 @@ public class WidgetManager {
 
 				});
 		
-		new Timer() {
-			@Override
-			public void run() {
-				WidgetManager.this.firstInputFromServer();
-			}
-		}.schedule(10000);
+
+		WidgetManager.this.firstInputFromServer();
+
 		
 	}
 
@@ -199,6 +201,27 @@ public class WidgetManager {
 		this.nextWidgetAction = NextWidgetAction.ADD;
 
 		startTimerWidget();
+		
+		/*
+		 * check if we have pending input
+		 */
+		ArrayList<WidgetInput> pendingInput = new ArrayList<WidgetInput>();
+		for ( WidgetInput input : this.unprocessedInput ) {
+			if ( input.getWidgetId().equals(widget.getWidgetId()) ) {
+				Log.debug(this, "Found pending input for widget: " + widget.getWidgetId() );
+				pendingInput.add(input);
+			}
+		}
+		/*
+		 * Remove pending input from unprocessed list
+		 */
+		if ( pendingInput.size() > 0 ) {
+			for ( WidgetInput input : pendingInput ) {
+				this.unprocessedInput.remove(input);
+			}
+			Log.debug(this, "Processing pending input for widget: " + widget.getWidgetId() );
+			this.onWidgetInput(pendingInput);
+		}
 	}
 
 	public InteractionManagerService getServerCommunicator() {
@@ -428,6 +451,7 @@ public class WidgetManager {
 			}
 
 			if (this.isProcessed(widgetInput)) {
+				Log.debug(this, "Found already processed input for widget: " + widgetInput.getWidgetId());
 				toDelete.add(widgetInput);
 			} else {
 				this.addToProcessedInput(widgetInput);
@@ -444,7 +468,9 @@ public class WidgetManager {
 		/*
 		 * Trigger the input events on the widgets
 		 */
-		InputEventHelper.triggerActionEvents(inputList, this.widgetList);
+		ArrayList<WidgetInput> notProcessed = InputEventHelper.triggerActionEvents(inputList, this.widgetList);
+		this.unprocessedInput.addAll(notProcessed);
+		this.processedInput.removeAll(notProcessed);
 
 	}
 

@@ -15,7 +15,7 @@ import org.purewidgets.shared.logging.Log;
  */
 public final class InputEventHelper {
 
-	public static void triggerActionEvents(ArrayList<WidgetInput> inputList, ArrayList<Widget>widgetList) {
+	public static ArrayList<WidgetInput> triggerActionEvents(ArrayList<WidgetInput> inputList, ArrayList<Widget>widgetList) {
 		/*
 		 * Widgets that have input will be added to a new List, as well as
 		 * the InputEvent that will later be triggered.
@@ -33,6 +33,11 @@ public final class InputEventHelper {
 		
 		
 		/*
+		 * Holds the input which does not have a matching widget.
+		 */
+		ArrayList<WidgetInput> unprocessed = new ArrayList<WidgetInput>();
+		
+		/*
 		 * Go through the inputs and save the widgets that have input
 		 */
 		for (WidgetInput input : inputList) {
@@ -41,11 +46,13 @@ public final class InputEventHelper {
 			/*
 			 * Go through all widgets and find the one targeted by the input
 			 */
+			boolean foundWidget = false;
 			for (Widget widget : widgetList) {
 				if (input.getWidgetId().equals(widget.getWidgetId())) {
 					/*
 					 * Found widget, match option...
 					 */
+					foundWidget = true;
 					for (WidgetOption option : widget.getWidgetOptions()) {
 						if (option.getWidgetOptionId().equals(input.getWidgetOptionId())) {
 							/*
@@ -70,6 +77,10 @@ public final class InputEventHelper {
 					}
 				}
 			}
+			
+			if ( !foundWidget ) {
+				unprocessed.add(input);
+			}
 		}
 		
 		/*
@@ -82,5 +93,6 @@ public final class InputEventHelper {
 			widget.onInput(widgetsToInputEventsMap.get(widget));
 		}
 		
+		return unprocessed;
 	}
 }
