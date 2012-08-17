@@ -17,7 +17,7 @@
 		border: 1px solid white;
 		border-radius: 15px;
 		
-		/*display: table-cell;*/
+		display: inline-table;
 		
 
 		background:url(purewidgetsicons/button-background.gif);
@@ -26,15 +26,17 @@
 	}
 
 	.pwButtonCaption {
-		margin-left:10px;
-		display:inline-block;
+		text-align: left;
+		padding-left: 10px;
+		display: table-cell;
 		vertical-align: middle;
 	}
 
 	.pwButtonReferencecode {
-		display:inline-block;
+		display: table-cell;
 		vertical-align: middle;
-		margin-left: 5px;
+		text-align:right;
+		padding-right: 10px;
 	}	
 	</ui:style>
 	
