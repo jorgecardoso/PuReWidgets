@@ -97,7 +97,7 @@ public class FeedbackSequencer {
 	 * Multiple input feedback will be shown with intervals of
 	 * DEFAULT_FEEDBACK_DELAY milliseconds.
 	 */
-	public static final int DEFAULT_FEEDBACK_DELAY = 100;
+	public static final int DEFAULT_FEEDBACK_DELAY = 300;
 	
 	
 	/**
@@ -110,7 +110,7 @@ public class FeedbackSequencer {
 	 * If there is no more feedback to show, the panel will stay
 	 * visible during DEFAULT_FINAL_DELAY milliseconds, be default.
 	 */
-	public static final int DEFAULT_FINAL_DELAY = 10000;
+	public static final int DEFAULT_FINAL_DELAY = 15000;
 	
 	/**
 	 * The interval between checks of the visibility of the widget

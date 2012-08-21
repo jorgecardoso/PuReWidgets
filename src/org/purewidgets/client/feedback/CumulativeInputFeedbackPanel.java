@@ -83,7 +83,6 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	private VerticalPanel vPanel;
 	
-	private Label title;
 	
 	private boolean showTitles = false;
 
@@ -166,22 +165,22 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	
 
 	@Override
-	public void show(InputFeedback<? extends PdWidget> feedback, int duration) {
+	public void show(InputFeedback<? extends PdWidget> inputFeedback, int duration) {
 		timer.schedule(duration);
 		
-		if ( null != feedback ) {
-			Log.debug(this, "Showing:" + feedback.toString());
+		if ( null != inputFeedback ) {
+			Log.debug(this, "Showing:" + inputFeedback.toString());
 		} else {
 			Log.warn(this, "Null feedback!");
 		}
 		
 		if ( this.newOnTop ) {
-			this.accumulatedFeedback.add(0, feedback);
+			this.accumulatedFeedback.add(0, inputFeedback);
 			if (this.accumulatedFeedback.size() > this.maxLines) {
 				this.accumulatedFeedback.remove(this.accumulatedFeedback.size()-1);
 			}
 		} else {
-			this.accumulatedFeedback.add(feedback);
+			this.accumulatedFeedback.add(inputFeedback);
 			
 			if (this.accumulatedFeedback.size() > this.maxLines) {
 				this.accumulatedFeedback.remove(0);
@@ -192,30 +191,41 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		
 		vPanel.clear();
 		
-		for (InputFeedback<?> feed : this.accumulatedFeedback) {
+		for (InputFeedback<?> feedback : this.accumulatedFeedback) {
 			
-				StringBuilder message = new StringBuilder();
-				message.append(feed.getInfo());
-
 				if ( this.showTitles ) {
-					Label title = new Label(feed.getWidget().getShortDescription());
+					Label title = new Label(feedback.getSharedFeedbackTitle() );//feed.getWidget().getShortDescription());
 					title.setStyleName(TITLE_STYLENAME_SUFFIX);
 					vPanel.add(title);
+					
+					HTML l = new HTML( feedback.getSharedFeedbackInfo()); //message.toString() );
+					switch( feedback.getType() ) {
+					case ACCEPTED:
+						l.setStyleName(ACCEPTED_INPUT_STYLENAME_SUFFIX);
+						break;
+					case NOT_ACCEPTED:
+						l.setStyleName(NOTACCEPTED_INPUT_STYLENAME_SUFFIX);
+						break;
+					}
+					
+					
+					vPanel.add(l);					
+				} else {
+					
+					HTML l = new HTML(feedback.getInfo() );
+					
+					switch( feedback.getType() ) {
+					case ACCEPTED:
+						l.setStyleName(ACCEPTED_INPUT_STYLENAME_SUFFIX);
+						break;
+					case NOT_ACCEPTED:
+						l.setStyleName(NOTACCEPTED_INPUT_STYLENAME_SUFFIX);
+						break;
+					}
+					
+					
+					vPanel.add(l);
 				}
-				
-				HTML l = new HTML( message.toString() );
-				
-				switch( feed.getType() ) {
-				case ACCEPTED:
-					l.setStyleName(ACCEPTED_INPUT_STYLENAME_SUFFIX);
-					break;
-				case NOT_ACCEPTED:
-					l.setStyleName(NOTACCEPTED_INPUT_STYLENAME_SUFFIX);
-					break;
-				}
-				
-				
-				vPanel.add(l);
 		
 		}
 		

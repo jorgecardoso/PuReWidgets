@@ -50,6 +50,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class PdListBox extends PdWidget implements ClickHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %WOS%";
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
+	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%WOS%";
 	
 	interface Style extends CssResource {
 		
@@ -108,6 +110,8 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		 * Set the default user feedback pattern
 		 */
 		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
 		
 		this.widgetList = new org.purewidgets.shared.widgets.ListBox(widgetId, title, options);
 		this.setWidget(this.widgetList);
@@ -169,7 +173,7 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		ActionEvent<PdListBox> ae = new ActionEvent<PdListBox>(ie, this, null);
 		feedback.setActionEvent(ae);
 		
-		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+		this.generateUserInputFeedbackMessage(ie, feedback);
 		return feedback;
 	}
 

@@ -26,6 +26,10 @@ public class InputFeedback<T extends PdWidget> {
 	 */
 	private String info;
 	
+	private String sharedFeedbackTitle;
+	
+	private String sharedFeedbackInfo;
+	
 	/**
 	 * The type of feedback (Accepted, not accepted)
 	 */
@@ -179,5 +183,37 @@ public class InputFeedback<T extends PdWidget> {
 	 */
 	public void setWidget(T widget) {
 		this.widget = widget;
+	}
+
+
+	/**
+	 * @return the sharedFeedbackTitle
+	 */
+	public String getSharedFeedbackTitle() {
+		return sharedFeedbackTitle;
+	}
+
+
+	/**
+	 * @param sharedFeedbackTitle the sharedFeedbackTitle to set
+	 */
+	public void setSharedFeedbackTitle(String sharedFeedbackTitle) {
+		this.sharedFeedbackTitle = sharedFeedbackTitle;
+	}
+
+
+	/**
+	 * @return the sharedFeedbackInfo
+	 */
+	public String getSharedFeedbackInfo() {
+		return sharedFeedbackInfo;
+	}
+
+
+	/**
+	 * @param sharedFeedbackInfo the sharedFeedbackInfo to set
+	 */
+	public void setSharedFeedbackInfo(String sharedFeedbackInfo) {
+		this.sharedFeedbackInfo = sharedFeedbackInfo;
 	}
 }

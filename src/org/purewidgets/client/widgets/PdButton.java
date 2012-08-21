@@ -94,7 +94,8 @@ public class PdButton extends PdWidget {
 
 		ActionEvent<PdButton> ae = new ActionEvent<PdButton>(ie, this, null);
 		feedback.setActionEvent(ae);
-		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+		this.generateUserInputFeedbackMessage(ie, feedback);
+		//feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
 		return feedback;
 	}
 

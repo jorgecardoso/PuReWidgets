@@ -48,7 +48,8 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 * %WOR% - widget option reference code
 	 */
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%";
-	
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
+	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%WS%";
 	/**
 	 * The widget that supports this guiwidget.
 	 */
@@ -71,6 +72,18 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	private String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 
+	/**
+	 * The pattern to apply to generate the input feedback message.
+	 */
+	private String userSharedTitleInputFeedbackPattern = DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN;
+	
+	/**
+	 * The pattern to apply to generate the input feedback message.
+	 */
+	private String userSharedInfoInputFeedbackPattern = DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN;
+	
+	
+	
 	/**
 	 * The visual state of the widget.
 	 */
@@ -237,7 +250,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		
 		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
 		feedback.setActionEvent(ae);
-		feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+		this.generateUserInputFeedbackMessage(ie, feedback);
 		return feedback;
 	}
 	
@@ -645,10 +658,14 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	
 	
 	
-	protected String generateUserInputFeedbackMessage(WidgetInputEvent inputEvent) {
-		String msg = new String(this.userInputFeedbackPattern);
-		
-		
+	protected void generateUserInputFeedbackMessage(WidgetInputEvent inputEvent, InputFeedback inputFeedback) {
+
+		inputFeedback.setInfo( replaceParameters(this.userInputFeedbackPattern, inputEvent) );
+		inputFeedback.setSharedFeedbackTitle( replaceParameters(this.userSharedTitleInputFeedbackPattern, inputEvent) );
+		inputFeedback.setSharedFeedbackInfo( replaceParameters(this.userSharedInfoInputFeedbackPattern, inputEvent) );
+	}
+	
+	private String replaceParameters(String pattern, WidgetInputEvent inputEvent) {
 		 /* %U% - user nickname
 		  * %P[i]% - Input parameter i
 		 * %WS% - widget short description
@@ -657,7 +674,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		 * %WOL% - widget option long description
 		 * %WOR% - widget option reference code
 		 */
-		
+		String msg = new String(pattern);
 		Log.debugFinest(this, "Replacing Username: " + msg + " : " + noNull(inputEvent.getNickname()));
 		msg = msg.replaceAll("%U%", noNull(inputEvent.getNickname()) );
 		
@@ -705,6 +722,34 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	public void setLocalStorage(LocalStorage localStorage) {
 		this.localStorage = localStorage;
+	}
+
+	/**
+	 * @return the userSharedTitleInputFeedbackPattern
+	 */
+	public String getUserSharedTitleInputFeedbackPattern() {
+		return userSharedTitleInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userSharedTitleInputFeedbackPattern the userSharedTitleInputFeedbackPattern to set
+	 */
+	public void setUserSharedTitleInputFeedbackPattern(String userSharedTitleInputFeedbackPattern) {
+		this.userSharedTitleInputFeedbackPattern = userSharedTitleInputFeedbackPattern;
+	}
+
+	/**
+	 * @return the userSharedInfoInputFeedbackPattern
+	 */
+	public String getUserSharedInfoInputFeedbackPattern() {
+		return userSharedInfoInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userSharedInfoInputFeedbackPattern the userSharedInfoInputFeedbackPattern to set
+	 */
+	public void setUserSharedInfoInputFeedbackPattern(String userSharedInfoInputFeedbackPattern) {
+		this.userSharedInfoInputFeedbackPattern = userSharedInfoInputFeedbackPattern;
 	}
 
 

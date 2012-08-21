@@ -58,7 +58,8 @@ import com.google.gwt.user.client.Timer;
  */
 public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler {
 	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %P[0]%";
-	
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
+	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%P[0]%";
 	
 	@UiTemplate("PdTextBox.ui.xml")
 	interface PdTextBoxUiBinder extends UiBinder<Widget, PdTextBox> {	}
@@ -108,6 +109,8 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		 * Set the default user feedback pattern
 		 */
 		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
 		
 		this.widgetTextBox = new org.purewidgets.shared.widgets.TextBox(widgetId, caption);
 		
@@ -195,7 +198,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<PdTextBox> ae = new ActionEvent<PdTextBox>(ie, this, ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
-			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+			this.generateUserInputFeedbackMessage(ie, feedback);
 		} else {
 			feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 		}

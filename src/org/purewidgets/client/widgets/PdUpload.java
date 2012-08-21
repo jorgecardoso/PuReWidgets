@@ -102,9 +102,9 @@ public class PdUpload extends PdWidget  {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<PdUpload> ae = new ActionEvent<PdUpload>(ie, this, ie.getParameters().get(0));
 			feedback.setActionEvent(ae);	
-			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+			this.generateUserInputFeedbackMessage(ie, feedback);
 		} else {
-			feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+			this.generateUserInputFeedbackMessage(ie, feedback);
 			feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 		}
 		
