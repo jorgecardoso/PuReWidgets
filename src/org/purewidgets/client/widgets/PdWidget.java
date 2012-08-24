@@ -678,8 +678,9 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	    RegExp reg = RegExp.compile(parameterPattern);
 	    MatchResult matcher = reg.exec(inputString);
 	    
-	    if ( matcher.getGroupCount() > 1 ) {
+	    if ( null != matcher && matcher.getGroupCount() > 1 ) {
 	    	int nChars = Integer.parseInt(matcher.getGroup(1));
+	    	
 	    	inputString = reg.replace(inputString, noNull(replacement, nChars) );
 	    } else {
 	    	inputString = inputString.replaceAll(parameter, noNull(replacement) );
