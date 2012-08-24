@@ -14,6 +14,8 @@ import org.purewidgets.shared.events.WidgetInputEvent;
  *
  */
 public class InputFeedback<T extends PdWidget> {
+
+	
 	public enum Type {ACCEPTED, NOT_ACCEPTED};
 	
 	/**

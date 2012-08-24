@@ -2,6 +2,8 @@ package org.purewidgets.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.feedback.CumulativeInputFeedbackPanel;
@@ -9,6 +11,7 @@ import org.purewidgets.client.feedback.FeedbackDisplay;
 import org.purewidgets.client.feedback.FeedbackSequencer;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.feedback.InputFeedbackListener;
+import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.events.ActionEvent;
@@ -20,6 +23,8 @@ import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -665,7 +670,24 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		inputFeedback.setSharedFeedbackInfo( replaceParameters(this.userSharedInfoInputFeedbackPattern, inputEvent) );
 	}
 	
-	private String replaceParameters(String pattern, WidgetInputEvent inputEvent) {
+	
+	private String replaceParameter(String inputString, String parameter, String replacement) {
+		Log.debugFinest(this, "Replacing " + parameter +" in " + inputString + " with " + replacement );
+	    String parameterPattern = parameter+"\\(([\\d]+)\\)";
+	    	 
+	    RegExp reg = RegExp.compile(parameterPattern);
+	    MatchResult matcher = reg.exec(inputString);
+	    
+	    if ( matcher.getGroupCount() > 1 ) {
+	    	int nChars = Integer.parseInt(matcher.getGroup(1));
+	    	inputString = reg.replace(inputString, noNull(replacement, nChars) );
+	    } else {
+	    	inputString = inputString.replaceAll(parameter, noNull(replacement) );
+	    }
+	    return inputString;
+	}
+	
+	private String replaceParameters(String inputString, WidgetInputEvent inputEvent) {
 		 /* %U% - user nickname
 		  * %P[i]% - Input parameter i
 		 * %WS% - widget short description
@@ -674,38 +696,53 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		 * %WOL% - widget option long description
 		 * %WOR% - widget option reference code
 		 */
-		String msg = new String(pattern);
-		Log.debugFinest(this, "Replacing Username: " + msg + " : " + noNull(inputEvent.getNickname()));
-		msg = msg.replaceAll("%U%", noNull(inputEvent.getNickname()) );
 		
-		Log.debugFinest(this, "Replacing widget short description: " + msg + " : " + noNull(this.getShortDescription()));
-		msg = msg.replaceAll("%WS%", noNull(this.getShortDescription()) );
 		
-		Log.debugFinest(this, "Replacing widget long description: " + msg + " : " + noNull(this.getLongDescription()));
-		msg = msg.replaceAll("%WL%", noNull(this.getLongDescription()) );
+		// nickname
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_USER_NICKNAME, inputEvent.getNickname());
 		
-		Log.debugFinest(this, "Replacing widget option short description: " + msg + " : " + noNull(inputEvent.getWidgetOption().getShortDescription()));
-		msg = msg.replaceAll("%WOS%", noNull(inputEvent.getWidgetOption().getShortDescription()) );
 		
-		Log.debugFinest(this, "Replacing widget option long description: " + msg + " : " + noNull(inputEvent.getWidgetOption().getLongDescription()));
-		msg = msg.replaceAll("%WOL%", noNull(inputEvent.getWidgetOption().getLongDescription()) );
+	    // widget short description
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION, this.getShortDescription());
 		
-		Log.debugFinest(this, "Replacing widget option reference code: " + msg + " : " + noNull(inputEvent.getWidgetOption().getReferenceCode()));
-		msg = msg.replaceAll("%WOR%", noNull(inputEvent.getWidgetOption().getReferenceCode()) );
 		
-		Log.debugFinest(this, "Replacing widget parameters: " + msg);
+	    // widget long description
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_LONG_DESCRIPTION, this.getLongDescription());
+	   
+	   	
+	    // widget option short description
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION, inputEvent.getWidgetOption().getShortDescription() );
+	  
+		
+	    // widget option long description
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_LONG_DESCRIPTION, inputEvent.getWidgetOption().getLongDescription() );
+
+	    // widget option reference code
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_REFERENCE_CODE, inputEvent.getWidgetOption().getReferenceCode() );
+		
+			
+		Log.debugFinest(this, "Replacing widget parameters: " + inputString);
 		if ( null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0 ) {
 			for (int i = 0; i < inputEvent.getParameters().size(); i++ ) {
-				msg = msg.replaceAll("%P\\["+i+"\\]%", noNull(inputEvent.getParameters().get(i)) );
+
+				inputString = replaceParameter(inputString, MessagePattern.getInputParameterPattern(i), inputEvent.getParameters().get(i) );
 			}
 		
 		}
-		return msg;
+		return inputString;
 	}
 	
 	private String noNull(String s) {
 		if (null == s) {
 			return "";
+		}
+		return s;
+	}
+	
+	private String noNull(String s, int nChars) {
+		s = noNull(s);
+		if ( s.length() > nChars ) {
+			s = s.substring(0, nChars) + "...";
 		}
 		return s;
 	}
