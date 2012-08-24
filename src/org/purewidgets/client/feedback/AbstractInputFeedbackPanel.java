@@ -5,6 +5,10 @@ package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.PdWidget;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -107,27 +111,74 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 		int height = this.getOffsetHeight();
 		int width = this.getOffsetWidth();
 
-		if (this.panelReferencePoint != null) {
-			switch (this.panelReferencePoint) {
-			case BOTTOM:
-				this.setPopupPosition(x - width / 2, y - height);
-				break;
-			case TOP:
-				this.setPopupPosition(x - width / 2, y);
-				break;
-			case LEFT:
-				this.setPopupPosition(x, y - height / 2);
-				break;
-			case RIGHT:
-				this.setPopupPosition(x - width, y - height / 2);
-				break;
-			case CENTER:
-				this.setPopupPosition(x - width / 2, y - height / 2);
-				break;
+		if ( null != this.widget ) {
+			/*
+			 * If its relative to an existing widget, use absolute positioning
+			 */
+			if (this.panelReferencePoint != null) {
+				switch (this.panelReferencePoint) {
+				case BOTTOM:
+					this.setPopupPosition(x - width / 2, y - height);
+					break;
+				case TOP:
+					this.setPopupPosition(x - width / 2, y);
+					break;
+				case LEFT:
+					this.setPopupPosition(x, y - height / 2);
+					break;
+				case RIGHT:
+					this.setPopupPosition(x - width, y - height / 2);
+					break;
+				case CENTER:
+					this.setPopupPosition(x - width / 2, y - height / 2);
+					break;
+				}
+			}
+		} else {
+			/*
+			 * If it's relative to the window use relative positioning
+			 */
+			if (this.widgetReferencePoint != null) {
+				Style s;
+				switch (this.widgetReferencePoint) {
+				case BOTTOM:
+					s = this.getElement().getStyle();
+					s.clearProperty("top");
+					s.clearProperty("right");
+					s.setProperty("bottom", "0%"); 
+					s.setProperty("left", x-width/2, Unit.PX); 
+					break;
+				case TOP:
+					s = this.getElement().getStyle();
+					s.setProperty("top", "0%"); 
+					s.clearProperty("right");
+					s.setProperty("left", x-width/2, Unit.PX); 
+					s.clearProperty("bottom");
+					break;
+				case LEFT:
+					s = this.getElement().getStyle();
+					s.setProperty("left", "0%"); 
+					s.setProperty("top", y, Unit.PX);
+					s.clearProperty("right");
+					s.clearProperty("bottom");
+					break;
+				case RIGHT:
+					s = this.getElement().getStyle();
+					s.setProperty("right", "0%"); 
+					s.setProperty("top", y, Unit.PX); 
+					s.clearProperty("bottom");
+					s.clearProperty("left");
+					break;
+				case CENTER:
+					this.setPopupPosition(x - width / 2, y - height / 2);
+					break;
+				}
 			}
 		}
 	}
 
+
+	 
 	/**
 	 * Sets the reference point on the widget  that will be used to align the 
 	 * the panel. 

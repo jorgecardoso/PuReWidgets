@@ -172,6 +172,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 			Log.debug(this, "Showing:" + inputFeedback.toString());
 		} else {
 			Log.warn(this, "Null feedback!");
+			return;
 		}
 		
 		if ( this.newOnTop ) {
