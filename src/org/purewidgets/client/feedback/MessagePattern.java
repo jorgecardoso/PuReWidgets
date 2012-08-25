@@ -17,6 +17,6 @@ public class MessagePattern {
 	public static final String PATTERN_WIDGET_OPTION_REFERENCE_CODE = "%WOR%";
 	public static final String PATTERN_INPUT_AGE = "%AGE%";
 	public static final String getInputParameterPattern(int index) {
-		return "%P["+index+"]";
+		return "%P["+index+"]%";
 	}
 }

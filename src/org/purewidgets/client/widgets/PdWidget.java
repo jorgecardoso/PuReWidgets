@@ -676,7 +676,9 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	    String parameterPattern = parameter+"\\(([\\d]+)\\)";
 	    	 
 	    RegExp reg = RegExp.compile(parameterPattern);
+	    Log.debugFinest(this, "RegExp: " + reg);
 	    MatchResult matcher = reg.exec(inputString);
+	    Log.debugFinest(this, "Matcher: " + matcher);
 	    
 	    if ( null != matcher && matcher.getGroupCount() > 1 ) {
 	    	int nChars = Integer.parseInt(matcher.getGroup(1));
