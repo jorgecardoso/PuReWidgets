@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Composite;
 public class PdWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
 	
 	private static final String REFERENCE_CODES_STORAGE_ID = "referenceCodes";
-	private static final int INPUT_EVENT_OLD_AGE = 1000*60*5; // 5 minutes
+	private static final int INPUT_EVENT_OLD_AGE = 1000*60*60*24; // 1 day
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
 	/**
@@ -52,8 +52,8 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 * %WOL% - widget option long description
 	 * %WOR% - widget option reference code
 	 */
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%";
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% %AGE%";
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U% %AGE%";
 	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%WS%";
 	/**
 	 * The widget that supports this guiwidget.
@@ -721,6 +721,13 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	    // widget option reference code
 		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_REFERENCE_CODE, inputEvent.getWidgetOption().getReferenceCode() );
 		
+		// age
+		String ageString = inputEvent.getAgeString();
+		if ( inputEvent.getAge() < 1000*60*1 ) {
+			ageString="";
+		}
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_INPUT_AGE,  ageString);
+				
 			
 		Log.debugFinest(this, "Replacing widget parameters: " + inputString);
 		if ( null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0 ) {

@@ -173,7 +173,7 @@ public class WidgetManager {
 	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 * 
 	 */
-	public void addWidget(Widget widget) {
+	public void addWidget(final Widget widget) {
 		Log.debug(this, "Adding widget: " + widget.getWidgetId());
 
 		/*
@@ -202,6 +202,18 @@ public class WidgetManager {
 
 		startTimerWidget();
 		
+		new Timer() {
+			
+			@Override
+			public void run() {
+				processPendingInput(widget);
+			}	
+		}.schedule(1000);
+		
+	}
+	
+
+	private void processPendingInput( Widget widget ) {
 		/*
 		 * check if we have pending input
 		 */
