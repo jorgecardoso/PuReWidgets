@@ -5,6 +5,7 @@ package org.purewidgets.client.widgets;
 
 
 import org.purewidgets.client.feedback.InputFeedback;
+import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 
@@ -44,7 +45,10 @@ public class PdUpload extends PdWidget  {
 	@UiTemplate("PdUpload.ui.xml")
 	interface PdUploadUiBinder extends UiBinder<Widget, PdUpload> {	}
 	private static PdUploadUiBinder uiBinder = GWT.create(PdUploadUiBinder.class);
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% : %P[0]%";
+
+	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
 	
 	
 
@@ -75,7 +79,9 @@ public class PdUpload extends PdWidget  {
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserInputFeedbackPattern(USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
 		
 		this.uiHTMLCaption.setText(caption);
 		this.setWidget(widgetUpload);

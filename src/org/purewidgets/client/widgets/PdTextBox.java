@@ -7,6 +7,7 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
+import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
 import org.purewidgets.client.widgets.PdButton.PdButtonUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
@@ -57,9 +58,9 @@ import com.google.gwt.user.client.Timer;
  * @author Jorge C. S. Cardoso
  */
 public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler {
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %P[0]%";
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
-	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%P[0]%";
+	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
 	
 	@UiTemplate("PdTextBox.ui.xml")
 	interface PdTextBoxUiBinder extends UiBinder<Widget, PdTextBox> {	}
@@ -108,9 +109,9 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedInfoInputFeedbackPattern(DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedTitleInputFeedbackPattern(DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
+		this.setUserInputFeedbackPattern(USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
 		
 		this.widgetTextBox = new org.purewidgets.shared.widgets.TextBox(widgetId, caption);
 		

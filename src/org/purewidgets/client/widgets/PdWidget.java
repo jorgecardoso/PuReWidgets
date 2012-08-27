@@ -52,9 +52,9 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 * %WOL% - widget option long description
 	 * %WOR% - widget option reference code
 	 */
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% %AGE%";
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U% %AGE%";
-	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%WS%";
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " "+ MessagePattern.PATTERN_INPUT_AGE; 
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " "+ MessagePattern.PATTERN_INPUT_AGE;;
+	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION;
 	/**
 	 * The widget that supports this guiwidget.
 	 */

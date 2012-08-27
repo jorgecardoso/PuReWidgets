@@ -6,6 +6,7 @@ package org.purewidgets.client.widgets;
 import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
+import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetOption;
@@ -49,9 +50,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public class PdListBox extends PdWidget implements ClickHandler {
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U%: %WOS%";
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = "%U%";
-	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "%WOS%";
+	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION + "(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION+"(10)";
 	
 	interface Style extends CssResource {
 		
@@ -109,9 +110,9 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedInfoInputFeedbackPattern(DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedTitleInputFeedbackPattern(DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
+		this.setUserInputFeedbackPattern(USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
 		
 		this.widgetList = new org.purewidgets.shared.widgets.ListBox(widgetId, title, options);
 		this.setWidget(this.widgetList);

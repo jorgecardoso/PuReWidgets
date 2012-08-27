@@ -1,5 +1,6 @@
 package org.purewidgets.client.widgets;
 
+import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.shared.logging.Log;
 import org.purewidgets.shared.widgets.Checkin;
 
@@ -21,7 +22,10 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class PdCheckin extends PdWidget{
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = "%U% checked-in";
+	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " checked-in "+MessagePattern.PATTERN_INPUT_AGE;
+	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME;
+	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "Checked-in "+ MessagePattern.PATTERN_INPUT_AGE;
+	
 	
 	@UiTemplate("PdCheckin.ui.xml")
 	interface PdCheckinUiBinder extends UiBinder<Widget, PdCheckin> {	}
@@ -39,7 +43,9 @@ public class PdCheckin extends PdWidget{
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.setUserInputFeedbackPattern(DEFAULT_USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserInputFeedbackPattern(USER_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedTitleInputFeedbackPattern(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
+		this.setUserSharedInfoInputFeedbackPattern(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
 		
 		Log.debug(this, "Sending to server");
 		this.sendToServer();
