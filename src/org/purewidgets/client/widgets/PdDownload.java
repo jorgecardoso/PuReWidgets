@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.shared.events.WidgetInputEvent;
+import org.purewidgets.shared.im.WidgetParameter;
 import org.purewidgets.shared.logging.Log;
 
 
@@ -62,10 +63,13 @@ public class PdDownload extends PdWidget {
 	}
 
 	public PdDownload(String widgetId, String caption, String url, String suggestedRef) {
+		this(widgetId, caption, url, suggestedRef, "", null);
+	}
+	public PdDownload(String widgetId, String caption, String url, String suggestedRef, String longDescription, ArrayList<WidgetParameter> parameters) {
 		super(widgetId);
 		initWidget(uiBinder.createAndBindUi(this));
 		
-		widgetDownloadButton = new org.purewidgets.shared.widgets.Download(widgetId, caption, url);
+		widgetDownloadButton = new org.purewidgets.shared.widgets.Download(widgetId, caption, url, longDescription, null, parameters);
 
 		this.setWidget(widgetDownloadButton);
 		

@@ -69,7 +69,8 @@ public class Widget implements Comparable<Widget> {
 	public static String CONTROL_TYPE_PRESENCE = "presence";
 	//TODO: composite
 
-
+	public static String SORT_ORDER_PARAMETER_NAME = "purewidgets-sortorder";
+	
 	/**
 	 * The placeId where the application that has this widget is running.
 	 * Applications don't usually have to deal directly with this.
@@ -462,7 +463,33 @@ public class Widget implements Comparable<Widget> {
 
 	@Override
 	public int compareTo(Widget other) {
-		return this.widgetId.compareTo(other.getWidgetId());
+		String thisSort = null;
+		if ( this.widgetParameters.size() > 0) {
+			for (WidgetParameter wp: this.widgetParameters) {
+				if ( wp.getName().equals(SORT_ORDER_PARAMETER_NAME) ) {
+					thisSort = wp.getValue();
+				}
+			}
+		}
+		
+		String otherSort = null;
+		if ( other.widgetParameters.size() > 0) {
+			for (WidgetParameter wp: other.widgetParameters) {
+				if ( wp.getName().equals(SORT_ORDER_PARAMETER_NAME) ) {
+					otherSort = wp.getValue();
+				}
+			}
+		}
+		
+		if ( thisSort == null && otherSort == null ) {
+			return this.widgetId.compareTo(other.getWidgetId());
+		} else if ( thisSort != null && otherSort != null ) {
+			return thisSort.compareTo(otherSort);
+		} else if ( thisSort != null ) {
+			return -1;
+		} else {
+			return 1;
+		}
 	}
 
 	/**

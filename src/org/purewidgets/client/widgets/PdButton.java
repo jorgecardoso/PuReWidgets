@@ -9,6 +9,7 @@ import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
+import org.purewidgets.shared.im.WidgetParameter;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
@@ -62,12 +63,14 @@ public class PdButton extends PdWidget {
 	public PdButton(String widgetId, String caption) {
 		this(widgetId, caption, widgetId);
 	}
-
 	public PdButton(String widgetId, String caption, String suggestedRef) {
+		this(widgetId, caption, suggestedRef, "", null);
+	}
+	public PdButton(String widgetId, String caption, String suggestedRef, String longDescription, ArrayList<WidgetParameter> parameters) {
 		super(widgetId);
 		initWidget(uiBinder.createAndBindUi(this));
 		
-		widgetButton = new org.purewidgets.shared.widgets.Button(widgetId, caption);
+		widgetButton = new org.purewidgets.shared.widgets.Button(widgetId, caption, longDescription, null, parameters);
 
 		this.setWidget(widgetButton);
 	
