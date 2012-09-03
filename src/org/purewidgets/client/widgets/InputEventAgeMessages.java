@@ -1,4 +1,4 @@
-package org.purewidgets.shared.events;
+package org.purewidgets.client.widgets;
 
 import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;

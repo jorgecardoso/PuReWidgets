@@ -23,6 +23,7 @@ import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Composite;
@@ -100,6 +101,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 */
 	protected boolean inputEnabled = true;
 	
+	InputEventAgeMessages messages;
 	
 	private LocalStorage localStorage;
 	private String widgetId;
@@ -120,6 +122,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
 		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.widgetId);
+		this.messages = GWT.create(InputEventAgeMessages.class);
 	}
 
 	public boolean isDisplaying() {
@@ -724,7 +727,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_REFERENCE_CODE, inputEvent.getWidgetOption().getReferenceCode() );
 		
 		// age
-		String ageString = inputEvent.getAgeString();
+		String ageString = getAgeString( inputEvent.getAge() );
 		if ( inputEvent.getAge() < 1000*60*1 ) {
 			ageString="";
 		}
@@ -742,6 +745,27 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		return inputString;
 	}
 	
+	private String getAgeString(long milli) {
+		float ageSeconds = milli/1000;
+		
+		float ageMinutes = ageSeconds/60;
+		float ageHours = ageMinutes/60;
+		float ageDays = ageHours/24;
+		float ageWeeks = ageDays/7;
+		
+		if ( ageWeeks > 1 ) {
+			return messages.ageWeek( (int)ageWeeks );
+		} else if ( ageDays > 1 ) {
+			return messages.ageDay( (int)ageDays );
+		} else if ( ageHours > 1 ) {
+			return messages.ageHour( (int)ageHours );
+		} else if ( ageMinutes > 1 ) {
+			return messages.ageMinute( (int)ageMinutes );
+		} else {
+			return messages.ageSecond( (int)ageSeconds );
+		}
+		
+	}
 	private String noNull(String s) {
 		if (null == s) {
 			return "";

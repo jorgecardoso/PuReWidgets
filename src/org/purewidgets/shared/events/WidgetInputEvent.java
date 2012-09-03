@@ -46,7 +46,7 @@ public class WidgetInputEvent {
 	 */
 	private long age;
 	
-	InputEventAgeMessages messages;
+
 	
 	public WidgetInputEvent(WidgetOption widgetOption, ArrayList<String> parameters) {
 		this("Anonymous", "Anonymous", widgetOption, parameters);
@@ -79,7 +79,7 @@ public class WidgetInputEvent {
 		this.widgetOption = widgetOption;
 		this.parameters =  parameters;
 		this.age = 0;
-		this.messages = GWT.create(InputEventAgeMessages.class);
+		
 	}	
 	
 
@@ -99,27 +99,7 @@ public class WidgetInputEvent {
 		return this.widgetOption;
 	}
 
-	public String getAgeString() {
-		float ageSeconds = this.age/1000;
-		
-		float ageMinutes = ageSeconds/60;
-		float ageHours = ageMinutes/60;
-		float ageDays = ageHours/24;
-		float ageWeeks = ageDays/7;
-		
-		if ( ageWeeks > 1 ) {
-			return messages.ageWeek( (int)ageWeeks );
-		} else if ( ageDays > 1 ) {
-			return messages.ageDay( (int)ageDays );
-		} else if ( ageHours > 1 ) {
-			return messages.ageHour( (int)ageHours );
-		} else if ( ageMinutes > 1 ) {
-			return messages.ageMinute( (int)ageMinutes );
-		} else {
-			return messages.ageSecond( (int)ageSeconds );
-		}
-		
-	}
+	
 	
 
 	/**
