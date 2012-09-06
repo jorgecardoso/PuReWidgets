@@ -81,7 +81,11 @@ public native final void setDefaultPlayerUrl(String playerUrl) /*-{
      * @return
      */
     private native final JsArrayString getKeywordsAsJsArray() /*-{
-		return this.tags;
+    	if ( typeof(this.tags) == "undefined" ) {
+    		return Array();
+    	} else {
+			return this.tags;
+    	}
 	}-*/;
     
     public final String[] getKeywords() {
