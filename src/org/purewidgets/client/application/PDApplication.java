@@ -164,13 +164,23 @@ public class PDApplication  {
 	
 	/** 
 	 * This function returns a string application parameter value by first checking if
-	 * it is set in the remote storage, then on the URL. Remote storage parameters have
-	 * precedence over URL parameters.
+	 * it is set in the remote storage, then on the URL. URL parameters have
+	 * precedence over Remote storage parameters.
 	 */
 	public  String getParameterString(String name, String defaultValue) {
 
 		/*
-		 * Check remote storage first
+		 * Check the URL for the parameter first
+		 */
+		String urlValue = com.google.gwt.user.client.Window.Location.getParameter(name);
+
+		if (null != urlValue) {
+			return urlValue;
+		}
+
+		
+		/*
+		 * Check remote storage 
 		 */
 		if (null != parameters && parameters.size() > 0) {
 
@@ -185,15 +195,7 @@ public class PDApplication  {
 			}
 		} 
 
-		/*
-		 * Check the URL for the parameter
-		 */
-		String urlValue = com.google.gwt.user.client.Window.Location.getParameter(name);
-
-		if (null != urlValue) {
-			return urlValue;
-		}
-
+	
 		return defaultValue;
 		
 	}		
