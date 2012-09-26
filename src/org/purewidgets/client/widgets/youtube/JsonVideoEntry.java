@@ -1,5 +1,7 @@
 package org.purewidgets.client.widgets.youtube;
 
+import java.util.ArrayList;
+
 import org.purewidgets.client.json.GenericJson;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -90,11 +92,34 @@ public native final void setDefaultPlayerUrl(String playerUrl) /*-{
     
     public final String[] getKeywords() {
     	JsArrayString jsArrayString = this.getKeywordsAsJsArray();
-    	String []keywords = new String[jsArrayString.length()];
-    	for (int i = 0; i < jsArrayString.length(); i++ ) {
-    		keywords[i] = jsArrayString.get(i);
+    	
+    	
+    	if ( jsArrayString.length() == 0 ) {
+    		
+    		
+    		String title[] = this.getTitle().split(" ");
+    		ArrayList<String> keywords = new ArrayList<String>();
+    		
+    		for (String s : title) {
+    			s = s.trim();
+    			if ( s.length() >= 4 && s.length() < 16) {
+    				keywords.add(s);
+    			} 
+    			
+    		}
+    		keywords.add(this.getCategory());
+    		return keywords.toArray(new String[]{});
+    		
+    		
+    	} else {
+    		String []keywords = new String[jsArrayString.length()];
+    	
+    		for (int i = 0; i < jsArrayString.length(); i++ ) {
+    			keywords[i] = jsArrayString.get(i);
+    		}
+    		return keywords;
     	}
-    	return keywords;
+    	
     }
     
     private native final void setKeywordsAsJsArray(JsArrayString keywords) /*-{
