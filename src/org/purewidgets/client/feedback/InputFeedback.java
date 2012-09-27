@@ -64,11 +64,6 @@ public class InputFeedback<T extends PdWidget> {
 	 * The type of feedback (Accepted, not accepted)
 	 */
 	private Type type; 
-
-	/**
-	 * The start time for this feedback.
-	 */
-	private long time;
 	
 	/**
 	 * The action event to trigger if the input was accepted.
@@ -96,7 +91,7 @@ public class InputFeedback<T extends PdWidget> {
 		this.actionEvent = ae;
 		this.info = "";
 		this.type = (null == type ? Type.ACCEPTED : type);
-		this.time = System.currentTimeMillis(); //getTimeStampMilli();
+		//this.time = System.currentTimeMillis(); //getTimeStampMilli();
 	}
 	
 	/*
