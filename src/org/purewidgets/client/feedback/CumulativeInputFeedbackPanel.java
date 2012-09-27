@@ -4,7 +4,6 @@
 package org.purewidgets.client.feedback;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +11,16 @@ import org.purewidgets.client.widgets.PdWidget;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * TODO: Add animation (fade in or something) to new items
  * 
- * The SequentialInputFeedbackPanel displays input feedback to the user.
+ * The CumulativeInputFeedbackPanel displays input feedback to the user, accumulating various feedback
+ * messages if they occur within a limited amount of time.
  * The panel can be configured with a maximum number of simultaneous feedback
- * lines to display. The panel will display up to Maximum Lines at a time. 
+ * lines to display. 
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
@@ -44,38 +42,31 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	public final String DEFAULT_STYLENAME = "pwCumulativeInputFeedbackPanel";
 	
-	
 
 	/**
-	 * The style name for the widget title.
+	 * The style name applied the title element.
 	 */
 	public final String TITLE_STYLENAME_SUFFIX = "title";
 	
 	/**
-	 * The style name for accepted input feedback lines.
+	 * The style name applied to accepted input feedback elements
 	 */
 	public final String ACCEPTED_INPUT_STYLENAME_SUFFIX = "accepted";
 
 	
 	/**
-	 * The style name for not accepted input feedback lines.
+	 * The style name applied to not accepted input feedback elements.
 	 */
 	public final String NOTACCEPTED_INPUT_STYLENAME_SUFFIX = "notaccepted";
 
 	
 	/**
-	 * The style name for system info input feedback lines.
-	 */
-	public final String SYSTEMINFO_INPUT_STYLENAME_SUFFIX = "systeminfo";
-
-
-	
-	/**
-	 * The default value for the maximum number of simultaneous feedback lines
+	 * The default value (5) for the maximum number of simultaneous feedback lines
 	 * to display.
 	 */
 	public static final int DEFAULT_MAX_LINES = 5;
 
+	
 	private VerticalPanel mainPanel;
 	
 	/**
@@ -111,9 +102,10 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	private Timer timer;
 	
 	/**
-	 * Creates a new SequentialInputFeedbackPanel with default values for the
-	 * maximum number of display lines and delay.
+	 * Creates a new CumulativeInputFeedbackPanel for the specified PdWidget with default values for the
+	 * maximum number of display lines.
 	 * 
+	 * @param widget The PdWidget that is the target of the input that this panel is giving feedback about.
 	 */
 	public CumulativeInputFeedbackPanel(PdWidget widget) {
 		this(widget, DEFAULT_MAX_LINES);
@@ -121,11 +113,13 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 
 
 	/**
-	 * Creates a new SequentialInputFeedbackPanel object with the given number
-	 * of maximum lines and display delay.
+	 * Creates a new CumulativeInputFeedbackPanel for the specified PDWidget, with the given number
+	 * of maximum lines.
 	 * 
 	 * @param maxLines
 	 *            The maximum number of simultaneous feedback lines.
+	 * @param widget 
+	 * 				The PdWidget that is the target of the input that this panel is giving feedback about.
 	 */
 	public CumulativeInputFeedbackPanel(PdWidget widget, int maxLines) {
 		
@@ -164,6 +158,12 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	}
 	
 
+	/**
+	 * Shows input feedback for the specified duration.
+	 * 
+	 * @param inputFeedback The information about the feedback to display.
+	 * @param duration The amount of time, in milliseconds, that the feedback should be visible.
+	 */
 	@Override
 	public void show(InputFeedback<? extends PdWidget> inputFeedback, int duration) {
 		timer.schedule(duration);
@@ -234,6 +234,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		this.displayPanel();
 	}
 
+	/**
+	 * Hides the feedback. The panel is only actually hidden if there no more feedback to 
+	 * display, or if this panel only shows one line at a time.
+	 *   
+	 */
 	@Override
 	public void hide(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
 		if ( null != feedback ) {
@@ -260,7 +265,9 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 
 	
 	/**
-	 *  displays the feedback panel if the widget is currently being displayed.
+	 *  Displays the feedback panel. If the panel is already showing, this method will recalculate its position
+	 *  and position it accordingly.
+	 *  
 	 */
 	private void displayPanel() {
 		if (!this.isShowing()) {
@@ -283,38 +290,42 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 			 */
 			this.alignPanel();
 		}
-
-		
-
 	}
 
-
+	/**
+	 * Sets new input feedback on top or on the bottom of the panel.
+	 * 
+	 * @param newOnTop if true, sets new feedback on top of the panel; if false, sets new feedback on the bottom of the panel.
+	 */
 	public void setNewOnTop(boolean newOnTop) {
 		this.newOnTop = newOnTop;
 	}
 
-
+	/**
+	 * Tests whether new feedback is displayed on top or on the bottom of the panel.
+	 * @return <code>true</code> if the new feedback is displayed on top; <code>false</code> otherwise.
+	 */
 	public boolean isNewOnTop() {
 		return newOnTop;
 	}
 
-
 	/**
-	 * @return the showTitles
+	 * Tests if this panel shows feedback using only one line per feedback message, or if it uses a title line and
+	 * a description lines for the feedback.
+	 * 
+	 * @return true if the panel shows titles and description lines; false if it shows only the description.
 	 */
 	public boolean isShowTitles() {
 		return showTitles;
 	}
 
-
 	/**
-	 * @param showTitles the showTitles to set
+	 * Sets whether this panel should show titles and descriptions of just descriptions for the feedback.
+	 * 
+	 * @param showTitles if true, this panel will show title and descriptions; if false it will show only descriptions.
 	 */
 	public void setShowTitles(boolean showTitles) {
 		this.showTitles = showTitles;
 	}
-
-
 	
-
 }

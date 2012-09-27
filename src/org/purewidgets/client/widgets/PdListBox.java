@@ -168,11 +168,12 @@ public class PdListBox extends PdWidget implements ClickHandler {
 	
 	@Override
 	public InputFeedback<PdListBox> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdListBox> feedback = new InputFeedback<PdListBox>(this, ie);
-		feedback.setType(InputFeedback.Type.ACCEPTED);
-
 		ActionEvent<PdListBox> ae = new ActionEvent<PdListBox>(ie, this, null);
-		feedback.setActionEvent(ae);
+		
+		InputFeedback<PdListBox> feedback = new InputFeedback<PdListBox>(this, ie, InputFeedback.Type.ACCEPTED, ae);
+		
+//		feedback.setType(InputFeedback.Type.ACCEPTED);
+//		feedback.setActionEvent(ae);
 		
 		this.generateUserInputFeedbackMessage(ie, feedback);
 		return feedback;

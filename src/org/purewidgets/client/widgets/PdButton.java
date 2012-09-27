@@ -92,13 +92,11 @@ public class PdButton extends PdWidget {
 	}
 	@Override
 	public InputFeedback<PdButton> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdButton> feedback = new InputFeedback<PdButton>(this, ie);
-		feedback.setType(InputFeedback.Type.ACCEPTED);
-
 		ActionEvent<PdButton> ae = new ActionEvent<PdButton>(ie, this, null);
-		feedback.setActionEvent(ae);
+		InputFeedback<PdButton> feedback = new InputFeedback<PdButton>(this, ie, InputFeedback.Type.ACCEPTED, ae);
+		
 		this.generateUserInputFeedbackMessage(ie, feedback);
-		//feedback.setInfo(this.generateUserInputFeedbackMessage(ie));
+		
 		return feedback;
 	}
 

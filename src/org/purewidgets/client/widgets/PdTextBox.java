@@ -194,7 +194,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	
 	@Override
 	public InputFeedback<PdTextBox> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdTextBox> feedback = new InputFeedback<PdTextBox>(this, ie);
+		InputFeedback<PdTextBox> feedback = new InputFeedback<PdTextBox>(this, ie, null, null);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<PdTextBox> ae = new ActionEvent<PdTextBox>(ie, this, ie.getParameters().get(0));

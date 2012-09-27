@@ -103,7 +103,7 @@ public class PdUpload extends PdWidget  {
 	
 	@Override
 	public InputFeedback<PdUpload> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdUpload> feedback = new InputFeedback<PdUpload>(this, ie);
+		InputFeedback<PdUpload> feedback = new InputFeedback<PdUpload>(this, ie, null, null);
 		if ( null != ie.getParameters() && ie.getParameters().size() > 0 && ie.getParameters().get(0).length() > "http".length() ) {
 			feedback.setType(InputFeedback.Type.ACCEPTED);
 			ActionEvent<PdUpload> ae = new ActionEvent<PdUpload>(ie, this, ie.getParameters().get(0));

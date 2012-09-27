@@ -253,7 +253,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	}
 	
 	protected InputFeedback<? extends PdWidget> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdWidget> feedback = new InputFeedback<PdWidget>(this, ie);
+		InputFeedback<PdWidget> feedback = new InputFeedback<PdWidget>(this, ie, null, null);
 		feedback.setType(InputFeedback.Type.ACCEPTED);
 		
 		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
@@ -340,7 +340,7 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 			 */
 			} else {
 				
-				InputFeedback<? extends PdWidget> feedback = new InputFeedback<PdWidget>(this, ie);
+				InputFeedback<? extends PdWidget> feedback = new InputFeedback<PdWidget>(this, ie, null, null);
 				if( this.isInputEnabled() ) {
 					
 					/*
@@ -369,18 +369,18 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 
 	
 	
-	@Override
-	public void widgetVisibilityChanged() {
-//		Log.debug(this, "Widget visibility changed, transfering feedback.");
-//		/*
-//		 * Transfer the feedback to the bottom panel
-//		 */
-//		this.feedbackSequencer.stop();
-//		for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput() ) {
-//			sharedFeedbackSequencer.add(inputfeedback);
-//		}
-//		this.feedbackSequencer.clear();
-	}
+//	@Override
+//	public void widgetVisibilityChanged() {
+////		Log.debug(this, "Widget visibility changed, transfering feedback.");
+////		/*
+////		 * Transfer the feedback to the bottom panel
+////		 */
+////		this.feedbackSequencer.stop();
+////		for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput() ) {
+////			sharedFeedbackSequencer.add(inputfeedback);
+////		}
+////		this.feedbackSequencer.clear();
+//	}
 	
 	/**
 	 * Concrete widgets should override this method to update their Gui with the correct reference codes.

@@ -5,8 +5,6 @@ package org.purewidgets.client.feedback;
 
 import org.purewidgets.client.widgets.PdWidget;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
@@ -14,11 +12,12 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 
-
-
 /**
+ * The AbstractInputFeedbackPanel is an abstract implementation of a panel for user input feedback display on the public 
+ * display.
+ * 
+ * 
  * @author Jorge C. S. Cardoso
- *
  */
 public abstract class AbstractInputFeedbackPanel extends PopupPanel implements FeedbackDisplay {
 
@@ -41,9 +40,22 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	protected Align widgetReferencePoint;
 	
 	
+	/**
+	 * The horizontal displacement applied to the calculated position of the panel.
+	 */
 	protected int alignDisplacementX;
+	
+	/**
+	 * The vertical displacement applied to the calculated position of the panel.
+	 */
 	protected int alignDisplacementY;
 	
+	
+	/**
+	 * Creates a new AbstractInputFeedbackPanel for the specified PDWidget.
+	 *  
+	 * @param widget
+	 */
 	public AbstractInputFeedbackPanel(PdWidget widget) {
 		this.panelReferencePoint = Align.BOTTOM;
 		this.widgetReferencePoint = Align.TOP;
@@ -180,16 +192,11 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 
 	 
 	/**
-	 * Sets the reference point on the widget  that will be used to align the 
+	 * Sets the reference point on the widget that will be used to align the 
 	 * the panel. 
 	 * 
-	 * TOP - Use the top-center point as a reference.
-	 * BOTTOM - Use the bottom-center point as a reference.
-	 * LEFT - Use the left-center point as a reference.
-	 * RIGHT - Use the right-center point as a reference.
-	 * CENTER - Use the center point as a reference.
-	 * 
 	 * @param widgetReferencePoint The reference point.
+	 * @see FeedbackDisplay#setWidgetReferencePoint(Align)
 	 */
 	@Override
 	public void setWidgetReferencePoint(Align widgetReferencePoint) {
@@ -197,16 +204,12 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 	
 	/**
-	 * Sets the reference point on the feedback panel that will be used to position
+	 * Sets the reference point of the feedback panel that will be used to position
 	 * the panel. 
 	 * 
-	 * TOP - Use the top-center point as a reference.
-	 * BOTTOM - Use the bottom-center point as a reference.
-	 * LEFT - Use the left-center point as a reference.
-	 * RIGHT - Use the right-center point as a reference.
-	 * CENTER - Use the center as a reference.
 	 * 
 	 * @param panelReferencePoint
+	 * @see FeedbackDisplay#setPanelReferencePoint(Align)
 	 */
 	@Override
 	public void setPanelReferencePoint(Align panelReferencePoint) {
@@ -214,6 +217,8 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 
 	/**
+	 * Gets the horizontal displacement applied to the panel.
+	 * 
 	 * @return the alignDisplacementX
 	 */
 	public int getAlignDisplacementX() {
@@ -221,6 +226,8 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 
 	/**
+	 * Sets the horizontal displacement, relative to the reference point.
+	 * 
 	 * @param alignDisplacementX the alignDisplacementX to set
 	 */
 	public void setAlignDisplacementX(int alignDisplacementX) {
@@ -228,6 +235,7 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 
 	/**
+	 * Gets the vertical displacement of the panel, relative to the reference point.
 	 * @return the alignDisplacementY
 	 */
 	public int getAlignDisplacementY() {
@@ -235,16 +243,27 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 	}
 
 	/**
+	 * Sets the vertical displacement of the panel, relative to the reference point.
+	 * 
 	 * @param alignDisplacementY the alignDisplacementY to set
 	 */
 	public void setAlignDisplacementY(int alignDisplacementY) {
 		this.alignDisplacementY = alignDisplacementY;
 	}
 	
+	/**
+	 * Gets the PDWidget that this AbstractInputFeedbackPanel is serving.
+	 * @return The PDWidget that this AbstractInputFeedbackPanel is serving.
+	 */
+	@Override
 	public PdWidget getWidget() {
 		return this.widget;
 	}
 	
+	/**
+	 * Gets the Panel widget used by this AbstractInputFeedbackPanel to show feedback.
+	 */
+	@Override
 	public Widget getFeedbackDisplayWidget() {
 		return this;
 	}

@@ -6,31 +6,28 @@ package org.purewidgets.client.feedback;
 import org.purewidgets.client.widgets.PdWidget;
 
 /**
+ * The InputFeedbackListener defines methods associated with the life-cycle of a user input feedback panel.
+ * 
  * @author Jorge C. S. Cardoso
  *
  */
 public interface InputFeedbackListener {
 
 	/**
-	 * Triggers the processing of the specified InputFeedback.
+	 * Triggered when the feedback is shown on the public display.
 	 * 
-	 * @param feedback The feedback to process.
+	 * @param feedback The feedback that has been displayed.
 	 */
 	public void inputFeedbackStarted(InputFeedback<? extends PdWidget> feedback);
 	
 	
 	/**
-	 * Stops the processing of the specified feedback.
-	 * This method will always be called with the same InputFeedback that
-	 * the previous start method and will always be interleaved with start calls.
+	 * Triggered when the feedback is removed from the public display.
 	 * 
-	 * @param feedback The feedback to stop showing. 
+	 * @param feedback The feedback that has been removed.
+	 * @param noMore If true, indicated that there is currently no more feedback for this widget; if false, indicates that
+	 * thre is additional feedback to display.
 	 */
 	public void inputFeedbackEnded(InputFeedback<? extends PdWidget> feedback, boolean noMore);
 
-
-	/**
-	 * Triggered when the widget stops being visible
-	 */
-	public void widgetVisibilityChanged();
 }

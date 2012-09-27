@@ -17,7 +17,7 @@ public interface PDApplicationLifeCycle {
 	/**
 	 * Triggers the loaded event after the corresponding PDApplication has been fully loaded.
 	 * 
-	 * @param pdApplication
+	 * @param pdApplication The PDApplication that has been loaded.
 	 */
 	public void onPDApplicationLoaded(PDApplication pdApplication);
 }

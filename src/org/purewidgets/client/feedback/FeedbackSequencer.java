@@ -17,22 +17,22 @@ import com.google.gwt.user.client.ui.PopupPanel;
 /**
  * 
  * The FeedbackSequencer sequences the showing and hiding of the input feedback panel 
- * for the widget. When feedback for a widget is showing, the FeedbackSequencer periodically
+ * for the PdWidget. When feedback for a widget is showing, the FeedbackSequencer periodically
  * checks if the widget is still visible. If it is not, the feedback panel is animated to the 
  * bottom of the screen, by default (the positioning can be changed). The bottom panel
  * is used to display feedback about all non-visible widgets, i.e., it is shared by all widgets.
  * 
  * 
- * The sequence has the following states:
+ * The sequence has the following life-cycle:
  * <pre>
  *                              <-       <-        <-       <-         <-       <-
  *                           |                                                     |
  *                           \/                                                    |
- * STOPPED     ->        SHOWING(delay) -> [More feedback to display?](yes) -> INTERVAL(delay)     
+ * STOPPED     ->        SHOWING(feedbackDuration) -> [More feedback to display?](yes) -> INTERVAL(intermediateDelay)     
  *   /\                                                (no)
  *   |                                                  | 
  *   |                                                  \/
- *     <-      <-        <-        <-       <-     <-  FINAL(delay)
+ *     <-      <-        <-        <-       <-     <-  FINAL(finalDelay)
  * </pre>
  * <ul>
  * <li>                                                      
@@ -97,7 +97,7 @@ public class FeedbackSequencer {
 	 * Multiple input feedback will be shown with intervals of
 	 * DEFAULT_FEEDBACK_DELAY milliseconds.
 	 */
-	public static final int DEFAULT_FEEDBACK_DELAY = 300;
+	public static final int DEFAULT_INTERMEDIATE_DELAY = 300;
 	
 	
 	/**
@@ -122,7 +122,6 @@ public class FeedbackSequencer {
 	 * The panel that is used to show feedback for widgets that are not visible.
 	 */
 	private static FeedbackDisplay sharedFeedbackDisplay; 
-	
 	
 	
 	/**
@@ -164,7 +163,7 @@ public class FeedbackSequencer {
 	/**
 	 * The interval between multiple feedbacks
 	 */
-	private int feedbackIntervalDelay;;
+	private int feedbackIntermediateDelay;;
 	
 	/**
 	 * The list of input feedback to display.
@@ -178,20 +177,46 @@ public class FeedbackSequencer {
 	private InputFeedbackListener listener;
 	
 	
+	/**
+	 * Creates a new FeedbackSequencer using the specified CumulativeInputFeedbackPanel for showing the feedback and the specified 
+	 * InputFeedbackListener for receiving notifications about the state of the feedback. This creates a sequencer with default values
+	 * for the feedback duration, the interval duration between consecutive feedback messages, and final delay duration before the panel
+	 * is hidden.
+	 * 
+	 * An InputFeedbackListener is typically created by a PdWidget to handle its input feedback. The InputFeedbackListener is
+	 * also typically the PdWidget itself, so that it is notified when each input feedback is shown and hidden. 
+	 * 
+	 * @param display The CumulativeInputFeedbackPanel that will show the feedback messages.
+	 * @param listener The InputFeedbackListener that will be notified about 
+	 */
 	public  FeedbackSequencer (CumulativeInputFeedbackPanel display, InputFeedbackListener listener) {
-		this(display, listener, DEFAULT_FEEDBACK_DURATION, DEFAULT_FEEDBACK_DELAY, DEFAULT_FINAL_DELAY);
+		this(display, listener, DEFAULT_FEEDBACK_DURATION, DEFAULT_INTERMEDIATE_DELAY, DEFAULT_FINAL_DELAY);
 	}
 	
+	/**
+	 * Creates a new FeedbackSequencer using the specified CumulativeInputFeedbackPanel for showing the feedback and the specified 
+	 * InputFeedbackListener for receiving notifications about the state of the feedback. 
+	 * 
+	 * @param display The CumulativeInputFeedbackPanel that will show the feedback messages.
+	 * @param listener The InputFeedbackListener that will be notified about 
+	 * @param feedbackDuration The duration, in milliseconds, of the input feedback on the display.
+	 * @param feedbackIntermediateDelay In case there is multiple feedback to show, an additional interval, in milliseconds, before showing 
+	 * another feedback.
+	 * @param feedbackFinalDelay In case there is no more feedback to show, the final delay, in milliseconds, before
+	 * dismissing the feedback panel.
+	 * 
+	 * @see #FeedbackSequencer (CumulativeInputFeedbackPanel, InputFeedbackListener)
+	 */
 	public FeedbackSequencer (CumulativeInputFeedbackPanel display, InputFeedbackListener listener, 
 			int feedbackDuration, 
-			int feedbackIntervalDelay,
+			int feedbackIntermediateDelay,
 			int feedbackFinalDelay) {
 		
 		
 		this.display = display;
 		this.listener = listener;
 		this.feedbackDuration = feedbackDuration;
-		this.feedbackIntervalDelay = feedbackIntervalDelay;
+		this.feedbackIntermediateDelay = feedbackIntermediateDelay;
 		this.feedbackFinalDelay = feedbackFinalDelay;
 		this.state = STATE.STOPPED;
 		
@@ -219,19 +244,24 @@ public class FeedbackSequencer {
 	}
 
 	/**
-	 * @return the sharedFeedbackDisplay
+	 * Gets the shared FeedbackDisplay that is used to show feedback for off-screen PdWidgets.
+	 * 
+	 * The toolkit creates one instance of a FeedbackDisplay that is shared between all FeedbackSequencers to
+	 * show feedback for off-screen PdWidgets (widgets which are not on the DOM or not visible).
+	 * 
+	 * @return The shared FeedbackDisplay.
 	 */
-	public static FeedbackDisplay getSharedFeedbackDisplay() {
-		return sharedFeedbackDisplay;
-	}
+//	public static FeedbackDisplay getSharedFeedbackDisplay() {
+//		return sharedFeedbackDisplay;
+//	}
 	
 	
 	/**
 	 * @param sharedFeedbackDisplay the sharedFeedbackDisplay to set
 	 */
-	public static void setSharedFeedbackDisplay(FeedbackDisplay sharedFeedbackDisplay) {
-		FeedbackSequencer.sharedFeedbackDisplay = sharedFeedbackDisplay;
-	}
+//	public static void setSharedFeedbackDisplay(FeedbackDisplay sharedFeedbackDisplay) {
+//		FeedbackSequencer.sharedFeedbackDisplay = sharedFeedbackDisplay;
+//	}
 
 	 
 	/**
@@ -241,29 +271,41 @@ public class FeedbackSequencer {
 	 */
 	public void add(InputFeedback<? extends PdWidget> feedback) {
 		
-		Log.debug(this,  "Added input feedback to list: " + feedback.toString());
+		Log.debugFinest(this,  "Added input feedback to list: " + feedback.toString());
 		
 		this.input.add(feedback);
 		start();
 	}
 	
+	/**
+	 * Gets the duration of the input feedback (without intermediate delay, or final delay)
+	 * @return The feedback duration, in milliseconds.
+	 */
 	public int getFeedbackDuration() {
 		return feedbackDuration;
 	}
 	
+	/**
+	 * Gets the final delay for the input feedback.
+	 * @return The final delay duration, in milliseconds.
+	 */
 	public int getFeedbackFinalDelay() {
 		return feedbackFinalDelay;
 	}
 	
-	
-	public int getFeedbackIntervalDelay() {
-		return feedbackIntervalDelay;
+	/**
+	 * Gets the duration of the intermediate delay of the input feedback.
+	 * @return The intermediate delay duration, in milliseconds.
+	 */
+	public int getFeedbackIntermediateDelay() {
+		return feedbackIntermediateDelay;
 	}
 
 	
 	/**
+	 * Checks if this sequencer is currently showing any feedback.
 	 * 
-	 * @return True if this sequencer is currently displaying feedback, False otherwise.
+	 * @return true if this sequencer is currently displaying feedback; false otherwise.
 	 */
 	public boolean isShowing() {
 		
@@ -272,18 +314,33 @@ public class FeedbackSequencer {
 	}
 
 
+	/**
+	 * Sets the feedback duration. This value does not include de intermediate nor the final delay durations.
+	 * 
+	 * @param feedbackDuration The duration of the feedback, in milliseconds.
+	 */
 	public void setFeedbackDuration(int feedbackDuration) {
 		this.feedbackDuration = feedbackDuration;
 	}
 
 
+	/**
+	 * Sets the final delay duration.
+	 * 
+	 * @param feedbackFinalDelay The final delay duration, in milliseconds.
+	 */
 	public void setFeedbackFinalDelay(int feedbackFinalDelay) {
 		this.feedbackFinalDelay = feedbackFinalDelay;
 	}
 
 
-	public void setFeedbackIntervalDelay(int feedbackIntervalDelay) {
-		this.feedbackIntervalDelay = feedbackIntervalDelay;
+	/**
+	 * Sets the intermediate delay duration.
+	 * 
+	 * @param feedbackIntermediateDelay The intermediate delay duration, in milliseconds.
+	 */
+	public void setFeedbackIntermediateDelay(int feedbackIntermediateDelay) {
+		this.feedbackIntermediateDelay = feedbackIntermediateDelay;
 	}
 
 
@@ -411,8 +468,8 @@ public class FeedbackSequencer {
 				Log.debug(this, "New state: " +state);
 				
 				this.stopShowingFeedback();
-				timer.schedule(this.feedbackIntervalDelay);
-				Log.debug(this, "Scheduling timer: " + this.feedbackIntervalDelay);
+				timer.schedule(this.feedbackIntermediateDelay);
+				Log.debug(this, "Scheduling timer: " + this.feedbackIntermediateDelay);
 				
 			} else {
 				
