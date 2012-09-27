@@ -15,11 +15,31 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("../httpservice")
 public interface HttpService extends RemoteService {
 	
+	/**
+	 * Executes a POST request with the specified post data, on the specified URL.
+	 * 
+	 * @param data The data to post.
+	 * @param url The URL to post to.
+	 * @return The HTTP response.
+	 * @throws HttpServerException In case of any IO exception, or if the HTTP response is not 200 Ok.
+	 */
 	String post(String data, String url) throws HttpServerException;
 	
+	/**
+	 * Executes a GET request  on the specified URL.
+	 * 
+	 * @param url The URL to get.
+	 * @return The HTTP response.
+	 * @throws HttpServerException In case of any IO exception, or if the HTTP response is not 200 Ok.
+	 */
 	String get(String url) throws HttpServerException;
 	
-	String delete( String url) throws HttpServerException;
-	
-	
+	/**
+	 * Executes a DELETE request  on the specified URL.
+	 * 
+	 * @param url The URL to call.
+	 * @return The HTTP response.
+	 * @throws HttpServerException In case of any IO exception, or if the HTTP response is not 200 Ok.
+	 */	
+	String delete(String url) throws HttpServerException;
 }
