@@ -46,18 +46,18 @@ public class LocalStorage {
 	
 	public  String getString(String item) {
 		String name = this.storageId+"-"+item;
-		String value = org.purewidgets.client.storage.json.LocalStorage.getString(name);
+		String value = org.purewidgets.client.storage.js.LocalStorageJs.getString(name);
 		return value;
 	}
 
 
 public void setString(String item, String value) {
-	org.purewidgets.client.storage.json.LocalStorage.setString(this.storageId+"-"+item, value);
+	org.purewidgets.client.storage.js.LocalStorageJs.setString(this.storageId+"-"+item, value);
 }
 	
 	public void removeItem(String item) {
 		Log.debug(this, "Removing item: " + this.storageId+"-"+item);
-		org.purewidgets.client.storage.json.LocalStorage.removeItem(this.storageId+"-"+item);
+		org.purewidgets.client.storage.js.LocalStorageJs.removeItem(this.storageId+"-"+item);
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public void setString(String item, String value) {
 	public int [] loadIntList(String name) {
 		name = this.storageId+"-"+name;
 		
-		String codedList = org.purewidgets.client.storage.json.LocalStorage.getString(name);
+		String codedList = org.purewidgets.client.storage.js.LocalStorageJs.getString(name);
 		
 		
 		if ( null == codedList || codedList.length() == 0) {
@@ -161,7 +161,7 @@ public void setString(String item, String value) {
 	
 	public  ArrayList<String> loadList(String name) {
 		name = this.storageId+"-"+name;
-		String value = org.purewidgets.client.storage.json.LocalStorage.getString(name);
+		String value = org.purewidgets.client.storage.js.LocalStorageJs.getString(name);
 		return decode(value);
 	}
 
@@ -180,7 +180,7 @@ public void setString(String item, String value) {
 		// delete the end ':'
 		sb.deleteCharAt(sb.length()-1);
 		
-		org.purewidgets.client.storage.json.LocalStorage.setString(name,  sb.toString());
+		org.purewidgets.client.storage.js.LocalStorageJs.setString(name,  sb.toString());
 	}
 
 	/**
@@ -191,7 +191,7 @@ public void setString(String item, String value) {
 	 */
 	public void saveList(String name, ArrayList<String> values) {
 		name = this.storageId+"-"+name;
-		org.purewidgets.client.storage.json.LocalStorage.setString(name, encode(values));
+		org.purewidgets.client.storage.js.LocalStorageJs.setString(name, encode(values));
 	}
 
 	public Long getLong(String item) {
@@ -208,6 +208,6 @@ public void setString(String item, String value) {
 	}
 	
 	public void clear() {
-		org.purewidgets.client.storage.json.LocalStorage.clear(this.storageId);
+		org.purewidgets.client.storage.js.LocalStorageJs.clear(this.storageId);
 	}
 }
