@@ -6,16 +6,25 @@ import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.im.WidgetParameter;
-import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.JsArray;
 
+/**
+ * WidgetJson is a Json DTO for receiving and sending widgets to the interaction manager server. 
+ * 
+ * @author "Jorge C. S. Cardoso"
+ * @see org.purewidgets.shared.im.Widget
+ */
 public class WidgetJson extends GenericJson {
-
+	
+	// Overlay types always have protected, zero-arg ctors
+	protected WidgetJson() {
+	}
+	
 	/**
-	 * Converts this widget to a JSON representation
+	 * Creates a WidgetJson object based on a Widget object
 	 * 
-	 * @return
+	 * @return The WidgetJson converted object.
 	 */
 	public static WidgetJson create(Widget widget) {
 		WidgetJson widgetJson = GenericJson.getNew();
@@ -39,57 +48,12 @@ public class WidgetJson extends GenericJson {
 		return widgetJson;
 	}
 
-	// Overlay types always have protected, zero-arg ctors
-	protected WidgetJson() {
-
-	}
-
-	public final native void addWidgetOption(WidgetOptionJson widgetOption) /*-{
-		if (typeof (this.widgetOptions) == "undefined") {
-			this.widgetOptions = new Array();
-		}
-		this.widgetOptions.push(widgetOption);
-	}-*/;
 	
-	public final native void addWidgetParameter(WidgetParameterJson widgetParameter) /*-{
-	if (typeof (this.widgetParameters) == "undefined") {
-		this.widgetParameters = new Array();
-	}
-	this.widgetParameters.push(widgetParameter);
-}-*/;
-
-	public final native String getApplicationId() /*-{
-		return this.applicationId;
-	}-*/;
-
-
-
-	public final native String getContentUrl() /*-{
-		return this.contentUrl;
-	}-*/;
-
-	public final native String getControlType() /*-{
-		return this.controlType;
-	}-*/;
-
-	public final native String getLongDescription() /*-{
-		return this.longDescription;
-	}-*/;
-
-	public final native String getPlaceId() /*-{
-		return this.placeId;
-	}-*/;
-
-	public final native String getShortDescription() /*-{
-		return this.shortDescription;
-	}-*/;
-
-
-
-	public final native String getUserResponse() /*-{
-		return this.userResponse;
-	}-*/;
-
+	/**
+	 * Gets the Widget object that this WidgetJson object is representing.
+	 * 
+	 * @return The Widget object that this WidgetJson object is representing.
+	 */
 	public final Widget getWidget() {
 		Widget aw = new Widget(this.getWidgetId(), this.getControlType(), this.getShortDescription(),
 				this.getLongDescription(),
@@ -101,11 +65,95 @@ public class WidgetJson extends GenericJson {
 
 		return aw;
 	}
+	
+	/**
+	 * Adds a widget option to the widget represented by this WidgetJson.
+	 * 
+	 * @param widgetOption The widget option to add.
+	 */
+	public final native void addWidgetOption(WidgetOptionJson widgetOption) /*-{
+		if (typeof (this.widgetOptions) == "undefined") {
+			this.widgetOptions = new Array();
+		}
+		this.widgetOptions.push(widgetOption);
+	}-*/;
+	
+	/**
+	 * Adds a widget parameter to the widget represented by this WidgetJson
+	 * 
+	 * @param widgetParameter The widget parameter to add
+	 */
+	public final native void addWidgetParameter(WidgetParameterJson widgetParameter) /*-{
+		if (typeof (this.widgetParameters) == "undefined") {
+			this.widgetParameters = new Array();
+		}
+		
+		this.widgetParameters.push(widgetParameter);
+	}-*/;
 
+	
+	/**
+	 * Gets the id of the application to which the widget represented by this WidgetJson belongs.
+	 * 
+	 * @return The id of the application.
+	 */
+	public final native String getApplicationId() /*-{
+		return this.applicationId;
+	}-*/;
+
+
+	/**
+	 * Gets the type of control of the widget represented by this WidgetJson.
+	 * 
+	 * @return The type of control.
+	 */
+	public final native String getControlType() /*-{
+		return this.controlType;
+	}-*/;
+
+	/**
+	 * Gets the long description of the widget.
+	 * @return The long description of the widget.
+	 */
+	public final native String getLongDescription() /*-{
+		return this.longDescription;
+	}-*/;
+
+	/**
+	 * Gets the id of the place of the application of this widget.
+	 * 
+	 * @return The id of the place of the application of this widget.
+	 */
+	public final native String getPlaceId() /*-{
+		return this.placeId;
+	}-*/;
+
+	
+	/**
+	 * Gets the short description of the widget.
+	 * 
+	 * @return The short description of the widget.
+	 */
+	public final native String getShortDescription() /*-{
+		return this.shortDescription;
+	}-*/;
+
+
+
+	/**
+	 * Gets the widget id.
+	 * 
+	 * @return The widget id.
+	 */
 	public final native String getWidgetId() /*-{
 		return this.widgetId;
 	}-*/;
 
+	/**
+	 * Gets the list of widget options as an ArrayList.
+	 * 
+	 * @return The list of widget options.
+	 */
 	public final ArrayList<WidgetOption> getWidgetOptions() {
 		JsArray<WidgetOptionJson> optionsJs = getWidgetOptionsAsJsArray();
 		ArrayList<WidgetOption> options = new ArrayList<WidgetOption>();// [optionsJs.length()];
@@ -117,6 +165,11 @@ public class WidgetJson extends GenericJson {
 		return options;
 	}
 	
+	/**
+	 * Gets the list of widget parameters as an ArrayList.
+	 * 
+	 * @return The list of widget parameters.
+	 */
 	public final ArrayList<WidgetParameter> getWidgetParameters() {
 		JsArray<WidgetParameterJson> parametersJs = getWidgetParametersAsJsArray();
 		
@@ -131,47 +184,81 @@ public class WidgetJson extends GenericJson {
 		return parameters;
 	}
 
+	/**
+	 * Gets the list of widget options as a JsArray.
+	 * 
+	 * @return The list of widget options.
+	 */
 	public final native JsArray<WidgetOptionJson> getWidgetOptionsAsJsArray() /*-{
 		return this.widgetOptions;
 	}-*/;
 	
+	/**
+	 * Gets the list of widget parameters as a JsArray
+	 * 
+	 * @return The list of widget parameters.
+	 */
 	public final native JsArray<WidgetParameterJson> getWidgetParametersAsJsArray() /*-{
 		if ( 'undefined' == typeof(this.widgetParameters) ) {
 			return new Array();
 		}
 		return this.widgetParameters;
-}-*/;
+	}-*/;
 
-
+	/**
+	 * Sets the id of the application that this widget belongs to.
+	 * 
+	 * @param appId The id of the application.
+	 */
 	public final native void setApplicationId(String appId) /*-{
 		this.applicationId = appId;
 	}-*/;
 
-	public final native void setContentUrl(String url) /*-{
-		this.contentUrl = url;
-	}-*/;
 
+
+	/**
+	 * Sets the type of control of this widget.
+	 * 
+	 * @param type The type of control
+	 * @see org.purewidgets.shared.im.Widget
+	 */
 	public final native void setControlType(String type) /*-{
 		this.controlType = type;
 	}-*/;
 
+	/**
+	 * Sets the long description of this widget.
+	 * 
+	 * @param longDescription The long description.
+	 */
 	public final native void setLongDescription(String longDescription) /*-{
 		this.longDescription = longDescription;
 	}-*/;
 
+	/**
+	 * Sets the place id of the application this widget belongs to.
+	 * 
+	 * @param placeId The id of the place.
+	 */
 	public final native void setPlaceId(String placeId) /*-{
 		this.placeId = placeId;
 	}-*/;
 
+	/**
+	 * Sets the short description of this widget.
+	 * 
+	 * @param shortDescription The short description.
+	 */
 	public final native void setShortDescription(String shortDescription) /*-{
 		this.shortDescription = shortDescription;
 	}-*/;
 
-	public final native void setUserResponse(String response) /*-{
-		this.userResponse = response;
-	}-*/;
-
-
+	
+	/**
+	 * Sets the id of this widget.
+	 * 
+	 * @param id The id of the widget.
+	 */
 	public final native void setWidgetId(String id) /*-{
 		this.widgetId = id;
 	}-*/;
