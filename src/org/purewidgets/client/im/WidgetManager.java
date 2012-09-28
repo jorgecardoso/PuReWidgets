@@ -6,6 +6,7 @@ package org.purewidgets.client.im;
 import java.util.ArrayList;
 
 import org.purewidgets.client.im.json.WidgetJson;
+import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.im.InputEventHelper;
 import org.purewidgets.shared.im.Widget;
@@ -17,52 +18,97 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * The WidgetManager manages the creation, deletion, and input handling for all PdWidgets created by an application.
+ * 
+ * All operations run asynchronously.
+ * 
+ * It makes sure that widgets are sent to the interaction manager when created by the application, deleted from the 
+ * interaction manager when an application deletes a widget, and that widgets receive all input from the interaction manager.
+ * 
+ * The InteractionManager uses queues and timers to retry failed operations and the local storage (for deleted widgets) to 
+ * continue after the application is re-started.
+ * 
  * @author Jorge C. S. Cardoso
  */
 public class WidgetManager {
 
+	/**
+	 * The WidgetManager intercalates adding and deleting widgets operations.
+	 * This enum serves to identify the next operation that will be performed.
+	 * 
+	 * @author "Jorge C. S. Cardoso"
+	 *
+	 */
 	private static enum NextWidgetAction {
 		ADD, DELETE
 	}
 
+	/**
+	 * The interval between input requests (milliseconds).
+	 * If a synchronous channel cannot be created, the WidgetManager will periodically
+	 * ask the interaction manager for input.
+	 */
 	private static final int INPUT_REQUEST_INTERVAL = 10000;
 
+	/**
+	 * The current interval between input requests to the interaction manager.
+	 * 
+	 * If a previous request failed, the WidgetManager will double the waiting period.
+	 */
+	private int currentInputRequestInterval;
+	
+	/**
+	 * The localstorage parameter name for storing the last input timestamp.
+	 */
 	private static final String TIMESTAMP = "lastTimeStamp";
 
 	/**
-	 * The default interval between widget requests to the server
+	 * The default interval between widget requests to the server (milliseconds)
 	 */
-	private static final int WIDGET_REQUEST_INTERVAL = 10000;;
+	private static final int WIDGET_REQUEST_INTERVAL = 10000;
 
 	/**
+	 * The current widget request interval.
 	 * 
+	 * If a previous widget operation failed, the WidgetManager will double the waiting period.
+	 */
+	private int currentWidgetRequestInterval;
+	
+	
+	/**
+	 * The singleton reference. 
 	 */
 	private static WidgetManager wm;
 
+	/**
+	 * The place id of the application this WidgetManager is serving.
+	 */	
+	private String placeId;
+	
+	/**
+	 * The application id of the application this WidgetManager is serving.
+	 */
 	private String applicationId;
 
 
 	/**
-	 * Communication with the Interaction manager is done via a
-	 * ServerCommunicator.
+	 * The InteractionManagerService to communicate with the interaction manager server.
 	 */
 	private InteractionManagerService communicator;
 
-	/**
-	 * The current interval between connection attempts to the server.
-	 */
-	private int currentInputRequestInterval;
+
 
 	/**
-	 * The current widget request interval
+	 * The LocalStorage used to store the last input timestamp and the list of widgets to delete.
 	 */
-	private int currentWidgetRequestInterval;
-
 	private LocalStorage localStorage;
 
+	/**
+	 * The next widget operation to be performed.
+	 */
 	private NextWidgetAction nextWidgetAction;
 
-	private String placeId;
+	
 
 	/**
 	 * Keeps a list of the most recently processed input. Used to make sure we
@@ -75,6 +121,7 @@ public class WidgetManager {
 	 * the app adds a widget.
 	 */
 	private ArrayList<WidgetInput> unprocessedInput;
+	
 	/**
 	 * Timer for scheduling input requests to the server.
 	 */
@@ -101,7 +148,7 @@ public class WidgetManager {
 	private ArrayList<Widget> widgetList;
 
 	/**
-	 * Creates a new Widget Manager.
+	 * Creates a new WidgetManager for the specified application, and with the given LocalStorage, and InteractionManager.
 	 */
 	private WidgetManager(String placeId, String applicationId, LocalStorage localStorage,
 			InteractionManagerService interactionManager) {
@@ -150,28 +197,45 @@ public class WidgetManager {
 		
 	}
 
+	/**
+	 * Creates a new WidgetManager for the specified application, and with the given LocalStorage, and InteractionManager.
+	 * This method creates only one instance of the WidgetManager. If it is called twice, the second invocation will simply
+	 * return.
+	 *
+	 * @param placeId The place id of the application that this WidgetManager will serve.
+	 * @param applicationId The application id of the application that this WidgetManager will serve.
+	 * @param localStorage The LocalStorage that this WidgetManager will use to store persistent data.
+	 * @param interactionManager The InteractionManager that will be used to communicate with the interaction manager server.
+	 */
 	public static void create(String placeId, String applicationId, LocalStorage localStorage,
 			InteractionManagerService interactionManager) {
-		wm = new WidgetManager(placeId, applicationId, localStorage, interactionManager);
+		
+		if ( null != wm ) {
+			wm = new WidgetManager(placeId, applicationId, localStorage, interactionManager);
+		}
 	}
 
+	/**
+	 * Returns a WidgetManager.
+	 * 
+	 * @return A WidgetManager
+	 */
 	public static WidgetManager get() {
 		return wm;
 	}
 
 	/**
-	 * 
 	 * Registers a new widget so that it is assigned a reference code and is
 	 * able to receive input. Adding a Widget triggers the generation of
-	 * reference codes for that Widget.
+	 * reference codes for that Widget. The WidgetManager will send the added
+	 * widget to the interaction manager server as soon as possible.
 	 * 
 	 * The same Widget object can be added multiple times. If the options for
 	 * that widget have changed, new reference codes may be assigned.
 	 * 
 	 * @param widget
 	 *            The Widget to register.
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#addWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
-	 * 
+	 *            
 	 */
 	public void addWidget(final Widget widget) {
 		Log.debug(this, "Adding widget: " + widget.getWidgetId());
@@ -213,50 +277,32 @@ public class WidgetManager {
 	}
 	
 
-	private void processPendingInput( Widget widget ) {
-		/*
-		 * check if we have pending input
-		 */
-		ArrayList<WidgetInput> pendingInput = new ArrayList<WidgetInput>();
-		for ( WidgetInput input : this.unprocessedInput ) {
-			if ( input.getWidgetId().equals(widget.getWidgetId()) ) {
-				Log.debug(this, "Found pending input for widget: " + widget.getWidgetId() );
-				pendingInput.add(input);
-			}
-		}
-		/*
-		 * Remove pending input from unprocessed list
-		 */
-		if ( pendingInput.size() > 0 ) {
-			for ( WidgetInput input : pendingInput ) {
-				this.unprocessedInput.remove(input);
-			}
-			Log.debug(this, "Processing pending input for widget: " + widget.getWidgetId() );
-			this.onWidgetInput(pendingInput);
-		}
-	}
+//	public InteractionManagerService getServerCommunicator() {
+//		return this.communicator;
+//	}
 
-	public InteractionManagerService getServerCommunicator() {
-		return this.communicator;
-	}
+//	public ArrayList<Widget> getWidgetList() {
+//		return widgetList;
+//	}
 
-	public ArrayList<Widget> getWidgetList() {
-		return widgetList;
-	}
-
+	/**
+	 * Removes all widgets that belong to the application this WidgetManager is serving.
+	 */
 	public void removeAllWidgets() {
 
 		this.communicator.deleteAllWidgets(this.placeId, this.applicationId, this.applicationId,
 				null);
-
 	}
 
 	/**
 	 * Removes a previously added Widget.
+	 * The widget will be removed from the interaction manager as soon as possible. This method stores widgets
+	 * to be removed in the local storage so that they will be removed even if the application is terminated before
+	 * the WidgetManager has a change to send the deleted widget to the interaction manager.
+	 * 
 	 * 
 	 * @param widget
 	 *            The Widget to remove.
-	 * @see org.instantplaces.purewidgets.shared.widgetmanager.WidgetManagerInterface#removeWidget(org.instantplaces.purewidgets.shared.widgets.WidgetInterface)
 	 */
 	public void removeWidget(Widget widget) {
 		Log.debug(this, "Removing widget: " + widget.getWidgetId());
@@ -287,23 +333,6 @@ public class WidgetManager {
 		startTimerWidget();
 	}
 
-	private void saveToDeleteWidgetPoolToLocalStorage() {
-		ArrayList<String> widgetsSerialized = new ArrayList<String>();
-		for ( Widget widget : this.toDeleteWidgetPool ) {
-			widgetsSerialized.add( WidgetJson.create(widget).toJsonString() );
-		}
-		this.localStorage.saveList("WidgetManager-deletePool", widgetsSerialized);
-	}
-	
-	private void loadToDeleteWidgetPoolFromLocalStorage() {
-		ArrayList<String> widgetsSerialized = this.localStorage.loadList("WidgetManager-deletePool");
-		for ( String widgetSerialized : widgetsSerialized ) {
-			WidgetJson widgetJson = WidgetJson.fromJson(widgetSerialized);
-			this.toDeleteWidgetPool.add( widgetJson.getWidget() );
-		}
-	}
-	
-
 	private void addToProcessedInput(WidgetInput wi) {
 		this.processedInput.add(wi);
 
@@ -330,7 +359,7 @@ public class WidgetManager {
 				});
 
 	}
-
+	
 	private long getLastTimeStampAsLong() {
 		try {
 			return Long.parseLong(getLastTimeStampAsString());
@@ -339,6 +368,7 @@ public class WidgetManager {
 		}
 		return 0;
 	}
+	
 
 	private String getLastTimeStampAsString() {
 		String ts = this.localStorage.getString(TIMESTAMP);
@@ -364,6 +394,14 @@ public class WidgetManager {
 			return true;
 		}
 		return false;
+	}
+
+	private void loadToDeleteWidgetPoolFromLocalStorage() {
+		ArrayList<String> widgetsSerialized = this.localStorage.loadList("WidgetManager-deletePool");
+		for ( String widgetSerialized : widgetsSerialized ) {
+			WidgetJson widgetJson = GenericJson.fromJson(widgetSerialized);
+			this.toDeleteWidgetPool.add( widgetJson.getWidget() );
+		}
 	}
 
 	private void onWidgetAdd(Widget widgetFromServer) {
@@ -619,6 +657,37 @@ public class WidgetManager {
 			this.nextWidgetAction = NextWidgetAction.ADD;
 		}
 
+	}
+
+	private void processPendingInput( Widget widget ) {
+		/*
+		 * check if we have pending input
+		 */
+		ArrayList<WidgetInput> pendingInput = new ArrayList<WidgetInput>();
+		for ( WidgetInput input : this.unprocessedInput ) {
+			if ( input.getWidgetId().equals(widget.getWidgetId()) ) {
+				Log.debug(this, "Found pending input for widget: " + widget.getWidgetId() );
+				pendingInput.add(input);
+			}
+		}
+		/*
+		 * Remove pending input from unprocessed list
+		 */
+		if ( pendingInput.size() > 0 ) {
+			for ( WidgetInput input : pendingInput ) {
+				this.unprocessedInput.remove(input);
+			}
+			Log.debug(this, "Processing pending input for widget: " + widget.getWidgetId() );
+			this.onWidgetInput(pendingInput);
+		}
+	}
+
+	private void saveToDeleteWidgetPoolToLocalStorage() {
+		ArrayList<String> widgetsSerialized = new ArrayList<String>();
+		for ( Widget widget : this.toDeleteWidgetPool ) {
+			widgetsSerialized.add( WidgetJson.create(widget).toJsonString() );
+		}
+		this.localStorage.saveList("WidgetManager-deletePool", widgetsSerialized);
 	}
 
 	private void setTimeStamp(long timeStamp) {
