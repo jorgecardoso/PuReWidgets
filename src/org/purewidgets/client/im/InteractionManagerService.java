@@ -34,6 +34,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * The InteractionManagerService represents the services available at the interaction manager server.
+ * This class is mainly for the internal use of the PuReWidgets toolkit. In general, application should
+ * not need to use it directly.
+ * 
+ * 
  * @author Jorge C. S. Cardoso
  *
  */
@@ -41,19 +46,30 @@ public class InteractionManagerService {
 
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Presences
-	 * service. 
+	 * An Http service proxy to talk to the interaction manager server.
 	 */
 	private final HttpServiceAsync interactionService;
 
 	
+	/**
+	 * A helper class to create the various Rest style Urls for accessing the interaction manager
+	 * server.
+	 */
 	private UrlHelper urlHelper;
 	
+	
 	/**
-	 * Used to store the channel token
+	 * The application's localstorage.
 	 */
 	private LocalStorage localStorage;
 	
+	/**
+	 * Creates a new InteractionManagerService that uses the interaction manager specified by the 
+	 * <code>interactionServerUrl</code> and the specified application's LocalStorage.
+	 * 
+	 * @param interactionServerUrl The base Url of the interaction manager server.
+	 * @param localStorage The application's LocalStorage.
+	 */
 	public InteractionManagerService(String interactionServerUrl, LocalStorage localStorage) {
 		
 		this.localStorage = localStorage;
@@ -63,6 +79,14 @@ public class InteractionManagerService {
 		interactionService = GWT.create(HttpService.class);
 	}
 	
+	/**
+	 * Deletes all widgets of the specified application. The deleleted widgets are returned in the callback.
+	 * 
+	 * @param placeId The place id of the application of which to delete all widgets.
+	 * @param applicationId The application id of the application of to delete all widgets.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void deleteAllWidgets(String placeId, String applicationId, String callingApplicationId, 
 			final AsyncCallback<ArrayList<Widget>> callback) {
 		
@@ -110,7 +134,15 @@ public class InteractionManagerService {
 	}
 	
 	
-
+	/**
+	 * Adds a list of widgets to the specified application. The added widgets are returned back in the callback.
+	 * 
+	 * @param placeId The place id of the application to which the widgets will be added.
+	 * @param applicationId The application id of the application to which the widgets will be added.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param widgets The widgets to add.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void addWidgetToServer(String placeId, String applicationId, String callingApplicationId, 
 			ArrayList<Widget> widgets, final AsyncCallback<ArrayList<Widget>> callback) {
 		
@@ -174,7 +206,15 @@ public class InteractionManagerService {
 	}
 
 	
-
+	/**
+	 * Asks for input to the specified application. 
+	 * 
+	 * @param placeId The place id of the application from which we want to receive input.
+	 * @param applicationId The application id of the application from which we want to receive input.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param from A timestamp defining the oldest allowed timestamp in the input to be received.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void getInputFromServer(String placeId, String applicationId, String callingApplicationId, String from,
 			final AsyncCallback<ArrayList<WidgetInput>> callback) {
 		Log.debug(this, "Asking for input for " + placeId + " : " + applicationId);
@@ -221,11 +261,15 @@ public class InteractionManagerService {
 	}
 	
 	/**
-	 * Removes a previously added Widget.
+	 * Deletes a list of widgets from the specified application. The deleted widgets are returned back in the callback.
 	 * 
-	 * @param widget The Widget to remove.
+	 * @param placeId The place id of the application from which the widgets will be deleted.
+	 * @param applicationId The application id of the application from which the widgets will be deleted.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param widgets The list of widgets to delete.
+	 * @param callback The callback instance to notify when the response comes back.
 	 */
-	public  void removeWidget(String placeId, String applicationId, String callingApplicationId,
+	public void removeWidget(String placeId, String applicationId, String callingApplicationId,
 			ArrayList<Widget> widgets, final AsyncCallback<ArrayList<Widget>> callback) {
 		Log.debug(this, "Removing  widgets from " + placeId + " : " + applicationId);
 		
@@ -299,8 +343,14 @@ public class InteractionManagerService {
 	
 	
 	
-
-	
+	/**
+	 * Retrieves the list of widgets from the specified application. 
+	 * 
+	 * @param placeId The place id of the application from which the widgets will be retrieved.
+	 * @param applicationId The application id of the application from which the widgets will be retrieved.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void getWidgetsList(String placeId, String applicationId, String callingApplicationId,
 			final AsyncCallback<ArrayList<Widget>> callback) {
 		Log.debug(this, "Retrieving  widgets from " + placeId + " : " + applicationId);
@@ -347,7 +397,15 @@ public class InteractionManagerService {
 		
 	}
 	
-
+	/**
+	 * Sends input to the specified application. 
+	 * 
+	 * @param placeId The place id of the application to which input will be sent.
+	 * @param applicationId The application id of the application to which input will be sent.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param widgetInput The WidgetInput that describes the input
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void sendWidgetInput(String placeId, String applicationId, String callingApplicationId, 
 			WidgetInput widgetInput, final AsyncCallback<WidgetInput> callback) {
 		
@@ -386,42 +444,53 @@ public class InteractionManagerService {
 		
 	}
 
-	public void setApplication(String placeId, String applicationId, String callingApplicationId, Application application, final AsyncCallback<Application> callback) {
-		ApplicationJson applicationJson = ApplicationJson.create(application);
-		Log.debug(this, "Sending application " + placeId + " : " + applicationId);
-		Log.debugFinest(this, "Sending to server: " + applicationJson.toJsonString());
-		
-		this.interactionService.post(applicationJson.toJsonString(), 
-				this.urlHelper.getApplicationUrl(placeId, applicationId, callingApplicationId), 
-				new AsyncCallback<String>() {
+//	
+//	public void setApplication(String placeId, String applicationId, String callingApplicationId, 
+//			Application application, final AsyncCallback<Application> callback) {
+//		ApplicationJson applicationJson = ApplicationJson.create(application);
+//		Log.debug(this, "Sending application " + placeId + " : " + applicationId);
+//		Log.debugFinest(this, "Sending to server: " + applicationJson.toJsonString());
+//		
+//		this.interactionService.post(applicationJson.toJsonString(), 
+//				this.urlHelper.getApplicationUrl(placeId, applicationId, callingApplicationId), 
+//				new AsyncCallback<String>() {
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						Log.warn(this, "Error posting application. ", caught);
+//						
+//						if ( null != callback ) {
+//							callback.onFailure(caught);
+//						} else {
+//							Log.warn(InteractionManagerService.this, "No callback to notify.");
+//						}
+//					}
+//
+//					@Override
+//					public void onSuccess(String result) {
+//						Log.debug(InteractionManagerService.this, "Got response to sending application.");
+//						Log.debugFinest(InteractionManagerService.this,  result);
+//						if ( null != callback ) {
+//							Application application = (Application)(ApplicationJson.fromJson(result));
+//							callback.onSuccess(application);
+//						} else {
+//							Log.warn(InteractionManagerService.this, "No callback to notify.");
+//						}
+//					}
+//
+//		});
+//	}
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.warn(this, "Error posting application. ", caught);
-						
-						if ( null != callback ) {
-							callback.onFailure(caught);
-						} else {
-							Log.warn(InteractionManagerService.this, "No callback to notify.");
-						}
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						Log.debug(InteractionManagerService.this, "Got response to sending application.");
-						Log.debugFinest(InteractionManagerService.this,  result);
-						if ( null != callback ) {
-							Application application = (Application)(ApplicationJson.fromJson(result));
-							callback.onSuccess(application);
-						} else {
-							Log.warn(InteractionManagerService.this, "No callback to notify.");
-						}
-					}
-
-		});
-	}
-
-	public void getApplication(String placeId, String applicationId, String callingApplicationId, final AsyncCallback<Application> callback) {
+	/**
+	 * Gets information about an application. 
+	 * 
+	 * @param placeId The place id of the application to get information from.
+	 * @param applicationId The application id of the application  to get information from.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */	
+	public void getApplication(String placeId, String applicationId, String callingApplicationId, 
+			final AsyncCallback<Application> callback) {
 		
 		
 		Log.debug(this, "Asking for application " + placeId +" : "+applicationId);
@@ -464,16 +533,39 @@ public class InteractionManagerService {
 	}
 
 	
+	/**
+	 * Gets a list of applications of a place. 
+	 * 
+	 * @param placeId The place id to get information from.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */		
 	public void getApplicationsList(String placeId, String callingApplicationId, final AsyncCallback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, callingApplicationId, Application.STATE.All, callback);
 	}
 
+	/**
+	 * Gets a list of applications of a place, filtered by it active status.
+	 * 
+	 * @param placeId The place id to get information from.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param active if true, gets list of active applications; if false, get list of inactive applications.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */		
 	public void getApplicationsList(String placeId, String callingApplicationId, boolean active,
 			AsyncCallback<ArrayList<Application>> callback) {
 		this.getApplicationsList(placeId, callingApplicationId, active?Application.STATE.Active : Application.STATE.Inactive, callback);
 		
 	}
 	
+	/**
+	 * Gets a list of applications of a place, filtered by it active status.
+	 * 
+	 * @param placeId The place id to get information from.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param state The state of the applications to retrieve.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */		
 	private void getApplicationsList(String placeId, String callingApplicationId, Application.STATE state,
 			final AsyncCallback<ArrayList<Application>> callback) {
 		Log.debug(this, "Asking for applications from " + placeId );
@@ -532,7 +624,13 @@ public class InteractionManagerService {
 		}
 	}
 
-
+	/**
+	 * Gets information about a specific place.
+	 * 
+	 * @param placeId The place id to get information from.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */
 	public void getPlace(String placeId, String callingApplicationId, final AsyncCallback<Place> callback) {
 		Log.debug( this, "Getting place from server: " +  this.urlHelper.getPlaceUrl(placeId, callingApplicationId) );
 		try {
@@ -577,7 +675,12 @@ public class InteractionManagerService {
 		}				
 	}
 	
-	
+	/**
+	 * Gets a list of available places on the interaction manager.
+	 * 
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */	
 	public void getPlacesList(String callingApplicationId, final AsyncCallback<ArrayList<Place>> callback) {
 		Log.debug( this, "Getting places from server: " +  this.urlHelper.getPlacesUrl(callingApplicationId) );
 		try {
@@ -624,7 +727,16 @@ public class InteractionManagerService {
 	}
 	
 	
-
+	/**
+	 * Creates a communication channel with the interaction manager for synchronous 
+	 * communication with a specific application. Currently, the channel is used only
+	 * to receive WidgetInput for an application.
+	 * 
+	 * @param placeId The place id of the application which this channel will serve.
+	 * @param applicationId The application id of the application which this channel will serve.
+	 * @param callingApplicationId The application id of the application that is making the request.
+	 * @param listener The listener for WidgetInput directed at the specified application.
+	 */
 	public void createChannel(String placeId, String applicationId, String callingApplicationId,
 			final AsyncCallback<ArrayList<WidgetInput>> listener) {
 		
@@ -764,11 +876,11 @@ public class InteractionManagerService {
 	
 
 	
-	public String getWidgetIdUrlEscaped(Widget widget) {
+	private String getWidgetIdUrlEscaped(Widget widget) {
 		return com.google.gwt.http.client.URL.encode(widget.getWidgetId());
 	}
 	
-	public String getWidgetIdUrlEscaped(String widgetId) {
+	private String getWidgetIdUrlEscaped(String widgetId) {
 		return com.google.gwt.http.client.URL.encode(widgetId);
 	}
 }
