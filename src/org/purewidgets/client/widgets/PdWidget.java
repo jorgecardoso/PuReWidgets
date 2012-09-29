@@ -63,10 +63,16 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
 	/**
+	 * The default pattern to apply to generate the input feedback title for
+	 * on-screen widgets. {@see org.purewidgets.client.feedback.MessagePattern}
+	 */
+	protected static final String DEFAULT_ONSCREEN_FEEDBACK_TITLE = MessagePattern.PATTERN_USER_NICKNAME;
+	
+	/**
 	 * The default pattern to apply to generate the input feedback message for
 	 * on-screen widgets. {@see org.purewidgets.client.feedback.MessagePattern}
 	 */
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME
+	protected static final String DEFAULT_ONSCREEN_FEEDBACK_INFO = MessagePattern.PATTERN_USER_NICKNAME
 			+ " " + MessagePattern.PATTERN_INPUT_AGE;
 
 	/**
@@ -74,7 +80,7 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	 * for off-screen widgets. {@see
 	 * org.purewidgets.client.feedback.MessagePattern}
 	 */
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME
+	protected static final String DEFAULT_OFFSCREEN_FEEDBACK_TITLE = MessagePattern.PATTERN_USER_NICKNAME
 			+ " " + MessagePattern.PATTERN_INPUT_AGE;;
 
 	/**
@@ -82,7 +88,7 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	 * description for off-screen widgets. {@see
 	 * org.purewidgets.client.feedback.MessagePattern}
 	 */
-	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION;
+	protected static final String DEFAULT_OFFSCREEN_FEEDBACK_INFO = MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION;
 
 	/**
 	 * The PuReWidgets Widget that is associated with this PdWidget.
@@ -106,22 +112,29 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	private FeedbackSequencer feedbackSequencer;
 
 	/**
+	 * The pattern to apply to generate the input feedback title for on-screen
+	 * widgets.
+	 */
+	private String onScreenFeedbackTitle = DEFAULT_ONSCREEN_FEEDBACK_TITLE;
+
+	
+	/**
 	 * The pattern to apply to generate the input feedback message for on-screen
 	 * widgets.
 	 */
-	private String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
+	private String onScreenFeedbackInfo = DEFAULT_ONSCREEN_FEEDBACK_INFO;
 
 	/**
 	 * The pattern to apply to generate the input feedback message title for
 	 * off-screen widgets.
 	 */
-	private String userSharedTitleInputFeedbackPattern = DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN;
+	private String offScreenFeedbackTitle = DEFAULT_OFFSCREEN_FEEDBACK_TITLE;
 
 	/**
 	 * The pattern to apply to generate the input feedback message description
 	 * for off-screen widgets.
 	 */
-	private String userSharedInfoInputFeedbackPattern = DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN;
+	private String offScreenFeedbackInfo = DEFAULT_OFFSCREEN_FEEDBACK_INFO;
 
 	/**
 	 * The visual state of the widget.
@@ -257,14 +270,10 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * Gets the short description of this PdWidget (which is the same as the underlying Widget).
-	 * This method calls {@link org.purewidgets.shared.im.Widget#getShortDescription()} on the underlying Widget.
-	 * 
-	 * 
-	 * @return The short description
+	 * @return the onScreenFeedbackTitle
 	 */
-	public String getShortDescription() {
-		return this.widget.getShortDescription();
+	public String getOnScreenFeedbackTitle() {
+		return onScreenFeedbackTitle;
 	}
 
 	// /**
@@ -276,25 +285,36 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	// }
 
 	/**
+	 * Gets the short description of this PdWidget (which is the same as the underlying Widget).
+	 * This method calls {@link org.purewidgets.shared.im.Widget#getShortDescription()} on the underlying Widget.
+	 * 
+	 * 
+	 * @return The short description
+	 */
+	public String getShortDescription() {
+		return this.widget.getShortDescription();
+	}
+
+	/**
 	 * Gets the feedback message pattern for on-screen widgets.
 	 * @return the userInputFeedbackPattern
 	 */
 	public String getUserInputFeedbackPattern() {
-		return userInputFeedbackPattern;
+		return onScreenFeedbackInfo;
 	}
 
 	/**
 	 * @return the userSharedInfoInputFeedbackPattern
 	 */
 	public String getUserSharedInfoInputFeedbackPattern() {
-		return userSharedInfoInputFeedbackPattern;
+		return offScreenFeedbackInfo;
 	}
 
 	/**
 	 * @return the userSharedTitleInputFeedbackPattern
 	 */
 	public String getUserSharedTitleInputFeedbackPattern() {
-		return userSharedTitleInputFeedbackPattern;
+		return offScreenFeedbackTitle;
 	}
 
 	/**
@@ -318,6 +338,20 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		return this.widget.getWidgetOptions();
 	}
 
+	// @Override
+	// public void widgetVisibilityChanged() {
+	// // Log.debug(this, "Widget visibility changed, transfering feedback.");
+	// // /*
+	// // * Transfer the feedback to the bottom panel
+	// // */
+	// // this.feedbackSequencer.stop();
+	// // for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput()
+	// ) {
+	// // sharedFeedbackSequencer.add(inputfeedback);
+	// // }
+	// // this.feedbackSequencer.clear();
+	// }
+
 	/**
 	 * Called by the FeedbackSequencer to notify that a feedback display has
 	 * ended.
@@ -332,20 +366,6 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	public final void inputFeedbackEnded(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
 
 	}
-
-	// @Override
-	// public void widgetVisibilityChanged() {
-	// // Log.debug(this, "Widget visibility changed, transfering feedback.");
-	// // /*
-	// // * Transfer the feedback to the bottom panel
-	// // */
-	// // this.feedbackSequencer.stop();
-	// // for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput()
-	// ) {
-	// // sharedFeedbackSequencer.add(inputfeedback);
-	// // }
-	// // this.feedbackSequencer.clear();
-	// }
 
 	/**
 	 * Triggers the processing of the specified InputFeedback.
@@ -587,35 +607,42 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * @param shortDescription
-	 *            the shortDescription to set
-	 */
-	public void setShortDescription(String shortDescription) {
-		this.widget.setShortDescription(shortDescription);
-	}
-
-	/**
-	 * @param userInputFeedbackPattern
-	 *            the userInputFeedbackPattern to set
-	 */
-	public void setUserInputFeedbackPattern(String userInputFeedbackPattern) {
-		this.userInputFeedbackPattern = userInputFeedbackPattern;
-	}
-
-	/**
 	 * @param userSharedInfoInputFeedbackPattern
 	 *            the userSharedInfoInputFeedbackPattern to set
 	 */
-	public void setUserSharedInfoInputFeedbackPattern(String userSharedInfoInputFeedbackPattern) {
-		this.userSharedInfoInputFeedbackPattern = userSharedInfoInputFeedbackPattern;
+	public void setOffScreenFeedbackInfo(String userSharedInfoInputFeedbackPattern) {
+		this.offScreenFeedbackInfo = userSharedInfoInputFeedbackPattern;
 	}
 
 	/**
 	 * @param userSharedTitleInputFeedbackPattern
 	 *            the userSharedTitleInputFeedbackPattern to set
 	 */
-	public void setUserSharedTitleInputFeedbackPattern(String userSharedTitleInputFeedbackPattern) {
-		this.userSharedTitleInputFeedbackPattern = userSharedTitleInputFeedbackPattern;
+	public void setOffScreenFeedbackTitle(String userSharedTitleInputFeedbackPattern) {
+		this.offScreenFeedbackTitle = userSharedTitleInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userInputFeedbackPattern
+	 *            the userInputFeedbackPattern to set
+	 */
+	public void setOnScreenFeedbackInfo(String userInputFeedbackPattern) {
+		this.onScreenFeedbackInfo = userInputFeedbackPattern;
+	}
+
+	/**
+	 * @param onScreenFeedbackTitle the onScreenFeedbackTitle to set
+	 */
+	public void setOnScreenFeedbackTitle(String onScreenFeedbackTitle) {
+		this.onScreenFeedbackTitle = onScreenFeedbackTitle;
+	}
+
+	/**
+	 * @param shortDescription
+	 *            the shortDescription to set
+	 */
+	public void setShortDescription(String shortDescription) {
+		this.widget.setShortDescription(shortDescription);
 	}
 
 	/**
@@ -666,11 +693,12 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	protected void generateUserInputFeedbackMessage(WidgetInputEvent inputEvent,
 			InputFeedback<?> inputFeedback) {
 
-		inputFeedback.setInfo(replaceParameters(this.userInputFeedbackPattern, inputEvent));
-		inputFeedback.setSharedFeedbackTitle(replaceParameters(
-				this.userSharedTitleInputFeedbackPattern, inputEvent));
-		inputFeedback.setSharedFeedbackInfo(replaceParameters(
-				this.userSharedInfoInputFeedbackPattern, inputEvent));
+		inputFeedback.setOnScreenWidgetFeedbackTitle(replaceParameters(this.onScreenFeedbackTitle, inputEvent));
+		inputFeedback.setOnScreenWidgetFeedbackInfo(replaceParameters(this.onScreenFeedbackInfo, inputEvent));
+		inputFeedback.setOffScreenWidgetFeedbackTitle(replaceParameters(
+				this.offScreenFeedbackTitle, inputEvent));
+		inputFeedback.setOffScreenWidgetFeedbackInfo(replaceParameters(
+				this.offScreenFeedbackInfo, inputEvent));
 	}
 
 	protected InputFeedback<? extends PdWidget> handleInput(WidgetInputEvent ie) {

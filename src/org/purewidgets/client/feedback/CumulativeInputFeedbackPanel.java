@@ -195,11 +195,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 		for (InputFeedback<?> feedback : this.accumulatedFeedback) {
 			
 				if ( this.showTitles ) {
-					Label title = new Label(feedback.getSharedFeedbackTitle() );//feed.getWidget().getShortDescription());
+					Label title = new Label(feedback.getOffScreenWidgetFeedbackTitle() );//feed.getWidget().getShortDescription());
 					title.setStyleName(TITLE_STYLENAME_SUFFIX);
 					vPanel.add(title);
 					
-					HTML l = new HTML( feedback.getSharedFeedbackInfo()); //message.toString() );
+					HTML l = new HTML( feedback.getOffScreenWidgetFeedbackInfo()); //message.toString() );
 					switch( feedback.getType() ) {
 					case ACCEPTED:
 						l.setStyleName(ACCEPTED_INPUT_STYLENAME_SUFFIX);
@@ -213,7 +213,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 					vPanel.add(l);					
 				} else {
 					
-					HTML l = new HTML(feedback.getInfo() );
+					HTML l = new HTML(feedback.getOnScreenWidgetFeedbackInfo() );
 					
 					switch( feedback.getType() ) {
 					case ACCEPTED:

@@ -8,15 +8,18 @@ import org.purewidgets.shared.events.WidgetInputEvent;
  * 
  * Represents the feedback information given by PdWidgets to the users.<p>
  * 
+ * The feedback information consists of a title and info for an on-screen (widgets that are visible 
+ * on the public display)
+ * widget feedback and a 
+ * title and description for off-screen (widgets that are not visible on the public display) widget feedback.
+ * 
  * Feedback can be presented to users in two ways, depending on the visual state of the corresponding
  * PdWidget.<br>
- * For on-screen PdWidgets (widgets that are visible on the public display) the feedback consists
- * of a panel shown next to the PdWidget. In these cases, feedback consists of a simple information line.<br>
- * For off-screen PdWidgets (widgets that are not visible on the public display) the feedback consists of a
- * title and an info lines. This allows widgets to provide more contextual information to their feedback (since the 
- * widget itself is not visible to provide this context). In this second case, the feedback panel is shared by all widgets
- * that an application may be using.<p>
- * These feedback messages typically use {@link MessagePattern} to define various variables related to the user input.<p>
+ * For on-screen PdWidgets the feedback is shown on a panel next to the PdWidget. <br>
+ * For off-screen PdWidgets the feedback is shown on a panel at the bottom of the screen.<br>
+ * 
+ * The feedback messages (title and info) typically use {@link MessagePattern} to define various 
+ * variables related to the user input.<p>
  * 
  * 
  * An InputFeedback object has references to other input related objects: the WidgetInputEvent that was triggered 
@@ -45,20 +48,28 @@ public class InputFeedback<T extends PdWidget> {
 	private WidgetInputEvent inputEvent;
 	
 	/**
+	 * For on-screen PdWidgets, the information that is going to be displayed as a title in the 
+	 * feedback panel next to the
+	 * PdWidget that received the input.
+	 */
+	private String onScreenWidgetFeedbackTitle;
+	
+	
+	/**
 	 * For on-screen PdWidgets, the information that is going to be displayed in a feedback panel next to the
 	 * PdWidget that received the input.
 	 */
-	private String info;
+	private String onScreenWidgetFeedbackInfo;
 	
 	/**
 	 * The title displayed for feedback for off-screen widgets.
 	 */
-	private String sharedFeedbackTitle;
+	private String offScreenWidgetFeedbackTitle;
 	
 	/**
 	 * The info line displayed for feedback for off-screen widgets.
 	 */
-	private String sharedFeedbackInfo;
+	private String offScreenWidgetFeedbackInfo;
 	
 	/**
 	 * The type of feedback (Accepted, not accepted)
@@ -89,7 +100,7 @@ public class InputFeedback<T extends PdWidget> {
 		this.widget = widget;
 		this.inputEvent =  event;
 		this.actionEvent = ae;
-		this.info = "";
+		this.onScreenWidgetFeedbackInfo = "";
 		this.type = (null == type ? Type.ACCEPTED : type);
 		//this.time = System.currentTimeMillis(); //getTimeStampMilli();
 	}
@@ -116,8 +127,8 @@ public class InputFeedback<T extends PdWidget> {
 	 * 
 	 * @param info the info to set.
 	 */
-	public void setInfo(String info) {
-		this.info = info;
+	public void setOnScreenWidgetFeedbackInfo(String info) {
+		this.onScreenWidgetFeedbackInfo = info;
 	}
 
 	/**
@@ -125,8 +136,8 @@ public class InputFeedback<T extends PdWidget> {
 	 * 
 	 * @return the info
 	 */
-	public String getInfo() {
-		return info;
+	public String getOnScreenWidgetFeedbackInfo() {
+		return onScreenWidgetFeedbackInfo;
 	}
 
 //	/**
@@ -166,7 +177,7 @@ public class InputFeedback<T extends PdWidget> {
 	
 	@Override
 	public String toString() {
-		return this.info+": " + this.type.toString();
+		return this.onScreenWidgetFeedbackInfo+": " + this.type.toString();
 	}
 
 
@@ -233,8 +244,8 @@ public class InputFeedback<T extends PdWidget> {
 	 * 
 	 * @return the sharedFeedbackTitle
 	 */
-	public String getSharedFeedbackTitle() {
-		return sharedFeedbackTitle;
+	public String getOffScreenWidgetFeedbackTitle() {
+		return offScreenWidgetFeedbackTitle;
 	}
 
 
@@ -242,8 +253,8 @@ public class InputFeedback<T extends PdWidget> {
 	 * Sets the title for the shared panel feedback.
 	 * @param sharedFeedbackTitle the sharedFeedbackTitle to set
 	 */
-	public void setSharedFeedbackTitle(String sharedFeedbackTitle) {
-		this.sharedFeedbackTitle = sharedFeedbackTitle;
+	public void setOffScreenWidgetFeedbackTitle(String sharedFeedbackTitle) {
+		this.offScreenWidgetFeedbackTitle = sharedFeedbackTitle;
 	}
 
 
@@ -251,8 +262,8 @@ public class InputFeedback<T extends PdWidget> {
 	 * Gets the info for the shared panel feedback.
 	 * @return the sharedFeedbackInfo
 	 */
-	public String getSharedFeedbackInfo() {
-		return sharedFeedbackInfo;
+	public String getOffScreenWidgetFeedbackInfo() {
+		return offScreenWidgetFeedbackInfo;
 	}
 
 
@@ -261,7 +272,25 @@ public class InputFeedback<T extends PdWidget> {
 	 * 
 	 * @param sharedFeedbackInfo the sharedFeedbackInfo to set
 	 */
-	public void setSharedFeedbackInfo(String sharedFeedbackInfo) {
-		this.sharedFeedbackInfo = sharedFeedbackInfo;
+	public void setOffScreenWidgetFeedbackInfo(String sharedFeedbackInfo) {
+		this.offScreenWidgetFeedbackInfo = sharedFeedbackInfo;
+	}
+
+	/**
+	 * Gets the feedback title for on-screen widgets.
+	 * 
+	 * @return The feedback title for on-screen widgets.
+	 */
+	public String getOnScreenWidgetFeedbackTitle() {
+		return onScreenWidgetFeedbackTitle;
+	}
+
+	/**
+	 * Sets the feedback title for on-screen widgets. 
+	 * 
+	 * @param onScreenWidgetFeedbackTitle The title to set
+	 */
+	public void setOnScreenWidgetFeedbackTitle(String onScreenWidgetFeedbackTitle) {
+		this.onScreenWidgetFeedbackTitle = onScreenWidgetFeedbackTitle;
 	}
 }

@@ -43,9 +43,9 @@ public class PdCheckin extends PdWidget{
 		/*
 		 * Set the default user feedback pattern
 		 */
-		this.setUserInputFeedbackPattern(USER_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedTitleInputFeedbackPattern(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
-		this.setUserSharedInfoInputFeedbackPattern(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
+		this.setOnScreenFeedbackInfo(USER_INPUT_FEEDBACK_PATTERN);
+		this.setOffScreenFeedbackTitle(USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN);
+		this.setOffScreenFeedbackInfo(USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN);
 		
 		Log.debug(this, "Sending to server");
 		this.sendToServer();
