@@ -117,11 +117,6 @@ public class PdUpload extends PdWidget  {
 		return feedback;
 	}		
 
-	
-	
-	@Override
-	public void setInputEnabled(boolean inputEnabled) {
-		super.setInputEnabled(inputEnabled);
-	}
+
 	
 }

@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
-import org.purewidgets.client.widgets.PdButton.PdButtonUiBinder;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
-import org.purewidgets.shared.widgets.TextBox;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -23,8 +21,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.Timer;
@@ -243,6 +239,7 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		super.setInputEnabled(inputEnabled);
 		this.setCaret(inputEnabled);
 	}
+	
 	/*
 	@Override
 	public void onInput(InputEvent ie) {

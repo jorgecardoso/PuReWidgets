@@ -2,13 +2,11 @@ package org.purewidgets.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.feedback.CumulativeInputFeedbackPanel;
-import org.purewidgets.client.feedback.FeedbackDisplay;
 import org.purewidgets.client.feedback.FeedbackSequencer;
+import org.purewidgets.client.feedback.InputEventAgeMessages;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.feedback.InputFeedbackListener;
 import org.purewidgets.client.feedback.MessagePattern;
@@ -29,38 +27,72 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
+ * A PdWidget represents the base class for the client side version of a
+ * PuReWidgets widget. A PdWidget defines its own visual appearance, input data
+ * processing and interpretation, and the high-level events that applications
+ * receive when the widget is acted upon.
  * 
-
-* @author Jorge C. S. Cardoso
-*
+ * The PdWidget class defines basic functionality for all widgets: 1. Listening
+ * for user input 2. Triggering user input feedback on the public display 3.
+ * Maintaining a cache of the reference codes assigned
+ * 
+ * A PdWidget is associated with a {@link org.purewidgets.shared.im.Widget}, which holds
+ * the actual data that describes the widget, and that is sent to the
+ * interaction manager server.
+ * 
+ * @author Jorge C. S. Cardoso
+ * @see org.purewidgets.shared.im.Widget
  */
-public class PdWidget extends Composite implements  WidgetInputListener, ReferenceCodeListener, InputFeedbackListener {
-	
+public class PdWidget extends Composite implements WidgetInputListener, ReferenceCodeListener,
+		InputFeedbackListener {
+
+	/**
+	 * The key name for storing the assigned referenced codes on local storage
+	 */
 	private static final String REFERENCE_CODES_STORAGE_ID = "referenceCodes";
-	private static final int INPUT_EVENT_OLD_AGE = 1000*60*60*24; // 1 day
+
+	/**
+	 * The minimum age of an input to be considered old (no feedback is
+	 * triggered).
+	 */
+	private static final int INPUT_EVENT_OLD_AGE = 1000 * 60 * 60 * 24; // 1 day
+
+	/**
+	 * The stylename suffix for disabled widgets.
+	 */
 	protected static final String DEPENDENT_STYLENAME_DISABLED_WIDGET = "disabled";
 
 	/**
-	 * The default pattern to apply to generate the input feedback message.
-	 * Consists simply on showing the user's nickname.
-	 * 
-	 * Available fields:
-	 * %U% - user nickname
-	 * %P[i]% - Input parameter i
-	 * %WS% - widget short description
-	 * %WL% - widget long description
-	 * %WOS% - widget option short description
-	 * %WOL% - widget option long description
-	 * %WOR% - widget option reference code
+	 * The default pattern to apply to generate the input feedback message for
+	 * on-screen widgets. {@see org.purewidgets.client.feedback.MessagePattern}
 	 */
-	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " "+ MessagePattern.PATTERN_INPUT_AGE; 
-	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " "+ MessagePattern.PATTERN_INPUT_AGE;;
-	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION;
+	protected final String DEFAULT_USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME
+			+ " " + MessagePattern.PATTERN_INPUT_AGE;
+
 	/**
-	 * The widget that supports this guiwidget.
+	 * The default pattern to apply to generate the input feedback message title
+	 * for off-screen widgets. {@see
+	 * org.purewidgets.client.feedback.MessagePattern}
+	 */
+	protected final String DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME
+			+ " " + MessagePattern.PATTERN_INPUT_AGE;;
+
+	/**
+	 * The default pattern to apply to generate the input feedback message
+	 * description for off-screen widgets. {@see
+	 * org.purewidgets.client.feedback.MessagePattern}
+	 */
+	protected final String DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION;
+
+	/**
+	 * The PuReWidgets Widget that is associated with this PdWidget.
 	 */
 	protected Widget widget;
-	
+
+	/**
+	 * The action listeners that are registered to receive events from this
+	 * widget
+	 */
 	protected List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
 	/**
@@ -69,167 +101,209 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	protected CumulativeInputFeedbackPanel inputFeedbackDisplay;
 
 	/**
-	 * The feedback sequencer for internal feedback.
+	 * The feedback sequencer for feedback.
 	 */
 	private FeedbackSequencer feedbackSequencer;
 
 	/**
-	 * The pattern to apply to generate the input feedback message.
+	 * The pattern to apply to generate the input feedback message for on-screen
+	 * widgets.
 	 */
 	private String userInputFeedbackPattern = DEFAULT_USER_INPUT_FEEDBACK_PATTERN;
 
 	/**
-	 * The pattern to apply to generate the input feedback message.
+	 * The pattern to apply to generate the input feedback message title for
+	 * off-screen widgets.
 	 */
 	private String userSharedTitleInputFeedbackPattern = DEFAULT_USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN;
-	
+
 	/**
-	 * The pattern to apply to generate the input feedback message.
+	 * The pattern to apply to generate the input feedback message description
+	 * for off-screen widgets.
 	 */
 	private String userSharedInfoInputFeedbackPattern = DEFAULT_USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN;
-	
-	
-	
+
 	/**
 	 * The visual state of the widget.
 	 */
 	protected boolean enabled;
 
 	/**
-	 * The input state of the widget
-	 * TODO: Merge with the enabled flag
+	 * The input state of the widget TODO: Merge with the enabled flag
 	 */
 	protected boolean inputEnabled = true;
-	
-	InputEventAgeMessages messages;
-	
-	private LocalStorage localStorage;
-	private String widgetId;
-	
+
 	/**
-	 * Subclasses that implement widgets with several options should not call
-	 * this constructor. Although subclasses can call super(widgetID), this
-	 * should be avoided because it would mean calling the addWidget twice on
-	 * the InteractionManager.
+	 * Message localization for widget input age.
+	 */
+	InputEventAgeMessages messages;
+
+	/**
+	 * The localstorage to store the reference codes.
+	 */
+	private LocalStorage localStorage;
+
+	/**
+	 * The id of this widget.
+	 */
+	private String widgetId;
+
+	/**
+	 * Creates a new PdWidget with the specified widget id.
 	 * 
-	 * @param widgetID
+	 * @param widgetId
 	 *            The id of this widget (must be unique within the application).
-	 * @param suggestedReferenceCode
-	 *            The suggested reference code
 	 */
 	public PdWidget(String widgetId) {
 		this.widgetId = widgetId;
 		this.inputFeedbackDisplay = new CumulativeInputFeedbackPanel(this);
 		this.feedbackSequencer = new FeedbackSequencer(this.inputFeedbackDisplay, this);
-		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId()+"-"+this.widgetId);
+		this.localStorage = new LocalStorage(PDApplication.getCurrent().getApplicationId() + "-"
+				+ this.widgetId);
 		this.messages = GWT.create(InputEventAgeMessages.class);
 	}
 
-	public boolean isDisplaying() {
-		com.google.gwt.user.client.ui.Widget current = this;
-		try { // we were getting javascript exceptions (Cannot read property 'display' of undefined) 
-			//in development mode, hence the try-catch:
-			  
-			/*
-			 * If the widget is not on the DOM than it is not visible.
-			 */
-			if ( !current.isAttached() ) {
-				return false;
-			}
-			
-			/*
-			 * If any ancestor is not visible than this widget is not visible either
-			 */
-			while ( current != null ) {
-				if ( !current.isVisible() ) {
-					return false;
-				}
-				current = current.getParent();
-			}
-		} catch (Exception e) { 
-			Log.warn(this, "Could not determine visibility status", e);
-			return false;
-		}
-		return true;
-	}
-	
 	/**
 	 * Adds an ActionListener to this widget. ActionListeners will be notified
-	 * of any actions triggered by this widget, usually in response to user input.
+	 * of any actions triggered by this widget, usually in response to user
+	 * input.
 	 * 
-	 * @param handler The ActionListener to add.
+	 * @param handler
+	 *            The ActionListener to add.
 	 */
 	public void addActionListener(ActionListener handler) {
-		
 		this.actionListeners.add(handler);
 	}
-	
 
 	/**
-	 * Adds an optionID to this widget.
+	 * Adds a widget option to the underlying
+	 * {@link org.purewidgets.shared.im.Widget}.
 	 * 
-	 * @param optionID The widgetOption to add.
+	 * @param option
+	 *            The widgetOption to add.
+	 * @see org.purewidgets.shared.im.Widget#addWidgetOption(WidgetOption)
 	 */
 	public void addWidgetOption(WidgetOption option) {
 		this.widget.addWidgetOption(option);
 	}
-	
-	/**
-	 * 
-	 * @return The widget's bottom y coordinate
-	 */
-	public int getBottom() {
-		return this.getElement().getAbsoluteBottom();
-	}
 
+	/**
+	 * Gets the feedback sequencer for this PdWidget.
+	 * 
+	 * @return The feedback sequencer for this PdWidget.
+	 */
 	public FeedbackSequencer getFeedbackSequencer() {
 		return feedbackSequencer;
 	}
-	
-	
-	/**
-	 * 
-	 * @return The height of the widget, in pixels.
-	 */
-	public int getHeight() {
-		return this.getOffsetHeight();
-	}	
+
+	// /**
+	// *
+	// * @return The widget's bottom y coordinate
+	// */
+	// public int getBottom() {
+	// return this.getElement().getAbsoluteBottom();
+	// }
 
 	/**
+	 * Gets the local storage associated with this PdWidget.
 	 * 
-	 * @return The widget's leftmost x coordinate
+	 * @return The LocalStorage associated with this PdWidget.
 	 */
-	public int getLeft() {
-		return this.getElement().getAbsoluteLeft();
-	}
-	
-
-	
-
-	
-	/**
-	 * 
-	 * @return The widget's rightmost x coordinate
-	 */
-	public int getRight() {
-		return this.getElement().getAbsoluteRight();
+	public LocalStorage getLocalStorage() {
+		return localStorage;
 	}
 
+	// /**
+	// *
+	// * @return The height of the widget, in pixels.
+	// */
+	// public int getHeight() {
+	// return this.getOffsetHeight();
+	// }
+
+	// /**
+	// *
+	// * @return The widget's leftmost x coordinate
+	// */
+	// public int getLeft() {
+	// return this.getElement().getAbsoluteLeft();
+	// }
+
+	// /**
+	// *
+	// * @return The widget's rightmost x coordinate
+	// */
+	// public int getRight() {
+	// return this.getElement().getAbsoluteRight();
+	// }
+
+	// /**
+	// *
+	// * @return The widget's top y coordinate
+	// */
+	// public int getTop() {
+	// return this.getElement().getAbsoluteTop();
+	// }
+
 	/**
+	 * Gets the long description of this PdWidget (which is the same as the underlying Widget).
+	 * This method calls {@link org.purewidgets.shared.im.Widget#getLongDescription()} on the underlying Widget.
 	 * 
-	 * @return The widget's top y coordinate
+	 * 
+	 * @return The long description
 	 */
-	public int getTop() {
-		return this.getElement().getAbsoluteTop();
+	public String getLongDescription() {
+		return this.widget.getLongDescription();
 	}
-	
+
 	/**
-	 * Returns this widget's id. There is no setId() because the id of a
-	 * widget cannot be changed after it is set in the constructor.
+	 * Gets the short description of this PdWidget (which is the same as the underlying Widget).
+	 * This method calls {@link org.purewidgets.shared.im.Widget#getShortDescription()} on the underlying Widget.
 	 * 
 	 * 
-	 * @return This widget's WidgetID.
-	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#getId()
+	 * @return The short description
+	 */
+	public String getShortDescription() {
+		return this.widget.getShortDescription();
+	}
+
+	// /**
+	// *
+	// * @return The width of the widget, in pixels.
+	// */
+	// public int getWidth() {
+	// return this.getOffsetWidth();
+	// }
+
+	/**
+	 * Gets the feedback message pattern for on-screen widgets.
+	 * @return the userInputFeedbackPattern
+	 */
+	public String getUserInputFeedbackPattern() {
+		return userInputFeedbackPattern;
+	}
+
+	/**
+	 * @return the userSharedInfoInputFeedbackPattern
+	 */
+	public String getUserSharedInfoInputFeedbackPattern() {
+		return userSharedInfoInputFeedbackPattern;
+	}
+
+	/**
+	 * @return the userSharedTitleInputFeedbackPattern
+	 */
+	public String getUserSharedTitleInputFeedbackPattern() {
+		return userSharedTitleInputFeedbackPattern;
+	}
+
+	/**
+	 * Gets this widget's id. There is no setId() because the id of a widget
+	 * cannot be changed after it is set in the constructor.
+	 * 
+	 * 
+	 * @return This widget's id.
+	 * @see org.purewidgets.shared.im.Widget#getWidgetId()
 	 */
 	public String getWidgetId() {
 		return this.widget.getWidgetId();
@@ -245,54 +319,91 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	}
 
 	/**
+	 * Called by the FeedbackSequencer to notify that a feedback display has
+	 * ended.
 	 * 
-	 * @return The width of the widget, in pixels.
-	 */
-	public int getWidth() {
-		return this.getOffsetWidth();
-	}
-	
-	protected InputFeedback<? extends PdWidget> handleInput(WidgetInputEvent ie) {
-		InputFeedback<PdWidget> feedback = new InputFeedback<PdWidget>(this, ie, null, null);
-		feedback.setType(InputFeedback.Type.ACCEPTED);
-		
-		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
-		feedback.setActionEvent(ae);
-		this.generateUserInputFeedbackMessage(ie, feedback);
-		return feedback;
-	}
-	
-	/**
-	 * Called by the FeedbackSequencer to notify that a feedback display has ended.
+	 * This method will always be called with the same InputFeedback that the
+	 * previous start method and will always after an inputFeedbackStarted call.
 	 * 
-	 * This method will always be called with the same InputFeedback that
-	 * the previous start method and will always after an inputFeedbackStarted call.
-	 * 
-	 * @param feedback The feedback to stop showing. 
+	 * @param feedback
+	 *            The feedback to stop showing.
 	 */
 	@Override
 	public final void inputFeedbackEnded(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
-		
+
 	}
-	
+
+	// @Override
+	// public void widgetVisibilityChanged() {
+	// // Log.debug(this, "Widget visibility changed, transfering feedback.");
+	// // /*
+	// // * Transfer the feedback to the bottom panel
+	// // */
+	// // this.feedbackSequencer.stop();
+	// // for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput()
+	// ) {
+	// // sharedFeedbackSequencer.add(inputfeedback);
+	// // }
+	// // this.feedbackSequencer.clear();
+	// }
+
 	/**
 	 * Triggers the processing of the specified InputFeedback.
 	 * 
-	 * @param feedback The feedback to process.
+	 * @param feedback
+	 *            The feedback to process.
 	 */
 	@Override
 	public final void inputFeedbackStarted(InputFeedback<? extends PdWidget> feedback) {
 		Log.debugFinest(this, "Input feedback started: " + feedback.toString());
-		
+
 		/*
 		 * If feedback for an accepted input has started, trigger the
 		 * application event.
 		 */
-		if (feedback.getType() == InputFeedback.Type.ACCEPTED) {			
-				this.fireActionEvent(feedback.getActionEvent()); // widget specific object
+		if (feedback.getType() == InputFeedback.Type.ACCEPTED) {
+			this.fireActionEvent(feedback.getActionEvent()); // widget specific
+																// object
 		}
 	}
-	
+
+	/**
+	 * Checks if this PdWidget is currently visible. We cannot simply use the
+	 * isVisible method from GWT because it simply checks the visibility DOM
+	 * property of the element (it does not checks the element's ascendents).
+	 * 
+	 * @return true if the widget is visible; false otherwise.
+	 */
+	public boolean isDisplaying() {
+		com.google.gwt.user.client.ui.Widget current = this;
+		try { // we were getting javascript exceptions (Cannot read property
+				// 'display' of undefined)
+				// in development mode, hence the try-catch:
+
+			/*
+			 * If the widget is not on the DOM than it is not visible.
+			 */
+			if (!current.isAttached()) {
+				return false;
+			}
+
+			/*
+			 * If any ancestor is not visible than this widget is not visible
+			 * either
+			 */
+			while (current != null) {
+				if (!current.isVisible()) {
+					return false;
+				}
+				current = current.getParent();
+			}
+		} catch (Exception e) {
+			Log.warn(this, "Could not determine visibility status", e);
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Returns the visual state of the widget.
 	 * 
@@ -301,227 +412,119 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	public boolean isEnabled() {
 		return this.enabled;
 	}
-	
+
 	public boolean isInputEnabled() {
 		return this.inputEnabled;
 	}
-	
 
-	
-	
-	
 	/**
-	 * Event triggered by the InteractionManager to signal
-	 * input to this widget.
+	 * Event triggered by the InteractionManager to signal input to this widget.
 	 * 
 	 * 
-	 * @param ie An InputEvent object.
+	 * @param ie
+	 *            An InputEvent object.
 	 */
 	@Override
 	public final void onInput(ArrayList<WidgetInputEvent> inputList) {
 		Log.debugFinest(this, "Received input event list ");
-		
-		for ( WidgetInputEvent ie : inputList ) {
-			
-			
+
+		for (WidgetInputEvent ie : inputList) {
+
 			/*
 			 * If the input is old, just trigger the application event
 			 */
-			if ( ie.getAge() > INPUT_EVENT_OLD_AGE ) {
+			if (ie.getAge() > INPUT_EVENT_OLD_AGE) {
 				/*
-				 * Ask the widget to validate the input and generate an appropriate feedback
+				 * Ask the widget to validate the input and generate an
+				 * appropriate feedback
 				 */
 				InputFeedback<? extends PdWidget> feedback = handleInput(ie);
-				this.fireActionEvent( feedback.getActionEvent() );
-				
-				
-			/*
-			 * If the input is recent, generate feedback for it
-			 */
+				this.fireActionEvent(feedback.getActionEvent());
+
+				/*
+				 * If the input is recent, generate feedback for it
+				 */
 			} else {
-				
-				InputFeedback<? extends PdWidget> feedback = new InputFeedback<PdWidget>(this, ie, null, null);
-				if( this.isInputEnabled() ) {
-					
+
+				InputFeedback<? extends PdWidget> feedback = new InputFeedback<PdWidget>(this, ie,
+						null, null);
+				if (this.isInputEnabled()) {
+
 					/*
-					 * If this widget is enabled than ask it to handle the input, validating it 
+					 * If this widget is enabled than ask it to handle the
+					 * input, validating it
 					 */
 					feedback = handleInput(ie);
 				} else {
 					/*
-					 * If the widget is not enabled than the input is not accepted.
+					 * If the widget is not enabled than the input is not
+					 * accepted.
 					 */
 					feedback.setType(InputFeedback.Type.NOT_ACCEPTED);
 				}
-			
+
 				/*
-				 * Schedule the feedback to appear. Widgets may return null as an indication that no feedback should be displayed
+				 * Schedule the feedback to appear. Widgets may return null as
+				 * an indication that no feedback should be displayed
 				 */
-				if ( null != feedback ) {
-					
+				if (null != feedback) {
+
 					this.feedbackSequencer.add(feedback);
-					
+
 				}
 			}
 		}
 
 	}
 
-	
-	
-//	@Override
-//	public void widgetVisibilityChanged() {
-////		Log.debug(this, "Widget visibility changed, transfering feedback.");
-////		/*
-////		 * Transfer the feedback to the bottom panel
-////		 */
-////		this.feedbackSequencer.stop();
-////		for ( InputFeedback inputfeedback : this.feedbackSequencer.getInput() ) {
-////			sharedFeedbackSequencer.add(inputfeedback);
-////		}
-////		this.feedbackSequencer.clear();
-//	}
-	
 	/**
-	 * Concrete widgets should override this method to update their Gui with the correct reference codes.
+	 * Concrete widgets should override this method to update their Gui with the
+	 * correct reference codes.
 	 */
 	@Override
 	public void onReferenceCodesUpdated() {
-		
+
 		ArrayList<String> refCodes = new ArrayList<String>();
-		for ( WidgetOption widgetOption : this.widget.getWidgetOptions() ) {
+		for (WidgetOption widgetOption : this.widget.getWidgetOptions()) {
 			refCodes.add(widgetOption.getReferenceCode());
 		}
 		this.getLocalStorage().saveList(REFERENCE_CODES_STORAGE_ID, refCodes);
 	}
-	
-	
+
 	/**
 	 * Removes an ActionListener from this widget.
 	 * 
-	 * @param handler The ActionListener to remove.
+	 * @param handler
+	 *            The ActionListener to remove.
 	 */
 	public void removeActionListener(ActionListener handler) {
 		this.actionListeners.remove(handler);
 	}
-	
+
 	public void removeFromServer() {
 		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
 		WidgetManager.get().removeWidget(this.widget);
-		
+
 		this.localStorage.removeItem(REFERENCE_CODES_STORAGE_ID);
-		
-		for (Widget w : this.widget.getDependentWidget() ) {
+
+		for (Widget w : this.widget.getDependentWidget()) {
 			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
 			WidgetManager.get().removeWidget(w);
 		}
-	
+
 	}
 
-	
-	
-
-	
-	
-
-	
 	public final void sendToServer() {
 		Log.debugFinest(this, "Adding widget to widgetmanager: " + this.getWidgetId());
 		WidgetManager.get().addWidget(this.widget);
-		
-		for (Widget w : this.widget.getDependentWidget() ) {
+
+		for (Widget w : this.widget.getDependentWidget()) {
 			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w.getWidgetId());
 			WidgetManager.get().addWidget(w);
 		}
-		
+
 	}
-	
-	
-	//
-//	/**
-//	 * @param alignment
-//	 */
-//	public void setInputFeedbackPanelAlignment(Align alignment) {
-//		this.inputFeedbackPanelAlignment = alignment;
-//	}
-//
-//	/**
-//	 * @return the inputInfoPanelAlignment
-//	 */
-//	protected Align getInputFeedbackPanelAlignment() {
-//		return inputFeedbackPanelAlignment;
-//	}
-//
-//	/**
-//	 * @param inputFeedbackPanelReferencePoint
-//	 *            the inputInfoPanelReferencePoint to set
-//	 */
-//	protected void setInputFeedbackPanelReferencePoint(
-//			Align inputFeedbackPanelReferencePoint) {
-//		this.inputFeedbackPanelReferencePoint = inputFeedbackPanelReferencePoint;
-//	}
-//
-//	/**
-//	 * @return the inputInfoPanelReferencePoint
-//	 */
-//	protected Align getInputFeedbackPanelReferencePoint() {
-//		return inputFeedbackPanelReferencePoint;
-//	}
-//
-//	/**
-//	 * @param inputFeedbackDisplay
-//	 *            the inputInfoPanel to set
-//	 */
-//	public void setInputFeedbackDisplay(FeedbackDisplay inputFeedbackDisplay) {
-//		this.inputFeedbackDisplay = inputFeedbackDisplay;
-//	}
-//
-//	/**
-//	 * @return the inputInfoPanel
-//	 */
-//	public FeedbackDisplay getInputFeedbackDisplay() {
-//		return inputFeedbackDisplay;
-//	}
-//
-//	/**
-//	 * Sets the auto-disable feature to disable input automatically after an
-//	 * input has been received. Input will be disabled during the specified
-//	 * number of seconds. After that it will be enabled again.
-//	 * 
-//	 * @param seconds
-//	 *            The number of milliseconds during which input should be
-//	 *            disabled. A value of 0 (zero) disables the auto-disable
-//	 *            feature.
-//	 */
-//	public void setAutoDisable(int milliseconds) {
-//		this.autoDisable = milliseconds;
-//	}
-//
-//	/**
-//	 * Returns the duration of the auto-disable feature.
-//	 * 
-//	 * @return The duration of the auto-disable feature in milliseconds. 0 means
-//	 *         it is not enabled.
-//	 */
-//	public int getAutoDisable() {
-//		return this.autoDisable;
-//	}
-//
-//	/**
-//	 * @param feedbackSequencer
-//	 *            the feedbackSequencer to set
-//	 */
-//	public void setFeedbackSequencer(FeedbackSequencer feedbackSequencer) {
-//		this.feedbackSequencer = feedbackSequencer;
-//	}
-//
-//	/**
-//	 * @return the feedbackSequencer
-//	 */
-//	public FeedbackSequencer getFeedbackSequencer() {
-//		return feedbackSequencer;
-//	}
-//
+
 	/**
 	 * Sets the visual feedback of the widget to enabled or disabled. This
 	 * settings affects only the visual state. The widget may still receive
@@ -534,15 +537,17 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		if (enabled) {
 			this.removeStyleDependentName(PdWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET);// .setStyleName(this.getStyleName());
 		} else {
-			this.getWidget().addStyleDependentName(PdWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); //.setStyleName(					this.getStyleName() + this.DISABLED_STYLENAME_SUFFIX);
+			this.getWidget().addStyleDependentName(PdWidget.DEPENDENT_STYLENAME_DISABLED_WIDGET); // .setStyleName(
+																									// this.getStyleName()
+																									// +
+																									// this.DISABLED_STYLENAME_SUFFIX);
 		}
 	}
-	
-	
+
 	public void setFeedbackSequencer(FeedbackSequencer feedbackSequencer) {
 		this.feedbackSequencer = feedbackSequencer;
 	}
-	
+
 	/**
 	 * Enables or disables this Widget's processing of InputEvents. If disabled,
 	 * the Widget will no longer fire ActionEvents.
@@ -565,11 +570,53 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 		// this.hideInfoPanel();
 	}
 
-
-	
-	/*
-	 * Getters / Setters
+	/**
+	 * @param localStorage
+	 *            the localStorage to set
 	 */
+	public void setLocalStorage(LocalStorage localStorage) {
+		this.localStorage = localStorage;
+	}
+
+	/**
+	 * @param longDescription
+	 *            the longDescription to set
+	 */
+	public void setLongDescription(String longDescription) {
+		this.widget.setLongDescription(longDescription);
+	}
+
+	/**
+	 * @param shortDescription
+	 *            the shortDescription to set
+	 */
+	public void setShortDescription(String shortDescription) {
+		this.widget.setShortDescription(shortDescription);
+	}
+
+	/**
+	 * @param userInputFeedbackPattern
+	 *            the userInputFeedbackPattern to set
+	 */
+	public void setUserInputFeedbackPattern(String userInputFeedbackPattern) {
+		this.userInputFeedbackPattern = userInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userSharedInfoInputFeedbackPattern
+	 *            the userSharedInfoInputFeedbackPattern to set
+	 */
+	public void setUserSharedInfoInputFeedbackPattern(String userSharedInfoInputFeedbackPattern) {
+		this.userSharedInfoInputFeedbackPattern = userSharedInfoInputFeedbackPattern;
+	}
+
+	/**
+	 * @param userSharedTitleInputFeedbackPattern
+	 *            the userSharedTitleInputFeedbackPattern to set
+	 */
+	public void setUserSharedTitleInputFeedbackPattern(String userSharedTitleInputFeedbackPattern) {
+		this.userSharedTitleInputFeedbackPattern = userSharedTitleInputFeedbackPattern;
+	}
 
 	/**
 	 * Sets the widget associated with this GuiWidget.
@@ -577,26 +624,24 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 * @param widget
 	 */
 	public void setWidget(Widget widget) {
-		//Log.debug("AbstractGuiWidget " + this.toDebugString());
-		this.widget = widget; 
+		// Log.debug("AbstractGuiWidget " + this.toDebugString());
+		this.widget = widget;
 		this.widget.setInputListener(this);
 		this.widget.setReferenceCodeListener(this);
-		
+
 		Log.debug(this, "Loading reference codes from local storage.");
 		ArrayList<String> refCodes = this.getLocalStorage().loadList(REFERENCE_CODES_STORAGE_ID);
 		Log.debug(this, "Reference codes: " + refCodes.toString());
-		if ( null != refCodes ) {
+		if (null != refCodes) {
 			int i = 0;
 			for (WidgetOption widgetOption : this.widget.getWidgetOptions()) {
-				if ( refCodes.size() > i ) {
+				if (refCodes.size() > i) {
 					widgetOption.setReferenceCode(refCodes.get(i++));
 				}
 			}
 		}
 	}
 
-
-	
 	/**
 	 * Fires an ActionEvent to all registered listeners of this Widget.
 	 * 
@@ -606,222 +651,148 @@ public class PdWidget extends Composite implements  WidgetInputListener, Referen
 	 *            be created and sent.
 	 */
 	protected void fireActionEvent(ActionEvent<? extends PdWidget> ae) {
-		if ( null == ae ) {
+		if (null == ae) {
 			return;
 		}
-		
-		//Log.debug(this, "Firing " + ae.toDebugString());
-		for ( ActionListener al : this.actionListeners ) {
-			//Log.debug(this, "   on " + al.toString());
+
+		// Log.debug(this, "Firing " + ae.toDebugString());
+		for (ActionListener al : this.actionListeners) {
+			// Log.debug(this, "   on " + al.toString());
 			al.onAction(ae);
 		}
-		
-	}
-	
-	
-	/**
-	 * @return the shortDescription
-	 */
-	public String getShortDescription() {
-		return this.widget.getShortDescription();
+
 	}
 
+	protected void generateUserInputFeedbackMessage(WidgetInputEvent inputEvent,
+			InputFeedback<?> inputFeedback) {
 
-	/**
-	 * @param shortDescription the shortDescription to set
-	 */
-	public void setShortDescription(String shortDescription) {
-		this.widget.setShortDescription(shortDescription);
+		inputFeedback.setInfo(replaceParameters(this.userInputFeedbackPattern, inputEvent));
+		inputFeedback.setSharedFeedbackTitle(replaceParameters(
+				this.userSharedTitleInputFeedbackPattern, inputEvent));
+		inputFeedback.setSharedFeedbackInfo(replaceParameters(
+				this.userSharedInfoInputFeedbackPattern, inputEvent));
 	}
 
+	protected InputFeedback<? extends PdWidget> handleInput(WidgetInputEvent ie) {
+		InputFeedback<PdWidget> feedback = new InputFeedback<PdWidget>(this, ie, null, null);
+		feedback.setType(InputFeedback.Type.ACCEPTED);
 
-	/**
-	 * @return the longDescription
-	 */
-	public String getLongDescription() {
-		return this.widget.getLongDescription();
+		ActionEvent<PdWidget> ae = new ActionEvent<PdWidget>(ie, this, null);
+		feedback.setActionEvent(ae);
+		this.generateUserInputFeedbackMessage(ie, feedback);
+		return feedback;
 	}
 
-
-	/**
-	 * @param longDescription the longDescription to set
-	 */
-	public void setLongDescription(String longDescription) {
-		this.widget.setLongDescription(longDescription);
-	}
-
-	/**
-	 * @return the userInputFeedbackPattern
-	 */
-	public String getUserInputFeedbackPattern() {
-		return userInputFeedbackPattern;
-	}
-
-	/**
-	 * @param userInputFeedbackPattern the userInputFeedbackPattern to set
-	 */
-	public void setUserInputFeedbackPattern(String userInputFeedbackPattern) {
-		this.userInputFeedbackPattern = userInputFeedbackPattern;
-	}
-	
-	
-	
-	protected void generateUserInputFeedbackMessage(WidgetInputEvent inputEvent, InputFeedback inputFeedback) {
-
-		inputFeedback.setInfo( replaceParameters(this.userInputFeedbackPattern, inputEvent) );
-		inputFeedback.setSharedFeedbackTitle( replaceParameters(this.userSharedTitleInputFeedbackPattern, inputEvent) );
-		inputFeedback.setSharedFeedbackInfo( replaceParameters(this.userSharedInfoInputFeedbackPattern, inputEvent) );
-	}
-	
-	
-	private String replaceParameter(String inputString, String parameter, String replacement) {
-		Log.debugFinest(this, "Replacing " + parameter +" in " + inputString + " with " + replacement );
-	    String parameterPattern = parameter+"\\(([\\d]+)\\)";
-	    	 
-	    RegExp reg = RegExp.compile(parameterPattern);
-	    Log.debugFinest(this, "RegExp: " + reg);
-	    MatchResult matcher = reg.exec(inputString);
-	    Log.debugFinest(this, "Matcher: " + matcher);
-	    
-	    if ( null != matcher && matcher.getGroupCount() > 1 ) {
-	    	int nChars = Integer.parseInt(matcher.getGroup(1));
-	    	
-	    	inputString = reg.replace(inputString, noNull(replacement, nChars) );
-	    } else {
-	    	inputString = inputString.replaceAll(parameter, noNull(replacement) );
-	    }
-	    return inputString;
-	}
-	
-	private String replaceParameters(String inputString, WidgetInputEvent inputEvent) {
-		 /* %U% - user nickname
-		  * %P[i]% - Input parameter i
-		 * %WS% - widget short description
-		 * %WL% - widget long description
-		 * %WOS% - widget option short description
-		 * %WOL% - widget option long description
-		 * %WOR% - widget option reference code
-		 */
-		
-		
-		// nickname
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_USER_NICKNAME, inputEvent.getNickname());
-		
-		
-	    // widget short description
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION, this.getShortDescription());
-		
-		
-	    // widget long description
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_LONG_DESCRIPTION, this.getLongDescription());
-	   
-	   	
-	    // widget option short description
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION, inputEvent.getWidgetOption().getShortDescription() );
-	  
-		
-	    // widget option long description
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_LONG_DESCRIPTION, inputEvent.getWidgetOption().getLongDescription() );
-
-	    // widget option reference code
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_OPTION_REFERENCE_CODE, inputEvent.getWidgetOption().getReferenceCode() );
-		
-		// age
-		String ageString = getAgeString( inputEvent.getAge() );
-		if ( inputEvent.getAge() < 1000*60*1 ) {
-			ageString="";
-		}
-		inputString = replaceParameter(inputString, MessagePattern.PATTERN_INPUT_AGE,  ageString);
-				
-			
-		Log.debugFinest(this, "Replacing widget parameters: " + inputString);
-		if ( null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0 ) {
-			for (int i = 0; i < inputEvent.getParameters().size(); i++ ) {
-
-				inputString = replaceParameter(inputString, MessagePattern.getInputParameterPattern(i), inputEvent.getParameters().get(i) );
-			}
-		
-		}
-		return inputString;
-	}
-	
 	private String getAgeString(long milli) {
-		float ageSeconds = milli/1000;
-		
-		float ageMinutes = ageSeconds/60;
-		float ageHours = ageMinutes/60;
-		float ageDays = ageHours/24;
-		float ageWeeks = ageDays/7;
-		
-		if ( ageWeeks > 1 ) {
-			return messages.ageWeek( (int)ageWeeks );
-		} else if ( ageDays > 1 ) {
-			return messages.ageDay( (int)ageDays );
-		} else if ( ageHours > 1 ) {
-			return messages.ageHour( (int)ageHours );
-		} else if ( ageMinutes > 1 ) {
-			return messages.ageMinute( (int)ageMinutes );
+		float ageSeconds = milli / 1000;
+
+		float ageMinutes = ageSeconds / 60;
+		float ageHours = ageMinutes / 60;
+		float ageDays = ageHours / 24;
+		float ageWeeks = ageDays / 7;
+
+		if (ageWeeks > 1) {
+			return messages.ageWeek((int) ageWeeks);
+		} else if (ageDays > 1) {
+			return messages.ageDay((int) ageDays);
+		} else if (ageHours > 1) {
+			return messages.ageHour((int) ageHours);
+		} else if (ageMinutes > 1) {
+			return messages.ageMinute((int) ageMinutes);
 		} else {
-			return messages.ageSecond( (int)ageSeconds );
+			return messages.ageSecond((int) ageSeconds);
 		}
-		
+
 	}
+
 	private String noNull(String s) {
 		if (null == s) {
 			return "";
 		}
 		return s;
 	}
-	
+
 	private String noNull(String s, int nChars) {
 		s = noNull(s);
-		if ( s.length() > nChars ) {
+		if (s.length() > nChars) {
 			s = s.substring(0, nChars) + "...";
 		}
 		return s;
 	}
 
-	/**
-	 * @return the localStorage
-	 */
-	public LocalStorage getLocalStorage() {
-		return localStorage;
+	private String replaceParameter(String inputString, String parameter, String replacement) {
+		Log.debugFinest(this, "Replacing " + parameter + " in " + inputString + " with "
+				+ replacement);
+		String parameterPattern = parameter + "\\(([\\d]+)\\)";
+
+		RegExp reg = RegExp.compile(parameterPattern);
+		Log.debugFinest(this, "RegExp: " + reg);
+		MatchResult matcher = reg.exec(inputString);
+		Log.debugFinest(this, "Matcher: " + matcher);
+
+		if (null != matcher && matcher.getGroupCount() > 1) {
+			int nChars = Integer.parseInt(matcher.getGroup(1));
+
+			inputString = reg.replace(inputString, noNull(replacement, nChars));
+		} else {
+			inputString = inputString.replaceAll(parameter, noNull(replacement));
+		}
+		return inputString;
 	}
 
-	/**
-	 * @param localStorage the localStorage to set
-	 */
-	public void setLocalStorage(LocalStorage localStorage) {
-		this.localStorage = localStorage;
-	}
+	private String replaceParameters(String inputString, WidgetInputEvent inputEvent) {
+		/*
+		 * %U% - user nickname %P[i]% - Input parameter i %WS% - widget short
+		 * description %WL% - widget long description %WOS% - widget option
+		 * short description %WOL% - widget option long description %WOR% -
+		 * widget option reference code
+		 */
 
-	/**
-	 * @return the userSharedTitleInputFeedbackPattern
-	 */
-	public String getUserSharedTitleInputFeedbackPattern() {
-		return userSharedTitleInputFeedbackPattern;
-	}
+		// nickname
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_USER_NICKNAME,
+				inputEvent.getNickname());
 
-	/**
-	 * @param userSharedTitleInputFeedbackPattern the userSharedTitleInputFeedbackPattern to set
-	 */
-	public void setUserSharedTitleInputFeedbackPattern(String userSharedTitleInputFeedbackPattern) {
-		this.userSharedTitleInputFeedbackPattern = userSharedTitleInputFeedbackPattern;
-	}
+		// widget short description
+		inputString = replaceParameter(inputString,
+				MessagePattern.PATTERN_WIDGET_SHORT_DESCRIPTION, this.getShortDescription());
 
-	/**
-	 * @return the userSharedInfoInputFeedbackPattern
-	 */
-	public String getUserSharedInfoInputFeedbackPattern() {
-		return userSharedInfoInputFeedbackPattern;
-	}
+		// widget long description
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_WIDGET_LONG_DESCRIPTION,
+				this.getLongDescription());
 
-	/**
-	 * @param userSharedInfoInputFeedbackPattern the userSharedInfoInputFeedbackPattern to set
-	 */
-	public void setUserSharedInfoInputFeedbackPattern(String userSharedInfoInputFeedbackPattern) {
-		this.userSharedInfoInputFeedbackPattern = userSharedInfoInputFeedbackPattern;
-	}
+		// widget option short description
+		inputString = replaceParameter(inputString,
+				MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION, inputEvent
+						.getWidgetOption().getShortDescription());
 
+		// widget option long description
+		inputString = replaceParameter(inputString,
+				MessagePattern.PATTERN_WIDGET_OPTION_LONG_DESCRIPTION, inputEvent.getWidgetOption()
+						.getLongDescription());
+
+		// widget option reference code
+		inputString = replaceParameter(inputString,
+				MessagePattern.PATTERN_WIDGET_OPTION_REFERENCE_CODE, inputEvent.getWidgetOption()
+						.getReferenceCode());
+
+		// age
+		String ageString = getAgeString(inputEvent.getAge());
+		if (inputEvent.getAge() < 1000 * 60 * 1) {
+			ageString = "";
+		}
+		inputString = replaceParameter(inputString, MessagePattern.PATTERN_INPUT_AGE, ageString);
+
+		Log.debugFinest(this, "Replacing widget parameters: " + inputString);
+		if (null != inputEvent.getParameters() && inputEvent.getParameters().size() > 0) {
+			for (int i = 0; i < inputEvent.getParameters().size(); i++) {
+
+				inputString = replaceParameter(inputString,
+						MessagePattern.getInputParameterPattern(i),
+						inputEvent.getParameters().get(i));
+			}
+
+		}
+		return inputString;
+	}
 
 }

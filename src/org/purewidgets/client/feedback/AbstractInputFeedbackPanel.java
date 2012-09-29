@@ -74,10 +74,10 @@ public abstract class AbstractInputFeedbackPanel extends PopupPanel implements F
 		int widgetTop;
 		
 		if ( null != this.widget ) {
-			widgetWidth = this.widget.getWidth();
-			widgetHeight = this.widget.getHeight();
-			widgetLeft = this.widget.getLeft();
-			widgetTop = this.widget.getTop();
+			widgetWidth = this.widget.getOffsetWidth();
+			widgetHeight = this.widget.getOffsetHeight();
+			widgetLeft = this.widget.getElement().getAbsoluteLeft();
+			widgetTop = this.widget.getElement().getAbsoluteTop();
 		} else {
 			widgetWidth = Window.getClientWidth();
 			widgetHeight = Window.getClientHeight();
