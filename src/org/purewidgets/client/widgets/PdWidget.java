@@ -270,7 +270,9 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * @return the onScreenFeedbackTitle
+	 * Gets the on-screen widget feedback title.
+	 * 
+	 * @return the on-screen widget feedback title.
 	 */
 	public String getOnScreenFeedbackTitle() {
 		return onScreenFeedbackTitle;
@@ -296,24 +298,28 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * Gets the feedback message pattern for on-screen widgets.
-	 * @return the userInputFeedbackPattern
+	 * Gets the feedback info for on-screen widgets.
+	 * 
+	 * @return The feedback info for on-screen widgets.
 	 */
-	public String getUserInputFeedbackPattern() {
+	public String getOnScreenFeedbackInfo() {
 		return onScreenFeedbackInfo;
 	}
 
 	/**
-	 * @return the userSharedInfoInputFeedbackPattern
+	 * Gets the feedback info for off-screen widgets.
+	 * @return The feedback info for off-screen widgets.
 	 */
-	public String getUserSharedInfoInputFeedbackPattern() {
+	public String getOffScreenFeedbackInfo() {
 		return offScreenFeedbackInfo;
 	}
 
 	/**
-	 * @return the userSharedTitleInputFeedbackPattern
+	 * Gets the feedback title for off-screen widgets.
+	 * 
+	 * @return The feedback title for off-screen widgets. 
 	 */
-	public String getUserSharedTitleInputFeedbackPattern() {
+	public String getOffScreenFeedbackTitle() {
 		return offScreenFeedbackTitle;
 	}
 
@@ -356,11 +362,8 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	 * Called by the FeedbackSequencer to notify that a feedback display has
 	 * ended.
 	 * 
-	 * This method will always be called with the same InputFeedback that the
-	 * previous start method and will always after an inputFeedbackStarted call.
-	 * 
 	 * @param feedback
-	 *            The feedback to stop showing.
+	 *            The feedback that stopped showing.
 	 */
 	@Override
 	public final void inputFeedbackEnded(InputFeedback<? extends PdWidget> feedback, boolean noMore) {
@@ -368,10 +371,10 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * Triggers the processing of the specified InputFeedback.
+	 * Notifies that an input feedback started being displayed.
 	 * 
 	 * @param feedback
-	 *            The feedback to process.
+	 *            The feedback info that was displayed.
 	 */
 	@Override
 	public final void inputFeedbackStarted(InputFeedback<? extends PdWidget> feedback) {
@@ -425,7 +428,7 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * Returns the visual state of the widget.
+	 * Checks if the visual state of the widget indicates that it is active.
 	 * 
 	 * @return The state of the widget.
 	 */
@@ -433,16 +436,19 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		return this.enabled;
 	}
 
+	/**
+	 * Checks if this widget is input enabled, i.e., if it accepts input.
+	 * @return The status of the widget regarding input.
+	 */
 	public boolean isInputEnabled() {
 		return this.inputEnabled;
 	}
 
 	/**
-	 * Event triggered by the InteractionManager to signal input to this widget.
+	 * Event triggered by the widget manager to signal input to this widget.
 	 * 
-	 * 
-	 * @param ie
-	 *            An InputEvent object.
+	 * @param inputList Input events targeted to this widget.
+	 *            
 	 */
 	@Override
 	public final void onInput(ArrayList<WidgetInputEvent> inputList) {
@@ -498,6 +504,9 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
+	 * Triggered by the widget manager to signal an update on this widget's reference codes.
+	 * The new reference codes are set automatically on the underlying Widget by the widget manager.
+	 *  
 	 * Concrete widgets should override this method to update their Gui with the
 	 * correct reference codes.
 	 */
@@ -521,6 +530,10 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		this.actionListeners.remove(handler);
 	}
 
+	/**
+	 * Removes this widget from the widget manager (and the interaction manager server).
+	 * 
+	 */
 	public void removeFromServer() {
 		Log.debugFinest(this, "Removing widget from widgetmanager: " + this);
 		WidgetManager.get().removeWidget(this.widget);
@@ -534,6 +547,9 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 
 	}
 
+	/**
+	 * Sends this widget to the widget manager (and the interaction manager server).
+	 */
 	public final void sendToServer() {
 		Log.debugFinest(this, "Adding widget to widgetmanager: " + this.getWidgetId());
 		WidgetManager.get().addWidget(this.widget);
@@ -564,6 +580,11 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		}
 	}
 
+	/**
+	 * Sets the feedback sequencer for this widget.
+	 * 
+	 * @param feedbackSequencer The feedback sequencer to set.
+	 */
 	public void setFeedbackSequencer(FeedbackSequencer feedbackSequencer) {
 		this.feedbackSequencer = feedbackSequencer;
 	}
@@ -575,7 +596,7 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	 * Subclasses should obey this rule and call fireActionEvent (which does
 	 * this checking) to fire ActionEvents to their listeners.
 	 * 
-	 * @param inputEnabled
+	 * @param inputEnabled if true, input events are processed; if false, input events are ignored.
 	 */
 	public void setInputEnabled(boolean inputEnabled) {
 
@@ -591,14 +612,18 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
+	 * Sets the local storage for this widget.
+	 * 
 	 * @param localStorage
-	 *            the localStorage to set
+	 *            the local storage to set.
 	 */
 	public void setLocalStorage(LocalStorage localStorage) {
 		this.localStorage = localStorage;
 	}
 
 	/**
+	 * Sets the long description for this widget.
+	 * 
 	 * @param longDescription
 	 *            the longDescription to set
 	 */
@@ -607,37 +632,45 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 	}
 
 	/**
-	 * @param userSharedInfoInputFeedbackPattern
-	 *            the userSharedInfoInputFeedbackPattern to set
+	 * Sets the off-screen widget feedback info
+	 * 
+	 * @param offScreenFeedbackInfo
+	 *            the off-screen widget feedback info to set
 	 */
-	public void setOffScreenFeedbackInfo(String userSharedInfoInputFeedbackPattern) {
-		this.offScreenFeedbackInfo = userSharedInfoInputFeedbackPattern;
+	public void setOffScreenFeedbackInfo(String offScreenFeedbackInfo) {
+		this.offScreenFeedbackInfo = offScreenFeedbackInfo;
 	}
 
 	/**
-	 * @param userSharedTitleInputFeedbackPattern
-	 *            the userSharedTitleInputFeedbackPattern to set
+	 * Sets the off-screen widget feedback title.
+	 * 
+	 * @param offScreenFeedbackTitle
+	 *            the off-screen widget feedback title to set
 	 */
-	public void setOffScreenFeedbackTitle(String userSharedTitleInputFeedbackPattern) {
-		this.offScreenFeedbackTitle = userSharedTitleInputFeedbackPattern;
+	public void setOffScreenFeedbackTitle(String offScreenFeedbackTitle) {
+		this.offScreenFeedbackTitle = offScreenFeedbackTitle;
 	}
 
 	/**
-	 * @param userInputFeedbackPattern
-	 *            the userInputFeedbackPattern to set
+	 * Sets the on-screen widget feedback info.
+	 * @param onScreenFeedbackInfo
+	 *            the  on-screen widget feedback info to set
 	 */
-	public void setOnScreenFeedbackInfo(String userInputFeedbackPattern) {
-		this.onScreenFeedbackInfo = userInputFeedbackPattern;
+	public void setOnScreenFeedbackInfo(String onScreenFeedbackInfo) {
+		this.onScreenFeedbackInfo = onScreenFeedbackInfo;
 	}
 
 	/**
-	 * @param onScreenFeedbackTitle the onScreenFeedbackTitle to set
+	 * Sets the on-screen widget feedback title.
+	 * @param onScreenFeedbackTitle the on-screen widget feedback title to set
 	 */
 	public void setOnScreenFeedbackTitle(String onScreenFeedbackTitle) {
 		this.onScreenFeedbackTitle = onScreenFeedbackTitle;
 	}
 
 	/**
+	 * Sets the short description for this widget.
+	 * 
 	 * @param shortDescription
 	 *            the shortDescription to set
 	 */
