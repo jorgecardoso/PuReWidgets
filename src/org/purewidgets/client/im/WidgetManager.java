@@ -210,7 +210,7 @@ public class WidgetManager {
 	public static void create(String placeId, String applicationId, LocalStorage localStorage,
 			InteractionManagerService interactionManager) {
 		
-		if ( null != wm ) {
+		if ( null == wm ) {
 			wm = new WidgetManager(placeId, applicationId, localStorage, interactionManager);
 		}
 	}
