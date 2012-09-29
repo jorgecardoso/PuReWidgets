@@ -8,9 +8,13 @@ import java.util.List;
 
 import org.purewidgets.shared.logging.Log;
 
-
-
 /**
+ * 
+ * LocalStorage provides an application specific local storage, guaranteeing that there is no name collisions between 
+ * key/value pairs of different applications. 
+ * Additionally, it provides higher-level methods to the Javascript LocalStorage object, allowing applications
+ * to store and retrieve different types of values and lists.
+ * 
  * @author "Jorge C. S. Cardoso"
  *
  */
@@ -21,12 +25,26 @@ public class LocalStorage {
 	 */
 	private static String MAGIC_NUMBER = "123ListSerializer";
 
+	/**
+	 * The id of this local storage.
+	 */
 	private String storageId;
 	
+	/**
+	 * Creates a new LocalStorage object with the given id.
+	 * 
+	 * @param storageId The storage id.
+	 */
 	public LocalStorage(String storageId) {
 		this.storageId = storageId;
 	}
 	
+	/**
+	 * Gets a value from the local storage as an Integer.
+	 * 
+	 * @param item The key to retrieve.
+	 * @return The value as an Integer; null if the key does not exist, or if the value cannot be converted to an Integer.
+	 */
 	public Integer getInteger(String item) {
 		String valueString = this.getString(item);
 		
@@ -40,21 +58,43 @@ public class LocalStorage {
 		}
 	}
 	
+	/**
+	 * Sets an int value in the local storage.
+	 * 
+	 * @param item The key.
+	 * @param value The value.
+	 */
 	public void setInt(String item, int value) {
 		this.setString(item, value+"");
 	}
 	
+	
+	/**
+	 * Gets a value from the local storage as a String.
+	 * 
+	 * @param item The key to retrieve.
+	 * @return The value.
+	 */	
 	public  String getString(String item) {
 		String name = this.storageId+"-"+item;
 		String value = org.purewidgets.client.storage.js.LocalStorageJs.getString(name);
 		return value;
 	}
 
-
-public void setString(String item, String value) {
-	org.purewidgets.client.storage.js.LocalStorageJs.setString(this.storageId+"-"+item, value);
-}
+	/**
+	 * Sets a String value in the local storage.
+	 * @param item The key. 
+	 * @param value The value.
+	 */
+	public void setString(String item, String value) {
+		org.purewidgets.client.storage.js.LocalStorageJs.setString(this.storageId+"-"+item, value);
+	}
 	
+	/**
+	 * Remove a key/value pair from the local storage.
+	 * 
+	 * @param item The key to remove.
+	 */
 	public void removeItem(String item) {
 		Log.debug(this, "Removing item: " + this.storageId+"-"+item);
 		org.purewidgets.client.storage.js.LocalStorageJs.removeItem(this.storageId+"-"+item);
@@ -133,7 +173,11 @@ public void setString(String item, String value) {
 	}
 	
 
-	
+	/**
+	 * Retrieves a list of int from the local storage.
+	 * @param name The key.
+	 * @return The value of the key as an array of int. 
+	 */
 	public int [] loadIntList(String name) {
 		name = this.storageId+"-"+name;
 		
@@ -159,12 +203,24 @@ public void setString(String item, String value) {
 		
 	}
 	
+	/**
+	 * 
+	 * Retrieves a list of String from the local storage.
+	 * @param name The key.
+	 * @return The value of the key as an ArrayList of String. 
+	 */
 	public  ArrayList<String> loadList(String name) {
 		name = this.storageId+"-"+name;
 		String value = org.purewidgets.client.storage.js.LocalStorageJs.getString(name);
 		return decode(value);
 	}
 
+	/**
+	 * Saves a list of int values to the local storage.
+	 * 
+	 * @param name The key.
+	 * @param list The list of values to save.
+	 */
 	public void saveIntList(String name, int [] list) {
 		name = this.storageId+"-"+name;
 		if ( null == list || list.length == 0 ) {
@@ -184,16 +240,22 @@ public void setString(String item, String value) {
 	}
 
 	/**
-
+	 * Saves a list of Strings to the local storage.
 	 * 
-	 * @param name
-	 * @param values
+	 * @param name The key.
+	 * @param values The list of values to save.
 	 */
 	public void saveList(String name, ArrayList<String> values) {
 		name = this.storageId+"-"+name;
 		org.purewidgets.client.storage.js.LocalStorageJs.setString(name, encode(values));
 	}
 
+	/**
+	 * Gets a value from the local storage, as a Long.
+	 * 
+	 * @param item The key to retrieve.
+	 * @return The value, as a Long; null if the key does not exist, or if the value cannot be converted to Long.
+	 */
 	public Long getLong(String item) {
 		String valueString = this.getString(item);
 		
@@ -207,6 +269,9 @@ public void setString(String item, String value) {
 		}
 	}
 	
+	/**
+	 * Clears the local storage associated with the application.
+	 */
 	public void clear() {
 		org.purewidgets.client.storage.js.LocalStorageJs.clear(this.storageId);
 	}

@@ -10,6 +10,7 @@ import java.util.Map;
 import org.purewidgets.client.storage.ServerStorageService;
 import org.purewidgets.server.dao.Dao;
 import org.purewidgets.server.dao.StorageDao;
+import org.purewidgets.shared.storage.KeyValue;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -24,13 +25,17 @@ public class ServerStorageServiceImpl extends RemoteServiceServlet implements Se
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/* (non-Javadoc)
-	 * @see org.purewidgets.client.storage.RemoteStorageService#get(java.lang.String)
-	 */
+	/**
+	 * Gets a key/value from the server storage.
+	 * 
+	 * @param storageId The id of the storage where the key/value is saved.
+	 * @param name The key.
+	 * @return The key/value pair.
+	 */	
 	@Override
-	public String[] get(String storageId, String name) {
-		String[] result = new String[2];
-		result[0] = name;
+	public KeyValue get(String storageId, String name) {
+		KeyValue keyValue = new KeyValue(name, null);
+		
 		Dao.beginTransaction();
 		
 		StorageDao storageDao = Dao.getStorage(storageId);
@@ -39,14 +44,21 @@ public class ServerStorageServiceImpl extends RemoteServiceServlet implements Se
 		}
 		String value = storageDao.getString(name);
 		Dao.commitOrRollbackTransaction();
-		result[1] = value;
-		return result;
+		keyValue.setValue(value);
+		return keyValue;
 	
 	}
 
+	/**
+	 * Gets a list of key/value from the server storage.
+	 * 
+	 * @param storageId The id of the storage where the key/value is saved.
+	 * @param names The keys to retrieve.
+	 * @return An array of key/value pairs.
+	 */		
 	@Override
-	public String[] get(String storageId, ArrayList<String> names) {
-		String[] result = new String[names.size()];
+	public KeyValue[] get(String storageId, ArrayList<String> names) {
+		KeyValue[] result = new KeyValue[names.size()];
 		
 		Dao.beginTransaction();
 		
@@ -57,7 +69,7 @@ public class ServerStorageServiceImpl extends RemoteServiceServlet implements Se
 		int i = 0;
 		for ( String name: names ) {
 			String value = storageDao.getString(name);
-			result[i++] = value;
+			result[i++] = new KeyValue(name, value);
 		}
 		
 		Dao.commitOrRollbackTransaction();
@@ -66,9 +78,13 @@ public class ServerStorageServiceImpl extends RemoteServiceServlet implements Se
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see org.purewidgets.client.storage.RemoteStorageService#set(java.lang.String, java.lang.String)
-	 */
+	/**
+	 * Saves a string in the server storage.
+	 * 
+	 * @param storageId The id of the storage where the key/values are saved.
+	 * @param name The key.
+	 * @param value The Value.
+	 */	
 	@Override
 	public void set(String storageId, String name, String value) {
 		Dao.beginTransaction();
@@ -82,6 +98,12 @@ public class ServerStorageServiceImpl extends RemoteServiceServlet implements Se
 		Dao.commitOrRollbackTransaction();
 	}
 	
+	/**
+	 * Gets a list of all key/value pairs in the server storage.
+	 * 
+	 * @param storageId The id of the storage where the key/values are saved.
+	 * @return A map of key/values.
+	 */	
 	@Override
 	public Map<String, String> getAll(String storageId) {
 		HashMap<String, String> map = new HashMap<String, String>();

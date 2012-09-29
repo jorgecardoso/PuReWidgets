@@ -23,4 +23,5 @@ org.purewidgets.shared.events
 org.purewidgets.shared.exceptions
 org.purewidgets.shared.im
 org.purewidgets.shared.logging
+org.purewidgets.shared.storage
 org.purewidgets.shared.widgets
