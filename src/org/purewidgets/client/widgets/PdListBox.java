@@ -13,8 +13,6 @@ import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,8 +23,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A widget that presents a list of choices to the user. The ListBox may allow
- * multiple selections or provide a mutually-exclusive set of choices.
+ * A widget that presents a list of choices to the user. 
+ * When an option is selected, it triggers an ActionEvent. 
+ * By default, a PdListBox has graphical vertical orientation displaying the name of the option and the reference
+ * code for the option in a single line.
+ *  
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
@@ -49,10 +50,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PdListBox extends PdWidget implements ClickHandler {
-	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION + "(10) " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION+"(10)";
+public class PdListBox extends PdWidget {
+	private final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION + "(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_WIDGET_OPTION_SHORT_DESCRIPTION+"(10)";
 	
 	interface Style extends CssResource {
 		
@@ -97,11 +98,11 @@ public class PdListBox extends PdWidget implements ClickHandler {
 	private org.purewidgets.shared.widgets.ListBox widgetList;
 	
 	/**
-	 * @param widgetID
-	 * @param labels
-	 * @param optionsIDs
-	 * @param suggestedReferences
-	 * @param internalOptionIDs
+	 * Creates a new PdListBox with the specified id, title, and options.
+	 * 
+	 * @param widgetId The widget id
+	 * @param title the title of the listbox
+	 * @param options The options for the listbox
 	 */
 	public PdListBox(String widgetId, String title, ArrayList<String> options) {
 		super(widgetId);
@@ -152,6 +153,9 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		this.onReferenceCodesUpdated();
 	}
 
+	/**
+	 * Updates the graphical representations of the reference codes.
+	 */		
 	@Override
 	public void onReferenceCodesUpdated() {
 		Log.error(this, "Updating " + this.getWidgetOptions().size() + " reference codes");
@@ -166,6 +170,12 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		super.onReferenceCodesUpdated();
 	}
 	
+	/**
+	 * Handles input from the user, creating the ActionEvent that will be sent to the application
+	 * and the InputFeedback that will be displayed on the public display.
+	 * 
+	 * @return InputFeedback<PdButton> the InputFeedback that will be displayed on the public display.
+	 */	
 	@Override
 	public InputFeedback<PdListBox> handleInput(WidgetInputEvent ie) {
 		ActionEvent<PdListBox> ae = new ActionEvent<PdListBox>(ie, this, null);
@@ -179,27 +189,27 @@ public class PdListBox extends PdWidget implements ClickHandler {
 		return feedback;
 	}
 
-	@Override
-	public void onClick(ClickEvent event) {
-//		Cell cell = ((Grid) event.getSource()).getCellForEvent(event);
+//	@Override
+//	public void onClick(ClickEvent event) {
+////		Cell cell = ((Grid) event.getSource()).getCellForEvent(event);
+////
+////		int i = cell.getRowIndex();
+////
+////		// Simulate an input event
+////		InputEvent e;
+////		if (this.internalOptionIDs) {
+////			// the command uses (i+1) because, to the user, options start at 1.
+////			e = new InputEvent(new Identity("Click"), new Command(this
+////					.getReferenceCode(0)
+////					+ "." + (i + 1)), this.getOptionID(i));
+////		} else {
+////			e = new InputEvent(new Identity("Click"), new Command(""), this
+////					.getOptionID(i));
+////		}
+////
+////		this.onInput(e);
 //
-//		int i = cell.getRowIndex();
-//
-//		// Simulate an input event
-//		InputEvent e;
-//		if (this.internalOptionIDs) {
-//			// the command uses (i+1) because, to the user, options start at 1.
-//			e = new InputEvent(new Identity("Click"), new Command(this
-//					.getReferenceCode(0)
-//					+ "." + (i + 1)), this.getOptionID(i));
-//		} else {
-//			e = new InputEvent(new Identity("Click"), new Command(""), this
-//					.getOptionID(i));
-//		}
-//
-//		this.onInput(e);
-
-	}
+//	}
 
 	
 

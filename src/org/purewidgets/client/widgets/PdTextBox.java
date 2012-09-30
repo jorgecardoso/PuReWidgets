@@ -14,8 +14,6 @@ import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,8 +25,10 @@ import com.google.gwt.user.client.Timer;
 
 
 /**
- * The TextBox widget shows a graphical textbox with a caption (and reference code)
- * inside.
+ * The PdTextBox widget shows a graphical textbox with a caption (and reference code)
+ * inside. 
+ * When a user enters text, the PdTextBox triggers an ActionEvent.
+ * 
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
@@ -53,10 +53,10 @@ import com.google.gwt.user.client.Timer;
  * 
  * @author Jorge C. S. Cardoso
  */
-public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler {
-	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
+public class PdTextBox extends PdWidget {
+	private final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
 	
 	@UiTemplate("PdTextBox.ui.xml")
 	interface PdTextBoxUiBinder extends UiBinder<Widget, PdTextBox> {	}
@@ -90,13 +90,16 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	
 	private org.purewidgets.shared.widgets.TextBox widgetTextBox;
 	
-	/**
-	 *  The input text
-	 */
-	private String text = "";
+
 	
 
-		
+	/**
+	 * Creates a new PdTextBox with the specified id, caption, and suggested reference code.
+	 * 
+	 * @param widgetId The widget id.
+	 * @param caption The caption for the textbox.
+	 * @param suggestedReference The suggested reference code.
+	 */
 	public PdTextBox(String widgetId, String caption, String suggestedReference) {
 		
 		super(widgetId);
@@ -119,8 +122,32 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	     * Gui stuff
 	     */
 		
-		uiTextbox.addKeyPressHandler(this);
-		uiTextbox.addFocusHandler(this);
+		uiTextbox.addKeyPressHandler(new KeyPressHandler() {
+
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == 13) {
+					Log.debug(this, "Enter detected");
+					
+					ArrayList<String> params = new ArrayList<String>();
+					params.add(PdTextBox.this.uiTextbox.getText());
+					
+					WidgetInputEvent e = new WidgetInputEvent(PdTextBox.this.getWidgetOptions().get(0), params);
+					PdTextBox.this.uiTextbox.setText("");
+					
+					// remove the focus so that the internal caret disappears.
+					PdTextBox.this.uiTextbox.setFocus(false);
+					
+					ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
+					inputList.add(e);
+					PdTextBox.this.widget.onInput(inputList);
+					//this.onInput(inputList);	
+				}
+				
+			}
+			
+		});
+		//uiTextbox.addFocusHandler(this);
 		//textBox.setText(caption);
 		
 		uiLabelCaption.setText( this.widgetTextBox.getShortDescription() );
@@ -158,28 +185,15 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		
 	
 
-	@Override
-	public void onKeyPress(KeyPressEvent event) {
-		if (event.getCharCode() == 13) {
-			Log.debug(this, "Enter detected");
-			
-			ArrayList<String> params = new ArrayList<String>();
-			params.add(this.uiTextbox.getText());
-			
-			WidgetInputEvent e = new WidgetInputEvent(this.getWidgetOptions().get(0), params);
-			uiTextbox.setText("");
-			
-			// remove the focus so that the internal caret disappears.
-			uiTextbox.setFocus(false);
-			
-			ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
-			inputList.add(e);
-			this.widget.onInput(inputList);
-			//this.onInput(inputList);	
-		}
-		
-	}
-	
+//	@Override
+//	public void onKeyPress(KeyPressEvent event) {
+//		
+//		
+//	}
+//	
+	/**
+	 * Updates the graphical representations of the reference codes.
+	 */		
 	@Override
 	public void onReferenceCodesUpdated() {
 		if (!(this.uiLabelReferencecode  == null)) {
@@ -188,6 +202,12 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 		super.onReferenceCodesUpdated();
 	}
 	
+	/**
+	 * Handles input from the user, creating the ActionEvent that will be sent to the application
+	 * and the InputFeedback that will be displayed on the public display.
+	 * 
+	 * @return InputFeedback<PdButton> the InputFeedback that will be displayed on the public display.
+	 */	
 	@Override
 	public InputFeedback<PdTextBox> handleInput(WidgetInputEvent ie) {
 		InputFeedback<PdTextBox> feedback = new InputFeedback<PdTextBox>(this, ie, null, null);
@@ -205,40 +225,44 @@ public class PdTextBox extends PdWidget implements KeyPressHandler, FocusHandler
 	}		
 
 
-	@Override
-	public void onFocus(FocusEvent event) {
-		//this.textBox.setFocus(false);
-		
-	}
-	
-	
+//	@Override
+//	public void onFocus(FocusEvent event) {
+//		//this.textBox.setFocus(false);
+//		
+//	}
+//	
+	/**
+	 * Sets the text on the graphical textbox.
+	 * 
+	 * @param text The text to set.
+	 */
 	public void setText(String text) {
 		this.uiTextbox.setText(text);
-		this.text = text;
 	}
 	
-	public void setCaret(boolean on) {
-		if (on) {
-			caretOn = "|";
-		} else {
-			caretOn = "";
-		}
-		this.flashCaret();
-	}
 	
-	@Override
-	public void setEnabled(boolean enabled) {
-		Log.debug("" + inputEnabled);
-		uiTextbox.setEnabled(enabled);
-		//setCaret(enabled);
-		super.setEnabled(enabled);
-	}
+//	public void setCaret(boolean on) {
+//		if (on) {
+//			caretOn = "|";
+//		} else {
+//			caretOn = "";
+//		}
+//		this.flashCaret();
+//	}
 	
-	@Override
-	public void setInputEnabled(boolean inputEnabled) {
-		super.setInputEnabled(inputEnabled);
-		this.setCaret(inputEnabled);
-	}
+//	@Override
+//	public void setEnabled(boolean enabled) {
+//		Log.debug("" + inputEnabled);
+//		uiTextbox.setEnabled(enabled);
+//		//setCaret(enabled);
+//		super.setEnabled(enabled);
+//	}
+//	
+//	@Override
+//	public void setInputEnabled(boolean inputEnabled) {
+//		super.setInputEnabled(inputEnabled);
+//		this.setCaret(inputEnabled);
+//	}
 	
 	/*
 	@Override
@@ -302,10 +326,12 @@ public void stop(InputFeedback feedback, boolean noMore) {
 */
 
 	/**
+	 * Gets the text on the graphical textbox.
+	 *  
 	 * @return the text
 	 */
 	public String getText() {
-		return text;
+		return this.uiTextbox.getText();
 	}
 
 

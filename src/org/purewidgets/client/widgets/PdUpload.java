@@ -19,8 +19,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 /**
- * The TextBox widget shows a graphical textbox with a caption (and reference code)
- * inside.
+ * A PdUpload is a widget that allows users to upload files to the application.
+ * When a user uploads the item, the PdDownload triggers an ActionEvent with the url of the uploaded
+ * file. 
+ *  
+ * By default, a PdUpload has is represented by a download icon and a caption that can be set by the programmer.
+ * (The PdUpload displays the reference code next to the caption).
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
@@ -46,9 +50,9 @@ public class PdUpload extends PdWidget  {
 	interface PdUploadUiBinder extends UiBinder<Widget, PdUpload> {	}
 	private static PdUploadUiBinder uiBinder = GWT.create(PdUploadUiBinder.class);
 
-	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
+	private final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + ": " + MessagePattern.getInputParameterPattern(0)+"(10) " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " " + MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = MessagePattern.getInputParameterPattern(0)+"(10)";
 	
 	
 
@@ -63,10 +67,24 @@ public class PdUpload extends PdWidget  {
 	
 	private org.purewidgets.shared.widgets.Upload widgetUpload;
 	
+	/**
+	 * Creates a new PdUpload with the specified widget id and caption.
+	 * 
+	 * @param widgetID The widget id.
+	 * @param caption The caption.
+	 */
 	public PdUpload(String widgetID, String caption) {
 		this(widgetID, caption, null);
 	}
 		
+	/**
+	 * 
+	 * Creates a new PdUpload with the specified widget id, caption, and suggested reference code.
+	 * 
+	 * @param widgetID The widget id.
+	 * @param caption The caption.
+	 * @param suggestedReference The suggested reference code.
+	 */
 	public PdUpload(String widgetId, String caption, String suggestedReference) {
 		super(widgetId);
 		
@@ -92,7 +110,9 @@ public class PdUpload extends PdWidget  {
 	}
 	
 		
-	
+	/**
+	 * Updates the graphical representations of the reference codes.
+	 */		
 	@Override
 	public void onReferenceCodesUpdated() {
 		// Log.debug(this + " Updating reference code");
@@ -101,6 +121,12 @@ public class PdUpload extends PdWidget  {
 		super.onReferenceCodesUpdated();
 	}
 	
+	/**
+	 * Handles input from the user, creating the ActionEvent that will be sent to the application
+	 * and the InputFeedback that will be displayed on the public display.
+	 * 
+	 * @return InputFeedback<PdButton> the InputFeedback that will be displayed on the public display.
+	 */		
 	@Override
 	public InputFeedback<PdUpload> handleInput(WidgetInputEvent ie) {
 		InputFeedback<PdUpload> feedback = new InputFeedback<PdUpload>(this, ie, null, null);

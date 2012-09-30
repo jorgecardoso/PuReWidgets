@@ -32,13 +32,14 @@ import com.google.gwt.user.client.ui.Composite;
  * processing and interpretation, and the high-level events that applications
  * receive when the widget is acted upon.
  * 
+ * A PdWidget is associated with a {@link org.purewidgets.shared.im.Widget} (or a subclass), which holds
+ * the actual data that describes the widget, and that is sent to the
+ * interaction manager server.
+ * 
  * The PdWidget class defines basic functionality for all widgets: 1. Listening
  * for user input 2. Triggering user input feedback on the public display 3.
  * Maintaining a cache of the reference codes assigned
  * 
- * A PdWidget is associated with a {@link org.purewidgets.shared.im.Widget}, which holds
- * the actual data that describes the widget, and that is sent to the
- * interaction manager server.
  * 
  * @author Jorge C. S. Cardoso
  * @see org.purewidgets.shared.im.Widget

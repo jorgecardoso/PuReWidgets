@@ -10,7 +10,6 @@ import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetParameter;
-import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,11 +22,14 @@ import com.google.gwt.user.client.ui.*;
 
 /**
  * 
+ * A PdButton represents an action button that can by "clicked". When "clicked" it triggers an ActionEvent. 
+ * By default, a PdButton has a button like graphical appearance with a caption that can be set by the programmer.
+ * (The PdButton displays the reference code next to the caption).
+ * 
  * <h3>CSS Style Rules</h3>
  * <dl>
  * <dt>.pwButton</dt>
  * <dd>the outer element. </dd>
- * 
  *
  * <dt>.pwButtonCaption</dt>
  * <dd>the label with application defined caption</dd>
@@ -56,16 +58,39 @@ public class PdButton extends PdWidget {
 	@UiField
 	Label uiHTMLReferenceCode;
 	
-	
 
 	private org.purewidgets.shared.widgets.Button widgetButton;
 
+	/**
+	 * Creates a button with the specified id and caption.
+	 * 
+	 * @param widgetId The id of the widget.
+	 * @param caption The caption of the button.
+	 */
 	public PdButton(String widgetId, String caption) {
 		this(widgetId, caption, widgetId);
 	}
+	
+	/**
+	 * Created a button with the specified id, caption, and suggested reference code.
+	 * 
+	 * @param widgetId The id of the widget.
+	 * @param caption The caption of the button.
+	 * @param suggestedRef The suggested reference code.
+	 */
 	public PdButton(String widgetId, String caption, String suggestedRef) {
 		this(widgetId, caption, suggestedRef, "", null);
 	}
+	
+	/**
+	 * Created a button with the specified id, caption, suggested reference code, long description, and parameters.
+	 * 
+	 * @param widgetId The id of the widget.
+	 * @param caption The caption of the button.
+	 * @param suggestedRef The suggested reference code.
+	 * @param longDescription The long description for the button.
+	 * @param parameters Parameters for the button.
+	 */
 	public PdButton(String widgetId, String caption, String suggestedRef, String longDescription, ArrayList<WidgetParameter> parameters) {
 		super(widgetId);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -90,6 +115,13 @@ public class PdButton extends PdWidget {
 		PdButton.this.widget.onInput(inputList);
 		
 	}
+	
+	/**
+	 * Handles input from the user, creating the ActionEvent that will be sent to the application
+	 * and the InputFeedback that will be displayed on the public display.
+	 * 
+	 * @return InputFeedback<PdButton> the InputFeedback that will be displayed on the public display.
+	 */
 	@Override
 	public InputFeedback<PdButton> handleInput(WidgetInputEvent ie) {
 		ActionEvent<PdButton> ae = new ActionEvent<PdButton>(ie, this, null);
@@ -100,6 +132,10 @@ public class PdButton extends PdWidget {
 		return feedback;
 	}
 
+	/**
+	 * Updates the graphical representations of the reference codes.
+	 * 
+	 */
 	@Override
 	public void onReferenceCodesUpdated() {
 		// Log.debug(this + " Updating reference code");
@@ -108,12 +144,12 @@ public class PdButton extends PdWidget {
 		super.onReferenceCodesUpdated();
 	}
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		Log.debug(this, "" + enabled);
-		super.setEnabled(enabled);
-		//this.button.setEnabled(enabled);
-	}
+//	@Override
+//	public void setEnabled(boolean enabled) {
+//		Log.debug(this, "" + enabled);
+//		super.setEnabled(enabled);
+//		//this.button.setEnabled(enabled);
+//	}
 
 	
 }

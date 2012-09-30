@@ -11,28 +11,37 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
+ * A PdCheckin represents an check-in widget that reacts to users' check-ins. When a user checks-in, it triggers an ActionEvent. 
+ * By default, a PdCheckin is graphically represented by a simple static image.
+ * 
  * <h3>CSS Style Rules</h3>
  * <dl>
  * <dt>.pwCheckin</dt>
  * <dd>the outer element. </dd>
- *
  * </dl> 
  * 
  * @author "Jorge C. S. Cardoso"
  *
  */
 public class PdCheckin extends PdWidget{
-	protected final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " checked-in "+MessagePattern.PATTERN_INPUT_AGE;
-	protected final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME;
-	protected final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "Checked-in "+ MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME + " checked-in "+MessagePattern.PATTERN_INPUT_AGE;
+	private final String USER_SHARED_TITLE_INPUT_FEEDBACK_PATTERN = MessagePattern.PATTERN_USER_NICKNAME;
+	private final String USER_SHARED_INFO_INPUT_FEEDBACK_PATTERN = "Checked-in "+ MessagePattern.PATTERN_INPUT_AGE;
 	
 	
 	@UiTemplate("PdCheckin.ui.xml")
 	interface PdCheckinUiBinder extends UiBinder<Widget, PdCheckin> {	}
+	
 	private static PdCheckinUiBinder uiBinder = GWT.create(PdCheckinUiBinder.class);
 	
 	private Checkin checkin;
 	
+	/**
+	 * Creates a new check-in widget. A PdWidget has an internally defined widget id ("checkin"), 
+	 * since it does not make sense
+	 * to have multiple check-in widgets in an application.
+	 * 
+	 */
 	public PdCheckin() {
 		super("checkin");
 		initWidget(uiBinder.createAndBindUi(this));
