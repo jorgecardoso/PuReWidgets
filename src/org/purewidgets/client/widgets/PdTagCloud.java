@@ -26,11 +26,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
- * <dt>.instantplaces-GuiTagCloud</dt>
+ * <dt>.pw-GuiTagCloud</dt>
  * <dd>the outer &lt;div&gt; element</dd>
- * <dt>.instantplaces-GuiTagCloud .tag</dt>
+ * <dt>.pw-GuiTagCloud .tag</dt>
  * <dd>the &lt;span&gt; element for each word</dd>
- * <dt>.instantplaces-GuiTagCloud .tagspanel</dt>
+ * <dt>.pw-GuiTagCloud .tagspanel</dt>
  * <dd>the panel that holds the list of tags and the textbox</dd>
  * 
  * </dl>
@@ -39,11 +39,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * @author Jorge C. S. Cardoso
  * 
  */
-public class PdTagCloud extends PdWidget implements ActionListener {
+public class PdTagCloud extends PdWidget {
 	
 	
 	
-	public static final String DEFAULT_STYLENAME = "instantplaces-GuiTagCloud";
+	public static final String DEFAULT_STYLENAME = "pw-GuiTagCloud";
 	public static final String TAGS_PANEL_STYLENAME = "tagspanel";
 
 	public static final String TAG_STYLENAME = "tag";
@@ -54,7 +54,15 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	 * @author "Jorge C. S. Cardoso"
 	 *
 	 */
-	public enum ORDER {ALPHA, FREQUENCY}; 
+	public enum ORDER {
+		/**
+		 * Tags are ordered by name.
+		 */
+		ALPHA, 
+		/**
+		 * Tags are ordered by frequency.
+		 */
+		FREQUENCY}; 
 	
 	
 	/**
@@ -83,25 +91,36 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	
 	private int currentFontSize;
 	
+	/**
+	 * Creates a new tag cloud with the specified widget id.
+	 * @param widgetId The widget id.
+	 */
 	@UiConstructor
 	public PdTagCloud( String widgetId ) {
 		this(widgetId, null, null, false);
 	}
 	
+	/**
+	 * Creates a new tag cloud with the specified widget id and control over whether users
+	 * can add new tags.
+	 * 
+	 * @param widgetId The widget id
+	 * @param allowUserInput if true, users can add new tags; if false, they cannot.
+	 */
 	public PdTagCloud( String widgetId, boolean allowUserInput ) {
 		this(widgetId, null, null, allowUserInput);
 	}
 	
 	/**
-	 * The TagCloud is actually a composite widget with just one component -- the TextBox -- so, although,
-	 * we give it a widgetId, the TagCloud itself is never sent to the Widgetmanager, only the TextBox.
 	 * 
-	 * We never call sendToServer() in the constructor.
 	 * 
-	 * @param widgetId
-	 * @param tags
-	 * @param frequency
-	 * @param allowUserInput
+	 * Creates a new tag cloud with the specified widget id, initial tag and frequency sets, and control over whether users
+	 * can add new tags.
+	 * 
+	 * @param widgetId The widget id
+	 * @param tags The initial set of tags
+	 * @param frequency  The initial frequency for each tag
+	 * @param allowUserInput if true, users can add new tags; if false, they cannot.
 	 */
 	public PdTagCloud( String widgetId, String tags[], int frequency[], boolean allowUserInput ) {
 		super(widgetId);
@@ -134,7 +153,16 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 		/*
 		 * We listen for action events from the TagCloud and send them to the app
 		 */
-		this.tagCloud.addActionListener(this);
+		this.tagCloud.addActionListener(new ActionListener() {
+
+			@Override
+			public void onAction(ActionEvent<?> e) {
+				ActionEvent<PdTagCloud> ae = new ActionEvent<PdTagCloud>(e.getUserId(), e.getNickname(), PdTagCloud.this, null, e.getParam());
+				PdTagCloud.this.updateGui();
+				PdTagCloud.this.fireActionEvent(ae);
+			}
+			
+		});
 		
 		panel = new SimplePanel();
 		
@@ -149,12 +177,19 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	}
 	
 
+	/**
+	 * Sets the width of the tag cloud box.
+	 * @param w The width of the tag cloud box
+	 */
 	@Override
 	public void setWidth(String w) {
 		super.setWidth(w);
 		this.panel.setWidth(w);
 	}
 
+	/**
+	 * Updates the representation of tags in the tag box
+	 */
 	public void updateGui() {
 		
 		this.panel.clear();
@@ -284,7 +319,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 		int maxHeight = this.panel.getOffsetHeight();
 		int maxWidth = this.panel.getOffsetWidth();
 		int current = this.currentFontSize;
-		int count = 0;
+//		int count = 0;
 //		Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 //		Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
 //		Log.warn("panel width: " + this.panel.getOffsetWidth());
@@ -297,7 +332,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 				
 //				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 //				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-				count++;
+//				count++;
 			}
 			
 		} else {
@@ -307,7 +342,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 				
 //				Log.warn("tags panel width: " + tagsPanel.getOffsetWidth());
 //				Log.warn("tags panel height: " + tagsPanel.getOffsetHeight());
-				count++;
+//				count++;
 			}
 			/*
 			 * Revert the last change: current-1
@@ -325,11 +360,20 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 		
 	}
 	
-	
+	/**
+	 * Gets the current tag list.
+	 * 
+	 * @return The tag list.
+	 */
 	public ArrayList<Tag> getTagList() {
 		return this.tagCloud.getTagList();
 	}
 	
+	/**
+	 * Sets the tag list for this tag cloud.
+	 * 
+	 * @param tagList The tag list to set.
+	 */
 	public void setTagList(ArrayList<Tag> tagList) {
 		this.tagCloud.setTagList(tagList);
 		
@@ -338,51 +382,92 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 		//this.addTagsToPanel();
 	}
 	
+	/**
+	 * Gets the tag list, ordered by name of the tag.
+	 * @return The tag list, ordered by name.
+	 */
 	public ArrayList<Tag> getTagListSortedByAlpha() {
 		
 		return this.tagCloud.getTagListSortedByAlpha();
 	}
 	
+	/**
+	 * Adds a new tag to the tag cloud.
+	 * 
+	 * @param word The word to add.
+	 * @param frequency The frequency of that word.
+	 */
 	public void addTag(String word, int frequency) {
 		this.tagCloud.addTag(word, frequency);
 		//Log.warn(this, "add tag");
 		//this.updateGui();
 	}
 	
+	/**
+	 * Gets the tag list, sorted by frequency of the tag.
+	 * @return The tag list, sorted by frequency of the tag.
+	 */
 	public ArrayList<Tag> getTagListSortedByFrequency() {
 		
 		return this.tagCloud.getTagListSortedByFrequency();
 	}
 	
+	/**
+	 * Gets a tag from the tag cloud.
+	 * 
+	 * @param keyword The word to get.
+	 * @return The tag associated with the specified word.
+	 */
 	public TagCloud.Tag getTag(String keyword) {
 		return this.tagCloud.getTag(keyword);
 	}
 	
+	/**
+	 * Checks if this tag cloud contains a given word.
+	 * @param keyword The word to check.
+	 * @return true if the tag cloud contains the specified word, false otherwise.
+	 */
 	public boolean contains( String keyword ) {
 		return this.tagCloud.contains(keyword);
 	}
 	
+	/**
+	 * Gets a set with all the words of this tag cloud.
+	 * 
+	 * @return A set with all the words of this tag cloud.
+	 */
 	public Set<String> getKeywords() {
 		return this.tagCloud.getKeywords();
 	}
 	
+	/**
+	 * Gets a list of tags ordered by frequency.
+	 * 
+	 * @param desc if true, the tags are ordered in descending manner; if false, the tags are ordered in ascending manner.
+	 * @return
+	 */
 	public ArrayList<Tag> getTagListSortedByFrequency(boolean desc) {
 		
 		return this.tagCloud.getTagListSortedByFrequency(desc);
 	}
 	
+	/**
+	 * Gets the ordering for the tags in the visual representation.
+	 * 
+	 * @return The ordering for the tags in the visual representation.
+	 */
 	public ORDER getOrder() {
 		return order;
 	}
 
+	/**
+	 * Sets the ordering for the tags in the visual representation.
+	 * 
+	 * @param order The ordering for the tags in the visual representation.
+	 */	
 	public void setOrder(ORDER order) {
 		this.order = order;
 	}
 
-	@Override
-	public void onAction(ActionEvent<?> e) {
-		ActionEvent<PdTagCloud> ae = new ActionEvent<PdTagCloud>(e.getUserId(), e.getNickname(), this, null, e.getParam());
-		this.updateGui();
-		this.fireActionEvent(ae);
-	}
+
 }
