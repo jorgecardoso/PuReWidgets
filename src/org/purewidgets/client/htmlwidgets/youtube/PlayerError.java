@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
 public enum PlayerError {
 	/*This event is fired when an error in the player occurs. The possible error codes are 2, 100, 101, and 150:

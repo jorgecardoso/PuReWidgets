@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -566,12 +566,12 @@ public class ChromelessPlayer extends Widget {
 		$wnd.onYouTubePlayerReady = function(playerId) {
 		      var ytplayer = $wnd.document.getElementById(playerId + "api");
 
-		      @org.purewidgets.client.widgets.youtube.ChromelessPlayer::onReady(Ljava/lang/String;Lorg/purewidgets/client/widgets/youtube/ChromelessPlayer$YTPlayer;)(playerId, ytplayer);
+		      @org.purewidgets.client.htmlwidgets.youtube.ChromelessPlayer::onReady(Ljava/lang/String;Lorg/purewidgets/client/htmlwidgets/youtube/ChromelessPlayer$YTPlayer;)(playerId, ytplayer);
 
 		      var name = 'onPlayerStateChange'+playerId;
 
 		      $wnd[name]  = function(state) {	      		  
-		              @org.purewidgets.client.widgets.youtube.ChromelessPlayer::onStateChange(Ljava/lang/String;I)(playerId, state);
+		              @org.purewidgets.client.htmlwidgets.youtube.ChromelessPlayer::onStateChange(Ljava/lang/String;I)(playerId, state);
 		      }
 		      ytplayer.addEventListener("onStateChange", name);
 		  }

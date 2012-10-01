@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
 /**
  * @author Jorge C. S. Cardoso

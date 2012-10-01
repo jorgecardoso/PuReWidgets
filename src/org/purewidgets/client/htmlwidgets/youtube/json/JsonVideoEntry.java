@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube.json;
 
 import java.util.ArrayList;
 

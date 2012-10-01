@@ -1,8 +1,7 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube.json;
 
 import org.purewidgets.client.json.GenericJson;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 
@@ -23,7 +22,11 @@ public class JsonVideoList extends GenericJson {
     }-*/;
     
     public native final JsArray<JsonVideoEntry> getEntries() /*-{
-            return this.data.items;
+    		if ( typeof(this.data.items) != 'undefined' ) {
+            	return this.data.items;
+    		} else {
+    			return new Array();
+    		}
     }-*/;
     
 }

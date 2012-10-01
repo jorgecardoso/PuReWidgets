@@ -1,4 +1,4 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -591,19 +591,19 @@ public class EmbeddedPlayer extends Widget {
 		$wnd.onYouTubePlayerReady = function(playerId) {
 		      var ytplayer = $wnd.document.getElementById(playerId + "api");
 
-		      @org.purewidgets.client.widgets.youtube.EmbeddedPlayer::onReady(Ljava/lang/String;Lorg/purewidgets/client/widgets/youtube/EmbeddedPlayer$YTPlayer;)(playerId, ytplayer);
+		      @org.purewidgets.client.htmlwidgets.youtube.EmbeddedPlayer::onReady(Ljava/lang/String;Lorg/purewidgets/client/htmlwidgets/youtube/EmbeddedPlayer$YTPlayer;)(playerId, ytplayer);
 
 		      var name = 'onPlayerStateChange'+playerId;
 
 		      $wnd[name]  = function(state) {	      		  
-		              @org.purewidgets.client.widgets.youtube.EmbeddedPlayer::onStateChange(Ljava/lang/String;I)(playerId, state);
+		              @org.purewidgets.client.htmlwidgets.youtube.EmbeddedPlayer::onStateChange(Ljava/lang/String;I)(playerId, state);
 		      }
 		      ytplayer.addEventListener("onStateChange", name);
 		      
 		      var nameError = 'onError'+playerId;
 
 		      $wnd[nameError]  = function(error) {	      		  
-		              @org.purewidgets.client.widgets.youtube.EmbeddedPlayer::onError(Ljava/lang/String;I)(playerId, error);
+		              @org.purewidgets.client.htmlwidgets.youtube.EmbeddedPlayer::onError(Ljava/lang/String;I)(playerId, error);
 		      }
 		      ytplayer.addEventListener("onError", nameError);
 		  }

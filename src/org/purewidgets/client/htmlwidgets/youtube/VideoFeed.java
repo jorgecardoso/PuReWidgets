@@ -1,8 +1,10 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.purewidgets.client.htmlwidgets.youtube.json.JsonVideoEntry;
+import org.purewidgets.client.htmlwidgets.youtube.json.JsonVideoList;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.JsArray;

@@ -1,5 +1,6 @@
-package org.purewidgets.client.widgets.youtube;
+package org.purewidgets.client.htmlwidgets.youtube;
 
+import org.purewidgets.client.htmlwidgets.youtube.json.JsonVideoEntry;
 import org.purewidgets.client.json.GenericJson;
 
 public class VideoAdapter {
@@ -23,16 +24,16 @@ public class VideoAdapter {
 		return jsonVideoEntry;
 	}
 	
-	private static String join(String s[], String delimiter) {
-		
-	    if (s == null || s.length == 0 ) return "";
-	    
-	    StringBuilder builder = new StringBuilder(s[0]);
-	    for (int i = 1; i < s.length; i++ ) {
-	        builder.append(delimiter).append(s[i]);
-	    }
-	    return builder.toString();
-	}
+//	private static String join(String s[], String delimiter) {
+//		
+//	    if (s == null || s.length == 0 ) return "";
+//	    
+//	    StringBuilder builder = new StringBuilder(s[0]);
+//	    for (int i = 1; i < s.length; i++ ) {
+//	        builder.append(delimiter).append(s[i]);
+//	    }
+//	    return builder.toString();
+//	}
 	
 	public static Video fromJSONVideoEntry(JsonVideoEntry jsonVideo) {
 		Video v = new Video(jsonVideo.getId(), 
@@ -51,12 +52,12 @@ public class VideoAdapter {
 		return v;
 	}
 	
-	private static String[] parseKeywords(String keywords) {
-		if ( null == keywords ) {
-			return new String[0];
-		} else {
-			return keywords.split(",");
-		}
-	}
+//	private static String[] parseKeywords(String keywords) {
+//		if ( null == keywords ) {
+//			return new String[0];
+//		} else {
+//			return keywords.split(",");
+//		}
+//	}
 
 }
