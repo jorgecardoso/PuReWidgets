@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import org.purewidgets.shared.im.WidgetInput;
 import org.purewidgets.shared.im.WidgetOption;
 
-import com.google.gwt.core.client.GWT;
-
-
-
 /**
- * Represents an input event.
+ * Represents a low-level input event. The WidgetManager directs WidgetInputEvents to individual widgets
+ * when there is input from the interaction manager.
  * 
  * @author Jorge C. S. Cardoso
  *
@@ -19,12 +16,12 @@ public class WidgetInputEvent {
 
 	
 	/**
-	 * The identity which generated the input.
+	 * The id of the user which generated the input.
 	 */
 	private String userId;
 	
 	/**
-	 * The user name that can be displayed on the PD
+	 * The nickname of user which generated the input.
 	 */
 	private String nickname;
 	
@@ -36,7 +33,7 @@ public class WidgetInputEvent {
 	
 	
 	/**
-	 * The command issued by the user.
+	 * The parameters issued by the user.
 	 */
 	private ArrayList<String> parameters;
 	
@@ -47,29 +44,31 @@ public class WidgetInputEvent {
 	private long age;
 	
 
-	
+	/**
+	 * Creates a new WidgetInputEvent with the specified widget option and parameters.
+	 * @param widgetOption The widget option that is the target of this input event.
+	 * @param parameters The parameters of this input.
+	 */
 	public WidgetInputEvent(WidgetOption widgetOption, ArrayList<String> parameters) {
 		this("Anonymous", "Anonymous", widgetOption, parameters);
 	}	
 	
 	/**
-	 * Creates a new InputEvent with the given WidgetOption and parameters.
-	 * This constructor is used when there is no persona associated (i.e., the input was
-	 * generated locally at the Gui).
-	 * 
-	 * @param userId The identity that was responsible for generating the input.
-	 * @param widgetOption The WidgetOption that was selected by the user.
-	 * @param parameters The parameters the user sent in the input.
-	 */	
+	 * Creates a new WidgetInputEvent from the specified widget input data, widget option and parameters.
+	 * @param widgetInput The widget input that caused the event.
+	 * @param widgetOption The widget option that is the target of this input event.
+	 * @param parameters The parameters of this input.
+	 */
 	public WidgetInputEvent(WidgetInput widgetInput, WidgetOption widgetOption, ArrayList<String> parameters) {
 		this(widgetInput.getUserId(), widgetInput.getNickname(), widgetOption, parameters);
 	}	
 	
 	
 	/**
-	 * Creates a new InputEvent with the given UserId, nickname, WidgetOption and parameters.
+	 * Creates a new InputEvent with the given WidgetOption and parameters.
 	 * 
-	 * @param persona The identity that was responsible for generating the input.
+	 * @param userId The id of the user that was responsible for generating the input.
+	 * @param nickname The nickname of the user that was responsible for generating the input.
 	 * @param widgetOption The WidgetOption that was selected by the user.
 	 * @param parameters The parameters the user sent in the input.
 	 */	
@@ -85,15 +84,17 @@ public class WidgetInputEvent {
 
 	
 	/**
+	 * Gets the parameters associated with this widget input event.
 	 *  
-	 * @return The parameters associated with this InputEvent.
+	 * @return The parameters associated with this widget input event.
 	 */
 	public ArrayList<String> getParameters() {
 		return this.parameters;
 	}
 	
 	/**
-	 * @return the optionID
+	 * Gets the widget option associated with this widget input event.
+	 * @return the widget option associated with this widget input event.
 	 */
 	public WidgetOption getWidgetOption() {
 		return this.widgetOption;
@@ -103,6 +104,8 @@ public class WidgetInputEvent {
 	
 
 	/**
+	 * Gets the age of this widget input event.
+	 * 
 	 * @return the age
 	 */
 	public long getAge() {
@@ -111,6 +114,8 @@ public class WidgetInputEvent {
 
 
 	/**
+	 * Sets the age of this widget input event.
+	 * 
 	 * @param age the age to set
 	 */
 	public void setAge(long age) {
@@ -119,6 +124,8 @@ public class WidgetInputEvent {
 
 
 	/**
+	 * Gets the nickname of the user associated with this widget input event.
+	 * 
 	 * @return the nickname
 	 */
 	public String getNickname() {
@@ -127,7 +134,8 @@ public class WidgetInputEvent {
 
 
 	/**
-	 * @return the userId
+	 * Gets the id of the  user associated with this widget input event.
+	 * @return the id of the user.
 	 */
 	public String getUserId() {
 		return userId;

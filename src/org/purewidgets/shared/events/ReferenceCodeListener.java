@@ -1,5 +1,11 @@
 package org.purewidgets.shared.events;
 
+/**
+ * Interface for objects that want to listen to changes in reference codes.
+ * 
+ * @author "Jorge C. S. Cardoso"
+ *
+ */
 public interface ReferenceCodeListener {
 	/**
 	 * Called by the Widget Manager to notify widgets that their 
