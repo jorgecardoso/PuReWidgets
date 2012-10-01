@@ -27,6 +27,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
+ * Base class for client widgets.
  * A PdWidget represents the base class for the client side version of a
  * PuReWidgets widget. A PdWidget defines its own visual appearance, input data
  * processing and interpretation, and the high-level events that applications

@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * 
- * A PdCheckin represents an check-in widget that reacts to users' check-ins. When a user checks-in, it triggers an ActionEvent. 
+ * A check-in widget that reacts to users' check-ins. When a user checks-in, it triggers an ActionEvent. 
  * By default, a PdCheckin is graphically represented by a simple static image.
  * 
  * <h3>CSS Style Rules</h3>

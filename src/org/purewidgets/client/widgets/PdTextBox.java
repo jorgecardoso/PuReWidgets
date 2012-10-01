@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Timer;
 
 
 /**
+ * A textbox that can receive text.
  * The PdTextBox widget shows a graphical textbox with a caption (and reference code)
  * inside. 
  * When a user enters text, the PdTextBox triggers an ActionEvent.

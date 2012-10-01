@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 /**
- * A PdUpload is a widget that allows users to upload files to the application.
+ * Allows users to upload files to the application.
  * When a user uploads the item, the PdDownload triggers an ActionEvent with the url of the uploaded
  * file. 
  *  

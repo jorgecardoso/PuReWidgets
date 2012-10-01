@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.*;
 
 /**
  * 
- * A PdDownload represents an file or URL that can be downloaded or opened in a browser.
+ * A file or URL that can be downloaded or opened in a browser.
  * The item to download is specified when instantiating the widget.
  * When a user downloads the item, the PdDownload triggers an ActionEvent to let the application know. 
  *  

@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 
 /**
- * The tag cloud widget is a visual representation of a tag cloud.
+ * A visual representation of a tag cloud that allows users to add new tags.
  * 
  * 
  * <h3>CSS Style Rules</h3>
@@ -45,7 +45,7 @@ public class PdTagCloud extends PdWidget implements ActionListener {
 	
 	public static final String DEFAULT_STYLENAME = "instantplaces-GuiTagCloud";
 	public static final String TAGS_PANEL_STYLENAME = "tagspanel";
-	//public static final String 
+
 	public static final String TAG_STYLENAME = "tag";
 	
 	/**

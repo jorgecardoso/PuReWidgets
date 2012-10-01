@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A widget that presents a list of choices to the user. 
+ * A list of choices to the user. 
  * When an option is selected, it triggers an ActionEvent. 
  * By default, a PdListBox has graphical vertical orientation displaying the name of the option and the reference
  * code for the option in a single line.

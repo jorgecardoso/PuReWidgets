@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.*;
 
 /**
  * 
- * A PdButton represents an action button that can by "clicked". When "clicked" it triggers an ActionEvent. 
+ * An action button widget that can by "clicked". When "clicked" it triggers an ActionEvent. 
  * By default, a PdButton has a button like graphical appearance with a caption that can be set by the programmer.
  * (The PdButton displays the reference code next to the caption).
  * 
