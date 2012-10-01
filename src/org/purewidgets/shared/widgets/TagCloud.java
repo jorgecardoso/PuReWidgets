@@ -19,6 +19,7 @@ import org.purewidgets.shared.logging.Log;
 
 
 /**
+ * A TagCloud widget.
  * 
  * @author "Jorge C. S. Cardoso"
  */
@@ -189,7 +190,7 @@ public class TagCloud extends Widget implements ActionListener {
 		if ( this.allowUserInput ) {
 			this.textBox = new TextBox(widgetId + "-textbox", "Suggest a tag");
 			this.textBox.addActionListener(this);
-			this.addDependentWidget( this.textBox );
+//			this.addDependentWidget( this.textBox );
 		}
 		
 		this.createTags(tags, frequency);

@@ -1,8 +1,15 @@
 package org.purewidgets.shared.im;
 
-import com.googlecode.objectify.annotation.Unindexed;
-
+/**
+ * Represents a place in the interaction manager server.
+ * 
+ * @author "Jorge C. S. Cardoso"
+ *
+ */
 public class Place {
+	/**
+	 * the id of the place
+	 */
 	private String placeId;
 	
 
@@ -11,12 +18,12 @@ public class Place {
      */
     private String placeName;
     
-    /*
+    /**
      * The reference code used for text-based interactions
      */
     private String placeReferenceCode;
     
-    /*
+    /**
      * The phone number users can text in order to interact.
      */
     private String placePhoneNumber;
@@ -31,14 +38,20 @@ public class Place {
      */
     private String placeInteractionUrl;
     
-	
+	/**
+	 * Creates a new place with the specified id.
+	 * 
+	 * @param placeId The id of the place.
+	 */
 	public Place(String placeId) {
 		this.placeId = placeId;
 	}
 	
 	
 	/**
-	 * @return the placeId
+	 * Gets the id of the place.
+	 * 
+	 * @return the id of the place.
 	 */
 	public String getPlaceId() {
 		return placeId;
@@ -46,7 +59,8 @@ public class Place {
 	
 
 	/**
-	 * @param placeId the placeId to set
+	 * Sets the id of the place.
+	 * @param placeId the id to set
 	 */
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
@@ -54,7 +68,9 @@ public class Place {
 
 
 	/**
-	 * @return the placeName
+	 * Gets the human-readable name of the place.
+	 * 
+	 * @return the name of the place.
 	 */
 	public String getPlaceName() {
 		return placeName;
@@ -62,7 +78,9 @@ public class Place {
 
 
 	/**
-	 * @param placeName the placeName to set
+	 * Sets the name of the place.
+	 * 
+	 * @param placeName the name to set
 	 */
 	public void setPlaceName(String placeName) {
 		this.placeName = placeName;
@@ -70,6 +88,9 @@ public class Place {
 
 
 	/**
+	 * Gets the reference code of the place. The reference code is used in SMS and email interactions to 
+	 * disambiguate between several places as the target of the input.
+	 * 
 	 * @return the placeReferenceCode
 	 */
 	public String getPlaceReferenceCode() {
@@ -78,7 +99,9 @@ public class Place {
 
 
 	/**
-	 * @param placeReferenceCode the placeReferenceCode to set
+	 * Sets the reference code for the place.
+	 * 
+	 * @param placeReferenceCode the reference code to set
 	 */
 	public void setPlaceReferenceCode(String placeReferenceCode) {
 		this.placeReferenceCode = placeReferenceCode;
@@ -86,7 +109,9 @@ public class Place {
 
 
 	/**
-	 * @return the placePhoneNumber
+	 * Gets the phone number associated with the place for sms interactions.
+	 * 
+	 * @return the phone number.
 	 */
 	public String getPlacePhoneNumber() {
 		return placePhoneNumber;
@@ -94,7 +119,9 @@ public class Place {
 
 
 	/**
-	 * @param placePhoneNumber the placePhoneNumber to set
+	 * Sets the phone number associated with the place.
+	 * 
+	 * @param placePhoneNumber the phone number to set
 	 */
 	public void setPlacePhoneNumber(String placePhoneNumber) {
 		this.placePhoneNumber = placePhoneNumber;
@@ -102,7 +129,9 @@ public class Place {
 
 
 	/**
-	 * @return the placeEmailAddress
+	 * Gets the email address for email interaction.
+	 * 
+	 * @return the email address of the place.
 	 */
 	public String getPlaceEmailAddress() {
 		return placeEmailAddress;
@@ -110,7 +139,8 @@ public class Place {
 
 
 	/**
-	 * @param placeEmailAddress the placeEmailAddress to set
+	 * Sets the email address for email interaction.
+	 * @param placeEmailAddress the email address to set
 	 */
 	public void setPlaceEmailAddress(String placeEmailAddress) {
 		this.placeEmailAddress = placeEmailAddress;
@@ -118,7 +148,9 @@ public class Place {
 
 
 	/**
-	 * @return the placeInteractionUrl
+	 * Gets the  url for web interaction of the place.
+	 * 
+	 * @return the url for web interaction with the place.
 	 */
 	public String getPlaceInteractionUrl() {
 		return placeInteractionUrl;
@@ -126,7 +158,9 @@ public class Place {
 
 
 	/**
-	 * @param placeInteractionUrl the placeInteractionUrl to set
+	 * Sets the url for web interaction.
+	 * 
+	 * @param placeInteractionUrl the url to set
 	 */
 	public void setPlaceInteractionUrl(String placeInteractionUrl) {
 		this.placeInteractionUrl = placeInteractionUrl;

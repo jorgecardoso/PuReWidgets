@@ -518,7 +518,7 @@ public class WidgetManager {
 		/*
 		 * Trigger the input events on the widgets
 		 */
-		ArrayList<WidgetInput> notProcessed = InputEventHelper.triggerActionEvents(inputList, this.widgetList);
+		ArrayList<WidgetInput> notProcessed = InputEventHelper.triggerWidgetInputEvents(inputList, this.widgetList);
 		this.unprocessedInput.addAll(notProcessed);
 		this.processedInput.removeAll(notProcessed);
 

@@ -9,9 +9,9 @@ import org.purewidgets.shared.im.Widget;
 import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.im.WidgetParameter;
 
-import com.google.gwt.user.client.rpc.core.java.util.Collections;
 
 /**
+ * A Download widget.
  * 
  * The Download widget uses a "purewidgets-content-url" parameter to hold the target url.
  * 
@@ -20,6 +20,9 @@ import com.google.gwt.user.client.rpc.core.java.util.Collections;
  */
 public class Download extends Widget {
 
+	/**
+	 * The widget parameter name used to hold the Url of the content that can be downloaded
+	 */
 	public static final String CONTENT_URL_PARAMETER_NAME =  "purewidgets-content-url";
 	
 	private static ArrayList<WidgetParameter> createDownloadParameters(String url) {
@@ -35,6 +38,13 @@ public class Download extends Widget {
 		return p;
 	}
 	
+	/**
+	 * Creates a new Download widget with the given id, label and url.
+	 * 
+	 * @param widgetId the id of the widget.
+	 * @param label the label for the download button (short description)
+	 * @param url the url where the content associated with the widget can be downloaded
+	 */
 	public Download(String widgetId, String label, String url) {
 		/*
 		 * Use the label as the short description
@@ -43,6 +53,17 @@ public class Download extends Widget {
 		
 	}
 	
+	/**
+	 * Creates a new Download widget with the given id, label, url, long description, options and parameters.
+	 * The short description is used as the button label.
+	 * 
+	 * @param widgetId the id of the widget.
+	 * @param label the label for the download button (short description)
+	 * @param url the url where the content associated with the widget can be downloaded
+	 * @param longDescription the long description for the widget.
+	 * @param widgetOptions the widget options
+	 * @param parameters the widget parameters.
+	 */	
 	public Download(String widgetId, String label, String url, String longDescription, ArrayList<WidgetOption> options, ArrayList<WidgetParameter> parameters) {
 		/* 
 		 * Use the label as the short description

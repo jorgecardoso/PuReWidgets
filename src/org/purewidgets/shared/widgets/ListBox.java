@@ -12,7 +12,7 @@ import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 /**
- * A widget that provides a list of options to users.
+ * A ListBox widget that provides a list of options to users.
  * 
  * @author "Jorge C. S. Cardoso"
  *
@@ -38,6 +38,13 @@ public class ListBox extends Widget {
 		return widgetOptions;
 	}
 	
+	/**
+	 * Creates a new ListBox with the given id, label, and options.
+	 * 
+	 * @param widgetId the id for the widget.
+	 * @param listLabel the label for the listbox
+	 * @param options the list of options
+	 */
 	public ListBox(String widgetId, String listLabel, java.util.List<String> options) {
 		/*
 		 * Use the label as the short description
@@ -48,6 +55,9 @@ public class ListBox extends Widget {
 
 	
 	
+	/**
+	 * Handles input directed at the widget.
+	 */
 	@Override
 	public void handleInput(ArrayList<WidgetInputEvent> inputEventList) {
 		Log.debug(this, "Handling input");
@@ -75,6 +85,7 @@ public class ListBox extends Widget {
 	}
 
 	/**
+	 * Gets the list of options in this listbox.
 	 * @return the listOptions
 	 */
 	public java.util.List<String> getListOptions() {

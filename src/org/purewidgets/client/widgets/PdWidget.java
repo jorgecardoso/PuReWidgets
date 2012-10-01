@@ -542,10 +542,10 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 
 		this.localStorage.removeItem(REFERENCE_CODES_STORAGE_ID);
 
-		for (Widget w : this.widget.getDependentWidget()) {
-			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
-			WidgetManager.get().removeWidget(w);
-		}
+//		for (Widget w : this.widget.getDependentWidget()) {
+//			Log.debugFinest(this, "Removing dependent widgets from widgetmanager: " + w);
+//			WidgetManager.get().removeWidget(w);
+//		}
 
 	}
 
@@ -556,10 +556,10 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		Log.debugFinest(this, "Adding widget to widgetmanager: " + this.getWidgetId());
 		WidgetManager.get().addWidget(this.widget);
 
-		for (Widget w : this.widget.getDependentWidget()) {
-			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w.getWidgetId());
-			WidgetManager.get().addWidget(w);
-		}
+//		for (Widget w : this.widget.getDependentWidget()) {
+//			Log.debugFinest(this, "Adding dependent widgets to widgetmanager: " + w.getWidgetId());
+//			WidgetManager.get().addWidget(w);
+//		}
 
 	}
 

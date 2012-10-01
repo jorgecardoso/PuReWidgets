@@ -11,12 +11,20 @@ import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.Widget;
 
 /**
+ * A TextBox widget that accepts text.
+ * 
  * @author Jorge C. S. Cardoso
  *
  */
 
 public class TextBox extends Widget {
 
+	/**
+	 * Creates a new TextBox with the given id and label
+	 * 
+	 * @param widgetId The id for the widget.
+	 * @param label The label of the textbox.
+	 */
 	public TextBox(String widgetId, String label) {
 		/*
 		 * Use the label as the short description
@@ -24,6 +32,9 @@ public class TextBox extends Widget {
 		super(widgetId, Widget.CONTROL_TYPE_ENTRY, label, "", null, null);
 	}
 	
+	/**
+	 * Handles input directed at the textbox.
+	 */
 	@Override
 	public void handleInput(ArrayList<WidgetInputEvent> inputEventList) {
 		

@@ -132,7 +132,7 @@ public class PDApplication {
 		Log.debug(this, "Asking for input");
 		ArrayList<WidgetInput> inputList = serverCommunicator.askForInputFromServer();
 		Log.debug(this, "Triggering action events");
-		InputEventHelper.triggerActionEvents(inputList, this.widgets);
+		InputEventHelper.triggerWidgetInputEvents(inputList, this.widgets);
 		
 		Log.debug(this, "Triggering 'finish' event");
 		this.applicationLifeCycle.onPDApplicationEnded();

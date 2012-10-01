@@ -10,12 +10,24 @@ import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 /**
+ * A class to help trigger widget input events. The code is used in both client and server.
+ * 
  * @author "Jorge C. S. Cardoso"
  *
  */
 public final class InputEventHelper {
 
-	public static ArrayList<WidgetInput> triggerActionEvents(ArrayList<WidgetInput> inputList, ArrayList<Widget>widgetList) {
+	/**
+	 * Triggers widget input events in the widgets that were targeted by the specified widget inputs,
+	 * and returns a list of widget inputs that had no matching widgets (the application may not have
+	 * had a chance to create those widgets yet).
+	 * 
+	 * @param inputList The list of input to process.
+	 * @param widgetList The list of widgets to check against the input.
+	 * 
+	 * @return A list of widget input that had no target widgets in the specified list.
+	 */
+	public static ArrayList<WidgetInput> triggerWidgetInputEvents(ArrayList<WidgetInput> inputList, ArrayList<Widget>widgetList) {
 		/*
 		 * Widgets that have input will be added to a new List, as well as
 		 * the InputEvent that will later be triggered.

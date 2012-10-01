@@ -19,6 +19,7 @@ import org.purewidgets.client.im.json.WidgetListJson;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.shared.im.Application;
+import org.purewidgets.shared.im.ApplicationState;
 import org.purewidgets.shared.im.Place;
 import org.purewidgets.shared.im.UrlHelper;
 import org.purewidgets.shared.im.Widget;
@@ -541,7 +542,7 @@ public class InteractionManagerService {
 	 * @param callback The callback instance to notify when the response comes back.
 	 */		
 	public void getApplicationsList(String placeId, String callingApplicationId, final AsyncCallback<ArrayList<Application>> callback) {
-		this.getApplicationsList(placeId, callingApplicationId, Application.STATE.All, callback);
+		this.getApplicationsList(placeId, callingApplicationId, ApplicationState.All, callback);
 	}
 
 	/**
@@ -554,7 +555,7 @@ public class InteractionManagerService {
 	 */		
 	public void getApplicationsList(String placeId, String callingApplicationId, boolean active,
 			AsyncCallback<ArrayList<Application>> callback) {
-		this.getApplicationsList(placeId, callingApplicationId, active?Application.STATE.Active : Application.STATE.Inactive, callback);
+		this.getApplicationsList(placeId, callingApplicationId, active?ApplicationState.Active : ApplicationState.Inactive, callback);
 		
 	}
 	
@@ -566,7 +567,7 @@ public class InteractionManagerService {
 	 * @param state The state of the applications to retrieve.
 	 * @param callback The callback instance to notify when the response comes back.
 	 */		
-	private void getApplicationsList(String placeId, String callingApplicationId, Application.STATE state,
+	private void getApplicationsList(String placeId, String callingApplicationId, ApplicationState state,
 			final AsyncCallback<ArrayList<Application>> callback) {
 		Log.debug(this, "Asking for applications from " + placeId );
 		

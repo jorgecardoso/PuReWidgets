@@ -4,20 +4,33 @@
 package org.purewidgets.shared.im;
 
 
-
 /**
+ * Represents an application in the interaction manager server.
+ * 
  * @author "Jorge C. S. Cardoso"
  *
  */
 public class Application {
-	public static enum STATE {All, Active, Inactive};
-	
+	/**
+	 * The place id of the application.
+	 */
 	private String placeId;
 	
+	/**
+	 * The application id.
+	 */
 	private String applicationId;
 	
+	/**
+	 * The application's base url
+	 */
 	private String applicationBaseUrl;
 	
+	/**
+	 * Creates a new Application with the specified place id and application id.
+	 * @param placeId The place id of the new application.
+	 * @param appId The application id of the new application.
+	 */
 	public Application(String placeId, String appId) {
 		this.placeId = placeId;
 		this.applicationId = appId;
@@ -25,6 +38,8 @@ public class Application {
 	
 	
 	/**
+	 * Getes the place id of the application.
+	 * 
 	 * @return the placeId
 	 */
 	public String getPlaceId() {
@@ -33,7 +48,9 @@ public class Application {
 	
 
 	/**
-	 * @param placeId the placeId to set
+	 * Sets the place id of the new application.
+	 * 
+	 * @param placeId the place id to set
 	 */
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
@@ -41,7 +58,9 @@ public class Application {
 	
 
 	/**
-	 * @return the appId
+	 * Gets the application id of the application.
+	 * 
+	 * @return the application id.
 	 */
 	public String getApplicationId() {
 		return applicationId;
@@ -49,7 +68,9 @@ public class Application {
 
 	
 	/**
-	 * @param appId the appId to set
+	 * Sets the application id.
+	 * 
+	 * @param appId the application id to set.
 	 */
 	public void setApplicationId(String appId) {
 		this.applicationId = appId;
@@ -57,7 +78,9 @@ public class Application {
 
 
 	/**
-	 * @return the applicationBaseUrl
+	 * Gets the application base url.
+	 * 
+	 * @return the application base url.
 	 */
 	public String getApplicationBaseUrl() {
 		return applicationBaseUrl;
@@ -65,7 +88,9 @@ public class Application {
 
 
 	/**
-	 * @param applicationBaseUrl the applicationBaseUrl to set
+	 * Sets the application base url.
+	 * 
+	 * @param applicationBaseUrl the application base Url to set
 	 */
 	public void setApplicationBaseUrl(String applicationBaseUrl) {
 		this.applicationBaseUrl = applicationBaseUrl;
