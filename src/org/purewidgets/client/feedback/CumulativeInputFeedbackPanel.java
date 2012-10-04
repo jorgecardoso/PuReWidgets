@@ -7,9 +7,13 @@ package org.purewidgets.client.feedback;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.widgets.PdWidget;
+import org.purewidgets.shared.application.Constants;
 import org.purewidgets.shared.logging.Log;
 
+import com.allen_sauer.gwt.voices.client.Sound;
+import com.allen_sauer.gwt.voices.client.SoundController;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -101,6 +105,11 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	
 	private Timer timer;
 	
+	
+	SoundController soundController;
+    
+	Sound sound;
+	
 	/**
 	 * Creates a new CumulativeInputFeedbackPanel for the specified PdWidget with default values for the
 	 * maximum number of display lines.
@@ -155,6 +164,13 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 				CumulativeInputFeedbackPanel.this.hide(null, true);
 			}
 		};
+		
+		this.soundController = new SoundController();
+	    sound = soundController.createSound(Sound.MIME_TYPE_AUDIO_X_AIFF,
+	        PDApplication.getCurrent().getParameterString(Constants.FEEDBACK_SOUND_PARAMETER_NAME, 
+	        		Constants.FEEDBACK_SOUND_DEFAULT_PARAMETER_VALUE));
+
+	   
 	}
 	
 
@@ -166,6 +182,7 @@ public class CumulativeInputFeedbackPanel extends AbstractInputFeedbackPanel {
 	 */
 	@Override
 	public void show(InputFeedback<? extends PdWidget> inputFeedback, int duration) {
+		sound.play();
 		timer.schedule(duration);
 		
 		if ( null != inputFeedback ) {
