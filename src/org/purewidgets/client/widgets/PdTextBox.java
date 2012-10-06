@@ -14,11 +14,14 @@ import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.Timer;
@@ -75,7 +78,8 @@ public class PdTextBox extends PdWidget {
 	@UiField
 	Label uiLabelCaret;
 	
-
+	@UiField
+	HorizontalPanel uiPanelCaptionContainer;
 	
 	@UiField
 	Label uiLabelCaption;
@@ -129,6 +133,7 @@ public class PdTextBox extends PdWidget {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == 13) {
 					Log.debug(this, "Enter detected");
+					PdTextBox.this.uiPanelCaptionContainer.setVisible(true);
 					
 					ArrayList<String> params = new ArrayList<String>();
 					params.add(PdTextBox.this.uiTextbox.getText());
@@ -171,6 +176,12 @@ public class PdTextBox extends PdWidget {
 		caretTimer.scheduleRepeating(1000);
 		this.sendToServer();
 		this.onReferenceCodesUpdated();
+	}
+	
+	@UiHandler("uiPanelMain")
+	void handleClick(ClickEvent event) {
+		this.uiTextbox.setFocus(true);
+		this.uiPanelCaptionContainer.setVisible(false);
 	}
 	
 	private void flashCaret() {

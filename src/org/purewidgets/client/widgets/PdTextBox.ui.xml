@@ -61,7 +61,7 @@
 	    <g:TextBox ui:field="uiTextbox" styleName="{style.pwTextBoxTextbox}"/>
 	     
 	     
-	    <g:HorizontalPanel styleName="{style.pwTextBoxCaptioncontainer}">
+	    <g:HorizontalPanel styleName="{style.pwTextBoxCaptioncontainer}" ui:field="uiPanelCaptionContainer">
 	        <g:cell verticalAlignment="middle">
 	            <g:Label ui:field="uiLabelCaret" styleName="{style.pwTextBoxCaret}"/>
 	        </g:cell>
