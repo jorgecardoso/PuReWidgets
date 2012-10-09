@@ -312,9 +312,9 @@ public class WidgetManager {
 		 */
 		int index = indexOf(this.widgetList, widget);
 		if (-1 == index) {
-			this.widgetList.remove(index);
-		} else {
 			Log.warn(this, "Widget '" + widget.getWidgetId() + "' does not exist in widget list.");
+		} else {
+			this.widgetList.remove(index);
 		}
 
 		index = indexOf(this.toDeleteWidgetPool, widget);
@@ -522,6 +522,16 @@ public class WidgetManager {
 		this.unprocessedInput.addAll(notProcessed);
 		this.processedInput.removeAll(notProcessed);
 
+		/*
+		 * Delete the widgets that where the target of unprocessed input.
+		 * This way we will remove stale widgets when users try to interact with them
+		 * If the widget is not stale, and the application just hasn't had the chance to add them, them the widget
+		 * will be added again (a bit of a waste of server resources, but I have no better alternative yet). 
+		 */
+		for ( WidgetInput wi : notProcessed ) {
+			Widget w = new Widget(wi.getWidgetId(), "", "", null);
+			this.removeWidget(w);
+		}
 	}
 
 	/**
