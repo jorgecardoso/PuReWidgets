@@ -10,6 +10,7 @@ import org.purewidgets.client.http.HttpServiceAsync;
 import org.purewidgets.client.im.json.ApplicationJson;
 import org.purewidgets.client.im.json.ApplicationListJson;
 import org.purewidgets.client.im.json.ChannelTokenJson;
+import org.purewidgets.client.im.json.InputResponseJson;
 import org.purewidgets.client.im.json.PlaceJson;
 import org.purewidgets.client.im.json.PlaceListJson;
 import org.purewidgets.client.im.json.WidgetInputJson;
@@ -408,7 +409,7 @@ public class InteractionManagerService {
 	 * @param callback The callback instance to notify when the response comes back.
 	 */
 	public void sendWidgetInput(String placeId, String applicationId, String callingApplicationId, 
-			WidgetInput widgetInput, final AsyncCallback<WidgetInput> callback) {
+			WidgetInput widgetInput, final AsyncCallback<InputResponseJson> callback) {
 		
 		Log.debug(this, "Sending input to " + placeId + " : " + applicationId);
 		
@@ -436,7 +437,7 @@ public class InteractionManagerService {
 						Log.debug(InteractionManagerService.this, "Got response to input sending.");
 						Log.debugFinest(InteractionManagerService.this, result);
 						if ( null != callback ) {
-							callback.onSuccess(null);
+							callback.onSuccess((InputResponseJson)InputResponseJson.fromJson(result));
 						} else {
 							Log.warn(InteractionManagerService.this, "No callback to notify.");
 						}
