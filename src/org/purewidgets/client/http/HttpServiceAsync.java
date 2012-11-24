@@ -26,6 +26,16 @@ public interface HttpServiceAsync {
 	 */	
 	void post(String json, String url, AsyncCallback<String> callback);
 
+	
+	/**
+	 * Executes a PUT request with the specified post data, on the specified URL.
+	 * 
+	 * @param data The data to post.
+	 * @param url The URL to post to.
+	 * @param callback The callback instance to notify when the response comes back.
+	 */	
+	void put(String json, String url, AsyncCallback<String> callback);
+	
 	/**
 	 * Executes a DELETE request  on the specified URL.
 	 * 

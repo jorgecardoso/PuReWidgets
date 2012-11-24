@@ -26,6 +26,8 @@ public class Application {
 	 */
 	private String applicationBaseUrl;
 	
+	private boolean onScreen;
+	
 	/**
 	 * Creates a new Application with the specified place id and application id.
 	 * @param placeId The place id of the new application.
@@ -94,6 +96,22 @@ public class Application {
 	 */
 	public void setApplicationBaseUrl(String applicationBaseUrl) {
 		this.applicationBaseUrl = applicationBaseUrl;
+	}
+
+
+	/**
+	 * @return the onScreen
+	 */
+	public boolean isOnScreen() {
+		return onScreen;
+	}
+
+
+	/**
+	 * @param onScreen the onScreen to set
+	 */
+	public void setOnScreen(boolean onScreen) {
+		this.onScreen = onScreen;
 	}
 
 	

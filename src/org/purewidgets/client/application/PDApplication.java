@@ -11,11 +11,14 @@ import org.purewidgets.client.storage.LocalStorage;
 import org.purewidgets.client.storage.ServerStorage;
 import org.purewidgets.shared.application.Constants;
 import org.purewidgets.shared.im.Application;
+import org.purewidgets.shared.im.UrlHelper;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -445,21 +448,36 @@ public class PDApplication  {
 		
 		String interactionManagerUrl = this.getParameterString(Constants.INTERACTION_MANAGER_URL_PARAMETER_NAME, Constants.INTERACTIONMANAGER_ADDRESS);
 		
-		Log.info(this, "Using interaction manager: " + interactionManagerUrl);
+		Log.info(this, "Using interaction manager: " + interactionManagerUrl);	
 		
 		InteractionManagerService serverCommunicator = new InteractionManagerService(interactionManagerUrl, this.localStorage);
 		this.interactionManager = serverCommunicator;
+		
+		
+		updateOnscreenStatus(true);
 		
 		WidgetManager.create(this.placeId, this.applicationId, this.localStorage, serverCommunicator); 
 		
 		//WidgetManager.get().setServerCommunication( serverCommunicator );
 
-		Window.addCloseHandler(new CloseHandler<Window>() {
+		Window.addWindowClosingHandler(new ClosingHandler() {
+
 			@Override
-			public void onClose(CloseEvent<Window> event) {
+			public void onWindowClosing(ClosingEvent event) {
+				updateOnscreenStatus(false);
 				
 			}
-		});		
+			
+		});
+//		Window.addCloseHandler(new CloseHandler<Window>() {
+//			@Override
+//			public void onClose(CloseEvent<Window> event) {
+//				
+//				updateOnscreenStatus(false);
+//			}
+//
+//			
+//		});		
 		
 		
 		serverCommunicator.getApplication(this.placeId, this.applicationId, this.applicationId, new AsyncCallback<Application>() {
@@ -484,5 +502,30 @@ public class PDApplication  {
 		
 	}
 
+	/**
+	 * 
+	 */
+	private void updateOnscreenStatus(boolean status) {
+		String interactionManagerUrl = PDApplication.this.getParameterString(Constants.INTERACTION_MANAGER_URL_PARAMETER_NAME, Constants.INTERACTIONMANAGER_ADDRESS);
+		
+		UrlHelper urlHelper = new UrlHelper( interactionManagerUrl);
+		PDApplication.this.interactionManager.getInteractionService().put("{\"onScreen\":"+status+"}", 
+				urlHelper.getApplicationOnscreenUrl(PDApplication.this.placeId, PDApplication.this.applicationId, PDApplication.this.applicationId), 
+				new AsyncCallback<String>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.warn(PDApplication.class.getName(), "Could not update onscreen status.");
+						
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						Log.debug(PDApplication.class.getName(), "Updated onscreen status");
+						
+					}
+			
+		});
+	}
 	
 }

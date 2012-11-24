@@ -885,4 +885,11 @@ public class InteractionManagerService {
 	private String getWidgetIdUrlEscaped(String widgetId) {
 		return com.google.gwt.http.client.URL.encode(widgetId);
 	}
+
+	/**
+	 * @return the interactionService
+	 */
+	public HttpServiceAsync getInteractionService() {
+		return interactionService;
+	}
 }

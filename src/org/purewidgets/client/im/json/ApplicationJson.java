@@ -41,6 +41,23 @@ public class ApplicationJson extends GenericJson {
 		return this.placeId; 
 	}-*/;
 	
+	/**
+	 * Sets the place id.
+	 * 
+	 * @param placeId The place id to set.
+	 */
+	public final native void setOnScreen(boolean onScreen)  /*-{ 
+		this.onScreen = onScreen; 
+	}-*/;
+
+	/**
+	 * Gets the place id.
+	 * 
+	 * @return The place id.
+	 */
+	public final native boolean isOnScreen() /*-{ 
+		return this.onScreen; 
+	}-*/;	
 	  
 	/**
 	 * Sets the application id.
@@ -90,6 +107,7 @@ public class ApplicationJson extends GenericJson {
 		aJSON.setPlaceId( application.getPlaceId() );
 		aJSON.setApplicationId( application.getApplicationId() );
 		aJSON.setApplicationBaseUrl(application.getApplicationBaseUrl());
+		aJSON.setOnScreen(application.isOnScreen());
 		
 		return aJSON;
 	}
@@ -102,6 +120,8 @@ public class ApplicationJson extends GenericJson {
 	public final Application getApplication() {
 		Application a = new Application( this.getPlaceId(), this.getApplicationId() );
 		a.setApplicationBaseUrl(this.getApplicationBaseUrl());
+		a.setOnScreen(this.isOnScreen());
+		
 		return a;
 	}
 

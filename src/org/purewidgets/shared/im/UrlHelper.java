@@ -54,7 +54,18 @@ public class UrlHelper {
 		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId +"?appid="+callingApplicationId;
 	}
 	
-	
+
+	/**
+	 * Gets the url for the application onscreen service.
+	 * 
+	 * @param placeId The id of the place.
+	 * @param applicationId The id of the application
+	 * @param callingApplicationId The id of the calling application.
+	 * @return The url for the application service.
+	 */
+	public  String getApplicationOnscreenUrl(String placeId, String applicationId, String callingApplicationId) {
+		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId + "/onscreen" + "?appid="+callingApplicationId;
+	}
 //	public  String getApplicationUrl(String placeId, String applicationId) {
 //		return interactionServerUrl + "/place/" + placeId + "/application/"+ applicationId;
 //	}

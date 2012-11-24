@@ -20,6 +20,8 @@ public class ApplicationJson extends GenericJson {
 	
 	private String applicationBaseUrl;
 	
+	private boolean onScreen;
+	
 	private ApplicationJson() {
 	}
 	
@@ -29,13 +31,14 @@ public class ApplicationJson extends GenericJson {
 		applicationJson.setPlaceId(application.getPlaceId());
 		applicationJson.setApplicationId(application.getApplicationId());
 		applicationJson.setApplicationBaseUrl(application.getApplicationBaseUrl());
-		
+		applicationJson.setOnScreen(application.isOnScreen());
 		return applicationJson;
 	}
 	
 	public Application getApplication() {
 		Application application = new Application(this.placeId, this.applicationId);
 		application.setApplicationBaseUrl(this.applicationBaseUrl);
+		application.setOnScreen(this.onScreen);
 		return application;
 	}
 	
@@ -61,6 +64,20 @@ public class ApplicationJson extends GenericJson {
 	 */
 	private void setApplicationBaseUrl(String applicationBaseUrl) {
 		this.applicationBaseUrl = applicationBaseUrl;
+	}
+
+	/**
+	 * @return the onScreen
+	 */
+	public boolean isOnScreen() {
+		return onScreen;
+	}
+
+	/**
+	 * @param onScreen the onScreen to set
+	 */
+	public void setOnScreen(boolean onScreen) {
+		this.onScreen = onScreen;
 	}
 
 	

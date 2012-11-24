@@ -27,6 +27,10 @@ public class HttpServiceImpl extends RemoteServiceServlet implements
 		return doMethod("POST", data, url);		
 	}
 	
+	@Override
+	public String put( String data, String url ) throws HttpServerException  {
+		return doMethod("PUT", data, url);		
+	}
 	
 	@Override
 	public String get( String url ) throws HttpServerException  {
