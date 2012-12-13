@@ -33,7 +33,35 @@ import com.google.gwt.user.client.Timer;
  * inside. 
  * When a user enters text, the PdTextBox triggers an ActionEvent.
  * 
+* Here's an example of creating a listbox and getting the event data:
+ * <pre>
  * 
+ * // create the textbox
+ * PdTextBox textbox = new PdTextBox("mytextboxid", "Gimme something!", null);
+ *
+ * //add it to the DOM 
+ * RootPanel.get().add(textbox);
+ *  
+ * // Register the action listener for the textbox 
+ * textbox.addActionListener(new ActionListener() {
+ *     {@literal @}Override
+ *     public void onAction(ActionEvent&lt;?&gt; e) {
+ *	
+ *         // Get the widget that triggered the event.		 
+ *         PdWidget source = (PdWidget) e.getSource();
+ *
+ *         // If we received text, do something...
+ *         if ( source.getWidgetId().equals("mytextboxid") ) {
+ *         
+ *             // get the text 
+ *             String receivedText = e.getParam().toString();
+ *             
+ *             // do something here
+ *         }
+ *     }
+ * });
+ * 
+ * </pre>
  * <h3>CSS Style Rules</h3>
  * <dl>
  * <dt>.pwTextBox</dt>

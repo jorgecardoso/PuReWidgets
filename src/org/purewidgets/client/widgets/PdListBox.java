@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,9 +27,42 @@ import com.google.gwt.user.client.ui.Widget;
  * A list of choices to the user. 
  * When an option is selected, it triggers an ActionEvent. 
  * By default, a PdListBox has graphical vertical orientation displaying the name of the option and the reference
- * code for the option in a single line.
- *  
+ * code for the option in a single line.<p>
  * 
+ * Here's an example of creating a listbox and getting the event data:
+ * <pre>
+ * // create the listbox options
+ * ArrayList&lt;String&gt; options = new ArrayList&lt;String&gt;();
+ * options.add("I don't go");
+ * options.add("Once a week");
+ * options.add("Twice a week");
+ * 
+ * // create the listbox
+ * PdListBox listbox = new PdListBox("mypollid", "On average, how many times to you go to the movies?", options);
+ *
+ * //add it to the DOM 
+ * RootPanel.get().add(listbox);
+ *  
+ * // Register the action listener for the list 
+ * listbox.addActionListener(new ActionListener() {
+ *     {@literal @}Override
+ *     public void onAction(ActionEvent&lt;?&gt; e) {
+ *	
+ *         // Get the widget that triggered the event.		 
+ *         PdWidget source = (PdWidget) e.getSource();
+ *
+ *         // If one option was selected, do something...
+ *         if ( source.getWidgetId().equals("mypollid") ) {
+ *         
+ *             // get the selected option
+ *             String selectedOption = e.getSelection().getWidgetOptionId();
+ *             
+ *             // do something here
+ *         }
+ *     }
+ * });
+ * 
+ * </pre>
  * <h3>CSS Style Rules</h3>
  * <dl>
  * <dt>.pwListbox</dt>

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
 import org.purewidgets.shared.events.ActionEvent;
+import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetParameter;
 
@@ -24,7 +25,33 @@ import com.google.gwt.user.client.ui.*;
  * 
  * An action button widget that can by "clicked". When "clicked" it triggers an ActionEvent. 
  * By default, a PdButton has a button like graphical appearance with a caption that can be set by the programmer.
- * (The PdButton displays the reference code next to the caption).
+ * (The PdButton displays the reference code next to the caption).<p>
+ * 
+ * Here's an example of creating a button and receiving input:
+ * <pre>
+ * // Create a button widget giving it an id and a label
+ * PdButton pdButton = new PdButton("myButtonId", "Activate me");	
+ *
+ * // Register the action listener for the list 
+ * pdButton.addActionListener(new ActionListener() {
+ *     {@literal @}Override
+ *     public void onAction(ActionEvent&lt;?&gt; e) {
+ *	
+ *         // Get the widget that triggered the event.		 
+ *         PdWidget source = (PdWidget) e.getSource();
+ *
+ *         // If the button was activated, do something...
+ *         if ( source.getWidgetId().equals("myButtonId") ) {
+ *             RootPanel.get().add(new Label("Button activated"));
+ *         }
+ *     }
+ * });
+ *		
+ * // Add the graphical representation of the button to the browser
+ * // window.
+ * RootPanel.get().add(pdButton);
+ * </pre>
+ * 
  * 
  * <h3>CSS Style Rules</h3>
  * <dl>
