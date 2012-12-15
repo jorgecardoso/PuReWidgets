@@ -705,11 +705,16 @@ public class WidgetManager {
 	}
 
 	/**
+	 * Starts the timer that triggers the WidgetManager to send widget information to the 
+	 * Interaction Manager server.
 	 * 
+	 * This method resets the timer every time it is called, so the timer will only be triggered
+	 * is enough time has passed without this method being called.
+	 *  
 	 */
 	private void startTimerWidget() {
 		if (null == this.timerWidget) {
-
+			Log.debugFinest(this, "Creating new widget timer and scheduling it.");
 			this.timerWidget = new Timer() {
 				@Override
 				public void run() {
@@ -717,6 +722,10 @@ public class WidgetManager {
 				}
 			};
 			this.currentWidgetRequestInterval = WIDGET_REQUEST_INTERVAL;
+			timerWidget.schedule(this.currentWidgetRequestInterval);
+		} else {
+			this.currentWidgetRequestInterval = WIDGET_REQUEST_INTERVAL;
+			Log.debugFinest(this, "Delaying widget update to server by " + (this.currentWidgetRequestInterval/1000) + " seconds.");
 			timerWidget.schedule(this.currentWidgetRequestInterval);
 		}
 	}
