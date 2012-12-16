@@ -419,7 +419,7 @@ public class FeedbackSequencer {
 	 * Checks if the widget to which this FeedbackSequencer is assigned is still visible.
 	 */
 	private void timerCheckVisibilityElapsed() {
-		Log.debug(this, "Checking visibility of widget '" + this.display.getWidget().getWidgetId() +"'");
+		Log.debugFinest(this, "Checking visibility of widget '" + this.display.getWidget().getWidgetId() +"'");
 		
 		if ( null != this.display.getWidget() && this.display.getWidget().isDisplaying() ) {
 			
