@@ -33,8 +33,8 @@ public class Download extends Widget {
 	
 	private static ArrayList<WidgetParameter> combine(ArrayList<WidgetParameter> p1, ArrayList<WidgetParameter> p2) {
 		ArrayList<WidgetParameter> p = new ArrayList<WidgetParameter>();
-		p.addAll(p1);
-		p.addAll(p2);
+		if ( null != p1 ) p.addAll(p1);
+		if ( null != p2 ) p.addAll(p2);
 		return p;
 	}
 	
@@ -73,4 +73,17 @@ public class Download extends Widget {
 		
 	}
 	
+	/**
+	 * Sets the download url for this download widget.
+	 * 
+	 * @param url The url to set.
+	 */
+	public void setUrl(String url) {
+		WidgetParameter param = this.getWidgetParameter(CONTENT_URL_PARAMETER_NAME);
+		if ( null != param ) {
+			param.setValue(url);
+		} else {
+			this.getWidgetParameters().add(new WidgetParameter(CONTENT_URL_PARAMETER_NAME, url));
+		}
+	}
 }
