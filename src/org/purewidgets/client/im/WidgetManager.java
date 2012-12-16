@@ -76,6 +76,11 @@ public class WidgetManager {
 	
 	
 	/**
+	 * The synchronization delay
+	 */
+	private static final int SYNC_DELAY = 5000;
+	
+	/**
 	 * The singleton reference. 
 	 */
 	private static WidgetManager wm;
@@ -725,8 +730,8 @@ public class WidgetManager {
 			timerWidget.schedule(this.currentWidgetRequestInterval);
 		} else {
 			this.currentWidgetRequestInterval = WIDGET_REQUEST_INTERVAL;
-			Log.debugFinest(this, "Delaying widget update to server by " + (this.currentWidgetRequestInterval/1000) + " seconds.");
-			timerWidget.schedule(this.currentWidgetRequestInterval);
+			Log.debugFinest(this, "Delaying widget update to server by " + (SYNC_DELAY/1000) + " seconds.");
+			timerWidget.schedule(SYNC_DELAY);
 		}
 	}
 
