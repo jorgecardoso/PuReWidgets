@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.htmlwidgets.ClickableHTMLPanel;
 import org.purewidgets.shared.events.ActionEvent;
-import org.purewidgets.shared.events.ActionListener;
 import org.purewidgets.shared.events.WidgetInputEvent;
 import org.purewidgets.shared.im.WidgetParameter;
 
@@ -136,7 +135,7 @@ public class PdButton extends PdWidget {
 	 * Sets the caption of the button.
 	 * 
 	 * The caption is also the shortDescription of the widget, so this method triggers the WidgetManager to 
-	 * resend this widget's information to the Interaction Manager.
+	 * re-send this widget's information to the Interaction Manager.
 	 * 
 	 * @param caption The caption to set.
 	 */
