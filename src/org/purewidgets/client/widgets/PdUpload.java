@@ -109,6 +109,19 @@ public class PdUpload extends PdWidget  {
 		this.onReferenceCodesUpdated();
 	}
 	
+	/**
+	 * Sets the caption of the upload widget.
+	 * 
+	 * The caption is also the shortDescription of the widget, so this method triggers the WidgetManager to 
+	 * re-send this widget's information to the Interaction Manager.
+	 * 
+	 * @param caption The caption to set.
+	 */
+	public void setCaption(String caption) {
+		this.setShortDescription(caption);
+		this.uiHTMLCaption.setText(caption);
+		this.sendToServer();
+	}	
 		
 	/**
 	 * Updates the graphical representations of the reference codes.
