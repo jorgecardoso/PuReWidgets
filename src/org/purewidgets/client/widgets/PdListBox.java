@@ -19,7 +19,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -131,6 +130,8 @@ public class PdListBox extends PdWidget {
 	 */
 	private org.purewidgets.shared.widgets.ListBox widgetList;
 	
+	private String title;
+	
 	/**
 	 * Creates a new PdListBox with the specified id, title, and options.
 	 * 
@@ -141,7 +142,7 @@ public class PdListBox extends PdWidget {
 	public PdListBox(String widgetId, String title, ArrayList<String> options) {
 		super(widgetId);
 		initWidget(uiBinder.createAndBindUi(this));
-		
+		this.title = title;
 		/*
 		 * Set the default user feedback pattern
 		 */
@@ -154,15 +155,54 @@ public class PdListBox extends PdWidget {
 		//this.sendToServer();
 		
 		
-		/* Gui stuff 
-		 * 
-		 */
 		
+		
+		
+		renderWidgetOptions();
+		
+		this.sendToServer();
+		this.onReferenceCodesUpdated();
+	}
+
+	
+	/**
+	 * Sets the title of the listbox.
+	 * 
+	 * The title is also the longDescription of the widget, so this method triggers the WidgetManager to 
+	 * re-send this widget's information to the Interaction Manager.
+	 * 
+	 * @param title The title to set.
+	 */
+	public void setTitle(String title) {
+		this.setLongDescription(title);
+		this.titleLabel.setText(title);
+		this.sendToServer();
+	}
+	
+	/**
+	 * Sets the options for this listbox;
+	 * This method triggers an update of this widget's information to the Interaction Manager server.
+	 * 
+	 * @param options The options to set.
+	 */
+	public void setOptions(ArrayList<String> options) {
+		this.widgetList.setListOptions(options);
+		
+		renderWidgetOptions();
+		this.sendToServer();
+	}
+
+
+	/**
+	 * 
+	 */
+	private void renderWidgetOptions() {
+		this.uiVerticalPanelMain.clear();
+
 		this.titleLabel = new Label(title);
 		this.titleLabel.addStyleName(style.pwListboxItem());
 		this.titleLabel.addStyleName(style.pwListboxTitle());
 		this.uiVerticalPanelMain.add(titleLabel);
-		
 		
 		this.optionsHorizontalPanel = new ArrayList<HorizontalPanel>();
 		for ( String option : this.widgetList.getListOptions() ) {
@@ -181,12 +221,8 @@ public class PdListBox extends PdWidget {
 			
 			this.uiVerticalPanelMain.add(hPanel);
 		}
-		
-	
-		this.sendToServer();
-		this.onReferenceCodesUpdated();
 	}
-
+	
 	/**
 	 * Updates the graphical representations of the reference codes.
 	 */		
