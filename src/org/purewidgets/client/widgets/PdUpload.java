@@ -4,14 +4,18 @@
 package org.purewidgets.client.widgets;
 
 
+import java.util.ArrayList;
+
 import org.purewidgets.client.feedback.InputFeedback;
 import org.purewidgets.client.feedback.MessagePattern;
 import org.purewidgets.shared.events.ActionEvent;
 import org.purewidgets.shared.events.WidgetInputEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -123,6 +127,17 @@ public class PdUpload extends PdWidget  {
 		this.sendToServer();
 	}	
 		
+	@UiHandler("uiVerticalPanelMain")
+	void handleClick(ClickEvent event) {
+		// Simulate an input event
+		ArrayList<String> param = new ArrayList<String>();
+		param.add("http://purewidgets.org");
+		WidgetInputEvent e = new WidgetInputEvent(PdUpload.this.getWidgetOptions().get(0), param);
+		ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
+		inputList.add(e);
+
+		PdUpload.this.widget.onInput(inputList);
+	}
 	/**
 	 * Updates the graphical representations of the reference codes.
 	 */		

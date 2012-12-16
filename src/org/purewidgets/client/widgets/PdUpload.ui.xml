@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:org.purewidgets.client.htmlwidgets">
 	
 	<ui:style>
 	@external pwUpload, pwUploadCaption, pwUploadReferencecode, pwUploadIcon;
@@ -32,10 +33,10 @@
 	}
 	</ui:style>
 	
-	<g:HTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwUpload}" > 
+	<p:ClickableHTMLPanel ui:field="uiVerticalPanelMain"  styleName="{style.pwUpload}" > 
 		<g:Image url="purewidgetsicons/upload-icon.jpg" styleName="{style.pwUploadIcon}"/>
 	    <g:InlineLabel ui:field="uiHTMLCaption"  styleName="{style.pwUploadCaption}"/> 
 		<g:InlineLabel ui:field="uiHTMLReferenceCode"  styleName="{style.pwUploadReferencecode}"/>
-	</g:HTMLPanel>
+	</p:ClickableHTMLPanel>
 	
 </ui:UiBinder> 
