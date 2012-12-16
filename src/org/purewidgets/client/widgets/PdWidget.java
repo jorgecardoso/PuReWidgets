@@ -636,12 +636,14 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 
 	/**
 	 * Sets the long description for this widget.
+	 * This method triggers an update of this widget's information to the Interaction Manager.
 	 * 
 	 * @param longDescription
 	 *            the longDescription to set
 	 */
 	public void setLongDescription(String longDescription) {
 		this.widget.setLongDescription(longDescription);
+		this.sendToServer();
 	}
 
 	/**
@@ -683,12 +685,14 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 
 	/**
 	 * Sets the short description for this widget.
+	 * This method triggers an update of this widget's information to the Interaction Manager.
 	 * 
 	 * @param shortDescription
 	 *            the shortDescription to set
 	 */
 	public void setShortDescription(String shortDescription) {
 		this.widget.setShortDescription(shortDescription);
+		this.sendToServer();
 	}
 
 	/**
