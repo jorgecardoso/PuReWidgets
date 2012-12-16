@@ -206,11 +206,27 @@ public class PdTextBox extends PdWidget {
 		this.onReferenceCodesUpdated();
 	}
 	
+	
+	/**
+	 * Sets the caption of the textbox.
+	 * 
+	 * The caption is also the shortDescription of the widget, so this method triggers the WidgetManager to 
+	 * re-send this widget's information to the Interaction Manager.
+	 * 
+	 * @param caption The caption to set.
+	 */
+	public void setCaption(String caption) {
+		this.setShortDescription(caption);
+		this.uiLabelCaption.setText(caption);
+	}
+	
+	
 	@UiHandler("uiPanelMain")
 	void handleClick(ClickEvent event) {
 		this.uiTextbox.setFocus(true);
 		this.uiPanelCaptionContainer.setVisible(false);
 	}
+	
 	
 	private void flashCaret() {
 		if (isCaretOn) {
@@ -219,10 +235,7 @@ public class PdTextBox extends PdWidget {
 		} else {
 			PdTextBox.this.uiLabelCaret.setText(caretOn);
 		}
-		
 	}
-	
-		
 	
 
 //	@Override
