@@ -202,6 +202,17 @@ public class PdWidget extends Composite implements WidgetInputListener, Referenc
 		this.widget.addWidgetOption(option);
 	}
 
+
+	/**
+	 * Sets this widget's options to the specified ArrayList. The existing
+	 * options are discarded. 
+	 * 
+	 */
+	public void setWidgetOptions(ArrayList<WidgetOption> options) {
+		this.widget.setWidgetOptions(options);
+		this.sendToServer();
+	}
+	
 	/**
 	 * Gets the feedback sequencer for this PdWidget.
 	 * 
