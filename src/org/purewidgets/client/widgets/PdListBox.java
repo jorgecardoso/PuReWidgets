@@ -13,6 +13,8 @@ import org.purewidgets.shared.im.WidgetOption;
 import org.purewidgets.shared.logging.Log;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -155,9 +157,6 @@ public class PdListBox extends PdWidget {
 		//this.sendToServer();
 		
 		
-		
-		
-		
 		renderWidgetOptions();
 		
 		this.sendToServer();
@@ -220,6 +219,34 @@ public class PdListBox extends PdWidget {
 			hPanel.add(optionReferenceCode);
 			
 			this.uiVerticalPanelMain.add(hPanel);
+			
+			//hPanel.addDomHandler(cHandler, ClickEvent.getType());
+			hPanel.addDomHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					HorizontalPanel hPanel = (HorizontalPanel)(event.getSource());
+					WidgetOption widgetOption = null;
+					for ( int i = 0; i < PdListBox.this.optionsHorizontalPanel.size(); i++ ) {
+						HorizontalPanel p = PdListBox.this.optionsHorizontalPanel.get(i);
+						if ( p.equals(hPanel) ) {
+							widgetOption = PdListBox.this.getWidgetOptions().get(i);
+						}
+					}
+					if ( null != widgetOption ) {
+						// Simulate an input event
+						WidgetInputEvent e = new WidgetInputEvent(widgetOption, null);
+						ArrayList<WidgetInputEvent> inputList = new ArrayList<WidgetInputEvent>();
+						inputList.add(e);
+
+						PdListBox.this.widget.onInput(inputList);
+					
+						Log.error(this, "CLicked");
+					}
+					
+				}
+				
+			}, ClickEvent.getType());
 		}
 	}
 	
