@@ -245,9 +245,10 @@ public class Widget implements Comparable<Widget> {
 		if (!this.widgetOptions.contains(option)) {
 			this.widgetOptions.add(option);
 		}
-		
 	}
 
+
+	
 	/**
 	 * Compares this widget with another.
 	 * @see Comparable#compareTo(Object)
@@ -565,12 +566,11 @@ public class Widget implements Comparable<Widget> {
 
 	/**
 	 * Sets this widget's options to the specified ArrayList. The existing
-	 * options are discarded. This change is propagated immediately to the
-	 * WidgetManager.
+	 * options are discarded. 
 	 * 
 	 * @see org.instantplaces.purewidgets.shared.widgets.WidgetInterface#setWidgetOptions(java.util.ArrayList)
 	 */
-	protected void setWidgetOptions(ArrayList<WidgetOption> options) {
+	public void setWidgetOptions(ArrayList<WidgetOption> options) {
 		this.widgetOptions = options;
 	}
 
