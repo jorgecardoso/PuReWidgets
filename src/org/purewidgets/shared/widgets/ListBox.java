@@ -91,4 +91,14 @@ public class ListBox extends Widget {
 	public java.util.List<String> getListOptions() {
 		return listOptions;
 	}
+	
+	/**
+	 * Sets the options for this listbox;
+	 * 
+	 * @param options the options to set;
+	 */
+	public void setListOptions(ArrayList<String> options) {
+		this.listOptions = options;
+		this.setWidgetOptions(createListOptions(options));
+	}
 }
