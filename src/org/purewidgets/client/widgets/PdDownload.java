@@ -120,6 +120,32 @@ public class PdDownload extends PdWidget {
 		this.onReferenceCodesUpdated();
 	}
 
+	/**
+	 * Sets the caption of the download button.
+	 * 
+	 * The caption is also the shortDescription of the widget, so this method triggers the WidgetManager to 
+	 * re-send this widget's information to the Interaction Manager.
+	 * 
+	 * @param caption The caption to set.
+	 */
+	public void setCaption(String caption) {
+		this.setShortDescription(caption);
+		this.uiHTMLCaption.setText(caption);
+		this.sendToServer();
+	}
+	
+	/**
+	 * Sets the download url of this download button.
+	 * 
+	 * This method triggers an update of this widget's information to the Interaction Manager.
+	 * 
+	 * @param url The url to set.
+	 */
+	public void setUrl(String url) {
+		this.widgetDownloadButton.setUrl(url);
+		this.sendToServer();
+	}
+	
 	@UiHandler("uiVerticalPanelMain")
 	void handleClick(ClickEvent event) {
 		// Simulate an input event
