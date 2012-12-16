@@ -199,9 +199,7 @@ public class Widget implements Comparable<Widget> {
 			this.setWidgetOptions(options);
 		}
 		
-		/*
-		 * Make sure widgetparameters is never null
-		 */
+
 		if ( null != parameters ) {
 			this.widgetParameters = parameters;
 		}
@@ -286,6 +284,20 @@ public class Widget implements Comparable<Widget> {
 	}
 	
 
+	/**
+	 * Gets a widget parameter by name.
+	 * @param parameterName The name of the parameter to retrieve.
+	 * @return The WidgetParameter with the specified name; null, if no widget parameter with that name exists.
+	 */
+	public WidgetParameter getWidgetParameter(String parameterName) {
+		for ( WidgetParameter param : this.widgetParameters ) {
+			if ( param.getName().equals(parameterName) ) {
+				return param;
+			}
+		}
+		return null;
+	}
+	
 
 	/**
 	 * A helper method that sends an ActionEvent to all ActionListeners registered in this widget.
