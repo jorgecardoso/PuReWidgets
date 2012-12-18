@@ -4,7 +4,9 @@
 package org.purewidgets.client.im;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import org.purewidgets.client.application.PDApplication;
 import org.purewidgets.client.im.json.WidgetJson;
 import org.purewidgets.client.json.GenericJson;
 import org.purewidgets.client.storage.LocalStorage;
@@ -147,6 +149,8 @@ public class WidgetManager {
 	 */
 	private ArrayList<Widget> toDeleteWidgetPool;
 
+	private ArrayList<Widget> widgetCache;
+	
 	/**
 	 * The registered widgets.
 	 */
@@ -161,11 +165,16 @@ public class WidgetManager {
 		this.placeId = placeId;
 		this.applicationId = applicationId;
 		this.localStorage = localStorage;
-
+		
+		this.widgetCache = new ArrayList<Widget>();
 		this.widgetList = new ArrayList<Widget>();
+		this.loadWidgetCacheFromLocalStorage();
+		
 		this.toAddWidgetPool = new ArrayList<Widget>();
 		this.toDeleteWidgetPool = new ArrayList<Widget>();
 		this.loadToDeleteWidgetPoolFromLocalStorage();
+		
+		
 		this.processedInput = new ArrayList<WidgetInput>();
 		this.unprocessedInput = new ArrayList<WidgetInput>();
 		this.communicator = interactionManager;
@@ -244,7 +253,9 @@ public class WidgetManager {
 	 */
 	public void addWidget(final Widget widget) {
 		Log.debug(this, "Adding widget: " + widget.getWidgetId());
-
+		widget.setPlaceId(PDApplication.getCurrent().getPlaceId());
+		widget.setApplicationId(PDApplication.getCurrent().getApplicationId());
+		
 		/*
 		 * Register the widget locally
 		 */
@@ -253,7 +264,7 @@ public class WidgetManager {
 			this.widgetList.add(widget);
 		} else {
 			Log.warn(this, "Widget '" + widget.getWidgetId()
-					+ "' already exists in widget list, replacing entry " + index + ".");
+                    + "' already exists in widget list, replacing entry " + index + ".");
 			this.widgetList.set(index, widget);
 		}
 
@@ -408,10 +419,36 @@ public class WidgetManager {
 			this.toDeleteWidgetPool.add( widgetJson.getWidget() );
 		}
 	}
+	
+	private void loadWidgetCacheFromLocalStorage() {
+		ArrayList<String> widgetsSerialized = this.localStorage.loadList("WidgetManager-widgetcache");
+		for ( String widgetSerialized : widgetsSerialized ) {
+			WidgetJson widgetJson = GenericJson.fromJson(widgetSerialized);
+			Widget w = widgetJson.getWidget();
+			this.widgetCache.add( w );
+			this.widgetList.add( w );
+			
+		}
+	}
 
 	private void onWidgetAdd(Widget widgetFromServer) {
 		Log.debug(this, "Received widget from server: " + widgetFromServer.getWidgetId());
 
+		/*
+		 * Save to cache
+		 */
+		int index = this.indexOf(this.widgetCache, widgetFromServer);
+		if ( -1 == index ) {
+			Log.warn(this, "Adding Widget '" + widgetFromServer.getWidgetId()
+					+ "' to widget cache.");// replacing entry " + index + ".");
+			this.widgetCache.add(widgetFromServer);
+		} else {
+			Log.warn(this, "Widget '" + widgetFromServer.getWidgetId()
+					+ "' already exists in widget cache. Replacing");// replacing entry " + index + ".");
+			this.widgetCache.set(index, widgetFromServer);
+		}
+		this.saveWidgetCacheToLocalStorage();
+		
 		/*
 		 * Remove from to add pool
 		 */
@@ -471,6 +508,18 @@ public class WidgetManager {
 	private void onWidgetDelete(Widget widgetFromServer) {
 		Log.debug(this, "Received widget deleted from server: " + widgetFromServer.getWidgetId());
 
+
+		/*
+		 * Remove from to widget cache
+		 */
+		for (Widget widgetFromCache : this.widgetCache) {
+			if (widgetFromCache.getWidgetId().equals(widgetFromServer.getWidgetId())) {
+				this.widgetCache.remove(widgetFromCache);
+				this.saveWidgetCacheToLocalStorage();
+				break;
+			}
+		}
+		
 		/*
 		 * Remove from to add pool
 		 */
@@ -590,6 +639,30 @@ public class WidgetManager {
 
 		if (NextWidgetAction.ADD == this.nextWidgetAction) {
 
+			/*
+			 * Skip widgets that are on cache.
+			 */
+			Iterator<Widget> it = this.toAddWidgetPool.iterator();
+			while ( it.hasNext() ) {
+				Widget w = it.next();
+				
+				int indexOnCache = this.indexOf(widgetCache, w);
+				if ( indexOnCache >= 0 ) {
+					String newWidget = WidgetJson.create(w).toJsonString();
+					String existingWidget = WidgetJson.create(this.widgetCache.get(indexOnCache)).toJsonString();
+					Log.warn(this, newWidget);
+					Log.warn(this, existingWidget);
+					if ( newWidget.equals(existingWidget) ) {
+						Log.warn(this, "No changes found in widget " + w.getWidgetId() + ". Skipping update on server.");
+						
+						it.remove();
+					} else {
+						Log.warn(this, "Found changes in widget " + w.getWidgetId() + ". Updating server.");
+					}
+				}
+				
+			}
+			
 			if (this.toAddWidgetPool.size() > 0) {
 
 				/*
@@ -703,6 +776,14 @@ public class WidgetManager {
 			widgetsSerialized.add( WidgetJson.create(widget).toJsonString() );
 		}
 		this.localStorage.saveList("WidgetManager-deletePool", widgetsSerialized);
+	}
+	
+	private void saveWidgetCacheToLocalStorage() {
+		ArrayList<String> widgetsSerialized = new ArrayList<String>();
+		for ( Widget widget : this.widgetCache ) {
+			widgetsSerialized.add( WidgetJson.create(widget).toJsonString() );
+		}
+		this.localStorage.saveList("WidgetManager-widgetcache", widgetsSerialized);
 	}
 
 	private void setTimeStamp(long timeStamp) {
