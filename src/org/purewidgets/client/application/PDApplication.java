@@ -506,26 +506,27 @@ public class PDApplication  {
 	 * 
 	 */
 	private void updateOnscreenStatus(boolean status) {
-		String interactionManagerUrl = PDApplication.this.getParameterString(Constants.INTERACTION_MANAGER_URL_PARAMETER_NAME, Constants.INTERACTIONMANAGER_ADDRESS);
-		
-		UrlHelper urlHelper = new UrlHelper( interactionManagerUrl);
-		PDApplication.this.interactionManager.getInteractionService().put("{\"onScreen\":"+status+"}", 
-				urlHelper.getApplicationOnscreenUrl(PDApplication.this.placeId, PDApplication.this.applicationId, PDApplication.this.applicationId), 
-				new AsyncCallback<String>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.warn(PDApplication.class.getName(), "Could not update onscreen status.");
-						
-					}
-
-					@Override
-					public void onSuccess(String result) {
-						Log.debug(PDApplication.class.getName(), "Updated onscreen status");
-						
-					}
-			
-		});
+		return;
+//		String interactionManagerUrl = PDApplication.this.getParameterString(Constants.INTERACTION_MANAGER_URL_PARAMETER_NAME, Constants.INTERACTIONMANAGER_ADDRESS);
+//		
+//		UrlHelper urlHelper = new UrlHelper( interactionManagerUrl);
+//		PDApplication.this.interactionManager.getInteractionService().put("{\"onScreen\":"+status+"}", 
+//				urlHelper.getApplicationOnscreenUrl(PDApplication.this.placeId, PDApplication.this.applicationId, PDApplication.this.applicationId), 
+//				new AsyncCallback<String>(){
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						Log.warn(PDApplication.class.getName(), "Could not update onscreen status.");
+//						
+//					}
+//
+//					@Override
+//					public void onSuccess(String result) {
+//						Log.debug(PDApplication.class.getName(), "Updated onscreen status");
+//						
+//					}
+//			
+//		});
 	}
 	
 }
