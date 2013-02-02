@@ -69,6 +69,15 @@ public class ApplicationJson extends GenericJson {
 	}-*/;
 
 	/**
+	 * Sets the application name.
+	 * 
+	 * @param appName The application name to set.
+	 */
+	public final native void setApplicationName(String appName)  /*-{ 
+		this.applicationName = appName; 
+	}-*/;
+	
+	/**
 	 * Gets the application base url.
 	 * 
 	 * @return The application's base url.
@@ -95,6 +104,15 @@ public class ApplicationJson extends GenericJson {
 		return this.applicationId; 
 	}-*/;
 	
+	/**
+	 * Gets the application name.
+	 * 
+	 * @return The application name.
+	 */
+	public final native String getApplicationName() /*-{ 
+		return this.applicationName; 
+	}-*/;
+	
 
 	/**
 	 * Creates a ApplicationJson object based on an Application object
@@ -106,6 +124,7 @@ public class ApplicationJson extends GenericJson {
 		
 		aJSON.setPlaceId( application.getPlaceId() );
 		aJSON.setApplicationId( application.getApplicationId() );
+		aJSON.setApplicationName(application.getApplicationName());
 		aJSON.setApplicationBaseUrl(application.getApplicationBaseUrl());
 		aJSON.setOnScreen(application.isOnScreen());
 		
@@ -120,6 +139,7 @@ public class ApplicationJson extends GenericJson {
 	public final Application getApplication() {
 		Application a = new Application( this.getPlaceId(), this.getApplicationId() );
 		a.setApplicationBaseUrl(this.getApplicationBaseUrl());
+		a.setApplicationName(this.getApplicationName());
 		a.setOnScreen(this.isOnScreen());
 		
 		return a;

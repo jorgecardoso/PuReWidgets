@@ -22,6 +22,11 @@ public class Application {
 	private String applicationId;
 	
 	/**
+	 * The application name;
+	 */
+	private String applicationName;
+	
+	/**
 	 * The application's base url
 	 */
 	private String applicationBaseUrl;
@@ -112,6 +117,22 @@ public class Application {
 	 */
 	public void setOnScreen(boolean onScreen) {
 		this.onScreen = onScreen;
+	}
+
+
+	/**
+	 * @return the applicationName
+	 */
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+
+	/**
+	 * @param applicationName the applicationName to set
+	 */
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
 	}
 
 	
