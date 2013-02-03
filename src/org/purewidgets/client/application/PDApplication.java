@@ -5,6 +5,8 @@ package org.purewidgets.client.application;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.purewidgets.client.htmlwidgets.interactioninstructions.PDInteractionInstructionsSticker;
 import org.purewidgets.client.im.InteractionManagerService;
 import org.purewidgets.client.im.WidgetManager;
 import org.purewidgets.client.storage.LocalStorage;
@@ -502,6 +504,9 @@ public class PDApplication  {
 		
 	}
 
+	
+	
+	
 	/**
 	 * 
 	 */

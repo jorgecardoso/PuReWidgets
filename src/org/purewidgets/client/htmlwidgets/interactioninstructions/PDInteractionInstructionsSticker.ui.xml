@@ -1,0 +1,95 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.main {
+			margin: 0px;
+			background-color: white;
+			border: 1px solid black;
+			position: relative;
+			overflow: hidden;
+			font-family: Nunito;
+			font-size: 2em;
+			padding-bottom: 30px;
+		}
+
+		.main * {
+			font-family:Nunito;
+			font-size:1em;
+		}
+
+		.scrollPanel {
+			position: relative;
+		}
+
+		.item {
+			margin: 0px;
+			margin-right: 100px;
+			width: 460px;
+		}
+		.icon {
+			height: 200px;
+			width: 200px;
+			padding-right: 20px;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel styleName="{style.main}" ui:field="mainPanel">
+	    <g:Label>How to interact with this display:</g:Label>
+	    <g:HorizontalPanel styleName="{style.scrollPanel}" ui:field="scrollPanel">
+	        
+	        <g:HorizontalPanel styleName="{style.item}" ui:field="smsItem">
+	            <g:cell width="200px">
+	                <g:HTML styleName="{style.icon}">
+	            		<img src="htmlwidgets/smsbutton1.svg"></img>
+	            	</g:HTML>
+	            </g:cell>
+	        	<g:VerticalPanel>
+	        		<g:Label>SMS </g:Label>    
+	        		<g:Label ui:field="smsTo">to 9673412222</g:Label>
+	        		<g:Label ui:field="smsText">artes.[ref] </g:Label>
+	        	</g:VerticalPanel>
+	        </g:HorizontalPanel>
+	        
+	        <g:HorizontalPanel  styleName="{style.item}" ui:field="emailItem">
+	             <g:cell width="200px">
+	                <g:HTML styleName="{style.icon}">
+	            		<img src="htmlwidgets/emailbutton1.svg"></img>
+	            	</g:HTML>
+	            </g:cell>
+	        	<g:VerticalPanel>
+	        		<g:Label>Email </g:Label>    
+	        		<g:Label ui:field="emailTo">to artes@ecra.pt</g:Label>
+	        		<g:Label ui:field="emailSubject">subject: (ref) </g:Label>
+	        	</g:VerticalPanel>
+	         </g:HorizontalPanel>
+	         
+	        <g:HorizontalPanel  styleName="{style.item}">
+	             <g:cell width="200px">
+	                <g:HTML styleName="{style.icon}">
+	            		<img src="htmlwidgets/web1.svg"></img>
+	            	</g:HTML>
+	            </g:cell>	            
+		        <g:VerticalPanel>
+		        	<g:Label>Web </g:Label>    
+		        	<g:Label ui:field="webAddress">http://ecra.pt/artes</g:Label>
+		        	<g:Label></g:Label>
+		        </g:VerticalPanel>	     
+	        </g:HorizontalPanel>
+	        
+	        <g:HorizontalPanel  styleName="{style.item}">
+	             <g:cell width="200px">
+	                <g:HTML styleName="{style.icon}">
+	            		<img src="htmlwidgets/qrcode1.png"></img>
+	            	</g:HTML>
+	            </g:cell>	            
+		        <g:VerticalPanel>
+		        	<g:Label>QR code </g:Label>    
+		        	<g:Label></g:Label>
+		        	<g:Label></g:Label>
+		        </g:VerticalPanel>	     
+	        </g:HorizontalPanel>  
+	            
+	    </g:HorizontalPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 
